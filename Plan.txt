@@ -1,0 +1,1198 @@
+Poniżej masz gotowy plan działania w Markdown.
+
+````markdown
+# Plan działania: Toolsy dla Codexa do SEO tytułów, atrybutów i filtrów produktów
+
+## 1. Cel projektu
+
+Celem jest stworzenie zestawu narzędzi, które pomogą Codexowi automatyzować pracę na produktach w sklepie internetowym.
+
+System ma pomagać w:
+
+- analizie obecnych tytułów produktów,
+- wyszukiwaniu zasad tworzenia tytułów SEO,
+- zmianie tytułów produktów pod SEO,
+- wyciąganiu atrybutów z tytułów,
+- uzupełnianiu brakujących atrybutów z danych dostępnych w pliku,
+- uzupełnianiu brakujących atrybutów na podstawie internetu,
+- podpowiadaniu, po jakich atrybutach filtrować produkty,
+- tworzeniu raportu różnic przed i po zmianach,
+- przygotowaniu pliku gotowego do importu do WooCommerce / Base / ERP.
+
+Najważniejsza zasada:
+
+**Codex nie powinien analizować każdego produktu ręcznie. Codex ma tworzyć i poprawiać konfigurację, a program ma masowo przetwarzać produkty.**
+
+---
+
+# 2. Główna koncepcja działania
+
+System powinien działać jako pipeline:
+
+```txt
+plik wejściowy CSV/XLSX
+        ↓
+analiza danych
+        ↓
+wykrycie kategorii i producentów
+        ↓
+ekstrakcja atrybutów z tytułów
+        ↓
+uzupełnianie atrybutów z istniejących danych
+        ↓
+opcjonalne uzupełnianie z internetu
+        ↓
+generowanie nowych tytułów SEO
+        ↓
+rekomendacja filtrów
+        ↓
+walidacja danych
+        ↓
+raport różnic
+        ↓
+plik wynikowy do importu
+````
+
+---
+
+# 3. Założenia techniczne
+
+## 3.1. Główna zasada ograniczania tokenów
+
+Nie wysyłamy całego pliku do Codexa.
+
+Codex dostaje tylko:
+
+* próbkę produktów,
+* raport statystyczny,
+* listę kolumn,
+* przykładowe tytuły,
+* listę brakujących atrybutów,
+* listę problemów,
+* config kategorii.
+
+Program lokalny przetwarza cały plik samodzielnie.
+
+---
+
+## 3.2. Rola Codexa
+
+Codex powinien:
+
+* tworzyć konfiguracje dla kategorii,
+* poprawiać reguły tytułów,
+* poprawiać słowniki atrybutów,
+* analizować raport błędów,
+* pomagać w trudnych przypadkach,
+* modyfikować program, gdy logika wymaga rozbudowy.
+
+Codex nie powinien:
+
+* generować ręcznie tytułów dla 10 000 produktów,
+* analizować całego pliku linijka po linijce,
+* wyszukiwać w internecie każdego produktu, jeśli dane są już dostępne w pliku,
+* bez walidacji nadpisywać danych produktowych.
+
+---
+
+# 4. Struktura projektu
+
+```txt
+product-seo-tools/
+├── input/
+│   └── products.xlsx
+│
+├── output/
+│   ├── products_optimized.xlsx
+│   ├── products_optimized.csv
+│   └── changes_report.xlsx
+│
+├── configs/
+│   ├── global.yaml
+│   ├── categories/
+│   │   ├── oprawy-sufitowe.yaml
+│   │   ├── przewody.yaml
+│   │   ├── osprzet-elektryczny.yaml
+│   │   ├── zrodla-swiatla.yaml
+│   │   └── rozdzielnice.yaml
+│   │
+│   └── producers/
+│       ├── kanlux.yaml
+│       ├── gtv.yaml
+│       ├── kontakt-simon.yaml
+│       ├── ledvance.yaml
+│       └── bemko.yaml
+│
+├── dictionaries/
+│   ├── colors.yaml
+│   ├── power.yaml
+│   ├── ip_rating.yaml
+│   ├── color_temperature.yaml
+│   ├── mounting_types.yaml
+│   ├── cable_types.yaml
+│   └── producers.yaml
+│
+├── cache/
+│   ├── web_sources.sqlite
+│   └── researched_products.json
+│
+├── reports/
+│   ├── quality_report.html
+│   ├── missing_attributes.csv
+│   ├── filter_recommendations.csv
+│   └── suspicious_changes.csv
+│
+├── src/
+│   ├── analyze_products.py
+│   ├── extract_attributes.py
+│   ├── optimize_titles.py
+│   ├── recommend_filters.py
+│   ├── research_web.py
+│   ├── validate_output.py
+│   ├── export_results.py
+│   └── utils.py
+│
+├── prompts/
+│   ├── category_config_prompt.md
+│   ├── title_rules_prompt.md
+│   ├── filter_recommendation_prompt.md
+│   └── attribute_cleanup_prompt.md
+│
+├── README.md
+└── requirements.txt
+```
+
+---
+
+# 5. Moduły systemu
+
+## 5.1. Moduł: analiza pliku produktów
+
+Nazwa narzędzia:
+
+```txt
+analyze-products
+```
+
+Cel:
+
+Analiza pliku wejściowego i przygotowanie raportu dla Codexa oraz użytkownika.
+
+Program powinien sprawdzać:
+
+* jakie kolumny są w pliku,
+* ile jest produktów,
+* ile jest kategorii,
+* ilu jest producentów,
+* które pola są puste,
+* które atrybuty występują najczęściej,
+* które tytuły są za krótkie,
+* które tytuły są za długie,
+* które tytuły nie zawierają producenta,
+* które tytuły nie zawierają najważniejszych parametrów,
+* czy SKU zgadza się z tytułem,
+* czy EAN jest poprawny,
+* czy są duplikaty SKU,
+* czy są duplikaty EAN,
+* czy wartości atrybutów są niespójne.
+
+Przykładowy wynik:
+
+```txt
+Liczba produktów: 12 430
+Liczba kategorii: 183
+Produkty bez producenta: 821
+Produkty bez EAN: 1440
+Produkty bez mocy: 3210
+Produkty bez barwy światła: 2780
+Tytuły powyżej 120 znaków: 642
+Tytuły poniżej 40 znaków: 903
+Podejrzane duplikaty SKU: 12
+```
+
+---
+
+## 5.2. Moduł: konfiguracja kategorii
+
+Nazwa narzędzia:
+
+```txt
+suggest-category-config
+```
+
+Cel:
+
+Stworzenie lub poprawienie configu dla konkretnej kategorii produktowej.
+
+Config powinien określać:
+
+* jakie pola są wymagane,
+* jakie pola są opcjonalne,
+* jak budować tytuł SEO,
+* które atrybuty są ważne,
+* które atrybuty mają być filtrami,
+* które wartości należy normalizować,
+* których słów unikać,
+* jaka jest maksymalna długość tytułu.
+
+Przykład configu:
+
+```yaml
+category: "Oprawy sufitowe"
+
+title_template: "{typ} {rodzaj} {seria} {moc} {strumien} {barwa} {ip} {kolor} {producent}"
+
+max_title_length: 110
+
+required_fields:
+  - typ
+  - moc
+  - barwa
+  - producent
+
+optional_fields:
+  - seria
+  - strumien
+  - ip
+  - kolor
+  - kat_swiecenia
+  - ksztalt
+
+recommended_filters:
+  - producent
+  - moc
+  - barwa
+  - strumien
+  - kolor
+  - stopien_ochrony_ip
+  - sposob_montazu
+  - ksztalt
+  - srednica_otworu_montazowego
+
+forbidden_title_words:
+  - super
+  - najlepszy
+  - promocja
+  - okazja
+
+normalization:
+  kolor:
+    czarny mat: czarny
+    biały mat: biały
+  barwa:
+    neutralna: 4000K
+    ciepła: 3000K
+    zimna: 6500K
+```
+
+---
+
+## 5.3. Moduł: ekstrakcja atrybutów z tytułów
+
+Nazwa narzędzia:
+
+```txt
+extract-attributes
+```
+
+Cel:
+
+Wyciągnięcie parametrów technicznych z tytułów, nazw, opisów i istniejących specyfikacji.
+
+Program powinien rozpoznawać m.in.:
+
+* moc, np. 24W,
+* napięcie, np. 230V,
+* barwę światła, np. 3000K / 4000K / 6500K,
+* strumień świetlny, np. 2000lm,
+* stopień ochrony IP, np. IP20 / IP44 / IP65,
+* stopień ochrony IK, np. IK08,
+* kąt świecenia, np. 120°,
+* kolor,
+* producenta,
+* serię,
+* model,
+* materiał,
+* sposób montażu,
+* wymiary,
+* średnicę,
+* typ przewodu,
+* przekrój przewodu,
+* liczbę żył.
+
+Przykład:
+
+```txt
+Tytuł:
+Oprawa LED panel downlight MATIS PLUS 24W 2000lm 4000K IP20 120° czarny GTV
+
+Wynik:
+typ = Oprawa LED
+rodzaj = downlight
+seria = MATIS PLUS
+moc = 24W
+strumien = 2000lm
+barwa = 4000K
+ip = IP20
+kat_swiecenia = 120°
+kolor = czarny
+producent = GTV
+```
+
+---
+
+## 5.4. Moduł: normalizacja atrybutów
+
+Nazwa narzędzia:
+
+```txt
+normalize-attributes
+```
+
+Cel:
+
+Ujednolicenie wartości atrybutów, żeby filtry w sklepie nie robiły bałaganu.
+
+Przykłady problemów:
+
+```txt
+4000K
+4000 K
+neutralna
+biała neutralna
+Neutral White
+```
+
+Wszystko powinno zostać sprowadzone do jednej wartości:
+
+```txt
+4000K
+```
+
+Przykład dla kolorów:
+
+```txt
+czarny mat
+czarny matowy
+czarny
+black
+```
+
+Wynik:
+
+```txt
+czarny
+```
+
+---
+
+## 5.5. Moduł: generowanie tytułów SEO
+
+Nazwa narzędzia:
+
+```txt
+optimize-titles
+```
+
+Cel:
+
+Automatyczne generowanie nowych tytułów zgodnie z configiem kategorii.
+
+Tytuł powinien być:
+
+* czytelny,
+* konkretny,
+* oparty o realne parametry,
+* bez lania wody,
+* bez przesadnego upychania słów kluczowych,
+* zgodny z kategorią,
+* spójny z atrybutami,
+* możliwy do automatycznego wygenerowania.
+
+Przykład starego tytułu:
+
+```txt
+Panel Matis czarny 24W GTV
+```
+
+Przykład nowego tytułu:
+
+```txt
+Oprawa LED downlight MATIS PLUS 24W 2000lm 4000K IP20 czarna GTV
+```
+
+Program powinien zapisywać:
+
+```txt
+old_title
+new_title
+title_status
+title_length
+changed_fields
+warnings
+```
+
+---
+
+## 5.6. Moduł: rekomendacja filtrów
+
+Nazwa narzędzia:
+
+```txt
+recommend-filters
+```
+
+Cel:
+
+Podpowiedzenie, które atrybuty powinny być filtrami w danej kategorii.
+
+Program powinien brać pod uwagę:
+
+* czy atrybut występuje w dużej liczbie produktów,
+* czy ma różne wartości,
+* czy wartości są uporządkowane,
+* czy klient realnie może po tym filtrować,
+* czy atrybut nie jest technicznym śmieciem,
+* czy filtr ma sens zakupowy.
+
+Przykład dobrych filtrów:
+
+```txt
+producent
+moc
+barwa światła
+kolor
+stopień ochrony IP
+sposób montażu
+średnica otworu montażowego
+```
+
+Przykład słabych filtrów:
+
+```txt
+certyfikat CE
+adres producenta
+liczba cykli załącz/wyłącz
+gwarancja, jeśli prawie wszędzie jest taka sama
+```
+
+Wynik powinien wyglądać np. tak:
+
+```csv
+attribute,status,reason
+moc,DOBRY_FILTR,występuje często i ma wiele wartości
+barwa światła,DOBRY_FILTR,ważny parametr zakupowy
+certyfikat CE,NIE_DAWAĆ,prawie każdy produkt ma tę samą wartość
+adres producenta,NIE_DAWAĆ,nie jest parametrem zakupowym
+```
+
+---
+
+## 5.7. Moduł: uzupełnianie atrybutów z internetu
+
+Nazwa narzędzia:
+
+```txt
+research-attributes
+```
+
+Cel:
+
+Uzupełnianie brakujących danych z internetu, najlepiej na podstawie EAN, SKU producenta lub dokładnej nazwy produktu.
+
+Priorytet źródeł:
+
+1. oficjalna strona producenta,
+2. karta katalogowa PDF,
+3. oficjalny plik produktowy producenta,
+4. zaufany dystrybutor,
+5. inne sklepy,
+6. marketplace jako źródło pomocnicze.
+
+Każda znaleziona wartość musi mieć:
+
+* źródło,
+* confidence score,
+* datę pobrania,
+* informację, czy została dodana automatycznie,
+* informację, czy wymaga sprawdzenia.
+
+Przykład:
+
+```csv
+sku,attribute,value,source,confidence,status
+12345,moc,24W,title,0.98,AUTO
+12345,barwa światła,4000K,title,0.98,AUTO
+12345,strumień świetlny,2000lm,producer_pdf,0.95,AUTO
+12345,średnica otworu,brak,brak,0.00,DO_SPRAWDZENIA
+```
+
+---
+
+## 5.8. Moduł: walidacja wyników
+
+Nazwa narzędzia:
+
+```txt
+validate-output
+```
+
+Cel:
+
+Sprawdzenie, czy wygenerowane dane są bezpieczne do importu.
+
+Walidacja powinna obejmować:
+
+* czy SKU nie zniknęło,
+* czy EAN nie został zmieniony przypadkowo,
+* czy producent nie został błędnie nadpisany,
+* czy tytuł nie jest pusty,
+* czy tytuł nie jest za długi,
+* czy tytuł nie zawiera dziwnych znaków,
+* czy wymagane atrybuty są uzupełnione,
+* czy wartości atrybutów są zgodne ze słownikiem,
+* czy nie dodano podejrzanych danych z niskim confidence,
+* czy kategoria produktu się nie zmieniła bez powodu.
+
+Statusy:
+
+```txt
+OK
+WARNING
+DO_SPRAWDZENIA
+ERROR
+```
+
+---
+
+## 5.9. Moduł: raport różnic
+
+Nazwa narzędzia:
+
+```txt
+generate-report
+```
+
+Cel:
+
+Pokazanie, co dokładnie zostało zmienione.
+
+Raport powinien zawierać:
+
+* stary tytuł,
+* nowy tytuł,
+* stare atrybuty,
+* nowe atrybuty,
+* źródło nowych danych,
+* poziom pewności,
+* status,
+* ostrzeżenia.
+
+Przykład:
+
+```csv
+sku,old_title,new_title,changed_attributes,status,warnings
+12345,"Panel Matis czarny 24W GTV","Oprawa LED downlight MATIS PLUS 24W 2000lm 4000K IP20 czarna GTV","barwa=4000K;strumień=2000lm",OK,""
+12346,"Oprawa LED","Oprawa LED 18W 4000K Kanlux","moc=18W;barwa=4000K",WARNING,"brak IP"
+```
+
+---
+
+# 6. Kolejność wdrożenia
+
+## Etap 1: MVP bez internetu
+
+Cel:
+
+Zbudować pierwszą wersję, która działa na pliku lokalnym.
+
+Zakres:
+
+* import CSV/XLSX,
+* analiza kolumn,
+* ekstrakcja atrybutów z tytułów,
+* normalizacja wartości,
+* generowanie nowych tytułów SEO,
+* raport zmian,
+* eksport do XLSX/CSV.
+
+Bez:
+
+* internetu,
+* automatycznego scrapowania,
+* dużej automatyki,
+* nadpisywania danych bez kontroli.
+
+Efekt:
+
+System bierze plik produktów i tworzy drugi plik z poprawionymi tytułami oraz wyciągniętymi atrybutami.
+
+---
+
+## Etap 2: Configi kategorii
+
+Cel:
+
+Dodać możliwość pracy per kategoria.
+
+Zakres:
+
+* osobne configi dla kategorii,
+* osobne szablony tytułów,
+* wymagane i opcjonalne pola,
+* słowniki wartości,
+* reguły walidacji.
+
+Przykładowe kategorie na start:
+
+* oprawy sufitowe,
+* źródła światła,
+* przewody,
+* osprzęt elektryczny,
+* rozdzielnice,
+* aparatura modułowa.
+
+---
+
+## Etap 3: Rekomendacja filtrów
+
+Cel:
+
+Podpowiadać, które atrybuty warto dać jako filtry w sklepie.
+
+Zakres:
+
+* analiza częstotliwości atrybutów,
+* analiza liczby unikalnych wartości,
+* wykrywanie bałaganu w wartościach,
+* oznaczanie dobrych i złych filtrów,
+* raport dla kategorii.
+
+Efekt:
+
+Dla każdej kategorii dostajesz listę:
+
+```txt
+Filtry rekomendowane
+Filtry opcjonalne
+Filtry niezalecane
+Atrybuty wymagające czyszczenia
+```
+
+---
+
+## Etap 4: Internet i źródła zewnętrzne
+
+Cel:
+
+Uzupełnianie brakujących parametrów z internetu.
+
+Zakres:
+
+* wyszukiwanie po EAN,
+* wyszukiwanie po SKU,
+* wyszukiwanie po producencie i modelu,
+* pobieranie danych z kart katalogowych,
+* cache wyników,
+* zapisywanie źródeł,
+* confidence score.
+
+Ważne:
+
+Dane z internetu nie powinny być automatycznie uznawane za pewne, jeśli nie pochodzą z oficjalnego źródła.
+
+---
+
+## Etap 5: Integracja z Codexem
+
+Cel:
+
+Przygotować wygodne komendy i instrukcje dla Codexa.
+
+Codex powinien móc wykonać np.:
+
+```txt
+Przeanalizuj plik input/products.xlsx i przygotuj config dla kategorii oprawy sufitowe.
+```
+
+Albo:
+
+```txt
+Na podstawie raportu reports/missing_attributes.csv popraw config kategorii przewody.
+```
+
+Albo:
+
+```txt
+Uruchom optimize-titles dla kategorii źródła światła i pokaż raport zmian.
+```
+
+---
+
+# 7. Proponowane komendy CLI
+
+Docelowo narzędzie powinno działać z terminala.
+
+Przykłady:
+
+```bash
+python src/analyze_products.py --input input/products.xlsx
+```
+
+```bash
+python src/extract_attributes.py --input input/products.xlsx --config configs/categories/oprawy-sufitowe.yaml
+```
+
+```bash
+python src/optimize_titles.py --input input/products.xlsx --config configs/categories/oprawy-sufitowe.yaml --output output/products_optimized.xlsx
+```
+
+```bash
+python src/recommend_filters.py --input input/products.xlsx --category "Oprawy sufitowe"
+```
+
+```bash
+python src/validate_output.py --input output/products_optimized.xlsx
+```
+
+```bash
+python src/research_web.py --input reports/missing_attributes.csv --limit 100
+```
+
+---
+
+# 8. Minimalny workflow pracy
+
+## Krok 1: Wrzucasz plik
+
+```txt
+input/products.xlsx
+```
+
+---
+
+## Krok 2: Program analizuje dane
+
+```bash
+python src/analyze_products.py --input input/products.xlsx
+```
+
+Wynik:
+
+```txt
+reports/quality_report.html
+reports/missing_attributes.csv
+reports/category_summary.csv
+```
+
+---
+
+## Krok 3: Codex tworzy config kategorii
+
+Codex dostaje:
+
+* próbkę produktów,
+* listę kolumn,
+* raport braków,
+* przykładowe tytuły.
+
+Codex tworzy:
+
+```txt
+configs/categories/oprawy-sufitowe.yaml
+```
+
+---
+
+## Krok 4: Program wyciąga atrybuty
+
+```bash
+python src/extract_attributes.py --input input/products.xlsx --config configs/categories/oprawy-sufitowe.yaml
+```
+
+---
+
+## Krok 5: Program generuje nowe tytuły
+
+```bash
+python src/optimize_titles.py --input input/products.xlsx --config configs/categories/oprawy-sufitowe.yaml
+```
+
+---
+
+## Krok 6: Program robi walidację
+
+```bash
+python src/validate_output.py --input output/products_optimized.xlsx
+```
+
+---
+
+## Krok 7: Sprawdzasz raport
+
+Do ręcznego sprawdzenia trafiają tylko produkty ze statusem:
+
+```txt
+WARNING
+DO_SPRAWDZENIA
+ERROR
+```
+
+Produkty ze statusem `OK` można importować po kontroli próbki.
+
+---
+
+# 9. Zasady bezpieczeństwa danych
+
+## 9.1. Nigdy nie nadpisywać oryginału
+
+Program zawsze powinien tworzyć nowy plik:
+
+```txt
+products_optimized.xlsx
+```
+
+Oryginał zostaje bez zmian.
+
+---
+
+## 9.2. Każda zmiana musi mieć ślad
+
+Dla każdej zmiany zapisujemy:
+
+```txt
+co zmieniono
+stara wartość
+nowa wartość
+źródło zmiany
+confidence
+status
+```
+
+---
+
+## 9.3. Niepewne dane nie powinny być automatycznie importowane
+
+Jeśli confidence jest niski, np. poniżej 0.80, produkt powinien dostać status:
+
+```txt
+DO_SPRAWDZENIA
+```
+
+---
+
+## 9.4. Dane z internetu muszą mieć źródło
+
+Nie zapisujemy wartości typu:
+
+```txt
+moc = 24W
+```
+
+bez informacji, skąd to pochodzi.
+
+Powinno być:
+
+```txt
+moc = 24W
+source = title
+confidence = 0.98
+```
+
+albo:
+
+```txt
+moc = 24W
+source = producer_pdf
+confidence = 0.95
+```
+
+---
+
+# 10. Format pliku wynikowego
+
+Plik wynikowy powinien zawierać stare i nowe dane obok siebie.
+
+Przykładowe kolumny:
+
+```txt
+sku
+ean
+producer
+category
+old_title
+new_title
+title_status
+title_length
+old_attributes
+new_attributes
+added_attributes
+changed_attributes
+missing_attributes
+source
+confidence
+validation_status
+warnings
+```
+
+---
+
+# 11. Priorytety działania
+
+## Priorytet 1
+
+Najpierw zrobić:
+
+* analizę pliku,
+* ekstrakcję atrybutów z tytułów,
+* generowanie tytułów SEO,
+* raport różnic.
+
+To da największy efekt przy najmniejszym ryzyku.
+
+---
+
+## Priorytet 2
+
+Potem dodać:
+
+* configi kategorii,
+* normalizację wartości,
+* rekomendację filtrów,
+* walidację jakości danych.
+
+---
+
+## Priorytet 3
+
+Na końcu dodać:
+
+* wyszukiwanie w internecie,
+* pobieranie kart katalogowych,
+* cache wyników,
+* confidence score,
+* automatyczne uzupełnianie trudniejszych atrybutów.
+
+---
+
+# 12. Minimalne MVP
+
+MVP powinno mieć tylko 4 funkcje:
+
+```txt
+1. Wczytaj plik CSV/XLSX.
+2. Wyciągnij atrybuty z tytułów.
+3. Wygeneruj nowe tytuły z configu.
+4. Zrób raport różnic.
+```
+
+Bez internetu.
+
+Bez integracji z WooCommerce.
+
+Bez pełnej automatyzacji.
+
+---
+
+# 13. Przykład działania MVP
+
+Dane wejściowe:
+
+```txt
+SKU: 12345
+Tytuł: Panel Matis czarny 24W GTV 4000K
+Kategoria: Oprawy sufitowe
+Producent: GTV
+```
+
+Program wyciąga:
+
+```txt
+moc = 24W
+barwa = 4000K
+kolor = czarny
+producent = GTV
+seria = Matis
+```
+
+Program generuje:
+
+```txt
+Oprawa LED downlight MATIS 24W 4000K czarna GTV
+```
+
+Raport:
+
+```txt
+old_title = Panel Matis czarny 24W GTV 4000K
+new_title = Oprawa LED downlight MATIS 24W 4000K czarna GTV
+status = OK
+```
+
+---
+
+# 14. Instrukcja dla Codexa
+
+Codex powinien dostać jasną zasadę:
+
+```txt
+Nie przetwarzaj całego pliku ręcznie.
+Nie zmieniaj produktów pojedynczo.
+Najpierw uruchom analizę.
+Potem przygotuj lub popraw config kategorii.
+Następnie uruchom program.
+Na końcu przeanalizuj tylko raport błędów i ostrzeżeń.
+```
+
+---
+
+# 15. Przykładowy prompt dla Codexa
+
+```txt
+Masz projekt product-seo-tools.
+
+Twoje zadanie:
+1. Przeanalizuj raport reports/quality_report.html.
+2. Sprawdź próbkę produktów z input/sample_products.csv.
+3. Przygotuj config kategorii w configs/categories/oprawy-sufitowe.yaml.
+4. Nie zmieniaj logiki programu, jeśli nie jest to konieczne.
+5. Tytuły mają być generowane według szablonu, nie ręcznie.
+6. Po przygotowaniu configu uruchom optimize-titles.
+7. Na końcu sprawdź validate-output.
+8. Wypisz tylko problemy wymagające ręcznej decyzji.
+```
+
+---
+
+# 16. Docelowy efekt
+
+Po wdrożeniu systemu powinieneś móc działać tak:
+
+```txt
+1. Dajesz plik produktów.
+2. Program robi analizę.
+3. Codex dostosowuje config.
+4. Program generuje tytuły i atrybuty.
+5. Program robi raport.
+6. Sprawdzasz tylko błędy i ostrzeżenia.
+7. Eksportujesz gotowy plik do importu.
+```
+
+---
+
+# 17. Najważniejsze decyzje projektowe
+
+## Decyzja 1
+
+Robimy program lokalny, a nie same prompty.
+
+## Decyzja 2
+
+Codex pracuje na configach, a nie na pełnym pliku.
+
+## Decyzja 3
+
+Internet dodajemy dopiero po MVP.
+
+## Decyzja 4
+
+Każda zmiana musi mieć status i źródło.
+
+## Decyzja 5
+
+Niepewne dane trafiają do ręcznego sprawdzenia.
+
+## Decyzja 6
+
+Najpierw optymalizujemy tytuły i atrybuty, potem dopiero filtry.
+
+---
+
+# 18. Rekomendowana kolejność prac programistycznych
+
+## Sprint 1
+
+* stworzenie struktury projektu,
+* import XLSX/CSV,
+* analiza kolumn,
+* raport braków,
+* wykrywanie SKU/EAN/producenta/kategorii.
+
+## Sprint 2
+
+* ekstrakcja podstawowych parametrów z tytułów,
+* słowniki wartości,
+* normalizacja kolorów, mocy, IP, barwy światła.
+
+## Sprint 3
+
+* config kategorii,
+* generator tytułów SEO,
+* raport stary tytuł vs nowy tytuł.
+
+## Sprint 4
+
+* walidacja wyników,
+* statusy OK / WARNING / ERROR / DO_SPRAWDZENIA,
+* eksport pliku wynikowego.
+
+## Sprint 5
+
+* rekomendacja filtrów,
+* analiza jakości atrybutów,
+* raport filtrów per kategoria.
+
+## Sprint 6
+
+* research z internetu,
+* cache wyników,
+* confidence score,
+* obsługa źródeł.
+
+---
+
+# 19. Co powinno być gotowe jako pierwsze
+
+Pierwsza działająca wersja powinna umożliwiać komendę:
+
+```bash
+python src/run_pipeline.py --input input/products.xlsx --category "Oprawy sufitowe"
+```
+
+I generować:
+
+```txt
+output/products_optimized.xlsx
+reports/quality_report.html
+reports/changes_report.xlsx
+reports/missing_attributes.csv
+```
+
+---
+
+# 20. Podsumowanie
+
+Najlepszy kierunek to stworzenie konfigurowalnego programu, który masowo przetwarza produkty, a Codex służy jako pomocnik do tworzenia i poprawiania reguł.
+
+Najpierw należy zrobić MVP bez internetu:
+
+```txt
+analiza pliku
+ekstrakcja atrybutów
+generowanie tytułów SEO
+raport różnic
+```
+
+Dopiero później warto dodać:
+
+```txt
+rekomendację filtrów
+research internetowy
+uzupełnianie brakujących atrybutów
+pełną walidację importu
+```
+
+Dzięki temu system będzie szybki, tani tokenowo, kontrolowalny i dużo bezpieczniejszy dla danych produktowych.
+
+```
+```
