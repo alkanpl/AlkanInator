@@ -13,7 +13,7 @@ from utils import compact_spaces, is_blank, load_yaml, read_products, write_prod
 
 def build_title(row: pd.Series, config: dict[str, Any]) -> tuple[str, list[str]]:
     product_role = str(row.get("product_role", "main") or "main")
-    template = resolve_title_template(row, config, product_role)
+    template, matched_rule = resolve_title_template_and_rule(row, config, product_role)
     max_length = int(config.get("max_title_length", 110))
     forbidden = [str(word) for word in config.get("forbidden_title_words") or []]
     values: dict[str, str] = {}
@@ -24,6 +24,7 @@ def build_title(row: pd.Series, config: dict[str, Any]) -> tuple[str, list[str]]
     values["old_title"] = str(row.get("old_title", ""))
     values["product_role"] = product_role
     values["accessory_type"] = "" if is_blank(row.get("accessory_type", "")) else str(row.get("accessory_type", ""))
+    values["sku"] = resolve_sku_value(row, config)
     values.update(build_inflected_values(values, config))
 
     title = template
@@ -34,14 +35,27 @@ def build_title(row: pd.Series, config: dict[str, Any]) -> tuple[str, list[str]]
         title = re.sub(rf"\b{re.escape(word)}\b", " ", title, flags=re.IGNORECASE)
 
     title = compact_spaces(title)
+    if config.get("append_sku_after_producer"):
+        title = append_sku_after_producer(title, values.get("producent", ""), values.get("sku", ""))
     title = uppercase_first_letter(title)
     warnings: list[str] = []
     if len(title) > max_length:
         warnings.append(f"title_too_long:{len(title)}>{max_length}")
-    required_fields = (config.get("required_fields_by_role") or {}).get(product_role, config.get("required_fields") or [])
+
+    # Priorytety required_fields: regula > rola > globalny
+    if matched_rule is not None and matched_rule.get("required_fields") is not None:
+        required_fields = list(matched_rule["required_fields"])
+    else:
+        required_fields = (config.get("required_fields_by_role") or {}).get(product_role, config.get("required_fields") or [])
+
     for required in required_fields:
-        if required == "moc" and not is_blank(values.get("gwint", "")):
-            continue
+        if required == "moc":
+            # Gwint (np. GU10) zastepuje moc dla opraw bez wlasnego LED
+            if not is_blank(values.get("gwint", "")):
+                continue
+            # Strumien zastepuje moc dla produktow solarnych i CCT bez watazu
+            if not is_blank(values.get("strumien", "")):
+                continue
         if is_blank(values.get(required, "")):
             warnings.append(f"missing_required:{required}")
     if is_blank(title):
@@ -57,22 +71,56 @@ def uppercase_first_letter(value: str) -> str:
     return value
 
 
+def resolve_sku_value(row: pd.Series, config: dict[str, Any]) -> str:
+    for column in config.get("sku_columns") or ["sku", "Kod"]:
+        if column in row and not is_blank(row.get(column, "")):
+            value = str(row.get(column, "")).strip()
+            return value[:-2] if re.fullmatch(r"\d+\.0", value) else value
+    return ""
+
+
+def append_sku_after_producer(title: str, producer: str, sku: str) -> str:
+    if is_blank(sku):
+        return title
+    sku = str(sku).strip()
+    if re.search(rf"(?<!\d){re.escape(sku)}(?!\d)", title):
+        return title
+    if producer and re.search(rf"\b{re.escape(producer)}\b", title, flags=re.IGNORECASE):
+        return compact_spaces(re.sub(rf"\b{re.escape(producer)}\b", f"{producer} {sku}", title, count=1, flags=re.IGNORECASE))
+    return compact_spaces(f"{title} {sku}")
+
+
 def resolve_title_template(row: pd.Series, config: dict[str, Any], product_role: str) -> str:
+    template, _ = resolve_title_template_and_rule(row, config, product_role)
+    return template
+
+
+def resolve_title_template_and_rule(row: pd.Series, config: dict[str, Any], product_role: str) -> tuple[str, dict | None]:
     if product_role != "accessory":
         category = str(row.get("Kategoria", row.get("category", "")))
-        product_type = str(row.get("Typ", ""))
+        product_type = first_non_blank(row.get("attr_typ", ""), row.get("Typ", ""))
         title = str(row.get("old_title", ""))
         for rule in config.get("title_strategy_rules") or []:
             if strategy_rule_matches(rule, category, product_type, title):
-                return str(rule.get("template", config.get("title_template", "{old_title}")))
-        return str(config.get("title_template", "{old_title}"))
+                return str(rule.get("template", config.get("title_template", "{old_title}"))), rule
+        return str(config.get("title_template", "{old_title}")), None
     accessory_type = str(row.get("accessory_type", ""))
     templates = config.get("accessory_title_templates") or {}
-    return str(templates.get(accessory_type, config.get("accessory_title_template", config.get("title_template", "{old_title}"))))
+    return str(templates.get(accessory_type, config.get("accessory_title_template", config.get("title_template", "{old_title}")))), None
+
+
+def first_non_blank(*values: Any) -> str:
+    for value in values:
+        if not is_blank(value):
+            return str(value)
+    return ""
 
 
 def normalize_text(value: str) -> str:
-    replacements = str.maketrans("ąćęłńóśźżĄĆĘŁŃÓŚŹŻ", "acelnoszzACELNOSZZ")
+    replacements = str.maketrans(
+        "\u0105\u0107\u0119\u0142\u0144\u00f3\u015b\u017a\u017c\u0104\u0106\u0118\u0141\u0143\u00d3\u015a\u0179\u017b",
+        "acelnoszzACELNOSZZ"
+    )
     return str(value).translate(replacements).lower()
 
 
@@ -95,6 +143,25 @@ def build_inflected_values(values: dict[str, str], config: dict[str, Any]) -> di
         if target == "kolor_feminine":
             color = values.get("kolor", "")
             result[target] = str(mapping.get(color, color)) if isinstance(mapping, dict) else color
+    # Tlumaczenie barwy na slowo kluczowe SEO (np. 4000K -> neutralna)
+    barwa = values.get("barwa", "")
+    if barwa:
+        translations = config.get("barwa_translations") or {}
+        result["barwa_slownie"] = translations.get(barwa, "")
+    else:
+        result["barwa_slownie"] = ""
+    pasuje_do = values.get("pasuje_do", "")
+    series = values.get("seria", "")
+    if pasuje_do and series:
+        cleaned_target = re.sub(rf"\b{re.escape(series)}\b", " ", pasuje_do, flags=re.IGNORECASE)
+        result["pasuje_do_clean"] = compact_spaces(cleaned_target)
+    else:
+        result["pasuje_do_clean"] = pasuje_do
+    eco = values.get("eco", "")
+    if eco and "eco" not in normalize_text(values.get("seria", "")):
+        result["eco_clean"] = eco
+    else:
+        result["eco_clean"] = ""
     return result
 
 
@@ -143,7 +210,7 @@ def build_changes_report(df: pd.DataFrame) -> pd.DataFrame:
     attribute_columns = [column for column in df.columns if column.startswith("attr_")]
     report["new_attributes"] = df[attribute_columns].apply(
         lambda row: json.dumps(
-            {column[5:]: value for column, value in row.items() if not is_blank(value)},
+            {col[5:]: val for col, val in row.items() if not is_blank(val)},
             ensure_ascii=False,
             sort_keys=True,
         ),

@@ -9,6 +9,29 @@ import pandas as pd
 from utils import compact_spaces, is_blank, load_yaml, read_products, strip_accents, write_products
 
 
+def extract_product_type_prefix(text: str, config: dict[str, Any]) -> str:
+    value = compact_spaces(text)
+    value_ascii = strip_accents(value).lower()
+    for rule in config.get("product_type_prefix_rules") or []:
+        terms = [str(term) for term in rule.get("terms") or []]
+        if find_matching_terms(value_ascii, terms):
+            return str(rule.get("type", ""))
+
+    tokens = re.findall(r"[A-Za-zĄĆĘŁŃÓŚŹŻąćęłńóśźż0-9+-]+", value)
+    stop_words = {strip_accents(str(word)).lower() for word in config.get("product_type_prefix_stop_words") or []}
+    selected: list[str] = []
+    for token in tokens[:5]:
+        normalized = strip_accents(token).lower()
+        if normalized in stop_words:
+            break
+        if token.isupper() and len(token) >= 3 and selected:
+            break
+        selected.append(token)
+        if len(selected) >= 3:
+            break
+    return compact_spaces(" ".join(selected))
+
+
 def classify_product_roles(df: pd.DataFrame, config: dict[str, Any]) -> pd.DataFrame:
     classification = config.get("product_role_classification") or {}
     name_columns = classification.get("name_columns") or []
@@ -17,11 +40,16 @@ def classify_product_roles(df: pd.DataFrame, config: dict[str, Any]) -> pd.DataF
 
     for index, row in result.iterrows():
         searchable_text = build_searchable_text(row, name_columns)
+        source_name = first_non_blank(row, name_columns)
+        prefix_type = extract_product_type_prefix(source_name, config) if source_name else ""
         role = default_role
         accessory_type = ""
         reasons: list[str] = []
 
         for rule in classification.get("accessory_rules") or []:
+            excluded = find_matching_terms(searchable_text, rule.get("exclude_terms") or [])
+            if excluded:
+                continue
             matches = find_matching_terms(searchable_text, rule.get("terms") or [])
             if not matches:
                 continue
@@ -31,6 +59,13 @@ def classify_product_roles(df: pd.DataFrame, config: dict[str, Any]) -> pd.DataF
             break
 
         clear_accessory_attributes(result, index, accessory_type, config)
+
+        if prefix_type:
+            result.at[index, "product_type_prefix"] = prefix_type
+            if accessory_type:
+                result.at[index, "attr_typ"] = prefix_type
+            elif is_blank(result.at[index, "attr_typ"]) or str(result.at[index, "attr_typ"]).strip() in {"—", "-"}:
+                result.at[index, "attr_typ"] = prefix_type
 
         result.at[index, "product_role"] = role
         result.at[index, "accessory_type"] = accessory_type
@@ -127,6 +162,16 @@ def build_searchable_text(row: pd.Series, name_columns: list[str]) -> str:
             parts.append(str(row.get(column, "")))
     parts.extend(str(row.get(column, "")) for column in ["old_title", "new_title"] if column in row)
     return strip_accents(compact_spaces(" ".join(parts))).lower()
+
+
+def first_non_blank(row: pd.Series, columns: list[str]) -> str:
+    for column in columns:
+        if column in row and not is_blank(row.get(column, "")):
+            return str(row.get(column, ""))
+    for column in ["old_title", "new_title"]:
+        if column in row and not is_blank(row.get(column, "")):
+            return str(row.get(column, ""))
+    return ""
 
 
 def category_matches(category: str, needle: str) -> bool:

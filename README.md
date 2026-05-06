@@ -38,6 +38,12 @@ Dla pliku z wieloma arkuszami XLSX wskaz arkusz:
 py src/run_pipeline.py --input input/Alkan_Kanlux_pelne_rodziny.xlsx --sheet "7. Wszystkie SKU (master)" --config configs/categories/kanlux-oswietlenie.yaml --output output/kanlux_master_optimized.xlsx --reports-dir reports/kanlux_master
 ```
 
+Uzupelnianie brakujacych atrybutow z pliku parametrow Kanlux:
+
+```powershell
+py src/enrich_from_parameters.py --input input/Alkan_Kanlux_pelne_rodziny.xlsx --sheet "7. Wszystkie SKU (master)" --parameters input/Parametry.xlsx --config configs/categories/kanlux-oswietlenie.yaml --output output/alkan_kanlux_master_with_parameters.xlsx --reports-dir reports/parameter_enrichment
+```
+
 ## Wyniki
 
 Pipeline tworzy:
