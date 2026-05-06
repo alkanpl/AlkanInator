@@ -1,0 +1,300 @@
+category: "Kanlux oświetlenie"
+
+title_template: "{typ} {seria} {moc} {strumien} {barwa} {ip} {kolor} {producent}"
+title_strategy_rules:
+  - name: "plafoniera_drewniana"
+    category_contains: "Plafoniery"
+    type_contains: "drewniana"
+    template: "Plafoniera drewniana {seria} {gwint} {ksztalt} {srednica} {kolor_feminine} {producent}"
+  - name: "plafoniera_gwint"
+    category_contains: "Plafoniery"
+    title_contains: "E27"
+    template: "Plafoniera {seria} {gwint} {ksztalt} {srednica} {kolor_feminine} {producent}"
+  - name: "panel_led"
+    category_contains: "Panele LED"
+    template: "Panel LED {seria} {moc} {strumien} {barwa} {ksztalt} {wymiary} {kolor_feminine} {producent}"
+  - name: "naswietlacz"
+    category_contains: "Naświetlacze"
+    template: "Naświetlacz LED {seria} {moc} {strumien} {barwa} {ip} {czujnik} {kolor} {producent}"
+  - name: "high_bay"
+    category_contains: "High Bay"
+    template: "Oprawa High Bay LED {seria} {moc} {strumien} {barwa} {ip} {kolor} {producent}"
+  - name: "hermetyczne"
+    category_contains: "pyłoszczelne"
+    template: "Oprawa hermetyczna LED {seria} {moc} {strumien} {barwa} {ip} {kolor} {producent}"
+  - name: "plafoniera"
+    category_contains: "Plafoniery"
+    template: "Plafoniera LED {seria} {moc} {barwa} {ip} {czujnik} {kolor_feminine} {producent}"
+accessory_title_template: "{accessory_type} {seria} {model} {moc} {kolor} {producent}"
+accessory_title_templates:
+  Klosz: "{accessory_type} {seria} {kolor} {producent}"
+  Ramka: "{accessory_type} do paneli {seria} {wymiary} {ksztalt} {kolor_feminine} {producent}"
+  Zasilacz: "{accessory_type} {seria} {moc} {producent}"
+  Uchwyt: "{accessory_type} {seria} {kolor} {producent}"
+  Pilot: "{accessory_type} {seria} {producent}"
+  Soczewka: "{accessory_type} {seria} {kat_swiecenia} {producent}"
+  Czujnik: "{accessory_type} do oprawy {seria} {producent}"
+
+max_title_length: 120
+min_title_length: 35
+
+default_values:
+  producent: "Kanlux"
+
+input_attribute_columns:
+  typ: "Typ"
+  seria: "Rodzina"
+  moc: "Moc [W]"
+  barwa: "Barwa CCT [K]"
+  ip: "Klasa IP"
+  strumien: "Strumień [lm]"
+  kolor: "Kolor obudowy"
+  czujnik: "Czujnik ruchu"
+  gwint: "Gwint"
+
+attribute_overrides:
+  - attribute: "typ"
+    category_column: "Kategoria"
+    category_contains: "pyłoszczelne"
+    value_contains: "świetlówki"
+    value: "Oprawa hermetyczna"
+  - attribute: "typ"
+    category_column: "Kategoria"
+    category_contains: "pyłoszczelne"
+    value_contains: "swietlowki"
+    value: "Oprawa hermetyczna"
+
+title_fallback_columns:
+  - "Nazwa Kanlux"
+
+required_fields:
+  - typ
+  - moc
+  - producent
+
+required_fields_by_role:
+  main:
+    - typ
+    - moc
+    - producent
+  accessory:
+    - accessory_type
+    - producent
+
+optional_fields:
+  - seria
+  - model
+  - barwa
+  - strumien
+  - ip
+  - kolor
+  - czujnik
+  - ksztalt
+  - wymiary
+  - gwint
+  - srednica
+  - material
+
+product_role_classification:
+  name_columns:
+    - "Nazwa B2C / SEO"
+    - "Nazwa Kanlux"
+    - "Typ"
+    - "Rodzina"
+  default_role: "main"
+  accessory_rules:
+    - accessory_type: "Klosz"
+      terms:
+        - "klosz"
+        - "pokrywa"
+        - "szybka"
+        - "osłona"
+        - "oslona"
+    - accessory_type: "Ramka"
+      terms:
+        - "ramka"
+    - accessory_type: "Zasilacz"
+      terms:
+        - "zasilacz"
+        - "driver"
+        - "driv"
+        - "drv"
+        - "drvm"
+    - accessory_type: "Uchwyt"
+      terms:
+        - "uchwyt"
+        - "adapter"
+        - "wspornik"
+    - accessory_type: "Pilot"
+      terms:
+        - "pilot do"
+        - "remote"
+    - accessory_type: "Soczewka"
+      terms:
+        - "soczewka"
+        - "lens"
+    - accessory_type: "Czujnik"
+      terms:
+        - "mah pro sensor"
+        - "sensor c"
+
+accessory_attribute_policy:
+  clear_attributes:
+    Ramka:
+      - "moc"
+      - "barwa"
+      - "strumien"
+      - "ip"
+    Klosz:
+      - "moc"
+      - "barwa"
+      - "strumien"
+      - "ip"
+      - "kolor"
+    Uchwyt:
+      - "moc"
+      - "barwa"
+      - "strumien"
+      - "ip"
+    Pilot:
+      - "moc"
+      - "barwa"
+      - "strumien"
+      - "ip"
+      - "kolor"
+    Soczewka:
+      - "moc"
+      - "barwa"
+      - "strumien"
+      - "ip"
+      - "kolor"
+    Czujnik:
+      - "moc"
+      - "barwa"
+      - "strumien"
+      - "ip"
+      - "kolor"
+
+inflections:
+  kolor_feminine:
+    biały: "biała"
+    bialy: "biała"
+    czarny: "czarna"
+    srebrny: "srebrna"
+    szary: "szara"
+
+recommended_filters:
+  - kategoria
+  - typ
+  - producent
+  - moc
+  - barwa
+  - ip
+  - strumien
+  - kolor
+  - czujnik_ruchu
+  - awaryjne
+
+forbidden_title_words:
+  - super
+  - najlepszy
+  - promocja
+  - okazja
+  - gwarancja
+  - lat
+
+known_producers:
+  - Kanlux
+
+known_colors:
+  czarny:
+    - czarny
+    - czarna
+    - czarne
+    - black
+  bialy:
+    - bialy
+    - biala
+    - biale
+    - biały
+    - biała
+    - białe
+    - white
+  szary:
+    - szary
+    - szara
+    - grey
+    - gray
+
+series_stop_words:
+  - led
+  - panel
+  - oprawa
+  - high
+  - bay
+  - hermetyczna
+  - pyłoszczelna
+  - pyloszczelna
+
+category_validation:
+  category_column: "Kategoria"
+  name_columns:
+    - "Nazwa B2C / SEO"
+    - "Nazwa Kanlux"
+    - "Typ"
+    - "Rodzina"
+  rules:
+    - match_category_contains: "Panele LED"
+      expected_any_terms:
+        - "panel"
+        - "blingo"
+        - "barev"
+      disallowed_terms:
+        - "zasilacz"
+        - "driver"
+        - "driv"
+        - "drvm"
+        - "on-off"
+        - "on off"
+        - "ramka"
+        - "adapter"
+        - "uchwyt"
+        - "sensor"
+        - "akcesoria"
+      suspicious_if_missing_attributes:
+        - "barwa"
+        - "strumien"
+        - "kolor"
+      suspicious_missing_threshold: 2
+    - match_category_contains: "High Bay"
+      expected_any_terms:
+        - "high bay"
+        - "hb"
+      disallowed_terms:
+        - "zasilacz"
+        - "driver"
+        - "ramka"
+        - "adapter"
+        - "uchwyt"
+        - "sensor"
+        - "sensor"
+    - match_category_contains: "pyłoszczelne"
+      expected_any_terms:
+        - "hermetyczna"
+        - "pyłoszczelna"
+        - "pyloszczelna"
+        - "mah"
+        - "tp"
+      disallowed_terms:
+        - "klosz"
+        - "pokrywa"
+        - "szybka"
+        - "osłona"
+        - "oslona"
+        - "akcesoria"
+        - "zasilacz"
+        - "driver"
+        - "ramka"
+        - "adapter"
+        - "uchwyt"
+        - "sensor"

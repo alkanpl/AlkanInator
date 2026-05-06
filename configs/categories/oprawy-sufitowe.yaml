@@ -1,0 +1,85 @@
+category: "Oprawy sufitowe"
+
+title_template: "{typ} {rodzaj} {seria} {model} {moc} {strumien} {barwa} {ip} {kolor} {producent}"
+
+max_title_length: 110
+min_title_length: 40
+
+default_values:
+  typ: "Oprawa LED"
+  rodzaj: "downlight"
+
+required_fields:
+  - typ
+  - moc
+  - barwa
+  - producent
+
+optional_fields:
+  - rodzaj
+  - seria
+  - model
+  - strumien
+  - ip
+  - kolor
+  - kat_swiecenia
+
+recommended_filters:
+  - producent
+  - moc
+  - barwa
+  - strumien
+  - kolor
+  - ip
+  - sposob_montazu
+  - ksztalt
+  - srednica
+
+forbidden_title_words:
+  - super
+  - najlepszy
+  - promocja
+  - okazja
+
+known_producers:
+  - GTV
+  - Kanlux
+  - LEDVANCE
+  - Bemko
+  - Kontakt-Simon
+
+known_colors:
+  czarny:
+    - czarny
+    - czarna
+    - czarne
+    - black
+    - czarny mat
+    - czarny matowy
+  bialy:
+    - bialy
+    - biala
+    - biale
+    - biały
+    - biała
+    - białe
+    - white
+    - bialy mat
+    - biały mat
+  srebrny:
+    - srebrny
+    - srebrna
+    - silver
+  szary:
+    - szary
+    - szara
+    - grey
+    - gray
+
+series_stop_words:
+  - led
+  - panel
+  - oprawa
+  - downlight
+  - natynkowa
+  - podtynkowa

@@ -1,0 +1,34 @@
+default_title_column_candidates:
+  - nazwa b2c seo
+  - nazwa b2c / seo
+  - title
+  - name
+  - nazwa
+  - tytul
+  - tytuł
+  - product_name
+  - nazwa produktu
+
+default_sku_column_candidates:
+  - sku
+  - indeks
+  - symbol
+  - kod
+  - kod produktu
+
+default_ean_column_candidates:
+  - ean
+  - gtin
+  - kod ean
+
+default_producer_column_candidates:
+  - producer
+  - producent
+  - brand
+  - marka
+
+default_category_column_candidates:
+  - category
+  - kategoria
+  - categories
+  - kategorie
