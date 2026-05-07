@@ -15,13 +15,13 @@ title_strategy_rules:
 - name: oprawa_sufitowa
   category_contains: Plafoniery
   type_contains: Oprawa sufitowa
-  template: Oprawa sufitowa {seria} {gwint} {ip} {kolor} {producent}
+  template: Oprawa sufitowa {seria} {gwint} {ip} {kolor_feminine} {producent}
   required_fields:
   - producent
 - name: oprawa_punktowa
   category_contains: Plafoniery
   type_contains: oprawa punktowa
-  template: Oprawa sufitowa {seria} {gwint} {ip} {kolor} {producent}
+  template: Oprawa sufitowa {seria} {gwint} {ip} {kolor_feminine} {producent}
   required_fields:
   - producent
 - name: lampa_wiszaca
@@ -33,7 +33,13 @@ title_strategy_rules:
 - name: oprawa_sufitowa_dtl
   category_contains: Plafoniery
   title_contains: DTL50
-  template: Oprawa sufitowa {seria} {model} {kolor} {producent}
+  template: Oprawa sufitowa {seria} {model} {kolor_feminine} {producent}
+  required_fields:
+  - producent
+- name: plafoniera_e14
+  category_contains: Plafoniery
+  title_contains: E14
+  template: Plafoniera {seria} {gwint} {ksztalt} {srednica} {wymiary} {ip} {kolor_feminine} {producent}
   required_fields:
   - producent
 - name: plafoniera_gwint
@@ -51,13 +57,13 @@ title_strategy_rules:
 - name: plafoniera_cct
   category_contains: Plafoniery
   title_contains: CCT
-  template: Plafoniera LED CCT {seria} {eco_clean} {moc} {strumien} {lm_w} {barwa_zakres} {ksztalt} {srednica} {wymiary} {ip} {czujnik} {kolor_feminine} {producent}
+  template: Plafoniera LED CCT {seria_clean} {eco_clean} {moc} {strumien} {lm_w} {barwa_zakres} {ksztalt} {srednica} {wymiary} {ip} {czujnik} {kolor_feminine} {producent}
   required_fields:
   - producent
 - name: panel_led
   category_contains: Panele LED
-  template: Panel LED podtynkowy {seria} {ksztalt} {wymiary} {moc} {strumien} {barwa} {barwa_slownie}
-    {ip} {kolor_feminine} {producent}
+  template: Panel LED podtynkowy {seria} {ksztalt_masculine} {wymiary} {moc} {strumien} {barwa} {barwa_neuter}
+    {ip} {kolor} {producent}
   required_fields:
   - typ
   - moc
@@ -65,29 +71,29 @@ title_strategy_rules:
   - wymiary
 - name: spotlight_gu10
   title_contains: GU10
-  template: Oprawa sufitowa {seria} {gwint} {ip} {kolor} {producent}
+  template: Oprawa sufitowa {seria} {gwint} {ip} {kolor_feminine} {producent}
   required_fields:
   - producent
 - name: naswietlacz_solarny
   category_contains: Naświetlacze
   title_contains: solarny
-  template: Naświetlacz solarny LED {seria} {strumien} {lm_w} {barwa} {kat_swiecenia} {ip} {czujnik} {kolor}
+  template: Naświetlacz solarny LED {seria_clean} {strumien} {lm_w} {barwa} {kat_swiecenia} {ip} {czujnik} {kolor}
     {producent}
   required_fields:
   - producent
 - name: naswietlacz
   category_contains: Naświetlacze
-  template: Naświetlacz LED {seria} {moc} {strumien} {lm_w} {barwa} {kat_swiecenia} {ip} {czujnik} {kolor}
+  template: Naświetlacz LED {seria_clean} {moc} {strumien} {lm_w} {barwa} {kat_swiecenia} {ip} {czujnik} {kolor}
     {producent}
 - name: high_bay
   category_contains: High Bay
-  template: Oprawa High Bay LED {seria} {moc} {strumien} {barwa} {ip} {kolor} {producent}
+  template: Oprawa High Bay LED {seria_clean} {moc} {strumien} {barwa} {ip} {kolor_feminine} {producent}
 - name: hermetyczne
   category_contains: pyłoszczelne
-  template: Oprawa hermetyczna LED {seria} {dlugosc} {moc} {strumien} {lm_w} {barwa} {ip} {kolor} {producent}
+  template: Oprawa hermetyczna LED {seria_clean} {dlugosc} {moc} {strumien} {lm_w} {barwa} {ip} {kolor_feminine} {producent}
 - name: plafoniera
   category_contains: Plafoniery
-  template: Plafoniera LED {seria} {eco_clean} {moc} {strumien} {lm_w} {ksztalt} {srednica} {wymiary} {barwa} {barwa_slownie} {ip} {czujnik} {kolor_feminine}
+  template: Plafoniera LED {seria_clean} {eco_clean} {moc} {strumien} {lm_w} {ksztalt} {srednica} {wymiary} {barwa} {barwa_neuter} {ip} {czujnik} {kolor_feminine}
     {producent}
 accessory_title_template: '{accessory_type} {seria} {model} {moc} {kolor} {producent}'
 accessory_title_templates:
@@ -396,6 +402,36 @@ inflections:
     srebrny: srebrna
     szary: szara
     grafitowy: grafitowa
+  kolor_neuter:
+    biały: białe
+    bialy: białe
+    czarny: czarne
+    srebrny: srebrne
+    szary: szare
+    grafitowy: grafitowe
+  ksztalt_masculine:
+    kwadratowa: kwadratowy
+    prostokątna: prostokątny
+    prostokatna: prostokątny
+    okrągła: okrągły
+    okragla: okrągły
+  ksztalt_feminine:
+    kwadratowy: kwadratowa
+    prostokątny: prostokątna
+    prostokatny: prostokątna
+    okrągły: okrągła
+    okragly: okrągła
+  ksztalt_neuter:
+    kwadratowa: kwadratowe
+    kwadratowy: kwadratowe
+    prostokątna: prostokątne
+    prostokątny: prostokątne
+    prostokatna: prostokątne
+    prostokatny: prostokątne
+    okrągła: okrągłe
+    okrągły: okrągłe
+    okragla: okrągłe
+    okragly: okrągłe
 recommended_filters:
 - kategoria
 - typ

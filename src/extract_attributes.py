@@ -264,13 +264,13 @@ def extract_power_from_special_formats(title: str) -> str:
     match = re.search(r"\b(\d{1,3})W\d{1,3}NW\b", compact_title, flags=re.IGNORECASE)
     if match:
         return f"{match.group(1)}W"
-    # Kanlux: 30NW, 60NW, 120NW, 12-NW, 18-NW
+    # Kanlux: 12-NW, 18-NW. Nie lap formatow paneli typu 60NW/120NW jako mocy.
     match = re.search(r"\b(\d{1,3})[-\u2013]?(NW|WW|CW)\b", compact_title, flags=re.IGNORECASE)
-    if match:
+    if match and int(match.group(1)) <= 50 and not re.search(r"\b(?:\d{2,3}LM\s*)?\d{2,3}(?:NW|WW|CW)\b", compact_title, flags=re.IGNORECASE):
         return f"{match.group(1)}W"
-    # Kanlux kod zlozony: 125LM120NW (cyfry po literze, np. LM120NW -> 120W)
+    # Kanlux kod zlozony. Pomijamy 125LM120NW, bo LM oznacza skutecznosc, a 120 format panelu.
     match = re.search(r"(?<=[A-Z])(\d{1,3})(NW|WW|CW)\b", compact_title)
-    if match:
+    if match and int(match.group(1)) <= 50 and not re.search(r"\d{2,3}LM\d{2,3}(?:NW|WW|CW)\b", compact_title, flags=re.IGNORECASE):
         return f"{match.group(1)}W"
     # Kanlux kod modelu: SRM40W, TUN48W, U34W
     match = re.search(r"\b[A-Z]{2,}(\d{1,3})W(?!\s*[a-z])", compact_title)
@@ -322,6 +322,8 @@ def extract_panel_format(title: str) -> str:
 
 def extract_luminous_flux(title: str) -> str:
     compact_title = compact_spaces(title)
+    if re.search(r"\b\d{2,3}LM\b", compact_title, flags=re.IGNORECASE):
+        return ""
     max_match = re.search(r"\bmax\s*(\d+(?:[,.]\d+)?)\s*(?:lm|lumenow|lumen\u00f3w)\b", compact_title, flags=re.IGNORECASE)
     if max_match:
         return f"{normalize_number(max_match.group(1))}lm"
@@ -376,8 +378,16 @@ def extract_dimensions(title: str) -> dict[str, str]:
     if height:
         dimensions["wysokosc"] = normalize_number(height.group(1)) + "cm"
     if "dlugosc" in dimensions and "szerokosc" in dimensions:
-        dimensions["wymiary"] = f"{dimensions['dlugosc']} x {dimensions['szerokosc']}"
+        dimensions["wymiary"] = format_dimensions_pair(dimensions["dlugosc"], dimensions["szerokosc"])
     return dimensions
+
+
+def format_dimensions_pair(length: str, width: str) -> str:
+    length_match = re.fullmatch(r"(\d+(?:[,.]\d+)?)(mm|cm)", compact_spaces(length), flags=re.IGNORECASE)
+    width_match = re.fullmatch(r"(\d+(?:[,.]\d+)?)(mm|cm)", compact_spaces(width), flags=re.IGNORECASE)
+    if length_match and width_match and length_match.group(2).lower() == width_match.group(2).lower():
+        return f"{normalize_number(length_match.group(1))}x{normalize_number(width_match.group(1))}{length_match.group(2).lower()}"
+    return f"{length} x {width}"
 
 
 def extract_connector_size(title: str) -> str:
@@ -414,7 +424,7 @@ def extract_sensor(title: str) -> str:
     if re.search(r"\b(?:czujnik ruchu|sensor)\b", title_ascii):
         return "z czujnikiem ruchu"
     if re.search(r"\bczujnik\b", title_ascii):
-        return "z czujnikiem"
+        return "z czujnikiem ruchu"
     if re.search(r"\b[A-Z0-9]+(?:-[A-Z0-9]+)*-SE[A-Z]?\b", title):
         return "z czujnikiem ruchu"
     return ""
@@ -650,8 +660,19 @@ def normalize_attribute_value(value: str, attr: str) -> str:
         return ""
     if attr == "moc" and re.fullmatch(r"\d+(?:[,.]\d+)?", value):
         return f"{value.replace(',', '.')}W"
+    if attr == "moc":
+        max_match = re.fullmatch(r"max\s*(\d+(?:[,.]\d+)?)\s*W?", value, flags=re.IGNORECASE)
+        if max_match:
+            return f"max {normalize_number(max_match.group(1))}W"
+        range_match = re.fullmatch(r"(\d+(?:[,.]\d+)?)\s*/\s*(\d+(?:[,.]\d+)?)", value)
+        if range_match:
+            return f"{normalize_number(range_match.group(1))}-{normalize_number(range_match.group(2))}W"
     if attr == "barwa" and re.fullmatch(r"\d{3,5}", value):
         return f"{value}K"
+    if attr == "barwa":
+        values = [int(v) for v in re.findall(r"[23645]\d{3}", value)]
+        if len(set(values)) >= 2:
+            return f"{min(values)}-{max(values)}K"
     if attr == "strumien" and re.fullmatch(r"\d+(?:[,.]\d+)?", value):
         return f"{value.replace(',', '.')}lm"
     if attr == "wymiary":
@@ -670,10 +691,12 @@ def normalize_attribute_value(value: str, attr: str) -> str:
         return normalize_socket(value)
     if attr == "czujnik":
         lowered = strip_accents(value).lower()
-        if lowered in {"tak", "yes", "1", "true"}:
+        if lowered in {"tak", "yes", "1", "true", "z czujnikiem"}:
             return "z czujnikiem ruchu"
         if lowered in {"nie", "no", "0", "false"}:
             return ""
+        if "zmierzch" in lowered:
+            return "z czujnikiem zmierzchu"
         if "czuj" in lowered or "pir" in lowered or "mikrofal" in lowered:
             return extract_sensor(value) or "z czujnikiem ruchu"
     return value
@@ -693,7 +716,7 @@ def normalize_dimensions_value(value: str) -> str:
         return value
     match = re.fullmatch(r"(\d+(?:[,.]\d+)?)\s*[xX\u00d7]\s*(\d+(?:[,.]\d+)?)", value)
     if match:
-        return f"{normalize_number(match.group(1))}x{normalize_number(match.group(2))} cm"
+        return f"{normalize_number(match.group(1))}x{normalize_number(match.group(2))}cm"
     match = re.fullmatch(r"(?:\u00d8|fi)?\s*(\d+(?:[,.]\d+)?)", value, flags=re.IGNORECASE)
     if match:
         return f"{normalize_number(match.group(1))}cm"

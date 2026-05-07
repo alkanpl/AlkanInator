@@ -44,6 +44,12 @@ Uzupelnianie brakujacych atrybutow z pliku parametrow Kanlux:
 py src/enrich_from_parameters.py --input input/Alkan_Kanlux_pelne_rodziny.xlsx --sheet "7. Wszystkie SKU (master)" --parameters input/Parametry.xlsx --config configs/categories/kanlux-oswietlenie.yaml --output output/alkan_kanlux_master_with_parameters.xlsx --reports-dir reports/parameter_enrichment
 ```
 
+Budowanie slownika typow, producentow i kategorii z pelnego eksportu produktow:
+
+```powershell
+py src/learn_product_taxonomy.py --input input/Produkty-Export-2026-April-30-0723.xlsx --output dictionaries/learned_product_taxonomy.yaml --reports-dir reports/product_taxonomy
+```
+
 ## Wyniki
 
 Pipeline tworzy:

@@ -85,12 +85,33 @@ def normalize_parameter_value(value: str, attr: str, parameter_name: str) -> str
     if attr == "barwa_zakres":
         values = [int(v) for v in re.findall(r"[23645]\d{3}", value)]
         return f"{min(values)}-{max(values)}K" if len(set(values)) >= 2 else ""
+    if attr == "barwa":
+        values = [int(v) for v in re.findall(r"[23645]\d{3}", value)]
+        if len(set(values)) >= 2:
+            return f"{min(values)}-{max(values)}K"
+    if attr == "moc":
+        max_match = re.search(r"max\s*(\d+(?:[,.]\d+)?)\s*W?", value, flags=re.IGNORECASE)
+        if max_match:
+            return f"max {max_match.group(1).replace(',', '.')}W"
+        range_match = re.fullmatch(r"\s*(\d+(?:[,.]\d+)?)\s*/\s*(\d+(?:[,.]\d+)?)\s*", value)
+        if range_match:
+            return f"{range_match.group(1).replace(',', '.')}-{range_match.group(2).replace(',', '.')}W"
+    if attr == "ip":
+        values = re.findall(r"\d{2}", value)
+        if len(values) >= 2:
+            return "/".join(f"IP{item}" for item in values[:2])
     if attr == "czujnik":
         lowered = normalize_header(value)
-        if lowered in {"tak", "yes", "1", "true"} or "czuj" in lowered or "pir" in lowered or "mikrofal" in lowered:
-            return "z czujnikiem"
         if lowered in {"nie", "no", "0", "false"}:
             return ""
+        if "zmierzch" in lowered:
+            return "z czujnikiem zmierzchu"
+        if "mikrofal" in lowered:
+            return "z czujnikiem mikrofalowym"
+        if "pir" in lowered:
+            return "z czujnikiem ruchu PIR"
+        if lowered in {"tak", "yes", "1", "true"} or "czuj" in lowered or "sensor" in lowered:
+            return "z czujnikiem ruchu"
     if attr == "ik":
         match = re.search(r"\d{1,2}", value)
         if match:
@@ -107,6 +128,25 @@ def normalize_parameter_value(value: str, attr: str, parameter_name: str) -> str
     return normalize_attribute_value(value, attr)
 
 
+def should_parameter_override(attr: str, current_value: Any, parameter_value: str, source: str) -> bool:
+    current = compact_spaces(str(current_value))
+    if is_blank(current) or not parameter_value:
+        return False
+    if attr == "ip" and current == "IP12" and "/" in parameter_value:
+        return True
+    if attr == "strumien":
+        current_number = re.fullmatch(r"(\d{1,3})lm", current)
+        if current_number and "-" in parameter_value:
+            return True
+    if not source.startswith("title"):
+        return False
+    if attr == "moc" and parameter_value.startswith("max "):
+        return True
+    if attr == "barwa" and "-" in parameter_value and re.search(r"[/-]", current):
+        return True
+    return False
+
+
 def build_dimensions_from_parts(length: Any, width: Any) -> str:
     if is_blank(length) or is_blank(width):
         return ""
@@ -121,27 +161,36 @@ def build_dimensions_from_parts(length: Any, width: Any) -> str:
     return f"{length_value} x {width_value}"
 
 
+def infer_shape_from_dimensions(dimensions: Any = "", length: Any = "", width: Any = "") -> str:
+    length_value = ""
+    width_value = ""
+
+    if not is_blank(length) and not is_blank(width):
+        length_value = compact_spaces(str(length))
+        width_value = compact_spaces(str(width))
+    elif not is_blank(dimensions):
+        text = compact_spaces(str(dimensions)).replace("×", "x").lower()
+        match = re.search(r"(\d+(?:[,.]\d+)?)\s*(?:cm|mm)?\s*x\s*(\d+(?:[,.]\d+)?)", text)
+        if match:
+            length_value = match.group(1)
+            width_value = match.group(2)
+
+    if not length_value or not width_value:
+        return ""
+    length_match = re.search(r"\d+(?:[,.]\d+)?", length_value)
+    width_match = re.search(r"\d+(?:[,.]\d+)?", width_value)
+    if not length_match or not width_match:
+        return ""
+    length_number = float(length_match.group(0).replace(",", "."))
+    width_number = float(width_match.group(0).replace(",", "."))
+    return "kwadratowa" if abs(length_number - width_number) < 0.001 else "prostokątna"
+
+
 def synthesize_composite_attributes(enriched: pd.DataFrame, reports: dict[str, pd.DataFrame], sku_column: str) -> pd.DataFrame:
     result = enriched.copy()
     synthesized: list[dict[str, Any]] = []
     for index, row in result.iterrows():
-        if not is_blank(row.get("attr_wymiary", "")):
-            continue
-        dimensions = build_dimensions_from_parts(row.get("attr_dlugosc", ""), row.get("attr_szerokosc", ""))
-        if not dimensions:
-            continue
-        result.at[index, "attr_wymiary"] = dimensions
         sku = normalize_sku(row.get(sku_column, ""))
-        synthesized.append(
-            {
-                "sku": sku,
-                "attribute": "wymiary",
-                "old_value": "",
-                "new_value": dimensions,
-                "parameter_attribute": "Długość + Szerokość",
-                "parameter_raw_value": f"{row.get('attr_dlugosc', '')} + {row.get('attr_szerokosc', '')}",
-            }
-        )
         try:
             sources = json.loads(row.get("attribute_sources", "{}") or "{}")
         except json.JSONDecodeError:
@@ -150,8 +199,42 @@ def synthesize_composite_attributes(enriched: pd.DataFrame, reports: dict[str, p
             confidence = json.loads(row.get("attribute_confidence", "{}") or "{}")
         except json.JSONDecodeError:
             confidence = {}
-        sources["wymiary"] = "parameters:dlugosc+szerokosc"
-        confidence["wymiary"] = 0.94
+
+        dimensions = row.get("attr_wymiary", "")
+        if is_blank(dimensions):
+            dimensions = build_dimensions_from_parts(row.get("attr_dlugosc", ""), row.get("attr_szerokosc", ""))
+            if dimensions:
+                result.at[index, "attr_wymiary"] = dimensions
+                synthesized.append(
+                    {
+                        "sku": sku,
+                        "attribute": "wymiary",
+                        "old_value": "",
+                        "new_value": dimensions,
+                        "parameter_attribute": "Długość + Szerokość",
+                        "parameter_raw_value": f"{row.get('attr_dlugosc', '')} + {row.get('attr_szerokosc', '')}",
+                    }
+                )
+                sources["wymiary"] = "parameters:dlugosc+szerokosc"
+                confidence["wymiary"] = 0.94
+
+        if is_blank(row.get("attr_ksztalt", "")):
+            shape = infer_shape_from_dimensions(dimensions, row.get("attr_dlugosc", ""), row.get("attr_szerokosc", ""))
+            if shape:
+                result.at[index, "attr_ksztalt"] = shape
+                synthesized.append(
+                    {
+                        "sku": sku,
+                        "attribute": "ksztalt",
+                        "old_value": "",
+                        "new_value": shape,
+                        "parameter_attribute": "Wymiary",
+                        "parameter_raw_value": dimensions,
+                    }
+                )
+                sources["ksztalt"] = "dimensions"
+                confidence["ksztalt"] = 0.82
+
         result.at[index, "attribute_sources"] = json.dumps(sources, ensure_ascii=False, sort_keys=True)
         result.at[index, "attribute_confidence"] = json.dumps(confidence, ensure_ascii=False, sort_keys=True)
 
@@ -270,6 +353,14 @@ def enrich_from_parameters(
 
         fill_count = 0
         conflict_count = 0
+        try:
+            attribute_sources = json.loads(row.get("attribute_sources", "{}") or "{}")
+        except json.JSONDecodeError:
+            attribute_sources = {}
+        try:
+            attribute_confidence = json.loads(row.get("attribute_confidence", "{}") or "{}")
+        except json.JSONDecodeError:
+            attribute_confidence = {}
         for attr, payload in params.items():
             if attr not in PARAMETER_ATTRIBUTE_COLUMNS:
                 continue
@@ -278,12 +369,31 @@ def enrich_from_parameters(
             parameter_value = payload["value"]
             if is_blank(current_value):
                 enriched.at[index, column] = parameter_value
+                attribute_sources[attr] = f"parameter:{payload['parameter_attribute']}"
+                attribute_confidence[attr] = 0.97
                 fill_count += 1
                 filled.append(
                     {
                         "sku": sku,
                         "attribute": attr,
                         "old_value": "",
+                        "new_value": parameter_value,
+                        "parameter_attribute": payload["parameter_attribute"],
+                        "parameter_raw_value": payload["raw_value"],
+                    }
+                )
+                continue
+            current_source = str(attribute_sources.get(attr, ""))
+            if should_parameter_override(attr, current_value, parameter_value, current_source):
+                enriched.at[index, column] = parameter_value
+                attribute_sources[attr] = f"parameter_override:{payload['parameter_attribute']}"
+                attribute_confidence[attr] = 0.98
+                fill_count += 1
+                filled.append(
+                    {
+                        "sku": sku,
+                        "attribute": attr,
+                        "old_value": current_value,
                         "new_value": parameter_value,
                         "parameter_attribute": payload["parameter_attribute"],
                         "parameter_raw_value": payload["raw_value"],
@@ -303,6 +413,8 @@ def enrich_from_parameters(
                     }
                 )
 
+        enriched.at[index, "attribute_sources"] = json.dumps(attribute_sources, ensure_ascii=False, sort_keys=True)
+        enriched.at[index, "attribute_confidence"] = json.dumps(attribute_confidence, ensure_ascii=False, sort_keys=True)
         enriched.at[index, "parameter_match_status"] = "EXACT_SKU"
         enriched.at[index, "parameter_attributes"] = json.dumps(
             {attr: payload["value"] for attr, payload in sorted(params.items())},

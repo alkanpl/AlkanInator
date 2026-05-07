@@ -143,13 +143,23 @@ def build_inflected_values(values: dict[str, str], config: dict[str, Any]) -> di
         if target == "kolor_feminine":
             color = values.get("kolor", "")
             result[target] = str(mapping.get(color, color)) if isinstance(mapping, dict) else color
+        if target.startswith("ksztalt_"):
+            shape = values.get("ksztalt", "")
+            result[target] = str(mapping.get(shape, shape)) if isinstance(mapping, dict) else shape
+        if target == "kolor_neuter":
+            color = values.get("kolor", "")
+            result[target] = str(mapping.get(color, color)) if isinstance(mapping, dict) else color
     # Tlumaczenie barwy na slowo kluczowe SEO (np. 4000K -> neutralna)
     barwa = values.get("barwa", "")
     if barwa:
         translations = config.get("barwa_translations") or {}
         result["barwa_slownie"] = translations.get(barwa, "")
+        result["barwa_swiatla"] = f"światło {result['barwa_slownie']}" if result["barwa_slownie"] else ""
+        result["barwa_neuter"] = build_neuter_light_color(result["barwa_slownie"])
     else:
         result["barwa_slownie"] = ""
+        result["barwa_swiatla"] = ""
+        result["barwa_neuter"] = ""
     pasuje_do = values.get("pasuje_do", "")
     series = values.get("seria", "")
     if pasuje_do and series:
@@ -162,7 +172,20 @@ def build_inflected_values(values: dict[str, str], config: dict[str, Any]) -> di
         result["eco_clean"] = eco
     else:
         result["eco_clean"] = ""
+    series_clean = re.sub(r"(?<![-\w])LED(?![-\w])", " ", values.get("seria", ""), flags=re.IGNORECASE)
+    result["seria_clean"] = compact_spaces(series_clean) or values.get("seria", "")
     return result
+
+
+def build_neuter_light_color(value: str) -> str:
+    mapping = {
+        "neutralna": "neutralne",
+        "ciepłobiała": "ciepłobiałe",
+        "chłodnobiała": "chłodnobiałe",
+        "cieplobiala": "ciepłobiałe",
+        "chlodnobiala": "chłodnobiałe",
+    }
+    return mapping.get(value, value)
 
 
 def optimize_titles_for_dataframe(df: pd.DataFrame, title_column: str, config: dict[str, Any]) -> pd.DataFrame:
