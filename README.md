@@ -50,6 +50,12 @@ Budowanie slownika typow, producentow i kategorii z pelnego eksportu produktow:
 py src/learn_product_taxonomy.py --input input/Produkty-Export-2026-April-30-0723.xlsx --output dictionaries/learned_product_taxonomy.yaml --reports-dir reports/product_taxonomy
 ```
 
+Pelna analiza eksportu produktow WooCommerce CSV:
+
+```powershell
+py src/analyze_woocommerce_export.py --input input/wszystko.csv --reports-dir reports/woocommerce_catalog --dictionary dictionaries/woocommerce_catalog_knowledge.yaml
+```
+
 ## Wyniki
 
 Pipeline tworzy:
