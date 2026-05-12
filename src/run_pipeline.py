@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
+from catalog_knowledge import DEFAULT_CATALOG_KNOWLEDGE_PATH, enrich_config_with_catalog_knowledge, load_catalog_knowledge
 from analyze_products import (
     analyze_dataframe,
     build_category_summary,
@@ -54,6 +55,11 @@ def main() -> None:
     parser.add_argument("--sheet", help="Nazwa arkusza XLSX, np. '7. Wszystkie SKU (master)'.")
     parser.add_argument("--category", default="Oprawy sufitowe", help="Nazwa kategorii do wyboru configu.")
     parser.add_argument("--config", help="Sciezka do configu YAML kategorii.")
+    parser.add_argument(
+        "--catalog-knowledge",
+        default=DEFAULT_CATALOG_KNOWLEDGE_PATH,
+        help="Sciezka do slownika wiedzy z eksportu WooCommerce. Uzyj pustej wartosci, aby pominac.",
+    )
     parser.add_argument("--output", default="output/products_optimized.xlsx", help="Docelowy plik XLSX/CSV.")
     parser.add_argument("--reports-dir", default="reports", help="Katalog raportow.")
     args = parser.parse_args()
@@ -62,6 +68,7 @@ def main() -> None:
     config = load_yaml(config_path)
     if not config:
         raise SystemExit(f"Brak configu kategorii: {config_path}")
+    config = enrich_config_with_catalog_knowledge(config, load_catalog_knowledge(args.catalog_knowledge))
 
     reports_dir = ensure_dir(args.reports_dir)
     df = read_products(args.input, sheet_name=args.sheet)

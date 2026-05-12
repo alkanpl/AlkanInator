@@ -32,7 +32,7 @@ def read_products(path: str | Path, sheet_name: str | int | None = None) -> pd.D
     product_path = Path(path)
     suffix = product_path.suffix.lower()
     if suffix == ".csv":
-        return pd.read_csv(product_path, dtype=str, keep_default_na=False)
+        return pd.read_csv(product_path, dtype=str, keep_default_na=False, sep=None, engine="python")
     if suffix in {".xlsx", ".xlsm", ".xls"}:
         return pd.read_excel(product_path, sheet_name=sheet_name or 0, dtype=str, keep_default_na=False)
     raise ValueError(f"Nieobslugiwany format pliku: {suffix}. Uzyj CSV albo XLSX.")

@@ -1,0 +1,71 @@
+Teraz najlepszy opis produktu pod SEO to nie jest tekst napchany słowem kluczowym, tylko opis, który jednocześnie:
+
+jasno odpowiada na pytanie klienta,
+zawiera konkretne dane techniczne,
+odróżnia produkt od podobnych produktów,
+pomaga Google zrozumieć produkt,
+wspiera sprzedaż.
+
+Google mocno podkreśla, że treść ma być tworzona przede wszystkim dla ludzi, a nie tylko po to, żeby manipulować pozycjami w wyszukiwarce. Dobre treści powinny być pomocne, wiarygodne, kompletne i dawać wartość większą niż zwykłe przepisanie danych producenta.
+
+Jak bym teraz robił opisy produktów w sklepie
+
+Dla Alkanu trzymałbym taki model:
+
+<p>
+SŁOWO KLUCZOWE na początku pierwszego akapitu. Tutaj krótko wyjaśniamy, czym jest produkt, do czego służy, gdzie najlepiej się sprawdzi i jaki problem rozwiązuje dla klienta. Nie zaczynamy od pustych marketingowych zdań, tylko od konkretu: zastosowanie, typ produktu, najważniejszy parametr, miejsce montażu, styl lub przewaga użytkowa.
+</p>
+
+<h2>słowo kluczowe - czym wyróżnia się ten produkt?</h2>
+
+<ul>
+  <li>- SŁOWO KLUCZOWE zapewnia konkretną korzyść, np. wygodny montaż, trwałość, dobre światło, odporność, estetyczne wykończenie lub kompatybilność z daną instalacją.</li>
+  <li>- Druga zaleta powinna dotyczyć praktycznego użycia, np. gdzie produkt będzie najlepszy: dom, biuro, korytarz, garaż, elewacja, instalacja podtynkowa.</li>
+  <li>- Trzecia zaleta powinna wynikać z parametrów technicznych, np. IP, moc, barwa światła, materiał, napięcie, klasa ochronności.</li>
+  <li>- Czwarta zaleta może dotyczyć estetyki, trwałości, energooszczędności albo prostego dopasowania do innych elementów instalacji.</li>
+</ul>
+
+<p>
+Drugi akapit powinien rozwijać temat bez ponownego używania głównej frazy. Tu warto opisać produkt bardziej naturalnie: jak wpływa na komfort użytkowania, dlaczego sprawdzi się w danej przestrzeni, na co zwrócić uwagę przy wyborze i czym różni się od tańszych lub prostszych alternatyw. Ten fragment powinien brzmieć jak doradztwo sprzedawcy, a nie jak automatycznie wygenerowana treść.
+</p>
+
+<h3>Specyfikacja techniczna</h3>
+
+<ul>
+  <li>- Producent: ...</li>
+  <li>- Moc: ...</li>
+  <li>- Napięcie zasilania: ...</li>
+  <li>- Stopień ochrony IP: ...</li>
+  <li>- Materiał: ...</li>
+  <li>- Kolor: ...</li>
+</ul>
+Najważniejsze zasady
+
+1. Unikalność jest ważniejsza niż długość.
+Google nie ma „preferowanej liczby słów”, więc nie ma sensu lać wody tylko po to, żeby opis był długi. Natomiast u Was nadal trzymałbym wewnętrzny standard minimum 1500 znaków bez spacji, bo przy masowych produktach pomaga to uniknąć opisów wyglądających jak kopie producenta. Trzeba tylko pilnować, żeby długość wynikała z wartości, a nie z powtarzania tego samego.
+
+2. Pierwszy akapit musi od razu mówić, co to jest i do czego służy.
+Nie pisałbym: „Wybierz wysokiej jakości produkt, który spełni Twoje oczekiwania”. Lepiej: „Oprawa LED natynkowa sprawdzi się w korytarzach, biurach i pomieszczeniach technicznych, gdzie liczy się równomierne światło oraz prosty montaż”.
+
+3. Słowo kluczowe ma być użyte naturalnie, nie wszędzie.
+Dla Waszego schematu dobre jest użycie frazy w 3 miejscach: początek pierwszego akapitu, nagłówek H2 i pierwszy punkt listy. Reszta tekstu powinna używać synonimów i opisu zastosowania. Google coraz lepiej rozumie kontekst i różne warianty zapytań, więc nie trzeba powtarzać identycznej frazy co drugie zdanie.
+
+4. Opis powinien odpowiadać na intencję kupującego.
+Przy produktach elektrycznych i oświetleniowych warto zawsze dopisać: gdzie produkt pasuje, kiedy warto go wybrać, jaki parametr jest kluczowy, z czym jest kompatybilny, czy nadaje się do wnętrza / na zewnątrz / do wilgotnych pomieszczeń / do montażu podtynkowego / natynkowego.
+Mój wniosek dla Was
+
+Najlepszy obecnie model dla Alkanu to:
+
+produkt = opis doradczy + specyfikacja + unikalne zastosowanie + poprawne dane techniczne + schema + dobry tytuł + dobra kategoria.
+
+Czyli nie robiłbym opisów jako „ładnych tekstów SEO”, tylko jako krótkie karty doradczo-techniczne. Klient ma po przeczytaniu wiedzieć:
+
+do czego to jest,
+gdzie to zamontować,
+czemu ten wariant ma sens,
+jaki parametr jest najważniejszy,
+czym różni się od podobnych produktów,
+czy pasuje do jego zastosowania.
+
+Dla Waszego schematu HTML zostawiłbym strukturę, którą już masz, ale dopracowałbym logikę treści: pierwszy akapit pod intencję, H2 pod korzyść, lista pod przewagi, drugi akapit pod doradztwo, a specyfikacja jako czyste dane.
+Optymalnie: około 1500-2200 znaków bez spacji

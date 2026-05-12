@@ -32,6 +32,13 @@ Mozesz tez wskazac config i katalogi wyjsciowe:
 python src/run_pipeline.py --input input/products.csv --config configs/categories/oprawy-sufitowe.yaml --output output/products_optimized.xlsx --reports-dir reports
 ```
 
+Domyslnie pipeline dolacza wiedze z `dictionaries/woocommerce_catalog_knowledge.yaml`, jesli ten plik istnieje. Mozesz wskazac inny slownik albo wylaczyc te warstwe pusta wartoscia:
+
+```bash
+python src/run_pipeline.py --input input/products.csv --catalog-knowledge dictionaries/woocommerce_catalog_knowledge.yaml
+python src/run_pipeline.py --input input/products.csv --catalog-knowledge ""
+```
+
 Dla pliku z wieloma arkuszami XLSX wskaz arkusz:
 
 ```bash
@@ -55,6 +62,24 @@ Pelna analiza eksportu produktow WooCommerce CSV:
 ```powershell
 py src/analyze_woocommerce_export.py --input input/wszystko.csv --reports-dir reports/woocommerce_catalog --dictionary dictionaries/woocommerce_catalog_knowledge.yaml
 ```
+
+Ten slownik zasila kolejne uruchomienia pipeline'u: rozszerza liste znanych producentow, kolorow, serii, typow produktow, wartosci IP, kategorii i rekomendowanych filtrow bez recznego kopiowania tych danych do configow kategorii.
+
+Przygotowanie eksportu CSV z Baselinkera pod pipeline AlkanInatora:
+
+```powershell
+py src/prepare_baselinker_input.py --input input/przykładowycsv.csv --output output/baselinker_prepared.csv --default-category "Gniazdka i Łączniki"
+```
+
+Skrypt rozbija kolumne `features` na normalne kolumny, mapuje najwazniejsze parametry na format uzywany przez pipeline i zapisuje raport w `reports/baselinker_prepare`.
+
+Eksport wyniku AlkanInatora do CSV importowego Baselinkera:
+
+```powershell
+py src/export_to_baselinker_csv.py --input input/alkan_kanlux_master_names_from_parameters_v10_zolte_export.xlsx --output output/baselinker_import_alkan_kanlux_v10_zolte.csv
+```
+
+Skrypt tworzy CSV z kolumnami zgodnymi z przykladem Baselinkera: `product_id;name;sku;ean;manufacturer_name;description;features;images_urls`. Nazwa produktu bierze sie domyslnie z `new_title`, a parametry techniczne trafiaja do JSON w kolumnie `features`.
 
 ## Wyniki
 

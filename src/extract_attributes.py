@@ -8,6 +8,7 @@ from typing import Any
 
 import pandas as pd
 
+from catalog_knowledge import DEFAULT_CATALOG_KNOWLEDGE_PATH, enrich_config_with_catalog_knowledge, load_catalog_knowledge
 from utils import compact_spaces, first_present, load_yaml, read_products, strip_accents, write_products
 
 
@@ -583,11 +584,22 @@ def extract_series_and_model(title: str, attributes: dict[str, str], config: dic
     useful = [token for token in tokens if strip_accents(token).lower() not in stop_words]
     uppercase_tokens = [token for token in useful if token.isupper() and not token.isdigit()]
     titlecase_tokens = [token for token in useful if token[:1].isupper() and not any(char.isdigit() for char in token)]
-    series = " ".join((uppercase_tokens or titlecase_tokens)[:2])
+    series = first_present(find_known_series(title, config), " ".join((uppercase_tokens or titlecase_tokens)[:2]))
     model = first_present(
         *(token for token in useful if any(char.isdigit() for char in token) and not token.isdigit())
     )
     return compact_spaces(series), compact_spaces(model)
+
+
+def find_known_series(title: str, config: dict[str, Any]) -> str:
+    title_ascii = strip_accents(title).lower()
+    for series in sorted(config.get("known_series") or [], key=lambda value: len(str(value)), reverse=True):
+        normalized = strip_accents(str(series)).lower()
+        if len(normalized) < 3:
+            continue
+        if re.search(rf"(?<![a-z0-9]){re.escape(normalized)}(?![a-z0-9])", title_ascii):
+            return str(series)
+    return ""
 
 
 def extract_attributes_for_dataframe(
@@ -760,10 +772,11 @@ def main() -> None:
     parser.add_argument("--title-column", required=True)
     parser.add_argument("--producer-column")
     parser.add_argument("--config", default="configs/categories/oprawy-sufitowe.yaml")
+    parser.add_argument("--catalog-knowledge", default=DEFAULT_CATALOG_KNOWLEDGE_PATH)
     args = parser.parse_args()
 
     df = read_products(args.input, sheet_name=args.sheet)
-    config = load_yaml(args.config)
+    config = enrich_config_with_catalog_knowledge(load_yaml(args.config), load_catalog_knowledge(args.catalog_knowledge))
     result = extract_attributes_for_dataframe(df, args.title_column, config, args.producer_column)
     write_products(result, Path(args.output))
 

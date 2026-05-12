@@ -6,6 +6,7 @@ from typing import Any
 
 import pandas as pd
 
+from catalog_knowledge import DEFAULT_CATALOG_KNOWLEDGE_PATH, enrich_config_with_catalog_knowledge, load_catalog_knowledge
 from utils import compact_spaces, is_blank, load_yaml, read_products, strip_accents, write_products
 
 
@@ -16,6 +17,9 @@ def extract_product_type_prefix(text: str, config: dict[str, Any]) -> str:
         terms = [str(term) for term in rule.get("terms") or []]
         if find_matching_terms(value_ascii, terms):
             return str(rule.get("type", ""))
+    known_type = find_known_product_type(value_ascii, config)
+    if known_type:
+        return known_type
 
     tokens = re.findall(r"[A-Za-zĄĆĘŁŃÓŚŹŻąćęłńóśźż0-9+-]+", value)
     stop_words = {strip_accents(str(word)).lower() for word in config.get("product_type_prefix_stop_words") or []}
@@ -30,6 +34,17 @@ def extract_product_type_prefix(text: str, config: dict[str, Any]) -> str:
         if len(selected) >= 3:
             break
     return compact_spaces(" ".join(selected))
+
+
+def find_known_product_type(value_ascii: str, config: dict[str, Any]) -> str:
+    candidates = [*(config.get("known_product_types") or []), *(config.get("known_product_subtypes") or [])]
+    for candidate in sorted(candidates, key=lambda item: len(str(item)), reverse=True):
+        normalized = strip_accents(str(candidate)).lower()
+        if len(normalized) < 4:
+            continue
+        if re.search(rf"(?<![a-z0-9]){re.escape(normalized)}(?![a-z0-9])", value_ascii):
+            return str(candidate)
+    return ""
 
 
 def classify_product_roles(df: pd.DataFrame, config: dict[str, Any]) -> pd.DataFrame:
@@ -196,10 +211,11 @@ def main() -> None:
     parser.add_argument("--input", required=True)
     parser.add_argument("--sheet")
     parser.add_argument("--config", default="configs/categories/kanlux-oswietlenie.yaml")
+    parser.add_argument("--catalog-knowledge", default=DEFAULT_CATALOG_KNOWLEDGE_PATH)
     parser.add_argument("--output")
     args = parser.parse_args()
     df = read_products(args.input, sheet_name=args.sheet)
-    config = load_yaml(args.config)
+    config = enrich_config_with_catalog_knowledge(load_yaml(args.config), load_catalog_knowledge(args.catalog_knowledge))
     validated, suspicious = validate_category_fit(df, config)
     if args.output:
         write_products(validated, args.output)

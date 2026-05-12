@@ -6,6 +6,7 @@ from typing import Any
 
 import pandas as pd
 
+from catalog_knowledge import DEFAULT_CATALOG_KNOWLEDGE_PATH, enrich_config_with_catalog_knowledge, load_catalog_knowledge
 from extract_attributes import ATTRIBUTE_COLUMNS
 from utils import detect_column, ensure_dir, is_blank, load_yaml, read_products, valid_ean
 
@@ -153,11 +154,12 @@ def main() -> None:
     parser.add_argument("--input", required=True)
     parser.add_argument("--sheet")
     parser.add_argument("--config", default="configs/categories/oprawy-sufitowe.yaml")
+    parser.add_argument("--catalog-knowledge", default=DEFAULT_CATALOG_KNOWLEDGE_PATH)
     parser.add_argument("--reports-dir", default="reports")
     args = parser.parse_args()
 
     df = read_products(args.input, sheet_name=args.sheet)
-    config = load_yaml(args.config)
+    config = enrich_config_with_catalog_knowledge(load_yaml(args.config), load_catalog_knowledge(args.catalog_knowledge))
     columns = detect_product_columns(df)
     summary = analyze_dataframe(df, columns, config)
     reports_dir = ensure_dir(args.reports_dir)

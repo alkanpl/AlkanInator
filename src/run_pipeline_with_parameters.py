@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
+from catalog_knowledge import DEFAULT_CATALOG_KNOWLEDGE_PATH, enrich_config_with_catalog_knowledge, load_catalog_knowledge
 from analyze_products import (
     analyze_dataframe,
     build_category_summary,
@@ -43,11 +44,16 @@ def main() -> None:
     parser.add_argument("--parameters", required=True)
     parser.add_argument("--parameters-sheet", default=0)
     parser.add_argument("--config", default="configs/categories/kanlux-oswietlenie.yaml")
+    parser.add_argument(
+        "--catalog-knowledge",
+        default=DEFAULT_CATALOG_KNOWLEDGE_PATH,
+        help="Sciezka do slownika wiedzy z eksportu WooCommerce. Uzyj pustej wartosci, aby pominac.",
+    )
     parser.add_argument("--output", default="output/products_optimized_with_parameters.xlsx")
     parser.add_argument("--reports-dir", default="reports/optimized_with_parameters")
     args = parser.parse_args()
 
-    config = load_yaml(args.config)
+    config = enrich_config_with_catalog_knowledge(load_yaml(args.config), load_catalog_knowledge(args.catalog_knowledge))
     reports_dir = ensure_dir(args.reports_dir)
     parameter_reports_dir = ensure_dir(reports_dir / "parameters")
 

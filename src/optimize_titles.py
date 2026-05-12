@@ -8,6 +8,7 @@ from typing import Any
 
 import pandas as pd
 
+from catalog_knowledge import DEFAULT_CATALOG_KNOWLEDGE_PATH, enrich_config_with_catalog_knowledge, load_catalog_knowledge
 from utils import compact_spaces, is_blank, load_yaml, read_products, write_products
 
 
@@ -251,10 +252,11 @@ def main() -> None:
     parser.add_argument("--output", required=True)
     parser.add_argument("--title-column", required=True)
     parser.add_argument("--config", default="configs/categories/oprawy-sufitowe.yaml")
+    parser.add_argument("--catalog-knowledge", default=DEFAULT_CATALOG_KNOWLEDGE_PATH)
     args = parser.parse_args()
 
     df = read_products(args.input, sheet_name=args.sheet)
-    config = load_yaml(args.config)
+    config = enrich_config_with_catalog_knowledge(load_yaml(args.config), load_catalog_knowledge(args.catalog_knowledge))
     result = optimize_titles_for_dataframe(df, args.title_column, config)
     write_products(result, Path(args.output))
 
