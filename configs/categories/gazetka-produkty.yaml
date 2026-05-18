@@ -1,0 +1,332 @@
+category: "Gazetka produkty"
+
+title_template: "{typ} {seria_clean} {model} {moc} {prad} {napiecie} {przekroj} {wymiary} {ip} {kolor} {producent}"
+
+max_title_length: 130
+min_title_length: 25
+append_sku_after_producer: true
+prefer_title_producer_over_column: true
+
+sku_columns:
+  - Kod Producenta
+  - Kod produktu
+  - sku
+
+title_fallback_columns:
+  - Opis
+  - Atrybuty
+
+input_attribute_text_columns:
+  - Nazwa produktu
+  - Opis
+  - Atrybuty
+
+default_values: {}
+
+required_fields:
+  - producent
+required_fields_by_role:
+  main:
+    - producent
+  accessory:
+    - producent
+
+title_strategy_rules:
+  - name: reka_solar
+    title_contains: REKA
+    template: "Oprawa elewacyjna solarna LED REKA {moc} {strumien} {barwa} {ip} {czujnik} {kolor_feminine} {producent}"
+  - name: stono
+    title_contains: STONO
+    template: "Lampa ogrodowa kula STONO {gwint} {srednica} {ip} {kolor_feminine} {producent}"
+  - name: enelo
+    title_contains: ENELO
+    template: "Plafoniera LED ENELO {moc} {strumien} {barwa} {ksztalt} {ip} {kolor_feminine} {producent}"
+  - name: naswietlacz_led
+    title_contains: Naświetlacz
+    template: "Naświetlacz LED Endura {moc} {strumien} {barwa} {ip} {czujnik} {kolor} {producent}"
+  - name: damp_proof
+    title_contains: Damp Proof
+    template: "Oprawa hermetyczna LED Damp Proof Fit {moc} {strumien} {barwa} {ip} {producent}"
+  - name: balwir
+    title_contains: BALWIR
+    template: "Oprawa hermetyczna LED Balwir 2 {moc} {strumien} {barwa} {ip} {producent}"
+  - name: latarka
+    title_contains: LATARKA
+    template: "Latarka wielofunkcyjna LED {moc} {strumien} {barwa} {pojemnosc} {ip} {producent}"
+  - name: panel_bls
+    title_contains: SUPERIOR BLS
+    template: "Panel LED backlight Superior BLS {moc} {strumien} {barwa} {wymiary} {ip} {kolor_feminine} {producent}"
+  - name: panel_blo
+    title_contains: PANEL BACKLIGHT BLO
+    template: "Panel LED backlight okrągły BLO NT {moc} {strumien} {barwa} {srednica} {ip} {kolor} {producent}"
+  - name: lampa_smart_wifi
+    title_contains: Wifi
+    template: "Lampa ogrodowa LED Smart+ WiFi RGBW USB {moc} {strumien} {barwa} {ip} {kolor_feminine} {producent}"
+  - name: zarowka_sensor_filament
+    title_contains: filament
+    template: "Żarówka LED filament E27 z czujnikiem ruchu {moc} {strumien} {barwa} {ksztalt} {producent}"
+  - name: gniazdo_combo
+    title_contains: COMBO-POL2
+    template: "Gniazdo stałe COMBO-POL2 CEE 16A 5P 400V 2xGS16A {ip} {producent}"
+  - name: gniazdo_hermetyczne
+    title_contains: Gniazdo Hermetyczne
+    template: "Gniazdo hermetyczne GHN 16A 250V {ip} {kolor_neuter} {producent}"
+  - name: rozdzielnica_opole
+    title_contains: ROZDZIELNICA OPOLE
+    template: "Rozdzielnica przenośna OPOLE CEE 16A 32A 4xGS16A {ip} {producent}"
+  - name: pret_uziomowy
+    title_contains: Pręt uziomowy
+    template: "Pręt uziomowy Elkonomic z trzpieniem 1500mm fi16mm {producent}"
+  - name: zlacze_krzyzowe
+    title_contains: Złącze krzyżowe
+    template: "Złącze krzyżowe 1-otworowe M10x35 do drutu Ø8-10mm {producent}"
+  - name: ogranicznik_espac
+    title_contains: ESPAC
+    template: "Ogranicznik przepięć ESPAC V T12 4P 12,5/275 {producent}"
+  - name: rozdzielnica_elegant_twin
+    title_contains: ELEGANT TWIN
+    template: "Rozdzielnica natynkowa ELEGANT TWIN RN 2x12 PE+N + 2x12 multimedialna {ip} {kolor_feminine} {producent}"
+  - name: rozdzielnica_elegant
+    title_contains: ELEGANT RN
+    template: "Rozdzielnica natynkowa ELEGANT RN 4x12 PE+N {ip} {kolor_feminine} {producent}"
+  - name: puszka_podtynkowa
+    title_contains: Puszka podtynkowa
+    template: "Puszka podtynkowa {seria} {srednica} {wymiary} {ip} {kolor_feminine} {producent}"
+  - name: puszka_puste_sciany
+    title_contains: Puszka do pustych ścian
+    template: "Puszka do pustych ścian {seria} {srednica} {wymiary} {ip} {kolor_feminine} {producent}"
+  - name: obudowa_rozdzielnicy
+    title_contains: ERP18
+    template: "Obudowa rozdzielnicy podtynkowa {old_title} {liczba_modulow} {ip} {kolor_feminine} {producent}"
+  - name: kzs
+    title_contains: KZS
+    template: "Wyłącznik różnicowoprądowy z członem nadprądowym {old_title} {prad} {czulosc} {zwarciowa_zdolnosc} {ip} {producent}"
+  - name: steinel
+    title_contains: Steinel
+    template: "Czujnik obecności i ruchu IS 2360-3 ECO {moc} {kolor_feminine} {producent}"
+  - name: felo_strongbox
+    title_contains: XL-Strongbox
+    template: "Zestaw wkrętaków elektrycznych E-SMART SLIM 12 cz. VDE {producent}"
+  - name: felo_szczypce
+    title_contains: szczypiec
+    template: "Zestaw szczypiec VDE FELO kombinerki 180mm obcinaczki 160mm {producent}"
+  - name: felo_wkretaki
+    title_contains: wkrętaków FELO
+    template: "Zestaw wkrętaków Ergonic VDE PlusMinus Z1/Z2 {producent}"
+  - name: morek_otl
+    title_contains: OTL
+    template: "Złączka uniwersalna OTL {seria} {przekroj} {napiecie} {kolor} {producent}"
+  - name: morek_hlak
+    title_contains: HLAK
+    template: "Blok dystrybucyjny HLAK {seria} {liczba_biegunow} {prad} {kolor} {producent}"
+  - name: hager_rcbo
+    title_contains: RCBO
+    template: "Wyłącznik różnicowoprądowy nadprądowy RCBO 3x1P+N B16 30mA 6kA Typ A {producent}"
+  - name: hager_lumina
+    title_contains: lumina
+    template: "Gniazdo zasilające lumina z uziemieniem USB-C 2,4A 12W {ip} {kolor_neuter} {producent}"
+  - name: hager_spd
+    title_contains: SPD
+    template: "Ogranicznik przepięć SPD T2 4P 4+0 TN-S In20kA Imax40kA Up1,35kV {producent}"
+  - name: rawlplug
+    title_contains: Osadzak
+    template: "Osadzak akumulatorowy do betonu i stali 90J gwoździe 15-27mm {producent}"
+  - name: silikon_elesil
+    title_contains: ELESIL
+    template: "Silikon elektroizolacyjny ELESIL GELEBOX 20kV/mm 100ml {producent}"
+
+manual_title_templates_by_sku:
+  "92501T48163": "Przedłużacz bębnowy X-REEL 30m 4xGS16A IP20 {producent}"
+  "92501T48223": "Przedłużacz bębnowy X-REEL 20m 4xGS16A IP20 {producent}"
+  "04.1R": "Rura elektroinstalacyjna karbowana PVC EPS 04.1R"
+  "06.53": "Rura elektroinstalacyjna sztywna PVC 40mm szara {producent}"
+  "05.174": "Rura karbowana giętka PVC UV 25/19mm 50m czarna EPS 05.174"
+  "W-100518": "Przedłużacz bębnowy automatyczny 14+2m Plastrol W-100518"
+  "W-00318": "Naświetlacz akumulatorowy LED KEL 40W 6500lm 4000mAh Plastrol W-00318"
+  "W-00315": "Reflektor roboczy potrójny na statywie KEL 40W 3200lm Plastrol W-00315"
+  "W-00354": "Listwa przepięciowa 6 gniazd 2P+Z USB-A USB Plastrol W-00354"
+  "18.90": "Taśma ostrzegawcza samoprzylepna TOS-5zz 5cm x 33m żółto-zielona EPO 18.90"
+  "93000411": "Uchwyt plastikowy z obciążnikiem do drutu odgromowego Ø8-10mm ELKO-BIS 93000411"
+  "001101214": "Obudowa rozdzielnicy podtynkowa ERP18-4 18 modułów 4 rzędy IP40 biała {producent}"
+  "001101216": "Obudowa rozdzielnicy podtynkowa ERP18-5 18 modułów 5 rzędów IP40 biała {producent}"
+  "002172406": "Wyłącznik różnicowoprądowy nadprądowy KZS-2M2p EDI A B16/0.03 16A 30mA 10kA IP20 {producent}"
+  "002173814": "Wyłącznik różnicowoprądowy nadprądowy KZS-AFDD 3M2p A B16/0.03 16A 30mA IP20 {producent}"
+  "ST057770": "Czujnik obecności i ruchu Steinel IS 2360-3 ECO 2000W biały {sku}"
+  "ST081706": "Czujnik obecności i ruchu Steinel IS 2360-3 ECO 2000W czarny {sku}"
+  "FL06381216": "Zestaw wkrętaków elektrycznych FELO E-SMART SLIM 12 cz. VDE {sku}"
+  "FL58095095": "Zestaw szczypiec VDE FELO kombinerki 180mm obcinaczki boczne 160mm {sku}"
+  "FL41792191": "Zestaw wkrętaków FELO Ergonic VDE PlusMinus Z1/Z2 {sku}"
+  "HT1P169": "Zaciskarka hydrauliczna ręczna 16-300mm2 100kN {producent}"
+  "HT5K279-2": "Spodnie robocze odpinane nogawki szaro-czarne {producent}"
+  "HT5K284": "Kurtka robocza szaro-czarna {producent}"
+  "MAA5016A11": "Złączka uniwersalna OTL16-5x 5x1xAl/Cu 1,5-16mm2 1000VAC/1500VDC wielobarwna {producent}"
+  "MAA5050A10": "Złączka uniwersalna OTL50-5x 5x1xAl/Cu 1,5-50mm2 1000VAC/1500VDC wielobarwna {producent}"
+  "MAA5095A10": "Złączka uniwersalna OTL95-5x 5x1xAl/Cu 6-95mm2 1000VAC/1500VDC szara {producent}"
+  "MAG1251A00": "Blok dystrybucyjny HLAK 25 1P 2xAl/Cu 25mm2+16mm2 1000VAC/1500VDC szary {producent}"
+  "MAG1251B00": "Blok dystrybucyjny HLAK 25 1P 2xAl/Cu 25mm2+16mm2 1000VAC/1500VDC niebieski {producent}"
+  "MAG1251G00": "Blok dystrybucyjny HLAK 25 1P 2xAl/Cu 25mm2+16mm2 1000VAC/1500VDC zielony {producent}"
+  "MAG5253ABG": "Blok dystrybucyjny HLAK 25 5P 2xAl/Cu 25mm2+16mm2 1000VAC/1500VDC szary niebieski zielony {producent}"
+
+known_producers:
+  - Bemko
+  - ELKO-BIS
+  - EPN
+  - EPO
+  - EPS
+  - ETI
+  - ETI Polam
+  - FELO
+  - GTV
+  - Hager
+  - Kanlux
+  - Lange
+  - Ledvance
+  - Luxmena
+  - Morek
+  - PCE
+  - Plastrol
+  - Rawlplug
+  - Simet
+  - Steinel
+
+known_colors:
+  czarny:
+    - czarny
+    - czarna
+    - czarne
+    - black
+    - RAL9005
+    - RAL 9005
+  bialy:
+    - bialy
+    - biala
+    - biale
+    - biały
+    - biała
+    - białe
+    - white
+    - RAL9003
+    - RAL 9003
+  szary:
+    - szary
+    - szara
+    - szare
+    - grey
+    - gray
+    - RAL7035
+    - RAL 7035
+  grafitowy:
+    - grafitowy
+    - grafitowa
+    - grafitowe
+  niebieski:
+    - niebieski
+    - niebieska
+  pomarańczowy:
+    - pomarańczowy
+    - pomarańczowa
+  zielony:
+    - zielony
+    - zielona
+  czerwony:
+    - czerwony
+    - czerwona
+  wielobarwny:
+    - wielobarwny
+    - wielobarwna
+
+barwa_translations:
+  2700K: ciepłobiała
+  3000K: ciepłobiała
+  4000K: neutralna
+  5000K: chłodnobiała
+  6000K: chłodnobiała
+  6500K: chłodnobiała
+
+inflections:
+  kolor_feminine:
+    bialy: biała
+    biały: biała
+    czarny: czarna
+    szary: szara
+    grafitowy: grafitowa
+    niebieski: niebieska
+    pomarańczowy: pomarańczowa
+    zielony: zielona
+    czerwony: czerwona
+    wielobarwny: wielobarwna
+  kolor_neuter:
+    bialy: białe
+    biały: białe
+    czarny: czarne
+    szary: szare
+    grafitowy: grafitowe
+    niebieski: niebieskie
+    pomarańczowy: pomarańczowe
+    zielony: zielone
+    czerwony: czerwone
+
+series_stop_words:
+  - led
+  - panel
+  - oprawa
+  - oprawa hermetyczna
+  - lampa
+  - gniazdo
+  - przedłużacz
+  - rozdzielnica
+  - puszka
+  - złączka
+  - wyłącznik
+  - ogranicznik
+  - czujnik
+  - zestaw
+  - różne
+  - rozmiary
+
+product_role_classification:
+  name_columns:
+    - Nazwa produktu
+    - Opis
+    - Atrybuty
+  default_role: main
+  accessory_rules: []
+
+product_type_prefix_rules:
+  - type: Naświetlacz LED
+    terms: [naświetlacz, naswietlacz]
+  - type: Oprawa hermetyczna LED
+    terms: [oprawa hermetyczna, damp proof]
+  - type: Panel LED
+    terms: [panel backlight]
+  - type: Plafoniera LED
+    terms: [plafoniera]
+  - type: Lampa ogrodowa
+    terms: [lampa led ogrodowa, stono]
+  - type: Gniazdo
+    terms: [gniazdo]
+  - type: Przedłużacz
+    terms: [przedłużacz, przedluzacz]
+  - type: Rozdzielnica
+    terms: [rozdzielnica]
+  - type: Puszka
+    terms: [puszka]
+  - type: Złączka
+    terms: [złączka, zlaczka]
+  - type: Ogranicznik przepięć
+    terms: [ogranicznik przepięć, ogranicznik przepiec, spd]
+
+product_type_prefix_stop_words:
+  - led
+  - ip
+  - kolor
+  - dane
+  - informacje
+
+forbidden_title_words:
+  - promocja
+  - okazja
+  - najlepszy
+  - super
+  - gwarancja
+  - lat

@@ -26,7 +26,7 @@ BASELINKER_COLUMNS = [
 FEATURE_MAP = {
     "Producent": ["attr_producent", "Producent", "Marka"],
     "EAN (GTIN)": ["EAN", "ean"],
-    "Kod producenta": ["Kod", "SKU", "sku"],
+    "Kod producenta": ["Kod Producenta", "Kod", "SKU", "sku"],
     "Typ produktu": ["attr_typ", "Typ", "Rodzaj produktu"],
     "Seria": ["attr_seria", "Rodzina"],
     "Model": ["attr_model", "Nazwa Kanlux"],
@@ -141,7 +141,7 @@ def build_baselinker_rows(
         if not name:
             name = first_value(row, ["new_title", "Nazwa B2C / SEO final", "Nazwa", "Nazwa B2C / SEO", "Nazwa Kanlux"])
 
-        sku = first_value(row, ["SKU", "Kod", "sku"])
+        sku = first_value(row, ["SKU", "Kod Producenta", "Kod", "sku"])
         ean = only_digits(first_value(row, ["EAN", "ean"]))
         producer = first_value(row, ["attr_producent", "Producent", "manufacturer_name", "Marka"])
         export_sku = format_sku(sku, producer, sku_format)
@@ -187,7 +187,7 @@ def assign_main_images(
     matched = 0
     images: list[str] = []
     for _, row in result.iterrows():
-        code = normalize_code(first_value(row, ["Kod", "SKU", "sku"]))
+        code = normalize_code(first_value(row, ["Kod Producenta", "Kod", "SKU", "sku"]))
         image = image_by_code.get(code, "")
         if image:
             matched += 1

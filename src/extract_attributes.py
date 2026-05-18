@@ -42,6 +42,17 @@ ATTRIBUTE_COLUMNS = [
     "material",
     "pasuje_do",
     "sterowanie",
+    "prad",
+    "przekroj",
+    "liczba_biegunow",
+    "liczba_modulow",
+    "czulosc",
+    "zwarciowa_zdolnosc",
+    "dlugosc_przewodu",
+    "pojemnosc",
+    "sila",
+    "energia",
+    "zakres_gwozdzi",
 ]
 
 
@@ -222,7 +233,10 @@ def extract_attributes_from_text(text: str, config: dict[str, Any] | None = None
                 sources["kolor"] = "title_suffix"
                 confidence["kolor"] = 0.75
 
-    producer = extract_producer(title, config, producer_hint)
+    if config.get("prefer_title_producer_over_column"):
+        producer = extract_producer(title, config, "") or extract_producer(title, config, producer_hint)
+    else:
+        producer = extract_producer(title, config, producer_hint)
     if producer:
         attributes["producent"] = producer
         sources["producent"] = "producer_column" if producer_hint else "title"
@@ -615,6 +629,7 @@ def extract_attributes_for_dataframe(
         producer_hint = row.get(producer_column, "") if producer_column else ""
         extracted = extract_attributes_from_text(str(row.get(title_column, "")), config, str(producer_hint))
         attrs = extracted["attributes"]
+        merge_attributes_from_text_columns(attrs, extracted["sources"], extracted["confidence"], row, config)
         merge_attributes_from_columns(attrs, extracted["sources"], extracted["confidence"], row, config)
         sensor_from_row = extract_sensor_from_row(row, config)
         if sensor_from_row:
@@ -628,6 +643,235 @@ def extract_attributes_for_dataframe(
         extracted_rows.append(attrs)
 
     return result
+
+
+def merge_attributes_from_text_columns(
+    attrs: dict[str, str],
+    sources: dict[str, str],
+    confidence: dict[str, float],
+    row: pd.Series,
+    config: dict[str, Any],
+) -> None:
+    columns = [column for column in config.get("input_attribute_text_columns") or [] if column in row]
+    if not columns:
+        return
+    text = "\n".join(str(row.get(column, "")) for column in columns if str(row.get(column, "")).strip())
+    if not text.strip():
+        return
+
+    labeled_attrs = extract_labeled_attributes(text)
+    free_text_config = dict(config)
+    free_text_config["default_values"] = {}
+    extracted = extract_attributes_from_text(text, free_text_config, "")
+    free_text_attrs = {
+        key: value
+        for key, value in extracted["attributes"].items()
+        if key
+        in {
+            "moc",
+            "napiecie",
+            "barwa",
+            "barwa_zakres",
+            "strumien",
+            "lm_w",
+            "ip",
+            "ik",
+            "kat_swiecenia",
+            "kolor",
+            "wymiary",
+            "dlugosc",
+            "szerokosc",
+            "wysokosc",
+            "czujnik",
+            "gwarancja",
+            "gwint",
+            "srednica",
+            "material",
+            "producent",
+        }
+    }
+
+    for attr, value in {**free_text_attrs, **labeled_attrs}.items():
+        if should_keep_existing_attribute(str(attr), attrs.get(str(attr), "")):
+            continue
+        existing_value = str(attrs.get(str(attr), ""))
+        if (
+            existing_value
+            and attr == "barwa"
+            and "-" in str(value)
+            and "-" not in existing_value
+        ):
+            pass
+        elif attrs.get(str(attr), "") and attr not in {"kolor", "material", "wymiary"}:
+            continue
+        if not value:
+            continue
+        attrs[str(attr)] = value
+        sources[str(attr)] = "text_columns"
+        confidence[str(attr)] = 0.88
+
+    if attrs.get("dlugosc") and attrs.get("szerokosc") and not attrs.get("wymiary"):
+        attrs["wymiary"] = format_dimensions_pair(attrs["dlugosc"], attrs["szerokosc"])
+        sources["wymiary"] = "text_columns"
+        confidence["wymiary"] = 0.86
+
+
+def extract_labeled_attributes(text: str) -> dict[str, str]:
+    pairs = extract_label_value_pairs(text)
+    attrs: dict[str, str] = {}
+    for label, value in pairs:
+        attr = resolve_label_attribute(label)
+        if not attr:
+            continue
+        normalized = normalize_labeled_attribute_value(label, value, attr)
+        if not normalized:
+            continue
+        if attr in attrs:
+            continue
+        if attr in {"dlugosc", "szerokosc", "wysokosc", "srednica"} and attr in attrs:
+            continue
+        attrs[attr] = normalized
+    if attrs.get("dlugosc") and attrs.get("szerokosc") and "wymiary" not in attrs:
+        attrs["wymiary"] = format_dimensions_pair(attrs["dlugosc"], attrs["szerokosc"])
+    return attrs
+
+
+def extract_label_value_pairs(text: str) -> list[tuple[str, str]]:
+    normalized = text.replace("\r", "\n").replace("\xa0", " ")
+    pairs: list[tuple[str, str]] = []
+    tokens: list[str] = []
+    for raw_line in normalized.splitlines():
+        line = compact_spaces(raw_line)
+        if not line:
+            continue
+        if "\t" in raw_line:
+            parts = [compact_spaces(part) for part in raw_line.split("\t") if compact_spaces(part)]
+            if len(parts) >= 2:
+                pairs.append((parts[0], " ".join(parts[1:])))
+                continue
+        colon_match = re.fullmatch(r"([^:]{2,80}):\s*(.+)", line)
+        if colon_match:
+            pairs.append((colon_match.group(1), colon_match.group(2)))
+            continue
+        tokens.append(line)
+
+    index = 0
+    while index < len(tokens) - 1:
+        label = tokens[index]
+        if resolve_label_attribute(label):
+            pairs.append((label, tokens[index + 1]))
+            index += 2
+        else:
+            index += 1
+    return pairs
+
+
+def resolve_label_attribute(label: str) -> str:
+    normalized = strip_accents(label).lower()
+    normalized = re.sub(r"\s+", " ", normalized)
+    if any(needle in normalized for needle in ["kolorowy wyswietlacz", "kod koloru", "jasny kolor"]):
+        return ""
+    rules = [
+        ("temperatura barwowa", "barwa"),
+        ("temperatura chromatycznosci", "barwa"),
+        ("barwa swiatla", "barwa"),
+        ("kolor swiatla", "barwa"),
+        ("barwa", "barwa"),
+        ("strumien swietlny", "strumien"),
+        ("calkowity strumien", "strumien"),
+        ("skutecznosc swietlna", "lm_w"),
+        ("moc maksymalna", "moc"),
+        ("moc nominalna", "moc"),
+        ("moc znamionowa", "moc"),
+        ("moc w trybie", "moc"),
+        ("moc (w", "moc"),
+        ("moc", "moc"),
+        ("stopien szczelnosci", "ip"),
+        ("stopien ochrony (ip", "ip"),
+        ("stopien ochrony", "ip"),
+        ("klasa ip", "ip"),
+        ("stopien ochrony (ik", "ik"),
+        ("kat swiecenia", "kat_swiecenia"),
+        ("kat rozsylu", "kat_swiecenia"),
+        ("kat wiazki", "kat_swiecenia"),
+        ("trzonek", "gwint"),
+        ("napięcie", "napiecie"),
+        ("napiecie", "napiecie"),
+        ("kolor", "kolor"),
+        ("numer ral", "kolor"),
+        ("material", "material"),
+        ("tworzywo", "material"),
+        ("rodzaj czujnika", "czujnik"),
+        ("typ sensora", "czujnik"),
+        ("wykrywanie ruchu", "czujnik"),
+        ("srednica", "srednica"),
+        ("średnica", "srednica"),
+        ("dlugosc przewodu", "dlugosc_przewodu"),
+        ("długość przewodu", "dlugosc_przewodu"),
+        ("dlugosc", "dlugosc"),
+        ("długość", "dlugosc"),
+        ("szerokosc", "szerokosc"),
+        ("szerokość", "szerokosc"),
+        ("wysokosc", "wysokosc"),
+        ("wysokość", "wysokosc"),
+        ("glebokosc", "wysokosc"),
+        ("głębokość", "wysokosc"),
+        ("prad znamionowy", "prad"),
+        ("prąd znamionowy", "prad"),
+        ("liczba biegunow", "liczba_biegunow"),
+        ("liczba biegunów", "liczba_biegunow"),
+        ("szerokosc wyrazona liczba modulow", "liczba_modulow"),
+        ("szerokość wyrażona liczbą modułów", "liczba_modulow"),
+        ("znamionowy prad roznicowy", "czulosc"),
+        ("znamionowy prąd różnicowy", "czulosc"),
+        ("zwarciowa zdolnosc", "zwarciowa_zdolnosc"),
+        ("zwarciowa zdolność", "zwarciowa_zdolnosc"),
+        ("akumulator", "pojemnosc"),
+        ("pojemnosc", "pojemnosc"),
+        ("pojemność", "pojemnosc"),
+    ]
+    for needle, attr in rules:
+        if needle in normalized:
+            return attr
+    return ""
+
+
+def normalize_labeled_attribute_value(label: str, value: str, attr: str) -> str:
+    label_ascii = strip_accents(label).lower()
+    value = compact_spaces(value)
+    if not value:
+        return ""
+    if attr in {"dlugosc", "szerokosc", "wysokosc", "srednica", "dlugosc_przewodu"}:
+        return normalize_dimension_with_label(value, label_ascii)
+    if attr == "ip" and re.search(r"\bIK\s*\d{2}\b", value, flags=re.IGNORECASE) and not re.search(
+        r"\bIP\s*\d{2}\b", value, flags=re.IGNORECASE
+    ):
+        return ""
+    if attr == "kolor":
+        return normalize_color_value(value)
+    if attr == "czujnik":
+        return extract_sensor(value) or ("z czujnikiem ruchu" if strip_accents(value).lower() in {"tak", "yes", "true", "1"} else "")
+    if attr == "pojemnosc":
+        match = re.search(r"(\d+(?:[,.]\d+)?)\s*(mAh|Ah|ml)\b", value, flags=re.IGNORECASE)
+        return f"{normalize_number(match.group(1))}{match.group(2)}" if match else value
+    if attr == "prad":
+        match = re.search(r"(\d+(?:[,.]\d+)?)\s*A\b", value, flags=re.IGNORECASE)
+        return f"{normalize_number(match.group(1))}A" if match else value
+    if attr == "czulosc":
+        if re.fullmatch(r"0[,.]03", value):
+            return "30mA"
+        match = re.search(r"(\d+(?:[,.]\d+)?)\s*(mA|A)\b", value, flags=re.IGNORECASE)
+        return f"{normalize_number(match.group(1))}{match.group(2)}" if match else value
+    if attr == "liczba_biegunow":
+        match = re.search(r"\b(\d+\s*x\s*1P\+N|\d+P(?:\+N)?)\b", value, flags=re.IGNORECASE)
+        return re.sub(r"\s+", "", match.group(1).upper()) if match else value
+    if attr == "liczba_modulow":
+        match = re.search(r"\d+", value)
+        return f"{match.group(0)} modułów" if match else value
+    if attr == "zwarciowa_zdolnosc":
+        match = re.search(r"(\d+(?:[,.]\d+)?)\s*kA\b", value, flags=re.IGNORECASE)
+        return f"{normalize_number(match.group(1))}kA" if match else value
+    return normalize_attribute_value(value, attr)
 
 
 def merge_attributes_from_columns(
@@ -670,6 +914,12 @@ def normalize_attribute_value(value: str, attr: str) -> str:
     value = compact_spaces(value)
     if not value:
         return ""
+    if attr == "moc":
+        power_values = [float(number.replace(",", ".")) for number in re.findall(r"(\d+(?:[,.]\d+)?)\s*W\b", value, flags=re.IGNORECASE)]
+        if power_values:
+            low = format_number(min(power_values))
+            high = format_number(max(power_values))
+            return f"{low}-{high}W" if low != high else f"{high}W"
     if attr == "moc" and re.fullmatch(r"\d+(?:[,.]\d+)?", value):
         return f"{value.replace(',', '.')}W"
     if attr == "moc":
@@ -685,6 +935,17 @@ def normalize_attribute_value(value: str, attr: str) -> str:
         values = [int(v) for v in re.findall(r"[23645]\d{3}", value)]
         if len(set(values)) >= 2:
             return f"{min(values)}-{max(values)}K"
+        if len(values) == 1:
+            return f"{values[0]}K"
+    if attr == "strumien":
+        values = [float(v.replace(",", ".")) for v in re.findall(r"(\d+(?:[,.]\d+)?)\s*(?:lm|lumen)", value, flags=re.IGNORECASE)]
+        if values:
+            low = format_number(min(values))
+            high = format_number(max(values))
+            return f"{low}-{high}lm" if low != high else f"{high}lm"
+        max_match = re.fullmatch(r"max\s*(\d+(?:[,.]\d+)?)", value, flags=re.IGNORECASE)
+        if max_match:
+            return f"{normalize_number(max_match.group(1))}lm"
     if attr == "strumien" and re.fullmatch(r"\d+(?:[,.]\d+)?", value):
         return f"{value.replace(',', '.')}lm"
     if attr == "wymiary":
@@ -695,12 +956,34 @@ def normalize_attribute_value(value: str, attr: str) -> str:
             return f"{normalize_number(match.group(1))}lm/W"
     if attr == "ip" and re.fullmatch(r"\d{2}", value):
         return f"IP{value}"
+    if attr == "ip":
+        values = re.findall(r"IP[-\s]?(\d{2})|\b(?<!IK)(\d{2})\b", value, flags=re.IGNORECASE)
+        ip_values = [first or second for first, second in values if first or second]
+        if ip_values:
+            unique = []
+            for item in ip_values:
+                ip = f"IP{item}"
+                if ip not in unique:
+                    unique.append(ip)
+            return "/".join(unique)
+    if attr == "ik":
+        match = re.search(r"IK[-\s]?(\d{2})", value, flags=re.IGNORECASE)
+        if match:
+            return f"IK{match.group(1)}"
     if attr == "kat_swiecenia":
         match = re.search(r"(\d{2,3})", value)
         if match:
             return f"{match.group(1)}\u00b0"
     if attr == "gwint":
+        if strip_accents(value).lower() == "led":
+            return ""
         return normalize_socket(value)
+    if attr == "napiecie":
+        values = re.findall(r"(\d{2,4}(?:[,.]\d+)?)\s*(?:V|VAC|VDC)", value, flags=re.IGNORECASE)
+        if len(values) >= 2:
+            return f"{normalize_number(values[0])}-{normalize_number(values[1])}V"
+        if len(values) == 1:
+            return f"{normalize_number(values[0])}V"
     if attr == "czujnik":
         lowered = strip_accents(value).lower()
         if lowered in {"tak", "yes", "1", "true", "z czujnikiem"}:
@@ -712,6 +995,40 @@ def normalize_attribute_value(value: str, attr: str) -> str:
         if "czuj" in lowered or "pir" in lowered or "mikrofal" in lowered:
             return extract_sensor(value) or "z czujnikiem ruchu"
     return value
+
+
+def normalize_color_value(value: str) -> str:
+    lowered = strip_accents(value).lower()
+    if "9005" in lowered or "black" in lowered or "czarn" in lowered:
+        return "czarny"
+    if "9003" in lowered or "white" in lowered or "bial" in lowered:
+        return "bialy"
+    if "7035" in lowered or "szar" in lowered or "grey" in lowered or "gray" in lowered:
+        return "szary"
+    if "grafit" in lowered:
+        return "grafitowy"
+    if "niebies" in lowered:
+        return "niebieski"
+    if "pomarancz" in lowered:
+        return "pomarańczowy"
+    if "ziel" in lowered:
+        return "zielony"
+    if "czerw" in lowered:
+        return "czerwony"
+    if "wielobarwn" in lowered:
+        return "wielobarwny"
+    return value
+
+
+def normalize_dimension_with_label(value: str, label_ascii: str) -> str:
+    unit_match = re.search(r"\[(mm|cm|m)\]", label_ascii)
+    unit = unit_match.group(1) if unit_match else ""
+    match = re.search(r"(\d+(?:[,.]\d+)?)\s*(mm|cm|m)?\b", value, flags=re.IGNORECASE)
+    if not match:
+        return value
+    number = normalize_number(match.group(1))
+    resolved_unit = (match.group(2) or unit or "mm").lower()
+    return f"{number}{resolved_unit}"
 
 
 def extract_sensor_from_row(row: pd.Series, config: dict[str, Any]) -> str:

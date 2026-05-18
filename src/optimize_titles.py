@@ -97,6 +97,10 @@ def resolve_title_template(row: pd.Series, config: dict[str, Any], product_role:
 
 
 def resolve_title_template_and_rule(row: pd.Series, config: dict[str, Any], product_role: str) -> tuple[str, dict | None]:
+    sku = resolve_sku_value(row, config)
+    manual_templates = config.get("manual_title_templates_by_sku") or {}
+    if sku and sku in manual_templates:
+        return str(manual_templates[sku]), {"required_fields": []}
     if product_role != "accessory":
         category = str(row.get("Kategoria", row.get("category", "")))
         product_type = first_non_blank(row.get("attr_typ", ""), row.get("Typ", ""))
