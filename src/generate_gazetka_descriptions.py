@@ -120,13 +120,13 @@ def description_keyword(title: str, row: pd.Series) -> str:
 
 def first_keyword_benefit(keyword: str, family: str, row: pd.Series) -> str:
     if family == "lighting":
-        return f"{keyword} pomaga dobrać oświetlenie do konkretnego miejsca pracy, montażu lub codziennego użytkowania."
+        return f"{keyword} daje konkretny zestaw parametrów świetlnych, który można dopasować do miejsca montażu i oczekiwanego efektu."
     if family == "distribution_box":
         return f"{keyword} porządkuje montaż aparatury modułowej i ułatwia późniejszą obsługę instalacji."
     if family == "protection":
         return f"{keyword} wspiera ochronę obwodów i pozwala dobrać aparat do parametrów instalacji."
     if family == "socket":
-        return f"{keyword} ułatwia bezpieczne i wygodne korzystanie z zasilania w wybranym miejscu."
+        return f"{keyword} ułatwia podłączenie kilku urządzeń w jednym miejscu bez dokładania przypadkowych adapterów."
     if family == "installation":
         return f"{keyword} pomaga prowadzić instalację w uporządkowany sposób i dopasować osprzęt do podłoża."
     if family == "connector":
@@ -146,7 +146,7 @@ def build_context_note(family: str, row: pd.Series) -> str:
     if family == "protection":
         return "Aparatura zabezpieczająca powinna być dobierana do projektu instalacji, przewidywanego obciążenia oraz układu sieci. Parametry takie jak prąd znamionowy, liczba biegunów, charakterystyka i zdolność zwarciowa mają bezpośredni wpływ na poprawne działanie zabezpieczenia."
     if family == "socket":
-        return "W listwach, gniazdach i przedłużaczach liczy się nie tylko liczba punktów zasilania, ale też długość przewodu, typ gniazd, obecność zabezpieczeń i odporność na warunki pracy. Dobrze dobrany osprzęt ogranicza potrzebę stosowania dodatkowych adapterów."
+        return "W listwach, gniazdach i przedłużaczach liczy się nie tylko liczba punktów zasilania, ale też długość przewodu, typ gniazd, obecność zabezpieczeń i wygodny dostęp do portów. Dobrze dobrany osprzęt pozwala uporządkować zasilanie przy biurku, stanowisku roboczym albo w domowym warsztacie."
     if family == "installation":
         return "Elementy prowadzenia instalacji powinny być dopasowane do średnicy przewodów, sposobu montażu i środowiska pracy. Przy rurach i puszkach znaczenie ma materiał, odporność mechaniczna, kolor oraz możliwość użycia wewnątrz lub na zewnątrz budynku."
     if family == "connector":
@@ -199,6 +199,10 @@ def build_selection_note(family: str, row: pd.Series) -> str:
 
 
 def build_mounting_note(family: str, row: pd.Series) -> str:
+    if family == "tools":
+        return "Przy narzędziach warto sprawdzić nie tylko pojedynczy parametr, ale też wygodę pracy, zakres zastosowania i sposób przechowywania. To szczególnie ważne, gdy produkt ma być używany często, a nie tylko okazjonalnie."
+    if family == "socket":
+        return "Przed ustawieniem lub podłączeniem warto sprawdzić miejsce pracy, dostęp do gniazd oraz sposób prowadzenia przewodu. Dobrze dobrane położenie osprzętu poprawia wygodę i ogranicza plątaninę kabli."
     dimensions = value(row, "attr_wymiary") or value(row, "attr_srednica") or value(row, "attr_dlugosc")
     if dimensions:
         return f"Wymiar {dimensions} warto porównać z miejscem montażu przed zakupem. Ma to znaczenie szczególnie przy wymianie istniejącego elementu albo przy montażu w ograniczonej przestrzeni."
@@ -227,7 +231,7 @@ def classify_product(title: str, row: pd.Series) -> str:
         return "distribution_box"
     if any(term in text for term in ["wyłącznik", "wylacznik", "rcbo", "kzs", "ogranicznik przepiec", "ogranicznik przepięć", "spd"]):
         return "protection"
-    if any(term in text for term in ["gniazdo", "przedluzacz", "przedłużacz"]):
+    if any(term in text for term in ["gniazdo", "przedluzacz", "przedłużacz", "listwa przepieciowa", "listwa przepięciowa"]):
         return "socket"
     if any(term in text for term in ["puszka", "rura elektroinstalacyjna"]):
         return "installation"
@@ -294,6 +298,7 @@ def build_benefits(family: str, row: pd.Series) -> list[str]:
         ])[:5]
     if family == "socket":
         return compact_list([
+            socket_layout_benefit(row),
             current_benefit(row),
             voltage_benefit(row),
             ip_benefit(row, "do miejsca użytkowania osprzętu"),
@@ -347,7 +352,7 @@ def build_usage_note(family: str, row: pd.Series) -> str:
     if family == "protection":
         return "Aparaturę zabezpieczającą należy dobierać zgodnie z projektem i parametrami instalacji. Szczególnie ważne są prąd znamionowy, charakterystyka, liczba biegunów oraz wymagany poziom ochrony."
     if family == "socket":
-        return "W osprzęcie zasilającym warto sprawdzić obciążalność, napięcie, typ gniazd i odporność na warunki środowiskowe. Ma to znaczenie zarówno dla wygody użytkowania, jak i bezpieczeństwa instalacji."
+        return "W osprzęcie zasilającym warto sprawdzić obciążalność, napięcie, typ gniazd i warunki użytkowania. Ma to znaczenie zarówno dla wygody, jak i dla bezpiecznego podłączenia urządzeń."
     if family == "installation":
         return "Elementy instalacyjne najlepiej dobierać do typu podłoża, średnicy przewodów i sposobu prowadzenia instalacji. Zgodność wymiarów ogranicza ryzyko poprawek podczas montażu."
     if family == "connector":
@@ -376,10 +381,10 @@ def lighting_power_benefit(row: pd.Series) -> str:
     if power:
         parts.append(f"moc {power}")
     if flux:
-        parts.append(f"strumień {flux}")
+        parts.append(f"strumień świetlny {flux}")
     if color:
-        parts.append(f"temperatura barwowa {color}")
-    return f"Parametry świetlne obejmują {join_values(parts)}, co ułatwia dopasowanie produktu do zadania." if parts else ""
+        parts.append(f"temperaturę barwową {color}")
+    return f"Parametry świetlne obejmują {join_values(parts)}; dzięki temu łatwiej ocenić jasność i charakter światła przed zakupem." if parts else ""
 
 
 def ip_benefit(row: pd.Series, context: str) -> str:
@@ -389,7 +394,27 @@ def ip_benefit(row: pd.Series, context: str) -> str:
 
 def sensor_benefit(row: pd.Series) -> str:
     sensor = value(row, "attr_czujnik")
-    return f"Wbudowany element sterowania: {sensor}, zwiększa wygodę użytkowania." if sensor else ""
+    if not sensor:
+        return ""
+    cleaned = re.sub(r"^z\s+", "", sensor, flags=re.IGNORECASE)
+    cleaned = re.sub(r"^czujnikiem\b", "czujnik", cleaned, flags=re.IGNORECASE)
+    cleaned = cleaned.replace("mikrofalowym", "mikrofalowy")
+    return f"{cleaned.capitalize()} ogranicza potrzebę ręcznego włączania światła i poprawia wygodę użytkowania."
+
+
+def socket_layout_benefit(row: pd.Series) -> str:
+    title = value(row, "new_title")
+    sockets = first_match(title, r"\b\d+\s*gniazd")
+    usb = "USB-A/USB" if re.search(r"USB", title, flags=re.IGNORECASE) else ""
+    cable = first_match(title, r"\b\d+\+?\d*\s*m\b")
+    parts = []
+    if sockets:
+        parts.append(sockets)
+    if usb:
+        parts.append(usb)
+    if cable:
+        parts.append(f"przewód {cable}")
+    return f"Układ {join_values(parts)} ułatwia zasilanie kilku urządzeń z jednego punktu." if parts else ""
 
 
 def color_or_dimension_benefit(row: pd.Series) -> str:

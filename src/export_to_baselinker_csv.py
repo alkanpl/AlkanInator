@@ -146,7 +146,7 @@ def build_baselinker_rows(
         producer = first_value(row, ["attr_producent", "Producent", "manufacturer_name", "Marka"])
         export_sku = format_sku(sku, producer, sku_format)
         description = first_value(row, ["Opis HTML", "description", "Opis"])
-        images = first_value(row, ["images_urls", "Obrazki", "Zdjecia", "Zdjęcia"])
+        images = first_value(row, ["images_urls", "Zdjęcie URL", "Obrazki", "Zdjecia", "Zdjęcia"])
 
         features = build_features(row, include_empty_features)
         rows.append(
