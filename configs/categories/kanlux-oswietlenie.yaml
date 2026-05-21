@@ -51,13 +51,13 @@ title_strategy_rules:
 - name: plafoniera_wentylator
   category_contains: Plafoniery
   title_contains: wentylator
-  template: Plafoniera z wentylatorem LED {seria} {kolor_feminine} {producent}
+  template: Plafoniera z wentylatorem LED {cct} {rgb} {seria} {barwa_zakres} {strumien} {kolor_feminine} {producent}
   required_fields:
   - producent
 - name: plafoniera_cct
   category_contains: Plafoniery
   title_contains: CCT
-  template: Plafoniera LED CCT {seria_clean} {eco_clean} {moc} {strumien} {lm_w} {barwa_zakres} {ksztalt} {srednica} {wymiary} {ip} {czujnik} {kolor_feminine} {producent}
+  template: Plafoniera LED CCT {dim} {seria_clean} {eco_clean} {moc} {strumien} {lm_w} {barwa_zakres} {ksztalt} {srednica} {wymiary} {ip} {czujnik} {kolor_feminine} {producent}
   required_fields:
   - producent
 - name: panel_led
@@ -94,7 +94,7 @@ title_strategy_rules:
 - name: plafoniera
   category_contains: Plafoniery
   template: Plafoniera LED {seria_clean} {eco_clean} {moc} {strumien} {lm_w} {ksztalt} {srednica} {wymiary} {barwa} {barwa_neuter} {ip} {czujnik} {kolor_feminine}
-    {producent}
+    {material} {producent}
 accessory_title_template: '{accessory_type} {seria} {model} {moc} {kolor} {producent}'
 accessory_title_templates:
   Klosz: '{accessory_type} {seria} {kolor} {producent}'
@@ -399,16 +399,50 @@ inflections:
     biały: biała
     bialy: biała
     czarny: czarna
+    czarny mat: czarna matowa
     srebrny: srebrna
+    nikiel satynowy: nikiel satynowy
+    nikiel: nikiel
     szary: szara
     grafitowy: grafitowa
+    brazowy: brązowa
+    brązowy: brązowa
+    zloty: złota
+    złoty: złota
+    bezowy: beżowa
+    beżowy: beżowa
+    bialy mat: biała matowa
+    biały mat: biała matowa
+    zloty dab: złoty dąb
+    złoty dąb: złoty dąb
+    dab sonoma: dąb sonoma
+    dąb sonoma: dąb sonoma
+    wenge: wenge
+    drewno: drewno
   kolor_neuter:
     biały: białe
     bialy: białe
     czarny: czarne
+    czarny mat: czarne matowe
     srebrny: srebrne
+    nikiel satynowy: nikiel satynowy
+    nikiel: nikiel
     szary: szare
     grafitowy: grafitowe
+    brazowy: brązowe
+    brązowy: brązowe
+    zloty: złote
+    złoty: złote
+    bezowy: beżowe
+    beżowy: beżowe
+    bialy mat: białe matowe
+    biały mat: białe matowe
+    zloty dab: złoty dąb
+    złoty dąb: złoty dąb
+    dab sonoma: dąb sonoma
+    dąb sonoma: dąb sonoma
+    wenge: wenge
+    drewno: drewno
   ksztalt_masculine:
     kwadratowa: kwadratowy
     prostokątna: prostokątny
@@ -481,6 +515,43 @@ known_colors:
   - grafitowa
   - grafitowe
   - graphite
+  srebrny:
+  - srebrny
+  - srebrna
+  - srebrne
+  - silver
+  nikiel satynowy:
+  - nikiel satynowy
+  - niklu satynowego
+  - satin nickel
+  nikiel:
+  - nikiel
+  - nickel
+  brazowy:
+  - brązowy
+  - brąz
+  - brazowy
+  - braz
+  - brown
+  zloty:
+  - złoty
+  - złota
+  - zloty
+  - zlota
+  - gold
+  bezowy:
+  - beżowy
+  - beż
+  - bezowy
+  - bez
+  - beige
+  drewno:
+  - drewno
+  - drewniany
+  - drewniana
+  - dąb
+  - dab
+  - wenge
 series_stop_words:
 - led
 - panel

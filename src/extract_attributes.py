@@ -102,6 +102,12 @@ def extract_attributes_from_text(text: str, config: dict[str, Any] | None = None
         sources[attr] = "title"
         confidence[attr] = 0.98
 
+    power_range = extract_power_range(title)
+    if power_range:
+        attributes["moc"] = power_range
+        sources["moc"] = "title_power_range"
+        confidence["moc"] = 0.96
+
     luminous_flux = extract_luminous_flux(title)
     if luminous_flux:
         attributes["strumien"] = luminous_flux
@@ -215,15 +221,21 @@ def extract_attributes_from_text(text: str, config: dict[str, Any] | None = None
         sources["sterowanie"] = "title"
         confidence["sterowanie"] = 0.86
 
-    color = extract_color(title_ascii, config)
-    if color:
+    explicit_color = extract_explicit_color(title)
+    if explicit_color:
+        attributes["kolor"] = explicit_color
+        sources["kolor"] = "title_explicit_color"
+        confidence["kolor"] = 0.97
+    else:
+        color = extract_color(title_ascii, config)
+    if not explicit_color and color:
         attributes["kolor"] = color
         sources["kolor"] = "title"
         confidence["kolor"] = 0.90
 
     # Kanlux: pojedyncza litera koloru na koncu kodu modelu (np. "DABER CCT W" -> bialy, "PHLOX GU10 B" -> czarny)
     if "kolor" not in attributes:
-        suffix_match = re.search(r"\s([WB])$", title.strip(), re.IGNORECASE)
+        suffix_match = re.search(r"\s([WBG])$", title.strip(), re.IGNORECASE)
         if suffix_match:
             suffix = suffix_match.group(1).upper()
             kanlux_color_suffix = {"W": "bialy", "B": "czarny", "G": "grafitowy"}
@@ -271,8 +283,69 @@ def extract_color(title_ascii: str, config: dict[str, Any]) -> str:
     return ""
 
 
+def extract_explicit_color(title: str) -> str:
+    match = re.search(
+        r"\bkolor\s+(.+?)(?:\s{2,}|\s+Gwarancja|\s+cert\.?|\s+PZH|\s+ENEC|\s+IK\s*\d{2}|\s*$)",
+        title,
+        flags=re.IGNORECASE,
+    )
+    if not match:
+        return ""
+    return normalize_explicit_color_phrase(match.group(1))
+
+
+def normalize_explicit_color_phrase(value: str) -> str:
+    text = strip_accents(compact_spaces(value)).lower()
+    text = re.sub(r"\b\d+\s*[xX]\s*(?:e14|e27|gu10)\b", " ", text)
+    text = re.sub(r"\b(?:e14|e27|gu10|ip\s*\d{2}|ik\s*\d{2}|pzh|enec|cert)\b", " ", text)
+    text = re.sub(r"(?:Ø|fi)?\s*\d+(?:[,.]\d+)?\s*(?:mm|cm)?\b", " ", text)
+    text = compact_spaces(text)
+    if not text:
+        return ""
+
+    patterns = [
+        (r"\bzloty\s+dab\b", "zloty dab"),
+        (r"\bdab\s+sonoma\b", "dab sonoma"),
+        (r"\bczarny\s+mat\b", "czarny mat"),
+        (r"\bbialy\s+mat\b", "bialy mat"),
+        (r"\bgrafit\w*\b", "grafitowy"),
+        (r"\bczarn\w*\b", "czarny"),
+        (r"\bbial\w*\b", "bialy"),
+        (r"\bszar\w*\b", "szary"),
+        (r"\bsrebr\w*\b", "srebrny"),
+        (r"\bnikiel\s+satyn\w*\b", "nikiel satynowy"),
+        (r"\bnikiel\b", "nikiel"),
+        (r"\bbraz\w*\b", "brazowy"),
+        (r"\bzlot\w*\b", "zloty"),
+        (r"\bbez\w*\b", "bezowy"),
+        (r"\bwenge\b", "wenge"),
+        (r"\bdrew\w*\b", "drewno"),
+    ]
+    matches: list[tuple[int, int, str]] = []
+    for pattern, canonical in patterns:
+        for match in re.finditer(pattern, text):
+            overlaps_existing = any(
+                not (match.end() <= start or match.start() >= end)
+                for start, end, _ in matches
+            )
+            if overlaps_existing:
+                continue
+            matches.append((match.start(), match.end(), canonical))
+    if not matches:
+        return ""
+
+    result: list[str] = []
+    for _, _, canonical in sorted(matches, key=lambda item: item[0]):
+        if canonical not in result:
+            result.append(canonical)
+    return " / ".join(result)
+
+
 def extract_power_from_special_formats(title: str) -> str:
     compact_title = compact_spaces(title)
+    power_range = extract_power_range(compact_title)
+    if power_range:
+        return power_range
     match = re.search(r"\b(\d{1,3}(?:[,.]\d+)?)W(?:CCT|DIM|NW|WW|CW)\b", compact_title, flags=re.IGNORECASE)
     if match:
         return f"{normalize_number(match.group(1))}W"
@@ -335,10 +408,28 @@ def extract_panel_format(title: str) -> str:
     return ""
 
 
+def extract_power_range(title: str) -> str:
+    match = re.search(r"\b(\d{1,3}(?:[,.]\d+)?)\s*[-\u2013]\s*(\d{1,3}(?:[,.]\d+)?)\s*W\b", title, flags=re.IGNORECASE)
+    if not match:
+        return ""
+    low = normalize_number(match.group(1))
+    high = normalize_number(match.group(2))
+    return f"{low}-{high}W" if low != high else f"{high}W"
+
+
 def extract_luminous_flux(title: str) -> str:
     compact_title = compact_spaces(title)
     if re.search(r"\b\d{2,3}LM\b", compact_title, flags=re.IGNORECASE):
         return ""
+    min_max_match = re.search(
+        r"\bmin\s*(\d+(?:[,.]\d+)?)\s*(?:lm|lumenow|lumen\u00f3w)\b.*?\bmax\s*(\d+(?:[,.]\d+)?)\s*(?:lm|lumenow|lumen\u00f3w)\b",
+        compact_title,
+        flags=re.IGNORECASE,
+    )
+    if min_max_match:
+        low = normalize_number(min_max_match.group(1))
+        high = normalize_number(min_max_match.group(2))
+        return f"{low}-{high}lm" if low != high else f"{high}lm"
     max_match = re.search(r"\bmax\s*(\d+(?:[,.]\d+)?)\s*(?:lm|lumenow|lumen\u00f3w)\b", compact_title, flags=re.IGNORECASE)
     if max_match:
         return f"{normalize_number(max_match.group(1))}lm"
@@ -356,6 +447,11 @@ def extract_luminous_flux(title: str) -> str:
         max_value = format_number(max(values))
         return f"{min_value}-{max_value}lm" if min_value != max_value else f"{max_value}lm"
 
+    values = [float(value.replace(",", ".")) for value in re.findall(r"(?<![A-Z0-9])(\d+(?:[,.]\d+)?)\s*(?:lm|lumenow|lumen\u00f3w)\b", compact_title, flags=re.IGNORECASE)]
+    if len(values) > 1:
+        min_value = format_number(min(values))
+        max_value = format_number(max(values))
+        return f"{min_value}-{max_value}lm" if min_value != max_value else f"{max_value}lm"
     match = re.search(r"(?<![A-Z0-9])(\d+(?:[,.]\d+)?)\s*(?:lm|lumenow|lumen\u00f3w)\b", compact_title, flags=re.IGNORECASE)
     if match:
         return f"{normalize_number(match.group(1))}lm"
@@ -381,6 +477,7 @@ def extract_dimensions(title: str) -> dict[str, str]:
     width = re.search(r"\b(?:szer\.?|szeroko\u015b\u0107|szerokosc)\s*(\d+(?:[,.]\d+)?)\s*cm\b", compact_title, flags=re.IGNORECASE)
     height = re.search(r"\b(?:wys\.?|wysoko\u015b\u0107|wysokosc)\s*(\d+(?:[,.]\d+)?)\s*(?:cm|mm)\b", compact_title, flags=re.IGNORECASE)
     cm_pair = re.search(r"\b(\d+(?:[,.]\d+)?)\s*cm\s*[xX\u00d7/]\s*(\d+(?:[,.]\d+)?)\s*cm\b", compact_title)
+    compact_cm_pair = re.search(r"\b(\d+(?:[,.]\d+)?)\s*[xX\u00d7]\s*(\d+(?:[,.]\d+)?)\s*cm\b", compact_title)
     if length:
         dimensions["dlugosc"] = normalize_number(length.group(1)) + "cm"
     elif length_mm:
@@ -388,6 +485,9 @@ def extract_dimensions(title: str) -> dict[str, str]:
     elif cm_pair:
         dimensions["dlugosc"] = normalize_number(cm_pair.group(1)) + "cm"
         dimensions["szerokosc"] = normalize_number(cm_pair.group(2)) + "cm"
+    elif compact_cm_pair:
+        dimensions["dlugosc"] = normalize_number(compact_cm_pair.group(1)) + "cm"
+        dimensions["szerokosc"] = normalize_number(compact_cm_pair.group(2)) + "cm"
     if width:
         dimensions["szerokosc"] = normalize_number(width.group(1)) + "cm"
     if height:
@@ -442,6 +542,8 @@ def extract_sensor(title: str) -> str:
         return "z czujnikiem ruchu"
     if re.search(r"\b[A-Z0-9]+(?:-[A-Z0-9]+)*-SE[A-Z]?\b", title):
         return "z czujnikiem ruchu"
+    if re.search(r"\bSE[GW]?\b", title):
+        return "z czujnikiem ruchu"
     return ""
 
 
@@ -468,6 +570,8 @@ def extract_warranty(title: str) -> str:
 def extract_material(title_ascii: str) -> str:
     if re.search(r"\bdrewnian", title_ascii):
         return "drewniana"
+    if re.search(r"\btworzywo\s+sztuczne\b", title_ascii):
+        return "tworzywo sztuczne"
     if re.search(r"\balumini", title_ascii):
         return "aluminium"
     if re.search(r"\bstal", title_ascii):
@@ -541,9 +645,9 @@ def extract_driver_control(title: str) -> str:
 
 
 def extract_shape(title_ascii: str) -> str:
-    if re.search(r"\bprostokatny\b", title_ascii):
+    if re.search(r"\bprostokat(?:ny|na)?\b", title_ascii):
         return "prostok\u0105tna"
-    if re.search(r"\bkwadratowy\b", title_ascii):
+    if re.search(r"\bkwadrat(?:owy|owa)?\b", title_ascii):
         return "kwadratowa"
     if re.search(r"\bokragl[ay]\b", title_ascii):
         return "okr\u0105g\u0142a"
@@ -885,6 +989,8 @@ def merge_attributes_from_columns(
     for attr, column in mappings.items():
         if should_keep_existing_attribute(str(attr), attrs.get(str(attr), "")):
             continue
+        if str(attr) == "kolor" and sources.get("kolor") == "title_explicit_color":
+            continue
         if column not in row or not str(row.get(column, "")).strip():
             continue
         value = normalize_attribute_value(str(row.get(column, "")).strip(), str(attr))
@@ -907,6 +1013,8 @@ def should_keep_existing_attribute(attr: str, value: str) -> bool:
         return False
     if attr == "strumien":
         return True
+    if attr == "moc" and re.fullmatch(r"\d+(?:[,.]\d+)?-\d+(?:[,.]\d+)?W", value):
+        return True
     return False
 
 
@@ -915,6 +1023,9 @@ def normalize_attribute_value(value: str, attr: str) -> str:
     if not value:
         return ""
     if attr == "moc":
+        power_range = extract_power_range(value)
+        if power_range:
+            return power_range
         power_values = [float(number.replace(",", ".")) for number in re.findall(r"(\d+(?:[,.]\d+)?)\s*W\b", value, flags=re.IGNORECASE)]
         if power_values:
             low = format_number(min(power_values))

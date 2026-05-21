@@ -39,6 +39,7 @@ FEATURE_MAP = {
     "Klasa ochronności": ["attr_ik", "Klasa ochronności"],
     "Kąt świecenia": ["attr_kat_swiecenia", "Kąt", "Kąt świecenia"],
     "Kolor": ["attr_kolor", "Kolor obudowy"],
+    "Kolor producenta": ["Kolor producenta", "attr_kolor_producenta", "attr_kolor", "Kolor obudowy"],
     "Trzonek": ["attr_gwint", "Gwint", "Trzonek", "Rodzaj gwintu"],
     "Materiał": ["attr_material", "Materiał"],
     "Kształt": ["attr_ksztalt", "Kształt"],
@@ -231,6 +232,7 @@ def build_features(row: pd.Series, include_empty: bool) -> dict[str, str]:
         feature_value = normalize_feature_value(str(value), feature_name)
         if feature_value or include_empty:
             features.setdefault(feature_name, feature_value)
+    remove_redundant_producer_color(features)
     return features
 
 
@@ -281,6 +283,8 @@ def normalize_feature_value(value: str, feature_name: str = "") -> str:
         return normalize_socket_value(value)
     if feature_name == "Kolor":
         return normalize_color_value(value)
+    if feature_name == "Kolor producenta":
+        return normalize_producer_color_value(value)
     if feature_name == "Materiał":
         return normalize_material_value(value)
     return value
@@ -335,6 +339,96 @@ def normalize_color_value(value: str) -> str:
         "biały": "Biały",
     }
     return aliases.get(value, capitalize_first(value))
+
+
+def normalize_producer_color_value(value: str) -> str:
+    value = compact_spaces(value)
+    if not value:
+        return ""
+    value = re.sub(r"\s*\|\s*", " / ", value)
+    value = re.sub(r"\s*/\s*", " / ", value)
+    parts = [compact_spaces(part) for part in value.split(" / ") if compact_spaces(part)]
+    if len(parts) > 1:
+        return " / ".join(normalize_producer_color_part(part) for part in parts)
+    return normalize_producer_color_part(value)
+
+
+def normalize_producer_color_part(value: str) -> str:
+    aliases = {
+        "bialy": "Biały",
+        "biały": "Biały",
+        "czarny": "Czarny",
+        "szary": "Szary",
+        "srebrny": "Srebrny",
+        "grafitowy": "Grafitowy",
+        "brazowy": "Brązowy",
+        "brązowy": "Brązowy",
+        "bezowy": "Beżowy",
+        "beżowy": "Beżowy",
+        "zloty": "Złoty",
+        "złoty": "Złoty",
+        "bialy mat": "Biały mat",
+        "biały mat": "Biały mat",
+        "czarny mat": "Czarny mat",
+        "nikiel satynowy": "Nikiel satynowy",
+        "inox": "STAL INOX",
+        "zloty dab": "Złoty dąb",
+        "złoty dąb": "Złoty dąb",
+        "dab sonoma": "Dąb sonoma",
+        "dąb sonoma": "Dąb sonoma",
+        "wenge": "Wenge",
+        "drewno": "Drewno",
+    }
+    return aliases.get(value.lower(), capitalize_first(value))
+
+
+def remove_redundant_producer_color(features: dict[str, str]) -> None:
+    color = features.get("Kolor", "")
+    producer_color = features.get("Kolor producenta", "")
+    if colors_are_equivalent(color, producer_color):
+        features.pop("Kolor producenta", None)
+
+
+def colors_are_equivalent(color: str, producer_color: str) -> bool:
+    color_values = comparable_color_values(color)
+    producer_color_values = comparable_color_values(producer_color)
+    return bool(color_values) and color_values == producer_color_values
+
+
+def comparable_color_values(value: str) -> set[str]:
+    base_colors = {
+        "bialy": "Biały",
+        "biały": "Biały",
+        "czarny": "Czarny",
+        "szary": "Szary",
+        "srebrny": "Srebrny",
+        "zloty": "Złoty",
+        "złoty": "Złoty",
+        "brazowy": "Brązowy",
+        "brązowy": "Brązowy",
+        "grafitowy": "Grafitowy",
+        "bezowy": "Beżowy",
+        "beżowy": "Beżowy",
+        "kaszmir": "Kaszmir",
+        "zielony": "Zielony",
+        "czerwony": "Czerwony",
+        "pomaranczowy": "Pomarańczowy",
+        "pomarańczowy": "Pomarańczowy",
+        "antracyt": "Antracyt",
+        "niebieski": "Niebieski",
+        "transparentny": "Transparentny",
+        "zolty": "Żółty",
+        "żółty": "Żółty",
+        "rozowy": "Różowy",
+        "różowy": "Różowy",
+        "fioletowy": "Fioletowy",
+    }
+    result: set[str] = set()
+    for part in re.split(r"\s*(?:\||/)\s*", str(value or "")):
+        normalized = part.lower().strip()
+        if normalized in base_colors:
+            result.add(base_colors[normalized])
+    return result
 
 
 def normalize_material_value(value: str) -> str:

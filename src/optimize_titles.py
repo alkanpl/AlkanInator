@@ -147,13 +147,13 @@ def build_inflected_values(values: dict[str, str], config: dict[str, Any]) -> di
     for target, mapping in inflections.items():
         if target == "kolor_feminine":
             color = values.get("kolor", "")
-            result[target] = str(mapping.get(color, color)) if isinstance(mapping, dict) else color
+            result[target] = inflect_value(color, mapping) if isinstance(mapping, dict) else color
         if target.startswith("ksztalt_"):
             shape = values.get("ksztalt", "")
             result[target] = str(mapping.get(shape, shape)) if isinstance(mapping, dict) else shape
         if target == "kolor_neuter":
             color = values.get("kolor", "")
-            result[target] = str(mapping.get(color, color)) if isinstance(mapping, dict) else color
+            result[target] = inflect_value(color, mapping) if isinstance(mapping, dict) else color
     # Tlumaczenie barwy na slowo kluczowe SEO (np. 4000K -> neutralna)
     barwa = values.get("barwa", "")
     if barwa:
@@ -177,9 +177,26 @@ def build_inflected_values(values: dict[str, str], config: dict[str, Any]) -> di
         result["eco_clean"] = eco
     else:
         result["eco_clean"] = ""
+    old_title_normalized = normalize_text(values.get("old_title", ""))
+    result["cct"] = "CCT" if "cct" in old_title_normalized or values.get("barwa_zakres", "") else ""
+    result["dim"] = "DIM" if "cctdim" in old_title_normalized or "sciemn" in old_title_normalized else ""
+    result["rgb"] = "RGB" if "rgb" in old_title_normalized else ""
     series_clean = re.sub(r"(?<![-\w])LED(?![-\w])", " ", values.get("seria", ""), flags=re.IGNORECASE)
     result["seria_clean"] = compact_spaces(series_clean) or values.get("seria", "")
     return result
+
+
+def inflect_value(value: str, mapping: dict[str, Any]) -> str:
+    value = compact_spaces(value)
+    if not value:
+        return ""
+    direct = mapping.get(value)
+    if direct:
+        return str(direct)
+    if "/" not in value:
+        return str(mapping.get(value, value))
+    parts = [compact_spaces(part) for part in value.split("/") if compact_spaces(part)]
+    return " / ".join(str(mapping.get(part, part)) for part in parts)
 
 
 def build_neuter_light_color(value: str) -> str:
