@@ -59,12 +59,25 @@ KNOWN_PRODUCER_NAMES = {
     "Pawbol",
     "Polmark",
     "ETI",
+    "ELKO-BIS",
+    "EPN",
+    "EPO",
+    "EPS",
+    "FELO",
+    "Helukabel",
     "NKT",
     "WAGO",
     "Orno",
     "Eaton",
+    "Lange",
     "Schneider Electric",
     "Legrand",
+    "Morek",
+    "PCE",
+    "Plastrol",
+    "Rawlplug",
+    "Simet",
+    "Steinel",
     "V-TAC",
 }
 
@@ -100,9 +113,10 @@ TYPE_STOP_WORDS = {
 def detect_columns(df: pd.DataFrame) -> dict[str, str | None]:
     return {
         "title": detect_column(df, ["Title", "Nazwa", "Nazwa produktu", "name"]),
-        "sku": detect_column(df, ["Sku", "SKU", "Kod", "Indeks"]),
+        "sku": detect_column(df, ["Sku", "SKU", "Kod", "Indeks", "PRODUCT_CODE", "TOWARIDX"]),
         "ean": detect_column(df, ["hwp_product_gtin", "EAN", "GTIN"]),
         "category": detect_column(df, ["Kategorie produktów", "Kategorie", "category", "categories"]),
+        "producer": detect_column(df, ["PRODUCER", "Producent", "manufacturer_name", "manufacturer", "Marka"]),
         "status": detect_column(df, ["Status"]),
         "product_type": detect_column(df, ["Product Type", "Typ produktu"]),
     }
@@ -166,10 +180,39 @@ def infer_type_from_title(title: str) -> str:
     return useful[0] if len(useful) == 1 else " ".join(useful[:2])
 
 
+def normalize_explicit_producer(value: Any) -> str:
+    producer = compact_spaces(str(value or ""))
+    if not producer:
+        return ""
+    aliases = {
+        "BEMKO": "Bemko",
+        "ELKO-BIS": "ELKO-BIS",
+        "EPN": "EPN",
+        "EPO": "EPO",
+        "EPS": "EPS",
+        "EATON": "Eaton",
+        "ETI": "ETI",
+        "F&F": "F&F",
+        "GTV": "GTV",
+        "HAGER": "Hager",
+        "HELUKABEL": "Helukabel",
+        "KANLUX": "Kanlux",
+        "LANGE ŁUKASZUK": "Lange",
+        "LEDVANCE": "LEDVANCE",
+        "MOREK": "Morek",
+        "PCE": "PCE",
+        "PLASTROL": "Plastrol",
+        "RAWLPLUG": "Rawlplug",
+        "SIMET": "Simet",
+    }
+    return aliases.get(producer.upper(), producer)
+
+
 def build_taxonomy(df: pd.DataFrame, columns: dict[str, str | None]) -> dict[str, Any]:
     title_col = columns["title"]
     sku_col = columns["sku"]
     category_col = columns["category"]
+    producer_col = columns.get("producer")
     if not title_col:
         raise SystemExit("Nie wykryto kolumny z nazwą produktu.")
 
@@ -190,11 +233,26 @@ def build_taxonomy(df: pd.DataFrame, columns: dict[str, str | None]) -> dict[str
         if suffix:
             sku_suffixes[suffix] += 1
         paths = split_categories(row.get(category_col, "")) if category_col else []
-        producer, source = infer_producer(title, sku, paths, known_producers)
+        explicit_producer = normalize_explicit_producer(row.get(producer_col, "")) if producer_col else ""
+        if explicit_producer:
+            producer = explicit_producer
+            source = f"sku_suffix:{suffix}" if suffix else "producer_column"
+        else:
+            producer, source = infer_producer(title, sku, paths, known_producers)
         if producer:
             producers[producer] += 1
             producer_sources[f"{producer}|{source}"] += 1
             known_producers.add(producer)
+            title_producer, title_source = infer_producer(title, "", paths, known_producers)
+            if (
+                suffix
+                and title_source == "title_known"
+                and title_producer
+                and normalize_header(title_producer) != normalize_header(producer)
+            ):
+                producers[title_producer] += 1
+                producer_sources[f"{title_producer}|sku_suffix:{suffix}"] += 1
+                known_producers.add(title_producer)
 
         for path in paths:
             categories[path] += 1

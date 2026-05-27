@@ -36,6 +36,18 @@ title_strategy_rules:
   template: Oprawa sufitowa {seria} {model} {kolor_feminine} {producent}
   required_fields:
   - producent
+- name: oprawa_sufitowa_aqilo
+  category_contains: Plafoniery
+  title_contains: AQILO
+  template: Oprawa sufitowa {seria} {gwint} {ip} {kolor_feminine} {producent}
+  required_fields:
+  - producent
+- name: oprawa_kanalowa_milo
+  category_contains: Plafoniery
+  title_contains: MILO
+  template: Oprawa kanałowa {seria} {gwint} {wymiary} {ip} {kolor_feminine} {producent}
+  required_fields:
+  - producent
 - name: plafoniera_e14
   category_contains: Plafoniery
   title_contains: E14
@@ -58,6 +70,13 @@ title_strategy_rules:
   category_contains: Plafoniery
   title_contains: CCT
   template: Plafoniera LED CCT {dim} {seria_clean} {eco_clean} {moc} {strumien} {lm_w} {barwa_zakres} {ksztalt} {srednica} {wymiary} {ip} {czujnik} {kolor_feminine} {producent}
+  required_fields:
+  - producent
+- name: ramka_oswietleniowa_avar
+  category_contains: Panele LED
+  title_contains: AVAR
+  template: Ramka oświetleniowa LED podtynkowy {seria} {ksztalt_masculine} {wymiary} {moc} {strumien} {barwa} {barwa_neuter}
+    {ip} {kolor} {producent}
   required_fields:
   - producent
 - name: panel_led
@@ -113,6 +132,8 @@ accessory_title_templates:
   Konektor: '{accessory_type} {seria} QC {wymiary} {producent}'
   Łącznik: '{accessory_type} {pasuje_do_clean} {seria} {ilosc_sztuk} {kolor} {producent}'
   Siatka ochronna: '{accessory_type} {pasuje_do} {moc} {producent}'
+manual_title_templates_by_sku:
+  '38149': Czujnik ruchu do oprawy hermetycznej MAH PRO {producent}
 max_title_length: 120
 min_title_length: 35
 append_sku_after_producer: true

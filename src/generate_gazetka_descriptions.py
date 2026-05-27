@@ -173,6 +173,18 @@ def ensure_minimum_length(html: str, family: str, row: pd.Series) -> str:
             f"<p>{escape(note)}</p>\n\n<h3>Specyfikacja techniczna</h3>",
             1,
         )
+    final_notes = [
+        "Wariant warto porównać z pozostałymi rozmiarami lub odmianami tej samej serii, ponieważ podobna nazwa może oznaczać inną długość, wymiar albo zakres zastosowania.",
+        "Przed zakupem dobrze jest zestawić opis, kod producenta oraz parametry techniczne z realną potrzebą użytkownika, aby wybrać dokładnie właściwy wariant produktu.",
+    ]
+    for note in final_notes:
+        if chars_without_spaces(strip_html(result)) >= MIN_CHARS_NO_SPACES:
+            break
+        result = result.replace(
+            "<h3>Specyfikacja techniczna</h3>",
+            f"<p>{escape(note)}</p>\n\n<h3>Specyfikacja techniczna</h3>",
+            1,
+        )
     return result
 
 

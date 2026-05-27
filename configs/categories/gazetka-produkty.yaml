@@ -15,11 +15,17 @@ sku_columns:
 title_fallback_columns:
   - Opis
   - Atrybuty
+  - atrybuty nie posegregowane
+  - gazetki_Opis
+  - gazetki_Atrybuty
 
 input_attribute_text_columns:
   - Nazwa produktu
   - Opis
   - Atrybuty
+  - atrybuty nie posegregowane
+  - gazetki_Opis
+  - gazetki_Atrybuty
 
 default_values: {}
 
@@ -138,9 +144,20 @@ title_strategy_rules:
 manual_title_templates_by_sku:
   "92501T48163": "Przedłużacz bębnowy X-REEL 30m 4xGS16A IP20 {producent}"
   "92501T48223": "Przedłużacz bębnowy X-REEL 20m 4xGS16A IP20 {producent}"
-  "04.1R": "Rura elektroinstalacyjna karbowana PVC EPS 04.1R"
-  "06.53": "Rura elektroinstalacyjna sztywna PVC 40mm szara {producent}"
-  "05.174": "Rura karbowana giętka PVC UV 25/19mm 50m czarna EPS 05.174"
+  "04.1R": "Peszel rura giętka karbowana LDPE UV 7/4,5mm 100m czarna EPS 04.1R"
+  "06.53": "Rura elektroinstalacyjna sztywna PVC 40mm 3m szara {producent}"
+  "05.174": "Peszel rura giętka karbowana PVC UV 25/19mm 50m czarna EPS 05.174"
+  "248439": "Wyzwalacz wzrostowy 110-415V AC/DC ZP-ASA/230 248439"
+  "EP-501966": "Ogranicznik przepięć PV DC Typ 2 2+PE SPPVRT2-10-2+PE 1000V Eaton EP-501966"
+  "285345": "Rozdzielnica natynkowa 3x24 BF-O-3 72-P 415V 43x16 cm IP30 bialy {producent}"
+  "PSR-463-AUTO": "Automatyczny przełącznik sieć-agregat 4P 63A 3x230/400V F&F PSR-463-AUTO"
+  "284908": "Rozłącznik izolacyjny ZP-A63/3 3P 63A 400V IP40 Eaton 284908"
+  "713531": "Kabel fotowoltaiczny SOLARFLEX-X H1Z2Z2-K 1x6mm2 1m czarny Helukabel 713531"
+  "713569": "Kabel fotowoltaiczny SOLARFLEX-X H1Z2Z2-K 1x6mm2 1m czerwony Helukabel 713569"
+  "11024828": "Gniazdo PV MC4 Evo 2 4-6mm2 1500V IP68 Helukabel 11024828"
+  "11024829": "Wtyk PV MC4 Evo 2 4-6mm2 1500V IP68 Helukabel 11024829"
+  "160815421W": "Gniazdo stałe COMBO-POL2 CEE 16A 5P 400V 2xGS16A Gniazdo stałe COMBO-POL2 160815421W PCE"
+  "909110002W": "Rozdzielnica przenośna OPOLE CEE 16A 32A 4xGS16A OPOLE 909110002W PCE"
   "W-100518": "Przedłużacz bębnowy automatyczny 14+2m Plastrol W-100518"
   "W-00318": "Naświetlacz akumulatorowy LED KEL 40W 6500lm 4000mAh Plastrol W-00318"
   "W-00315": "Reflektor roboczy potrójny na statywie KEL 40W 3200lm Plastrol W-00315"
@@ -149,8 +166,9 @@ manual_title_templates_by_sku:
   "93000411": "Uchwyt plastikowy z obciążnikiem do drutu odgromowego Ø8-10mm ELKO-BIS 93000411"
   "001101214": "Obudowa rozdzielnicy podtynkowa ERP18-4 18 modułów 4 rzędy IP40 biała {producent}"
   "001101216": "Obudowa rozdzielnicy podtynkowa ERP18-5 18 modułów 5 rzędów IP40 biała {producent}"
-  "002172406": "Wyłącznik różnicowoprądowy nadprądowy KZS-2M2p EDI A B16/0.03 16A 30mA 10kA IP20 {producent}"
-  "002173814": "Wyłącznik różnicowoprądowy nadprądowy KZS-AFDD 3M2p A B16/0.03 16A 30mA IP20 {producent}"
+  "002172406": "Wyłącznik różnicowoprądowy 16A 2-biegunowy 30mA KZS-2M2p EDI A B16/0.03 {producent}"
+  "002173814": "Wyłącznik różnicowoprądowy 16A 2-biegunowy 30mA KZS-AFDD 3M2p {producent}"
+  "ADZ316D": "Wyłącznik różnicowoprądowy nadprądowy 16A 3x1P+N 30mA Typ A {producent}"
   "ST057770": "Czujnik obecności i ruchu Steinel IS 2360-3 ECO 2000W biały {sku}"
   "ST081706": "Czujnik obecności i ruchu Steinel IS 2360-3 ECO 2000W czarny {sku}"
   "FL06381216": "Zestaw wkrętaków elektrycznych FELO E-SMART SLIM 12 cz. VDE {sku}"
@@ -159,6 +177,18 @@ manual_title_templates_by_sku:
   "HT1P169": "Zaciskarka hydrauliczna ręczna 16-300mm2 100kN {producent}"
   "HT5K279-2": "Spodnie robocze odpinane nogawki szaro-czarne {producent}"
   "HT5K284": "Kurtka robocza szaro-czarna {producent}"
+  "HT5K279-2-S": "Spodnie robocze EDGAR II z odpinanymi nogawkami szaro-czarne rozmiar S (48) {producent}"
+  "HT5K279-2-M": "Spodnie robocze EDGAR II z odpinanymi nogawkami szaro-czarne rozmiar M (50) {producent}"
+  "HT5K279-2-L": "Spodnie robocze EDGAR II z odpinanymi nogawkami szaro-czarne rozmiar L (52) {producent}"
+  "HT5K279-2-XL": "Spodnie robocze EDGAR II z odpinanymi nogawkami szaro-czarne rozmiar XL (54) {producent}"
+  "HT5K279-2-2XL": "Spodnie robocze EDGAR II z odpinanymi nogawkami szaro-czarne rozmiar 2XL (56) {producent}"
+  "HT5K279-2-3XL": "Spodnie robocze EDGAR II z odpinanymi nogawkami szaro-czarne rozmiar 3XL (58) {producent}"
+  "HT5K284-1-S": "Bluza robocza EDGAR II szaro-czarna rozmiar S (48) {producent}"
+  "HT5K284-1-M": "Bluza robocza EDGAR II szaro-czarna rozmiar M (50) {producent}"
+  "HT5K284-1-L": "Bluza robocza EDGAR II szaro-czarna rozmiar L (52) {producent}"
+  "HT5K284-1-XL": "Bluza robocza EDGAR II szaro-czarna rozmiar XL (54) {producent}"
+  "HT5K284-1-2XL": "Bluza robocza EDGAR II szaro-czarna rozmiar 2XL (56) {producent}"
+  "HT5K284-1-3XL": "Bluza robocza EDGAR II szaro-czarna rozmiar 3XL (58) {producent}"
   "MAA5016A11": "Złączka uniwersalna OTL16-5x 5x1xAl/Cu 1,5-16mm2 1000VAC/1500VDC wielobarwna {producent}"
   "MAA5050A10": "Złączka uniwersalna OTL50-5x 5x1xAl/Cu 1,5-50mm2 1000VAC/1500VDC wielobarwna {producent}"
   "MAA5095A10": "Złączka uniwersalna OTL95-5x 5x1xAl/Cu 6-95mm2 1000VAC/1500VDC szara {producent}"

@@ -79,7 +79,16 @@ Eksport wyniku AlkanInatora do CSV importowego Baselinkera:
 py src/export_to_baselinker_csv.py --input input/alkan_kanlux_master_names_from_parameters_v10_zolte_export.xlsx --output output/baselinker_import_alkan_kanlux_v10_zolte.csv
 ```
 
-Skrypt tworzy CSV z kolumnami zgodnymi z przykladem Baselinkera: `product_id;name;sku;ean;manufacturer_name;description;features;images_urls`. Nazwa produktu bierze sie domyslnie z `new_title`, a parametry techniczne trafiaja do JSON w kolumnie `features`.
+Skrypt tworzy CSV z kolumnami zgodnymi z przykladem Baselinkera: `product_id;name;sku;ean;manufacturer_name;category;description;features;images_urls`. Nazwa produktu bierze sie domyslnie z `new_title`, kategoria z `proponowana_kategoria_1`, a parametry techniczne trafiaja do JSON w kolumnie `features`.
+
+Propozycje kategorii na podstawie nazwy, typu produktu i wiedzy katalogowej:
+
+```powershell
+py src/recommend_categories.py --input output/gazetka_produkty_nazwy_final_20260526_po_suffixach_z_opisami.xlsx --output output/category_recommendations_gazetka_20260526.xlsx --top-n 3
+```
+
+Skrypt dopisuje kolumny `proponowana_kategoria_1..N`, `category_score_1..N`, `category_confidence_1..N` i `category_reasons_1..N`. Domyslnie korzysta z `dictionaries/woocommerce_catalog_knowledge.yaml` oraz `dictionaries/learned_product_taxonomy.yaml`.
+Zaakceptowane reczne korekty po SKU mozna dopisywac w `dictionaries/category_recommendation_overrides.yaml`.
 
 ## Wyniki
 

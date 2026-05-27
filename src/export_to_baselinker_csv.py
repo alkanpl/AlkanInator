@@ -9,8 +9,11 @@ from typing import Any
 
 import pandas as pd
 
-from utils import compact_spaces, is_blank, normalize_header, read_products
+from utils import compact_spaces, is_blank, load_yaml, normalize_header, read_products
 
+
+DEFAULT_SKU_SUFFIX_KNOWLEDGE_PATH = "dictionaries/learned_product_taxonomy.yaml"
+DEFAULT_CATALOG_KNOWLEDGE_PATH = "dictionaries/woocommerce_catalog_knowledge.yaml"
 
 BASELINKER_COLUMNS = [
     "product_id",
@@ -18,13 +21,15 @@ BASELINKER_COLUMNS = [
     "sku",
     "ean",
     "manufacturer_name",
+    "category",
     "description",
     "features",
     "images_urls",
 ]
 
 FEATURE_MAP = {
-    "Producent": ["attr_producent", "Producent", "Marka"],
+    "Producent": ["attr_producent", "Producent", "manufacturer_name", "producer", "Marka"],
+    "Dane producenta": ["Dane producenta", "Dane Producenta", "manufacturer_data", "producer_data"],
     "EAN (GTIN)": ["EAN", "ean"],
     "Kod producenta": ["Kod Producenta", "Kod", "SKU", "sku"],
     "Typ produktu": ["attr_typ", "Typ", "Rodzaj produktu"],
@@ -59,6 +64,9 @@ FEATURE_MAP = {
 FEATURE_NAME_ALIASES = {
     "marka": "Producent",
     "producent": "Producent",
+    "dane producenta": "Dane producenta",
+    "manufacturer data": "Dane producenta",
+    "producer data": "Dane producenta",
     "rodzaj produktu": "Typ produktu",
     "typ": "Typ produktu",
     "typ produktu": "Typ produktu",
@@ -98,6 +106,11 @@ def main() -> None:
     parser.add_argument("--sheet", help="Arkusz XLSX, jesli input ma wiele arkuszy.")
     parser.add_argument("--output", default="output/baselinker_import.csv", help="Docelowy CSV dla Baselinkera.")
     parser.add_argument("--name-column", default="", help="Wymusza kolumne nazwy. Domyslnie: new_title, Nazwa, Nazwa B2C / SEO final.")
+    parser.add_argument(
+        "--category-column",
+        default="",
+        help="Wymusza kolumne kategorii. Domyslnie: proponowana_kategoria_1, Kategoria, category.",
+    )
     parser.add_argument("--include-empty-features", action="store_true", help="Zapisuje puste parametry w JSON features.")
     parser.add_argument("--links-file", default="", help="XLSX/CSV z linkami do zdjec, np. input/Linki.xlsx.")
     parser.add_argument("--links-sheet", default=None, help="Arkusz w pliku linkow. Domyslnie pierwszy arkusz.")
@@ -108,6 +121,16 @@ def main() -> None:
         choices=["plain", "producer_suffix"],
         default="producer_suffix",
         help="Format SKU w eksporcie. producer_suffix daje np. 22606/KAN.",
+    )
+    parser.add_argument(
+        "--sku-suffix-knowledge",
+        default=DEFAULT_SKU_SUFFIX_KNOWLEDGE_PATH,
+        help="Slownik z nauczonymi suffixami SKU producentow.",
+    )
+    parser.add_argument(
+        "--catalog-knowledge",
+        default=DEFAULT_CATALOG_KNOWLEDGE_PATH,
+        help="Slownik wiedzy katalogowej uzywany pomocniczo przy dopasowaniu suffixow.",
     )
     args = parser.parse_args()
 
@@ -121,7 +144,18 @@ def main() -> None:
             args.image_key_column,
             args.main_image_column,
         )
-    exported = build_baselinker_rows(df, args.name_column, args.include_empty_features, args.sku_format)
+    catalog_knowledge = load_yaml(args.catalog_knowledge) if args.catalog_knowledge else {}
+    producer_suffixes = load_producer_suffixes(args.sku_suffix_knowledge, args.catalog_knowledge)
+    manufacturer_data_by_producer = build_manufacturer_data_by_producer(catalog_knowledge)
+    exported = build_baselinker_rows(
+        df,
+        args.name_column,
+        args.category_column,
+        args.include_empty_features,
+        args.sku_format,
+        producer_suffixes,
+        manufacturer_data_by_producer,
+    )
     write_baselinker_csv(exported, args.output)
 
     print(f"OK: wczytano {len(df)} produktow")
@@ -133,9 +167,15 @@ def main() -> None:
 def build_baselinker_rows(
     df: pd.DataFrame,
     name_column: str = "",
+    category_column: str = "",
     include_empty_features: bool = False,
     sku_format: str = "producer_suffix",
+    producer_suffixes: dict[str, str] | None = None,
+    manufacturer_data_by_producer: dict[str, str] | None = None,
 ) -> list[dict[str, str]]:
+    if sku_format == "producer_suffix" and producer_suffixes is None:
+        producer_suffixes = load_producer_suffixes()
+
     rows: list[dict[str, str]] = []
     for _, row in df.iterrows():
         name = first_value(row, [name_column] if name_column else [])
@@ -145,11 +185,21 @@ def build_baselinker_rows(
         sku = first_value(row, ["SKU", "Kod Producenta", "Kod", "sku"])
         ean = only_digits(first_value(row, ["EAN", "ean"]))
         producer = first_value(row, ["attr_producent", "Producent", "manufacturer_name", "Marka"])
-        export_sku = format_sku(sku, producer, sku_format)
+        export_sku = format_sku(sku, producer, sku_format, producer_suffixes)
+        category = first_value(
+            row,
+            [category_column] if category_column else [
+                "proponowana_kategoria_1",
+                "Kategoria",
+                "category",
+                "Kategorie",
+                "gazetki_Kategoria",
+            ],
+        )
         description = first_value(row, ["Opis HTML", "description", "Opis"])
         images = first_value(row, ["images_urls", "Zdjęcie URL", "Obrazki", "Zdjecia", "Zdjęcia"])
 
-        features = build_features(row, include_empty_features)
+        features = build_features(row, include_empty_features, manufacturer_data_by_producer, producer)
         rows.append(
             {
                 "product_id": first_value(row, ["product_id", "Baselinker ID"]),
@@ -157,6 +207,7 @@ def build_baselinker_rows(
                 "sku": export_sku,
                 "ean": ean,
                 "manufacturer_name": producer,
+                "category": category,
                 "description": description,
                 "features": json.dumps(features, ensure_ascii=False, separators=(",", ":")),
                 "images_urls": images,
@@ -216,7 +267,12 @@ def normalize_code(value: Any) -> str:
     return value
 
 
-def build_features(row: pd.Series, include_empty: bool) -> dict[str, str]:
+def build_features(
+    row: pd.Series,
+    include_empty: bool,
+    manufacturer_data_by_producer: dict[str, str] | None = None,
+    producer: str = "",
+) -> dict[str, str]:
     features: dict[str, str] = {}
     for target, source_columns in FEATURE_MAP.items():
         value = normalize_feature_value(first_value(row, source_columns), target)
@@ -232,8 +288,26 @@ def build_features(row: pd.Series, include_empty: bool) -> dict[str, str]:
         feature_value = normalize_feature_value(str(value), feature_name)
         if feature_value or include_empty:
             features.setdefault(feature_name, feature_value)
+    add_manufacturer_data_feature(features, manufacturer_data_by_producer, producer)
     remove_redundant_producer_color(features)
     return features
+
+
+def add_manufacturer_data_feature(
+    features: dict[str, str],
+    manufacturer_data_by_producer: dict[str, str] | None,
+    producer: str = "",
+) -> None:
+    if compact_spaces(features.get("Dane producenta", "")):
+        features["Dane producenta"] = normalize_manufacturer_data_value(features["Dane producenta"])
+        return
+    if not manufacturer_data_by_producer:
+        return
+
+    producer_name = producer or features.get("Producent", "")
+    data = manufacturer_data_by_producer.get(normalize_header(producer_name))
+    if data:
+        features["Dane producenta"] = data
 
 
 def write_baselinker_csv(rows: list[dict[str, str]], output: str | Path) -> None:
@@ -266,6 +340,8 @@ def normalize_feature_value(value: str, feature_name: str = "") -> str:
     if not value:
         return ""
     value = re.sub(r"\s*\|\s*", "|", value)
+    if feature_name == "Dane producenta":
+        return normalize_manufacturer_data_value(value)
 
     if feature_name == "Stopień ochrony [IP]":
         return normalize_ip_value(value)
@@ -449,6 +525,73 @@ def normalize_material_value(value: str) -> str:
     return aliases.get(value, capitalize_first(value))
 
 
+def normalize_manufacturer_data_value(value: str) -> str:
+    parts = manufacturer_data_parts(value)
+    return "; ".join(parts) if parts else compact_spaces(value.replace("\\", ""))
+
+
+def manufacturer_data_parts(value: Any) -> list[str]:
+    text = compact_spaces(str(value or ""))
+    if not text:
+        return []
+    raw_parts = re.split(r"\s*(?:;|\||,|>)\s*", text)
+    parts: list[str] = []
+    for part in raw_parts:
+        cleaned = compact_spaces(part).strip("\\").strip()
+        if cleaned:
+            parts.append(cleaned)
+    return parts
+
+
+def build_manufacturer_data_by_producer(catalog_knowledge: dict[str, Any]) -> dict[str, str]:
+    best: dict[str, tuple[str, int, int]] = {}
+    rows = catalog_knowledge.get("top_attribute_values_by_category") or []
+    current_category = ""
+    current_count: int | None = None
+    current_parts: list[str] = []
+
+    def flush() -> None:
+        nonlocal current_count, current_parts
+        if len(current_parts) < 2 or current_count is None:
+            current_parts = []
+            current_count = None
+            return
+        producer_key = normalize_header(current_parts[0])
+        if not producer_key:
+            current_parts = []
+            current_count = None
+            return
+        data = "; ".join(current_parts)
+        previous = best.get(producer_key)
+        candidate = (data, current_count, len(current_parts))
+        if not previous or (candidate[1], candidate[2]) > (previous[1], previous[2]):
+            best[producer_key] = candidate
+        current_parts = []
+        current_count = None
+
+    for row in rows:
+        if not isinstance(row, dict):
+            continue
+        attribute = compact_spaces(str(row.get("attribute", "")))
+        category = compact_spaces(str(row.get("category", "")))
+        count = int(row.get("count") or 0)
+        if normalize_header(attribute) != "dane producenta":
+            flush()
+            current_category = category
+            continue
+
+        if current_parts and (category != current_category or count != current_count):
+            flush()
+        current_category = category
+        current_count = count
+        current_parts.extend(manufacturer_data_parts(row.get("value", "")))
+        if any("@" in part for part in current_parts):
+            flush()
+    flush()
+
+    return {producer: data for producer, (data, _, __) in best.items()}
+
+
 def normalize_decimal_separator(value: str) -> str:
     return re.sub(r"(?<=\d)\.(?=\d)", ",", value)
 
@@ -457,19 +600,157 @@ def capitalize_first(value: str) -> str:
     return value[:1].upper() + value[1:] if value else value
 
 
-def format_sku(sku: str, producer: str, sku_format: str) -> str:
+def format_sku(
+    sku: str,
+    producer: str,
+    sku_format: str,
+    producer_suffixes: dict[str, str] | None = None,
+) -> str:
     sku = compact_spaces(sku)
     if sku_format == "plain" or not sku:
         return sku
     if "/" in sku:
         return sku
-    suffix = producer_suffix(producer)
+    suffix = producer_suffix(producer, producer_suffixes)
     return f"{sku}/{suffix}" if suffix else sku
 
 
-def producer_suffix(producer: str) -> str:
+def producer_suffix(producer: str, producer_suffixes: dict[str, str] | None = None) -> str:
+    normalized_producer = normalize_producer_key(producer)
+    if producer_suffixes and normalized_producer:
+        suffix = producer_suffixes.get(normalized_producer)
+        if suffix:
+            return suffix
     letters = re.findall(r"[A-Za-zĄĆĘŁŃÓŚŹŻąćęłńóśźż]", str(producer or ""))
     return "".join(letters[:3]).upper()
+
+
+def load_producer_suffixes(
+    suffix_knowledge_path: str | Path | None = DEFAULT_SKU_SUFFIX_KNOWLEDGE_PATH,
+    catalog_knowledge_path: str | Path | None = DEFAULT_CATALOG_KNOWLEDGE_PATH,
+) -> dict[str, str]:
+    knowledge = load_yaml(suffix_knowledge_path) if suffix_knowledge_path else {}
+    catalog_knowledge = load_yaml(catalog_knowledge_path) if catalog_knowledge_path else {}
+
+    suffix_counts: dict[str, dict[str, int]] = {}
+    collect_suffixes_from_sources(knowledge, suffix_counts)
+    collect_suffixes_from_examples(knowledge, suffix_counts, minimum_count=5)
+    collect_suffixes_from_titles(knowledge, catalog_knowledge, suffix_counts, minimum_count=5)
+
+    return {
+        producer_key: best_suffix(counts)
+        for producer_key, counts in suffix_counts.items()
+        if best_suffix(counts)
+    }
+
+
+def collect_suffixes_from_sources(knowledge: dict[str, Any], suffix_counts: dict[str, dict[str, int]]) -> None:
+    for row in knowledge.get("producer_sources") or []:
+        if not isinstance(row, dict):
+            continue
+        source = str(row.get("source", ""))
+        match = re.fullmatch(r"sku_suffix:([A-Za-z0-9]+)", source)
+        if not match:
+            continue
+        add_suffix_count(
+            suffix_counts,
+            str(row.get("producer", "")),
+            match.group(1),
+            int(row.get("count") or 1),
+        )
+
+
+def collect_suffixes_from_examples(
+    knowledge: dict[str, Any],
+    suffix_counts: dict[str, dict[str, int]],
+    minimum_count: int,
+) -> None:
+    grouped_counts: dict[str, dict[str, int]] = {}
+    for row in iter_knowledge_examples(knowledge):
+        add_suffix_count(grouped_counts, row.get("producer", ""), sku_suffix_from_value(row.get("sku", "")), 1)
+
+    for producer_key, counts in grouped_counts.items():
+        suffix, count = best_suffix_with_count(counts)
+        if suffix and count >= minimum_count:
+            add_suffix_count(suffix_counts, producer_key, suffix, count)
+
+
+def collect_suffixes_from_titles(
+    knowledge: dict[str, Any],
+    catalog_knowledge: dict[str, Any],
+    suffix_counts: dict[str, dict[str, int]],
+    minimum_count: int,
+) -> None:
+    producers = known_catalog_producers(catalog_knowledge)
+    if not producers:
+        return
+
+    grouped_counts: dict[str, dict[str, int]] = {}
+    for row in iter_knowledge_examples(knowledge):
+        title_key = normalize_producer_key(row.get("title", ""))
+        suffix = sku_suffix_from_value(row.get("sku", ""))
+        if not title_key or not suffix:
+            continue
+        for producer, producer_key in producers:
+            if re.search(rf"(?<!\S){re.escape(producer_key)}(?!\S)", title_key):
+                add_suffix_count(grouped_counts, producer, suffix, 1)
+
+    for producer_key, counts in grouped_counts.items():
+        suffix, count = best_suffix_with_count(counts)
+        if suffix and count >= minimum_count:
+            add_suffix_count(suffix_counts, producer_key, suffix, count)
+
+
+def iter_knowledge_examples(knowledge: dict[str, Any]) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    examples = knowledge.get("examples") or {}
+    if not isinstance(examples, dict):
+        return rows
+    for example_rows in examples.values():
+        if not isinstance(example_rows, list):
+            continue
+        rows.extend(row for row in example_rows if isinstance(row, dict))
+    return rows
+
+
+def known_catalog_producers(catalog_knowledge: dict[str, Any]) -> list[tuple[str, str]]:
+    producers: list[tuple[str, str]] = []
+    for row in catalog_knowledge.get("producers") or []:
+        producer = str(row.get("producer", "")).strip() if isinstance(row, dict) else ""
+        producer_key = normalize_producer_key(producer)
+        if len(producer_key) >= 3:
+            producers.append((producer, producer_key))
+    return producers
+
+
+def add_suffix_count(counts: dict[str, dict[str, int]], producer: Any, suffix: Any, count: int) -> None:
+    producer_key = normalize_producer_key(producer)
+    suffix_text = compact_spaces(str(suffix or "")).upper()
+    if not producer_key or not suffix_text:
+        return
+    producer_counts = counts.setdefault(producer_key, {})
+    producer_counts[suffix_text] = producer_counts.get(suffix_text, 0) + count
+
+
+def sku_suffix_from_value(value: Any) -> str:
+    sku = compact_spaces(str(value or ""))
+    if "/" not in sku:
+        return ""
+    return sku.rsplit("/", 1)[1].strip().upper()
+
+
+def best_suffix(counts: dict[str, int]) -> str:
+    return best_suffix_with_count(counts)[0]
+
+
+def best_suffix_with_count(counts: dict[str, int]) -> tuple[str, int]:
+    if not counts:
+        return "", 0
+    return max(counts.items(), key=lambda item: (item[1], item[0]))
+
+
+def normalize_producer_key(value: Any) -> str:
+    return normalize_header(str(value or ""))
 
 
 def only_digits(value: Any) -> str:
