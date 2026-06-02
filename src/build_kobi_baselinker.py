@@ -12,6 +12,7 @@ from typing import Any
 import pandas as pd
 
 from catalog_knowledge import DEFAULT_CATALOG_KNOWLEDGE_PATH, load_catalog_knowledge
+from export_to_baselinker_csv import build_manufacturer_data_by_producer, manufacturer_data_for_producer
 from generate_product_descriptions import build_description_html
 from recommend_categories import (
     DEFAULT_OVERRIDES_PATH,
@@ -19,7 +20,7 @@ from recommend_categories import (
     CategoryRecommender,
     detect_recommendation_columns,
 )
-from utils import load_yaml
+from utils import load_yaml, strip_accents
 
 
 BASELINKER_COLUMNS = [
@@ -37,8 +38,8 @@ BASELINKER_COLUMNS = [
 FEATURE_NAME_MAP = {
     "EAN": "EAN (GTIN)",
     "Kod_producenta": "Kod producenta",
-    "Producent odpowiedzialny": "Producent odpowiedzialny",
-    "Podmiot odpowiedzialny": "Podmiot odpowiedzialny",
+    "Producent odpowiedzialny": "Dane producenta",
+    "Podmiot odpowiedzialny": "Dane producenta",
     "Marka": "Marka",
     "Moc [W]": "Moc [W]",
     "Napięcie zasilania": "Napięcie [V]",
@@ -78,6 +79,17 @@ TRAILING_BRANDS = [
     "LED2B",
 ]
 
+KOBI_MANUFACTURER_ALIASES = {
+    "KOBI",
+    "KOBI LIGHT",
+    "KOBI PREMIUM",
+    "KOBI PRO",
+    "KOBI PROFESSIONAL",
+    "LED2B",
+    "LED2B RED",
+    "RED",
+}
+
 COLOR_FORMS = {
     "biały": "biały",
     "bialy": "biały",
@@ -90,6 +102,21 @@ COLOR_FORMS = {
     "szary": "szary",
     "szara": "szary",
     "chrom": "chrom",
+}
+
+COLOR_INFLECTIONS = {
+    "biały": {"masculine": "biały", "feminine": "biała", "neuter": "białe"},
+    "czarny": {"masculine": "czarny", "feminine": "czarna", "neuter": "czarne"},
+    "szary": {"masculine": "szary", "feminine": "szara", "neuter": "szare"},
+    "grafitowy": {"masculine": "grafitowy", "feminine": "grafitowa", "neuter": "grafitowe"},
+    "srebrny": {"masculine": "srebrny", "feminine": "srebrna", "neuter": "srebrne"},
+    "złoty": {"masculine": "złoty", "feminine": "złota", "neuter": "złote"},
+}
+
+SHAPE_INFLECTIONS = {
+    "kwadratowy": {"masculine": "kwadratowy", "feminine": "kwadratowa", "neuter": "kwadratowe"},
+    "prostokątny": {"masculine": "prostokątny", "feminine": "prostokątna", "neuter": "prostokątne"},
+    "okrągły": {"masculine": "okrągły", "feminine": "okrągła", "neuter": "okrągłe"},
 }
 
 
@@ -128,7 +155,15 @@ def main() -> None:
     taxonomy = load_yaml(args.taxonomy) if args.taxonomy else {}
     overrides = load_yaml(args.overrides) if args.overrides else {}
     recommender = CategoryRecommender(catalog_knowledge, taxonomy, overrides)
-    enriched_df, baselinker_rows, report = build_outputs(source_df, offers, recommender)
+    allowed_feature_specs = build_allowed_feature_specs(catalog_knowledge)
+    manufacturer_data_by_producer = build_manufacturer_data_by_producer(catalog_knowledge)
+    enriched_df, baselinker_rows, report = build_outputs(
+        source_df,
+        offers,
+        recommender,
+        allowed_feature_specs,
+        manufacturer_data_by_producer,
+    )
 
     write_xlsx(enriched_df, args.output_xlsx)
     write_baselinker_csv(baselinker_rows, args.output_csv)
@@ -180,14 +215,197 @@ def read_xml_offers(path: str | Path) -> dict[str, dict[str, Any]]:
     return offers
 
 
+def build_allowed_feature_specs(catalog_knowledge: dict[str, Any]) -> dict[str, dict[str, Any]]:
+    specs: dict[str, dict[str, Any]] = {}
+    for row in catalog_knowledge.get("top_attributes") or []:
+        attribute = compact_spaces(row.get("attribute", ""))
+        if attribute:
+            spec = specs.setdefault(normalize_catalog_key(attribute), {"name": attribute, "values": {}})
+            for value in parse_top_attribute_values(row.get("top_values", "")):
+                spec["values"].setdefault(normalize_catalog_key(value), value)
+
+    for row in catalog_knowledge.get("top_attribute_values_by_category") or []:
+        attribute = compact_spaces(row.get("attribute", ""))
+        value = compact_spaces(row.get("value", ""))
+        if not attribute or not value:
+            continue
+        spec = specs.setdefault(normalize_catalog_key(attribute), {"name": attribute, "values": {}})
+        spec["values"].setdefault(normalize_catalog_key(value), value)
+    return specs
+
+
+def parse_top_attribute_values(value: str) -> list[str]:
+    values: list[str] = []
+    for part in str(value or "").split(";"):
+        cleaned = re.sub(r"\s+\(\d+\)\s*$", "", compact_spaces(part))
+        if cleaned:
+            values.append(cleaned)
+    return values
+
+
+def normalize_catalog_key(value: str) -> str:
+    value = strip_accents(compact_spaces(value)).lower()
+    value = re.sub(r"\\+$", "", value).strip()
+    return re.sub(r"[^a-z0-9]+", " ", value).strip()
+
+
+def filter_baselinker_features(
+    features: dict[str, str],
+    allowed_feature_specs: dict[str, dict[str, Any]],
+) -> tuple[dict[str, str], list[str]]:
+    filtered: dict[str, str] = {}
+    removed: list[str] = []
+    for key, value in features.items():
+        value = compact_spaces(value)
+        if not value:
+            continue
+        spec = allowed_feature_specs.get(normalize_catalog_key(key))
+        if not spec:
+            removed.append(key)
+            continue
+        canonical_value = find_allowed_feature_value(key, value, spec)
+        if not canonical_value:
+            removed.append(key)
+            continue
+        filtered[str(spec["name"])] = canonical_value
+    removed = sorted(dict.fromkeys(removed))
+    return filtered, removed
+
+
+def find_allowed_feature_value(key: str, value: str, spec: dict[str, Any]) -> str:
+    values = spec.get("values", {})
+    if normalize_catalog_key(key) == "dane producenta":
+        canonical_parts: list[str] = []
+        for part in split_manufacturer_data_parts(value):
+            canonical = values.get(normalize_catalog_key(part))
+            if not canonical:
+                return ""
+            canonical_parts.append(str(canonical).strip("\\").strip())
+        if len(canonical_parts) > 1:
+            return "; ".join(canonical_parts)
+
+    for candidate in feature_value_candidates(key, value):
+        canonical = values.get(normalize_catalog_key(candidate))
+        if canonical:
+            return str(canonical)
+    return ""
+
+
+def split_manufacturer_data_parts(value: str) -> list[str]:
+    return [
+        part.strip("\\").strip()
+        for part in re.split(r"\s*(?:;|\||>)\s*", compact_spaces(value))
+        if part.strip("\\").strip()
+    ]
+
+
+def feature_value_candidates(key: str, value: str) -> list[str]:
+    attr = normalize_catalog_key(key)
+    raw = compact_spaces(value)
+    candidates = [raw]
+    no_unit_space = normalize_unit_spacing(raw)
+    candidates.append(no_unit_space)
+    candidates.append(raw.upper())
+    candidates.append(raw.title())
+
+    numeric = normalize_numeric_value(raw)
+    if numeric:
+        candidates.append(numeric)
+
+    if "stopien ochrony" in attr:
+        ip_match = re.search(r"\bIP\s*-?\s*(\d{2})\b", raw, flags=re.IGNORECASE)
+        if ip_match:
+            candidates.extend([f"IP {ip_match.group(1)}", f"IP{ip_match.group(1)}", f"IP-{ip_match.group(1)}"])
+
+    if attr in {"strumien swietlny lm", "strumien swietlny", "jasnosc"}:
+        lumen_match = re.search(r"\d+(?:[.,]\d+)?", raw)
+        if lumen_match:
+            candidates.append(lumen_match.group(0).replace(",", "."))
+
+    if attr in {"temperatura barwowa k", "temperatura barwowa"}:
+        cct_numbers = re.findall(r"\d{4}", raw)
+        if cct_numbers:
+            candidates.extend(cct_numbers)
+            if len(cct_numbers) > 1:
+                candidates.append("/".join(cct_numbers))
+                candidates.append("-".join(cct_numbers))
+
+    if attr in {"kat swiecenia", "kat swiecenia"} or "kat swiecenia" in attr:
+        angle = re.search(r"\d+(?:[.,]\d+)?", raw)
+        if angle:
+            candidates.append(angle.group(0).replace(",", "."))
+
+    if attr in {"moc w", "moc"}:
+        if numeric:
+            candidates.append(numeric.rstrip("0").rstrip("."))
+
+    if attr in {"napiecie v", "napiecie", "zasilanie"}:
+        voltage = re.search(r"\d+(?:[.,]\d+)?", raw)
+        if voltage:
+            candidates.append(voltage.group(0).replace(",", "."))
+
+    if attr == "ksztalt":
+        shape = normalize_catalog_key(raw)
+        shape_map = {
+            "kwadratowy": "Kwadrat",
+            "kwadratowa": "Kwadrat",
+            "kwadratowe": "Kwadrat",
+            "kwadrat": "Kwadrat",
+            "prostokatny": "Prostokątny",
+            "prostokatna": "Prostokątny",
+            "prostokatne": "Prostokątny",
+            "prostokat": "Prostokątny",
+            "okragly": "Okrągły",
+            "okragla": "Okrągły",
+            "okragle": "Okrągły",
+            "okrag": "Okrągły",
+        }
+        mapped = shape_map.get(shape)
+        if mapped:
+            candidates.append(mapped)
+
+    if attr == "kolor":
+        color = normalize_color(raw)
+        color_map = {
+            "biały": "Biały",
+            "czarny": "Czarny",
+            "szary": "Szary",
+            "grafitowy": "Grafitowy",
+            "srebrny": "Srebrny",
+            "złoty": "Złoty",
+        }
+        mapped = color_map.get(color)
+        if mapped:
+            candidates.append(mapped)
+
+    if attr == "gwarancja":
+        warranty = re.search(r"\d+", raw)
+        if warranty:
+            number = warranty.group(0)
+            candidates.extend([f"{number} Lata", f"{number} lata", f"{number} Miesiące", f"{number} miesiące"])
+
+    return list(dict.fromkeys(candidate for candidate in candidates if compact_spaces(candidate)))
+
+
+def normalize_numeric_value(value: str) -> str:
+    match = re.search(r"\d+(?:[.,]\d+)?", compact_spaces(value))
+    if not match:
+        return ""
+    number = match.group(0).replace(",", ".")
+    return re.sub(r"\.0$", "", number)
+
+
 def build_outputs(
     source_df: pd.DataFrame,
     offers: dict[str, dict[str, Any]],
     recommender: CategoryRecommender,
+    allowed_feature_specs: dict[str, dict[str, Any]],
+    manufacturer_data_by_producer: dict[str, str],
 ) -> tuple[pd.DataFrame, list[dict[str, str]], dict[str, Any]]:
     enriched_rows: list[dict[str, Any]] = []
     baselinker_rows: list[dict[str, str]] = []
     missing_codes: list[dict[str, str]] = []
+    removed_feature_names: dict[str, int] = {}
 
     for _, source_row in source_df.iterrows():
         row = {str(column): source_row.get(column, "") for column in source_df.columns}
@@ -200,14 +418,18 @@ def build_outputs(
         producer = normalize_manufacturer(first_present(attrs.get("Producent"), row.get("Producent"), brand))
         ean = only_digits(attrs.get("EAN", ""))
         sku = first_present(row.get("Kod towaru"), code)
-        generated_name = build_product_name(original_name, features, brand, code)
-        generated_name = enforce_catalog_name_style(generated_name, row, features)
+        generated_name_without_code = build_product_name(original_name, features, brand, "")
+        generated_name_without_code = enforce_catalog_name_style(generated_name_without_code, row, features)
+        generated_name = append_code_to_name(generated_name_without_code, code)
         images = "|".join(offer.get("images", []))
         description_text = offer.get("description_text", "")
-        feature_payload = build_feature_payload(row, offer, brand)
+        feature_payload = build_feature_payload(row, offer, brand, manufacturer_data_by_producer)
         category, recommendations = recommend_store_category(row, generated_name, feature_payload, recommender)
         feature_payload["Kategoria import"] = category
-        feature_payload_json = json.dumps(feature_payload, ensure_ascii=False, separators=(",", ":"))
+        baselinker_feature_payload, removed_features = filter_baselinker_features(feature_payload, allowed_feature_specs)
+        for removed_feature in removed_features:
+            removed_feature_names[removed_feature] = removed_feature_names.get(removed_feature, 0) + 1
+        feature_payload_json = json.dumps(baselinker_feature_payload, ensure_ascii=False, separators=(",", ":"))
 
         match_status = "matched_xml" if offer else "missing_xml"
         if not offer:
@@ -217,6 +439,7 @@ def build_outputs(
             **row,
             "Kod producenta": code,
             "Dopasowanie XML": match_status,
+            "Nazwa SEO bez kodu": generated_name_without_code,
             "Nazwa wygenerowana": generated_name,
             "Nazwa oryginalna XML": offer.get("name", ""),
             "Baselinker product_id": offer.get("product_id", ""),
@@ -244,12 +467,17 @@ def build_outputs(
             "category": category,
             "features": feature_payload_json,
             "features_json": feature_payload_json,
+            "features_opisowe_json": json.dumps(feature_payload, ensure_ascii=False, separators=(",", ":")),
+            "Pominięte parametry Baselinker": ", ".join(removed_features),
         }
-        generated_description = build_description_html(pd.Series(enriched), title_column="name")
-        enriched["Opis"] = html_to_text(generated_description)
-        enriched["Opis HTML"] = generated_description
         for key, value in feature_payload.items():
             enriched[f"Parametr: {key}"] = value
+        for key, value in baselinker_feature_payload.items():
+            enriched[f"Baselinker parametr: {key}"] = value
+        description_row = {**enriched, "features": json.dumps(feature_payload, ensure_ascii=False, separators=(",", ":"))}
+        generated_description = build_description_html(pd.Series(description_row), title_column="name")
+        enriched["Opis"] = html_to_text(generated_description)
+        enriched["Opis HTML"] = generated_description
         enriched_rows.append(enriched)
 
         baselinker_rows.append(
@@ -267,11 +495,19 @@ def build_outputs(
         )
 
     enriched_df = pd.DataFrame(enriched_rows)
+    if "Nazwa SEO bez kodu" in enriched_df.columns:
+        title_keys = enriched_df["Nazwa SEO bez kodu"].map(normalize_for_compare)
+        duplicate_counts = title_keys.value_counts()
+        enriched_df["Duplikat nazwy SEO bez kodu"] = title_keys.map(
+            lambda key: f"TAK ({int(duplicate_counts.get(key, 0))})" if key and int(duplicate_counts.get(key, 0)) > 1 else ""
+        )
     report = {
         "rows": len(enriched_rows),
         "matched_xml": len(enriched_rows) - len(missing_codes),
         "missing_xml": len(missing_codes),
         "missing_codes": missing_codes,
+        "duplicate_seo_titles_without_code": int((enriched_df.get("Duplikat nazwy SEO bez kodu", "") != "").sum()),
+        "removed_baselinker_features": removed_feature_names,
         "output_columns": list(enriched_df.columns),
     }
     return enriched_df, baselinker_rows, report
@@ -301,7 +537,13 @@ def build_product_name(original_name: str, features: dict[str, str], brand: str,
     add_spec_if_missing_kind(specs, format_sensor(features.get("Typ czujnika", "")), base, r"\bczuj")
     add_spec_if_missing_kind(
         specs,
-        normalize_color(features.get("Kolor produktu", "")),
+        format_shape_for_title(infer_shape(original_name, features), base),
+        base,
+        r"\b(?:kwadrat\w*|prostok[ąa]t\w*|okr[ąa]g\w*)\b",
+    )
+    add_spec_if_missing_kind(
+        specs,
+        format_color_for_title(features.get("Kolor produktu", ""), base),
         base,
         r"\b(?:biały|bialy|biała|biala|czarny|czarna|szary|szara|chrom)\b",
     )
@@ -367,6 +609,14 @@ def normalize_hermetic_name(name: str) -> str:
     name = re.sub(r"(?i)^Oprawa\s+linowa\s+LED\s+", "Oprawa hermetyczna LED ", name)
     name = re.sub(r"(?i)^Oprawa\s+liniowa\s+hermetyczna\s+LED\s+", "Oprawa hermetyczna LED ", name)
     name = re.sub(r"(?i)^Oprawa\s+liniowa\s+LED\s+", "Oprawa hermetyczna LED ", name)
+    name = re.sub(
+        r"(?i)^Zestaw\s+HERMETIC\s+(.+?)\s*\+\s*(\d+x\s*)?LED\s+T8\s+",
+        lambda match: (
+            f"Lampa hermetyczna HERMETIC {match.group(1)} "
+            f"{'z ' + match.group(2).strip().rstrip('xX') + ' świetlówkami' if match.group(2) else 'ze świetlówką'} LED T8 "
+        ),
+        name,
+    )
     return name
 
 
@@ -377,7 +627,7 @@ def normalize_plafon_name(name: str, features: dict[str, str]) -> str:
         or bool(re.match(r"(?i)^Plafon\s+LED\s+", name))
     )
     if has_integrated_led:
-        name = re.sub(r"(?i)^Plafon\s+LED\s+", "Plafoniera LED ", name)
+        name = re.sub(r"(?i)^Plafoniera\s+LED\s+", "Plafon LED ", name)
     return name
 
 
@@ -385,6 +635,7 @@ def build_feature_payload(
     source_row: dict[str, Any],
     offer: dict[str, Any],
     brand: str,
+    manufacturer_data_by_producer: dict[str, str],
 ) -> dict[str, str]:
     payload: dict[str, str] = {}
     attrs = offer.get("attrs", {})
@@ -400,7 +651,21 @@ def build_feature_payload(
     for key in ["EAN", "Kod_producenta", "Producent odpowiedzialny", "Podmiot odpowiedzialny"]:
         value = normalize_feature_value(attrs.get(key, ""))
         if value:
-            payload[FEATURE_NAME_MAP.get(key, key)] = value
+            target = FEATURE_NAME_MAP.get(key, key)
+            if target == "Dane producenta" and payload.get(target):
+                continue
+            payload[target] = value
+
+    catalog_manufacturer_data = manufacturer_data_for_producer(
+        manufacturer_data_by_producer,
+        payload.get("Producent", ""),
+        attrs.get("Producent", ""),
+        source_row.get("Producent", ""),
+        features.get("Marka", ""),
+        brand,
+    )
+    if catalog_manufacturer_data:
+        payload["Dane producenta"] = catalog_manufacturer_data
 
     if offer.get("category"):
         payload["Kategoria dostawcy"] = offer["category"]
@@ -501,6 +766,10 @@ def fallback_store_category(source_row: dict[str, Any], generated_name: str) -> 
 
 
 def add_title_derived_features(payload: dict[str, str], title: str) -> None:
+    if title and "Kształt" not in payload:
+        shape = infer_shape(title, payload)
+        if shape:
+            payload["Kształt"] = format_shape_for_title(shape, title)
     if title and "Wymiary" not in payload:
         dimensions = find_dimensions(title)
         if dimensions:
@@ -522,6 +791,7 @@ def build_category_path(row: dict[str, Any]) -> str:
 def infer_product_type(title: str) -> str:
     text = normalize_for_compare(title)
     ordered_types = [
+        ("zestawhermetic", "Lampa hermetyczna ze świetlówką LED T8"),
         ("oprawadrogowasolar", "Oprawa drogowa solarna LED"),
         ("oprawadrogowa", "Oprawa drogowa LED"),
         ("naswietlaczsolar", "Naświetlacz solarny LED"),
@@ -531,7 +801,7 @@ def infer_product_type(title: str) -> str:
         ("oprawaliniowahermetyczna", "Oprawa hermetyczna LED"),
         ("oprawaliniowa", "Oprawa liniowa LED"),
         ("panelled", "Panel LED"),
-        ("plafoniera", "Plafoniera LED"),
+        ("plafoniera", "Plafon LED"),
         ("plafon", "Plafon LED"),
         ("swietlowka", "Świetlówka LED"),
         ("zasilacz", "Zasilacz LED"),
@@ -665,7 +935,7 @@ def format_lumens(value: str) -> str:
     if not value:
         return ""
     value = normalize_number_list(value)
-    return value if re.search(r"lm$", value, flags=re.IGNORECASE) else f"{value} lm"
+    return value if re.search(r"lm$", value, flags=re.IGNORECASE) else f"{value}lm"
 
 
 def format_ip(value: str) -> str:
@@ -707,28 +977,116 @@ def normalize_color(value: str) -> str:
     return COLOR_FORMS.get(value, value)
 
 
+def format_color_for_title(value: str, title_context: str) -> str:
+    color = normalize_color(value)
+    if not color:
+        return ""
+    gender = infer_title_gender(title_context)
+    return COLOR_INFLECTIONS.get(color, {}).get(gender, color)
+
+
+def infer_shape(title: str, features: dict[str, str] | None = None) -> str:
+    text = compact_spaces(title)
+    normalized = strip_accents(text).lower()
+    if re.search(r"\bokr[ąa]g\w*|\bround\b", normalized):
+        return "okrągły"
+    if re.search(r"\bkwadrat\w*|\bsquare\b", normalized):
+        return "kwadratowy"
+    if re.search(r"\bprostok[ąa]t\w*|\brectang", normalized):
+        return "prostokątny"
+
+    shape_sensitive = re.search(
+        r"\b(panel|plafon|downlight|oprawa\s+sufitowa|oprawa\s+podtynkowa)\b",
+        normalized,
+    )
+    if not shape_sensitive:
+        return ""
+
+    dimensions_source = " ".join(
+        [
+            text,
+            compact_spaces((features or {}).get("Wymiary", "")),
+            compact_spaces((features or {}).get("Wymiar", "")),
+        ]
+    )
+    match = re.search(r"\b(\d{2,4})\s*x\s*(\d{2,4})(?:\s*x\s*\d{1,4})?", dimensions_source, flags=re.IGNORECASE)
+    if not match:
+        return ""
+    first = int(match.group(1))
+    second = int(match.group(2))
+    if first == second:
+        return "kwadratowy"
+    return "prostokątny"
+
+
+def format_shape_for_title(shape: str, title_context: str) -> str:
+    shape = compact_spaces(shape).lower()
+    if not shape:
+        return ""
+    gender = infer_title_gender(title_context)
+    return SHAPE_INFLECTIONS.get(shape, {}).get(gender, shape)
+
+
+def infer_title_gender(title_context: str) -> str:
+    text = strip_accents(compact_spaces(title_context)).lower()
+    feminine_terms = [
+        "oprawa",
+        "lampa",
+        "swietlowka",
+        "przedluzka",
+        "ramka",
+        "linka",
+        "oslona",
+        "girlanda",
+    ]
+    masculine_terms = [
+        "panel",
+        "plafon",
+        "naswietlacz",
+        "zasilacz",
+        "uchwyt",
+        "czujnik",
+        "slupek",
+        "modul",
+        "klips",
+    ]
+    neuter_terms = ["gniazdo"]
+    for term in feminine_terms:
+        if re.search(rf"\b{re.escape(term)}\b", text):
+            return "feminine"
+    for term in masculine_terms:
+        if re.search(rf"\b{re.escape(term)}\b", text):
+            return "masculine"
+    for term in neuter_terms:
+        if re.search(rf"\b{re.escape(term)}\b", text):
+            return "neuter"
+    return "masculine"
+
+
 def normalize_brand(value: str) -> str:
     value = compact_spaces(value)
+    normalized = normalize_alias_key(value)
     aliases = {
-        "Kobi Professional": "Kobi Pro",
-        "Kobi Light": "Kobi",
+        "KOBI PROFESSIONAL": "Kobi Pro",
         "KOBI LIGHT": "Kobi",
         "KOBI": "Kobi",
+        "LED2B RED": "Kobi",
+        "RED": "Kobi",
     }
-    return aliases.get(value, value)
+    return aliases.get(normalized, value)
 
 
 def normalize_manufacturer(value: str) -> str:
     value = compact_spaces(value)
-    aliases = {
-        "KOBI LIGHT": "Kobi",
-        "KOBI": "Kobi",
-        "Kobi Pro": "Kobi",
-        "Kobi Premium": "Kobi",
-        "Kobi Professional": "Kobi",
-        "LED2B": "Kobi",
-    }
-    return aliases.get(value, value)
+    if not value or normalize_alias_key(value) in KOBI_MANUFACTURER_ALIASES:
+        return "Kobi"
+    return value
+
+
+def normalize_alias_key(value: str) -> str:
+    value = compact_spaces(value).upper()
+    value = re.sub(r"[^A-Z0-9]+", " ", value)
+    return compact_spaces(value)
 
 
 def normalize_feature_value(value: Any) -> str:
@@ -820,9 +1178,33 @@ def compact_spaces(value: Any) -> str:
 def final_cleanup(value: str) -> str:
     value = compact_spaces(value)
     value = re.sub(r"\s+([,/])", r"\1", value)
+    value = normalize_unit_spacing(value)
+    value = re.sub(r"\bIP\s+(\d{2})\b", r"IP\1", value, flags=re.IGNORECASE)
+    value = normalize_color_adjectives(value)
     value = re.sub(r"(?i)\bLED LED\b", "LED", value)
     value = re.sub(r"\s{2,}", " ", value)
     return value.strip()
+
+
+def normalize_unit_spacing(value: str) -> str:
+    units = "lm/W|mAh|mm2|mm²|mA|kA|Wh|Wp|lm|mm|cm|Hz|W|V|K|A|J|m|°"
+    return re.sub(rf"(?<=\d)\s+(?=(?:{units})\b)", "", value, flags=re.IGNORECASE)
+
+
+def normalize_color_adjectives(value: str) -> str:
+    gender = infer_title_gender(value)
+    replacements = [
+        ("biały", r"\b(?:biały|biała|białe|bialy|biala|biale)\b"),
+        ("czarny", r"\b(?:czarny|czarna|czarne)\b"),
+        ("szary", r"\b(?:szary|szara|szare)\b"),
+        ("grafitowy", r"\b(?:grafitowy|grafitowa|grafitowe)\b"),
+        ("srebrny", r"\b(?:srebrny|srebrna|srebrne)\b"),
+        ("złoty", r"\b(?:złoty|złota|złote|zloty|zlota|zlote)\b"),
+    ]
+    for canonical, pattern in replacements:
+        replacement = COLOR_INFLECTIONS.get(canonical, {}).get(gender, canonical)
+        value = re.sub(pattern, replacement, value, flags=re.IGNORECASE)
+    return value
 
 
 if __name__ == "__main__":

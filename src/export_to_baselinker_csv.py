@@ -304,10 +304,25 @@ def add_manufacturer_data_feature(
     if not manufacturer_data_by_producer:
         return
 
-    producer_name = producer or features.get("Producent", "")
-    data = manufacturer_data_by_producer.get(normalize_header(producer_name))
+    data = manufacturer_data_for_producer(manufacturer_data_by_producer, producer, features.get("Producent", ""))
     if data:
         features["Dane producenta"] = data
+
+
+def manufacturer_data_for_producer(
+    manufacturer_data_by_producer: dict[str, str] | None,
+    *producer_names: Any,
+) -> str:
+    if not manufacturer_data_by_producer:
+        return ""
+    for producer_name in producer_names:
+        normalized = normalize_header(str(producer_name or ""))
+        if not normalized:
+            continue
+        data = manufacturer_data_by_producer.get(normalized)
+        if data:
+            return data
+    return ""
 
 
 def write_baselinker_csv(rows: list[dict[str, str]], output: str | Path) -> None:
@@ -549,6 +564,17 @@ def build_manufacturer_data_by_producer(catalog_knowledge: dict[str, Any]) -> di
     current_category = ""
     current_count: int | None = None
     current_parts: list[str] = []
+    producer_counts_by_category: dict[tuple[str, int], list[str]] = {}
+    data_candidates: list[tuple[str, int, str, str, int]] = []
+
+    def remember(producer: str, data: str, count: int, parts_count: int) -> None:
+        producer_key = normalize_header(producer)
+        if not producer_key:
+            return
+        previous = best.get(producer_key)
+        candidate = (data, count, parts_count)
+        if not previous or (candidate[1], candidate[2]) > (previous[1], previous[2]):
+            best[producer_key] = candidate
 
     def flush() -> None:
         nonlocal current_count, current_parts
@@ -562,10 +588,8 @@ def build_manufacturer_data_by_producer(catalog_knowledge: dict[str, Any]) -> di
             current_count = None
             return
         data = "; ".join(current_parts)
-        previous = best.get(producer_key)
-        candidate = (data, current_count, len(current_parts))
-        if not previous or (candidate[1], candidate[2]) > (previous[1], previous[2]):
-            best[producer_key] = candidate
+        remember(current_parts[0], data, current_count, len(current_parts))
+        data_candidates.append((current_category, current_count, current_parts[0], data, len(current_parts)))
         current_parts = []
         current_count = None
 
@@ -575,6 +599,10 @@ def build_manufacturer_data_by_producer(catalog_knowledge: dict[str, Any]) -> di
         attribute = compact_spaces(str(row.get("attribute", "")))
         category = compact_spaces(str(row.get("category", "")))
         count = int(row.get("count") or 0)
+        if normalize_header(attribute) == "producent":
+            producer = compact_spaces(str(row.get("value", "")))
+            if producer:
+                producer_counts_by_category.setdefault((category, count), []).append(producer)
         if normalize_header(attribute) != "dane producenta":
             flush()
             current_category = category
@@ -588,6 +616,13 @@ def build_manufacturer_data_by_producer(catalog_knowledge: dict[str, Any]) -> di
         if any("@" in part for part in current_parts):
             flush()
     flush()
+
+    for category, count, data_producer, data, parts_count in data_candidates:
+        data_producer_key = normalize_header(data_producer)
+        for producer in producer_counts_by_category.get((category, count), []):
+            producer_key = normalize_header(producer)
+            if producer_key == data_producer_key or data_producer_key.startswith(f"{producer_key} "):
+                remember(producer, data, count, parts_count)
 
     return {producer: data for producer, (data, _, __) in best.items()}
 

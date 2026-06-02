@@ -46,7 +46,7 @@ title_strategy_rules:
     template: "Lampa ogrodowa kula STONO {gwint} {srednica} {ip} {kolor_feminine} {producent}"
   - name: enelo
     title_contains: ENELO
-    template: "Plafoniera LED ENELO {moc} {strumien} {barwa} {ksztalt} {ip} {kolor_feminine} {producent}"
+    template: "Plafon LED ENELO {moc} {strumien} {barwa} {ksztalt} {ip} {kolor} {producent}"
   - name: naswietlacz_led
     title_contains: Naświetlacz
     template: "Naświetlacz LED Endura {moc} {strumien} {barwa} {ip} {czujnik} {kolor} {producent}"
@@ -329,7 +329,7 @@ product_type_prefix_rules:
     terms: [oprawa hermetyczna, damp proof]
   - type: Panel LED
     terms: [panel backlight]
-  - type: Plafoniera LED
+  - type: Plafon LED
     terms: [plafoniera]
   - type: Lampa ogrodowa
     terms: [lampa led ogrodowa, stono]

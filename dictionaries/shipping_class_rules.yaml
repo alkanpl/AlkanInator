@@ -1,0 +1,104 @@
+default_shipping_class: Standard
+shipping_classes:
+- Standard
+- Kable i przewody do 15 kg
+- Gabaryt
+- Długie
+- Odbiór osobisty
+- Paleta 150zł
+- Przesyłka kurierska
+rules:
+- class: Standard
+  priority: 95
+  title_terms_any:
+  - oprawa kanałowa
+  - oprawa kanalowa
+  reason: mala oprawa kanalowa, nie dluga oprawa hermetyczna
+- class: Paleta 150zł
+  priority: 100
+  min_weight_kg: 20
+  title_terms_any:
+  - rozdzielnica 5x24
+  - rozdzielnica 6x24
+  - 5r/120m
+  - 6r/144m
+  reason: waga albo bardzo duża rozdzielnica
+- class: Kable i przewody do 15 kg
+  priority: 90
+  category_terms_any:
+  - kable i przewody
+  title_terms_any:
+  - kabel
+  - przewód
+  - przewod
+  - ydy
+  - ydyp
+  - omy
+  - owy
+  - h03vv
+  - h05vv
+  reason: produkt z rodziny kabli i przewodów
+- class: Przesyłka kurierska
+  priority: 85
+  title_terms_any:
+  - bęben 2 km
+  - beben 2 km
+  reason: historyczna reguła dla mikrorurek na bębnie
+- class: Odbiór osobisty
+  priority: 80
+  category_terms_any:
+  - koryta kablowe
+  - kanały elektroinstalacyjne
+  - kanaly elektroinstalacyjne
+  title_terms_any:
+  - koryto kablowe
+  - kanał elektroinstalacyjny
+  - kanal elektroinstalacyjny
+  reason: długi lub problematyczny element prowadzenia kabli
+- class: Długie
+  priority: 75
+  category_terms_any:
+  - szynoprzewody
+  - oprawy liniowe
+  - świetlówki led
+  - swietlowki led
+  title_terms_any:
+  - szynoprzewód
+  - szynoprzewod
+  - oprawa hermetyczna
+  - świetlówka
+  - swietlówka
+  - swietlowka
+  - oprawa liniowa
+  - belka led
+  - pręt uziomowy
+  - pret uziomowy
+  - 120cm
+  - 150cm
+  - 1,5m
+  - 1.5m
+  reason: produkt długi według historycznych przypisań
+- class: Gabaryt
+  priority: 70
+  category_terms_any:
+  - rury karbowane
+  - peszle
+  - lampy uliczne
+  - słupki ogrodowe
+  - slupki ogrodowe
+  - fundamenty do skrzynki elektrycznej
+  title_terms_any:
+  - peszel
+  - rura karbowana
+  - lampa uliczna
+  - oprawa uliczna
+  - słupek ogrodowy
+  - slupek ogrodowy
+  - fundament
+  - panel led 60x60
+  - 60x60
+  - kula stono 200
+  - kula stono 300
+  - stono 200
+  - stono 300
+  reason: gabaryt według kategorii lub typowych nazw produktów

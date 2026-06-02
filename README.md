@@ -90,6 +90,14 @@ py src/recommend_categories.py --input output/gazetka_produkty_nazwy_final_20260
 Skrypt dopisuje kolumny `proponowana_kategoria_1..N`, `category_score_1..N`, `category_confidence_1..N` i `category_reasons_1..N`. Domyslnie korzysta z `dictionaries/woocommerce_catalog_knowledge.yaml` oraz `dictionaries/learned_product_taxonomy.yaml`.
 Zaakceptowane reczne korekty po SKU mozna dopisywac w `dictionaries/category_recommendation_overrides.yaml`.
 
+Tagowanie wariantow i uzupelnianie klas wysylkowych bez zmiany nazw ani atrybutow:
+
+```powershell
+py src/enrich_variants_and_shipping.py --input "C:\Users\Handlowiec\Downloads\Kanlux (3).xlsx" --output output/kanlux_variants_shipping.xlsx
+```
+
+Skrypt dopisuje kolumny kontrolne `variant_group_key`, `variant_group_size`, `variant_tag`, `variant_link_tag`, `variant_differentiating_attributes`, `variant_attribute_summary`, `variant_reason`, `shipping_class_predicted`, `shipping_class_confidence`, `shipping_class_reason` i `shipping_category_guess`. Jesli istnieje kolumna `Product Tags`/`Tagi`, tag wariantu jest do niej dopisywany tylko dla rodzin, ktore realnie roznia sie atrybutami. Raport `reports/<nazwa_wyjscia>/variant_tag_report.xlsx` pokazuje tagi, SKU w grupie i atrybuty laczace wariacje. Jesli istnieje kolumna `Shipping Class`/`Klasa wysylkowa`, puste komorki sa uzupelniane przewidywana klasa, a istniejace wartosci pozostaja bez zmian. Flaga `--overwrite-shipping` pozwala nadpisac istniejace klasy.
+
 ## Wyniki
 
 Pipeline tworzy:

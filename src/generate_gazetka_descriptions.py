@@ -237,7 +237,7 @@ def build_difference_note(family: str, row: pd.Series) -> str:
 
 def classify_product(title: str, row: pd.Series) -> str:
     text = normalized(" ".join([title, value(row, "attr_typ"), value(row, "Opis")]))
-    if any(term in text for term in ["panel led", "plafoniera", "oprawa", "naswietlacz", "lampa ogrodowa", "latarka", "zarowka led"]):
+    if any(term in text for term in ["panel led", "plafon led", "plafoniera", "oprawa", "naswietlacz", "lampa ogrodowa", "latarka", "zarowka led"]):
         return "lighting"
     if any(term in text for term in ["rozdzielnica", "obudowa rozdzielnicy"]):
         return "distribution_box"

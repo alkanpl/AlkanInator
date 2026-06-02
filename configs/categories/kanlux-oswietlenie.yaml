@@ -4,7 +4,7 @@ title_strategy_rules:
 - name: plafoniera_drewniana
   category_contains: Plafoniery
   type_contains: drewniana
-  template: Plafoniera drewniana {seria} {gwint} {ksztalt} {srednica} {wymiary} {kolor_feminine}
+  template: Plafon drewniany {seria} {gwint} {ksztalt} {srednica} {wymiary} {kolor}
     {producent}
 - name: oprawa_kanalowa
   category_contains: Plafoniery
@@ -51,25 +51,25 @@ title_strategy_rules:
 - name: plafoniera_e14
   category_contains: Plafoniery
   title_contains: E14
-  template: Plafoniera {seria} {gwint} {ksztalt} {srednica} {wymiary} {ip} {kolor_feminine} {producent}
+  template: Plafon {seria} {gwint} {ksztalt} {srednica} {wymiary} {ip} {kolor} {producent}
   required_fields:
   - producent
 - name: plafoniera_gwint
   category_contains: Plafoniery
   title_contains: E27
-  template: Plafoniera {seria} {eco_clean} {gwint} {ksztalt} {srednica} {wymiary} {ip} {czujnik} {kolor_feminine} {producent}
+  template: Plafon {seria} {eco_clean} {gwint} {ksztalt} {srednica} {wymiary} {ip} {czujnik} {kolor} {producent}
   required_fields:
   - producent
 - name: plafoniera_wentylator
   category_contains: Plafoniery
   title_contains: wentylator
-  template: Plafoniera z wentylatorem LED {cct} {rgb} {seria} {barwa_zakres} {strumien} {kolor_feminine} {producent}
+  template: Plafon z wentylatorem LED {cct} {rgb} {seria} {barwa_zakres} {strumien} {kolor} {producent}
   required_fields:
   - producent
 - name: plafoniera_cct
   category_contains: Plafoniery
   title_contains: CCT
-  template: Plafoniera LED CCT {dim} {seria_clean} {eco_clean} {moc} {strumien} {lm_w} {barwa_zakres} {ksztalt} {srednica} {wymiary} {ip} {czujnik} {kolor_feminine} {producent}
+  template: Plafon LED CCT {dim} {seria_clean} {eco_clean} {moc} {strumien} {lm_w} {barwa_zakres} {ksztalt} {srednica} {wymiary} {ip} {czujnik} {kolor} {producent}
   required_fields:
   - producent
 - name: ramka_oswietleniowa_avar
@@ -112,7 +112,7 @@ title_strategy_rules:
   template: Oprawa hermetyczna LED {seria_clean} {dlugosc} {moc} {strumien} {lm_w} {barwa} {ip} {kolor_feminine} {producent}
 - name: plafoniera
   category_contains: Plafoniery
-  template: Plafoniera LED {seria_clean} {eco_clean} {moc} {strumien} {lm_w} {ksztalt} {srednica} {wymiary} {barwa} {barwa_neuter} {ip} {czujnik} {kolor_feminine}
+  template: Plafon LED {seria_clean} {eco_clean} {moc} {strumien} {lm_w} {ksztalt} {srednica} {wymiary} {barwa} {barwa_neuter} {ip} {czujnik} {kolor}
     {material} {producent}
 accessory_title_template: '{accessory_type} {seria} {model} {moc} {kolor} {producent}'
 accessory_title_templates:

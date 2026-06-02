@@ -79,7 +79,7 @@ def recommend_strategy(category: str, product_type: str, role: str, accessory_ty
     if "hermetycz" in normalize_ascii(text) or "pyloszczel" in normalize_ascii(text):
         return "main:Oprawa hermetyczna LED + seria + moc + strumien + barwa + ip + kolor + producent"
     if "plafon" in text:
-        return "main:Plafoniera LED + seria + moc + barwa + ip + kolor/material + czujnik + producent"
+        return "main:Plafon LED + seria + moc + barwa + ip + kolor/material + czujnik + producent"
     return "main:typ + seria + moc + parametry zakupowe + producent"
 
 

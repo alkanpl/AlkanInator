@@ -9,10 +9,15 @@ from typing import Any
 import pandas as pd
 
 from catalog_knowledge import DEFAULT_CATALOG_KNOWLEDGE_PATH, enrich_config_with_catalog_knowledge, load_catalog_knowledge
-from utils import compact_spaces, is_blank, load_yaml, read_products, write_products
+from utils import compact_spaces, is_blank, load_yaml, read_products, strip_accents, write_products
 
 
 def build_title(row: pd.Series, config: dict[str, Any]) -> tuple[str, list[str]]:
+    _, title, warnings = build_title_parts(row, config)
+    return title, warnings
+
+
+def build_title_parts(row: pd.Series, config: dict[str, Any]) -> tuple[str, str, list[str]]:
     product_role = str(row.get("product_role", "main") or "main")
     template, matched_rule = resolve_title_template_and_rule(row, config, product_role)
     max_length = int(config.get("max_title_length", 110))
@@ -35,7 +40,8 @@ def build_title(row: pd.Series, config: dict[str, Any]) -> tuple[str, list[str]]
     for word in forbidden:
         title = re.sub(rf"\b{re.escape(word)}\b", " ", title, flags=re.IGNORECASE)
 
-    title = compact_spaces(title)
+    seo_title_without_code = uppercase_first_letter(normalize_seo_title_terms(compact_spaces(title)))
+    title = seo_title_without_code
     if config.get("append_sku_after_producer"):
         title = append_sku_after_producer(title, values.get("producent", ""), values.get("sku", ""))
     title = uppercase_first_letter(title)
@@ -62,7 +68,18 @@ def build_title(row: pd.Series, config: dict[str, Any]) -> tuple[str, list[str]]
     if is_blank(title):
         warnings.append("empty_title")
 
-    return title, warnings
+    return seo_title_without_code, title, warnings
+
+
+def normalize_seo_title_terms(title: str) -> str:
+    title = re.sub(r"\bPlafoniera\b", "Plafon", title, flags=re.IGNORECASE)
+    return compact_spaces(title)
+
+
+def normalize_title_uniqueness_key(title: str) -> str:
+    value = strip_accents(compact_spaces(title)).lower()
+    value = re.sub(r"[^a-z0-9]+", " ", value)
+    return compact_spaces(value)
 
 
 def uppercase_first_letter(value: str) -> str:
@@ -213,11 +230,25 @@ def build_neuter_light_color(value: str) -> str:
 def optimize_titles_for_dataframe(df: pd.DataFrame, title_column: str, config: dict[str, Any]) -> pd.DataFrame:
     result = df.copy()
     result["old_title"] = result[title_column].astype(str)
+    generated_rows: list[tuple[int, str, str, list[str], str]] = []
 
     for index, row in result.iterrows():
-        new_title, warnings = build_title(row, config)
-        old_title = str(row.get("old_title", ""))
+        seo_title_without_code, new_title, warnings = build_title_parts(row, config)
+        title_uniqueness_key = normalize_title_uniqueness_key(seo_title_without_code)
+        generated_rows.append((index, seo_title_without_code, new_title, warnings, title_uniqueness_key))
+
+    duplicate_counts = pd.Series(
+        [item[4] for item in generated_rows if item[4]],
+        dtype="object",
+    ).value_counts()
+
+    for index, seo_title_without_code, new_title, warnings, title_uniqueness_key in generated_rows:
+        old_title = str(result.at[index, "old_title"])
+        if title_uniqueness_key and int(duplicate_counts.get(title_uniqueness_key, 0)) > 1:
+            warnings = [*warnings, f"duplicate_seo_title_without_code:{int(duplicate_counts[title_uniqueness_key])}"]
         changed_fields = ["title"] if new_title != old_title else []
+        result.at[index, "seo_title_without_code"] = seo_title_without_code
+        result.at[index, "title_uniqueness_key"] = title_uniqueness_key
         result.at[index, "new_title"] = new_title
         result.at[index, "title_status"] = "WARNING" if warnings else "OK"
         result.at[index, "title_length"] = len(new_title)
@@ -234,7 +265,9 @@ def build_changes_report(df: pd.DataFrame) -> pd.DataFrame:
         "producer",
         "category",
         "old_title",
+        "seo_title_without_code",
         "new_title",
+        "title_uniqueness_key",
         "title_status",
         "title_length",
         "new_attributes",
