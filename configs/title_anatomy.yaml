@@ -1,0 +1,124 @@
+enabled: true
+default_primary_keyword_source: primary_keyword
+primary_keyword_fallback_fields:
+- attr_typ
+- Typ produktu
+- Typ
+- Rodzaj produktu
+sku_fields:
+- Kod
+- Kod Producenta
+- SKU
+- sku
+producer_fields:
+- attr_producent
+- Producent
+- manufacturer_name
+- producer
+- Marka
+accepted_status_values:
+- approved
+- zaakceptowane
+- accepted
+rules:
+- normalized_product_type: panel led
+  status: approved
+  required_title_attributes:
+  - seria_clean
+  - ksztalt_masculine
+  - wymiary
+  - moc
+  - strumien
+  - barwa
+  - ip
+  - kolor
+  optional_title_attributes:
+  - czujnik
+  excluded_if_redundant:
+    kolor:
+    - barwa_swiatla
+    - barwa_neuter
+- normalized_product_type: high bay przemyslowy
+  status: approved
+  required_title_attributes:
+  - seria_clean
+  - moc
+  - strumien
+  - barwa
+  - ip
+  - kolor_feminine
+  optional_title_attributes:
+  - kat_swiecenia
+- normalized_product_type: high bay ufo
+  status: approved
+  required_title_attributes:
+  - seria_clean
+  - moc
+  - strumien
+  - barwa
+  - ip
+  - kolor_feminine
+  optional_title_attributes:
+  - kat_swiecenia
+- normalized_product_type: oprawa hermetyczna led
+  status: approved
+  required_title_attributes:
+  - seria_clean
+  - dlugosc
+  - moc
+  - strumien
+  - lm_w
+  - barwa
+  - ip
+  - kolor_feminine
+  optional_title_attributes:
+  - czujnik
+- normalized_product_type: oprawa hermetyczna led duzej mocy
+  status: approved
+  required_title_attributes:
+  - seria_clean
+  - dlugosc
+  - moc
+  - strumien
+  - lm_w
+  - barwa
+  - ip
+  - kolor_feminine
+  optional_title_attributes:
+  - czujnik
+- normalized_product_type: naswietlacz led
+  status: approved
+  required_title_attributes:
+  - seria_clean
+  - moc
+  - strumien
+  - lm_w
+  - barwa
+  - kat_swiecenia
+  - ip
+  - czujnik
+  - kolor
+- normalized_product_type: plafon led
+  status: approved
+  required_title_attributes:
+  - seria_clean
+  - eco_clean
+  - moc
+  - strumien
+  - lm_w
+  - ksztalt
+  - srednica
+  - wymiary
+  - barwa
+  - ip
+  - czujnik
+  - kolor
+  - material
+- normalized_product_type: zasilacz
+  status: approved
+  required_title_attributes:
+  - pasuje_do_clean
+  - seria
+  - sterowanie
+  - moc
+  optional_title_attributes: []

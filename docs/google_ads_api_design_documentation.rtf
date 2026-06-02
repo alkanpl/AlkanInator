@@ -1,0 +1,199 @@
+{\rtf1\ansi\deff0
+{\fonttbl{\f0 Calibri;}{\f1 Courier New;}}
+{\colortbl;\red11\green37\blue69;\red46\green116\blue181;}
+\fs34\b\cf1 AlkanInator - Google Ads API Tool Design Documentation\b0\cf0\par
+\fs22 Google Ads API Basic Access support document for an internal keyword research and product catalog enrichment utility.\par\par
+\par
+\fs28\b\cf2 1. Tool Overview\b0\cf0\fs22\par
+\par
+**Tool name:** AlkanInator\par
+**Tool type:** Internal product SEO and catalog enrichment utility\par
+**Requested access:** Google Ads API Basic Access\par
+**Permissible use requested:** Researching keywords and recommendations\par
+**Primary API use:** Keyword research through Google Ads Keyword Planner data\par
+\par
+AlkanInator is an internal command-line tool used by Alkan to prepare e-commerce product catalog data before importing products into Baselinker/WooCommerce workflows. The tool processes supplier product spreadsheets, extracts and normalizes product attributes, generates SEO-friendly product names, and enriches output files with keyword research data.\par
+\par
+The Google Ads API integration is limited to keyword research. It does not create, edit, pause, remove, or otherwise manage Google Ads campaigns, ad groups, ads, assets, billing, users, or account settings.\par
+\par
+\fs28\b\cf2 2. Business Purpose\b0\cf0\fs22\par
+\par
+Alkan sells electrical and lighting products online. The catalog contains many technical products with similar names, such as LED panels, hermetic luminaires, high bay fixtures, floodlights, and ceiling luminaires.\par
+\par
+The tool uses Google Ads keyword planning data to select better product-type keywords for product naming and SEO metadata decisions. For each product type, the tool identifies keyword candidates and chooses the two best keywords based on average monthly search volume.\par
+\par
+Example product types:\par
+\par
+\pard\li360\tx360\bullet\tab `panel LED`\par\pard
+\pard\li360\tx360\bullet\tab `oprawa hermetyczna LED`\par\pard
+\pard\li360\tx360\bullet\tab `High Bay przemyslowy`\par\pard
+\pard\li360\tx360\bullet\tab `naswietlacz LED`\par\pard
+\pard\li360\tx360\bullet\tab `plafon LED`\par\pard
+\par
+Example output fields:\par
+\par
+\pard\li360\tx360\bullet\tab `primary_keyword`\par\pard
+\pard\li360\tx360\bullet\tab `primary_keyword_avg_monthly_searches`\par\pard
+\pard\li360\tx360\bullet\tab `secondary_keyword`\par\pard
+\pard\li360\tx360\bullet\tab `secondary_keyword_avg_monthly_searches`\par\pard
+\pard\li360\tx360\bullet\tab `keyword_candidates_json`\par\pard
+\pard\li360\tx360\bullet\tab `keyword_status`\par\pard
+\pard\li360\tx360\bullet\tab `keyword_source`\par\pard
+\par
+\fs28\b\cf2 3. Users and Access Model\b0\cf0\fs22\par
+\par
+The tool is for internal use only. It is operated by Alkan staff on a local workstation as a command-line script.\par
+\par
+There is no public web interface, no third-party access, no customer-facing login, and no external user dashboard. The tool is not provided as SaaS and is not used by external advertisers or agencies.\par
+\par
+The OAuth user is an authorized Google account with access to the relevant Google Ads account. Credentials are stored locally in `google-ads.yaml`, which is excluded from version control.\par
+\par
+\fs28\b\cf2 4. Google Ads API Scope and Services\b0\cf0\fs22\par
+\par
+The integration uses the official Google Ads Python client library.\par
+\par
+The current implementation uses:\par
+\par
+\pard\li360\tx360\bullet\tab `KeywordPlanIdeaService.GenerateKeywordIdeas`\par\pard
+\pard\li360\tx360\bullet\tab `KeywordPlanIdeaService.GenerateKeywordHistoricalMetrics`\par\pard
+\par
+The requested data is limited to:\par
+\par
+\pard\li360\tx360\bullet\tab keyword ideas for product-type seed phrases,\par\pard
+\pard\li360\tx360\bullet\tab historical keyword metrics,\par\pard
+\pard\li360\tx360\bullet\tab average monthly searches.\par\pard
+\par
+The tool does not use:\par
+\par
+\pard\li360\tx360\bullet\tab `GoogleAdsService.Search` for campaign reporting,\par\pard
+\pard\li360\tx360\bullet\tab campaign creation or management services,\par\pard
+\pard\li360\tx360\bullet\tab ad group services,\par\pard
+\pard\li360\tx360\bullet\tab ad services,\par\pard
+\pard\li360\tx360\bullet\tab asset services,\par\pard
+\pard\li360\tx360\bullet\tab billing services,\par\pard
+\pard\li360\tx360\bullet\tab account creation services,\par\pard
+\pard\li360\tx360\bullet\tab user management services,\par\pard
+\pard\li360\tx360\bullet\tab recommendation apply/dismiss operations.\par\pard
+\par
+\fs28\b\cf2 5. Data Flow\b0\cf0\fs22\par
+\par
+1. The operator provides a supplier/product spreadsheet, for example `Alkan_Kanlux_pelne_rodziny.xlsx`.\par
+2. The pipeline extracts product attributes and determines the product type from columns such as `attr_typ`, `Typ produktu`, `Typ`, or `Rodzaj produktu`.\par
+3. The keyword step groups products by unique product type.\par
+4. For each unique product type, the tool sends the product type as a seed phrase to Google Ads API.\par
+5. The tool retrieves keyword ideas and filters out:\par
+   - brand names,\par
+   - SKU/product codes,\par
+   - EAN/GTIN-like numeric values,\par
+   - duplicate phrases,\par
+   - overly long phrases.\par
+6. The tool keeps up to five keyword candidates per product type.\par
+7. The tool requests historical metrics for these candidates.\par
+8. The tool ranks candidates by `avg_monthly_searches`.\par
+9. The best keyword is written as `primary_keyword`; the second-best keyword is written as `secondary_keyword`.\par
+10. The enriched spreadsheet is saved locally for review and later catalog import work.\par
+\par
+\fs28\b\cf2 6. Data Storage and Retention\b0\cf0\fs22\par
+\par
+The tool stores all generated outputs locally in the project workspace.\par
+\par
+Stored files may include:\par
+\par
+\pard\li360\tx360\bullet\tab enriched product spreadsheet outputs in `output/`,\par\pard
+\pard\li360\tx360\bullet\tab keyword reports in `reports/<run-name>/keywords/`,\par\pard
+\pard\li360\tx360\bullet\tab local metric cache in `cache/keyword_planner_metrics.json`.\par\pard
+\par
+The cache contains keyword phrases, targeting settings, source name, and average monthly search values. It does not contain campaign performance data, ad spend data, conversion data, customer lists, or user identity data.\par
+\par
+The API credential file `google-ads.yaml` contains OAuth and developer-token configuration. It is excluded from version control through `.gitignore`.\par
+\par
+\fs28\b\cf2 7. Security Controls\b0\cf0\fs22\par
+\par
+The tool uses the following security controls:\par
+\par
+\pard\li360\tx360\bullet\tab Credentials are stored locally and are not committed to the repository.\par\pard
+\pard\li360\tx360\bullet\tab `google-ads.yaml`, `.env`, and `.env.*` are ignored by Git.\par\pard
+\pard\li360\tx360\bullet\tab The tool is operated manually by an internal user.\par\pard
+\pard\li360\tx360\bullet\tab No credentials are displayed in CLI output.\par\pard
+\pard\li360\tx360\bullet\tab No Google Ads data is shared with third parties.\par\pard
+\pard\li360\tx360\bullet\tab Output files remain on the local workstation unless manually exported by the operator.\par\pard
+\pard\li360\tx360\bullet\tab The tool performs read-only keyword planning requests and does not mutate Google Ads account state.\par\pard
+\par
+\fs28\b\cf2 8. Quota and Rate Control\b0\cf0\fs22\par
+\par
+The tool is designed for low-volume catalog enrichment.\par
+\par
+Quota controls:\par
+\par
+\pard\li360\tx360\bullet\tab Requests are made per unique product type, not per individual product.\par\pard
+\pard\li360\tx360\bullet\tab The tool checks a maximum of five keyword candidates per product type.\par\pard
+\pard\li360\tx360\bullet\tab Historical metrics are cached locally to avoid repeated API calls for the same keyword, geography, language, and network.\par\pard
+\pard\li360\tx360\bullet\tab Typical test runs contain 5-20 unique product types.\par\pard
+\pard\li360\tx360\bullet\tab Full catalog runs are expected to stay well below the Basic Access limit of 15,000 operations per day.\par\pard
+\par
+Default targeting:\par
+\par
+\pard\li360\tx360\bullet\tab Geography: Poland\par\pard
+\pard\li360\tx360\bullet\tab Language: Polish\par\pard
+\pard\li360\tx360\bullet\tab Network: Google Search\par\pard
+\par
+These settings can be configured through CLI flags.\par
+\par
+\fs28\b\cf2 9. User Workflow\b0\cf0\fs22\par
+\par
+The keyword step can be run as a standalone step:\par
+\par
+\f1\fs18 py src/analyze_keywords.py `\f0\fs22\par
+\f1\fs18   --input output/products_optimized.xlsx `\f0\fs22\par
+\f1\fs18   --output output/products_with_keywords.xlsx `\f0\fs22\par
+\f1\fs18   --reports-dir reports/keywords `\f0\fs22\par
+\f1\fs18   --google-ads-config google-ads.yaml\f0\fs22\par
+\par
+It can also be run as part of the main catalog workflow:\par
+\par
+\f1\fs18 py src/run_pipeline_with_parameters.py `\f0\fs22\par
+\f1\fs18   --input input/Alkan_Kanlux_pelne_rodziny.xlsx `\f0\fs22\par
+\f1\fs18   --sheet "7. Wszystkie SKU (master)" `\f0\fs22\par
+\f1\fs18   --parameters input/Parametry.xlsx `\f0\fs22\par
+\f1\fs18   --config configs/categories/kanlux-oswietlenie.yaml `\f0\fs22\par
+\f1\fs18   --output output/alkan_kanlux_master_names_with_keywords.xlsx `\f0\fs22\par
+\f1\fs18   --reports-dir reports/alkan_kanlux_master_names_with_keywords `\f0\fs22\par
+\f1\fs18   --analyze-keywords `\f0\fs22\par
+\f1\fs18   --google-ads-config google-ads.yaml\f0\fs22\par
+\par
+\fs28\b\cf2 10. Error Handling and Reporting\b0\cf0\fs22\par
+\par
+The tool does not fail the entire catalog pipeline if Google Ads API calls fail for a product type. Instead, it writes status and diagnostic fields.\par
+\par
+Product-level status values include:\par
+\par
+\pard\li360\tx360\bullet\tab `OK`\par\pard
+\pard\li360\tx360\bullet\tab `NO_TYPE`\par\pard
+\pard\li360\tx360\bullet\tab `NO_DATA`\par\pard
+\pard\li360\tx360\bullet\tab `ERROR`\par\pard
+\par
+The tool writes API/provider errors to:\par
+\par
+\f1\fs18 reports/<run-name>/keywords/keyword_api_errors.csv\f0\fs22\par
+\par
+It also writes:\par
+\par
+\f1\fs18 reports/<run-name>/keywords/keyword_type_summary.csv\f0\fs22\par
+\f1\fs18 reports/<run-name>/keywords/keyword_missing_types.csv\f0\fs22\par
+\par
+\fs28\b\cf2 11. Compliance Position\b0\cf0\fs22\par
+\par
+AlkanInator is not a full-service Google Ads management tool. It is an internal, specialized keyword research and product catalog enrichment utility.\par
+\par
+The Google Ads API integration is limited to planning/research services and does not provide campaign creation, campaign management, ad management, reporting dashboards, billing operations, account creation, or user management.\par
+\par
+The requested Basic Access is needed because `KeywordPlanIdeaService` is restricted for lower access levels and is required to retrieve keyword ideas and keyword historical metrics for production account keyword research.\par
+\par
+\fs28\b\cf2 12. References\b0\cf0\fs22\par
+\par
+\pard\li360\tx360\bullet\tab Google Ads API Access Levels and Permissible Use: https://developers.google.com/google-ads/api/docs/api-policy/access-levels\par\pard
+\pard\li360\tx360\bullet\tab Google Ads API Required Minimum Functionality: https://developers.google.com/google-ads/api/docs/api-policy/rmf\par\pard
+\pard\li360\tx360\bullet\tab Google Ads API Python Client Configuration: https://developers.google.com/google-ads/api/docs/client-libs/python/configuration\par\pard
+\pard\li360\tx360\bullet\tab Keyword Planning - Generate Keyword Ideas: https://developers.google.com/google-ads/api/docs/keyword-planning/generate-keyword-ideas\par\pard
+\pard\li360\tx360\bullet\tab Keyword Planning - Generate Historical Metrics: https://developers.google.com/google-ads/api/docs/keyword-planning/generate-historical-metrics\par\pard
+}

@@ -90,6 +90,28 @@ py src/recommend_categories.py --input output/gazetka_produkty_nazwy_final_20260
 Skrypt dopisuje kolumny `proponowana_kategoria_1..N`, `category_score_1..N`, `category_confidence_1..N` i `category_reasons_1..N`. Domyslnie korzysta z `dictionaries/woocommerce_catalog_knowledge.yaml` oraz `dictionaries/learned_product_taxonomy.yaml`.
 Zaakceptowane reczne korekty po SKU mozna dopisywac w `dictionaries/category_recommendation_overrides.yaml`.
 
+Analiza slow kluczowych per typ produktu przez Google Keyword Planner:
+
+```powershell
+py src/analyze_keywords.py --input output/products_optimized.xlsx --output output/products_with_keywords.xlsx --reports-dir reports/keywords --customer-id 1234567890
+```
+
+Ten sam etap mozna wlaczyc w glownym workflow:
+
+```powershell
+py src/run_pipeline.py --input input/products.xlsx --category "Oprawy sufitowe" --output output/products_optimized.xlsx --reports-dir reports/products --analyze-keywords --google-ads-config google-ads.yaml
+```
+
+Skrypt wykrywa typ produktu z kolumn `attr_typ`, `Typ produktu`, `Typ` albo `Rodzaj produktu`, pobiera propozycje slow kluczowych, sprawdza historyczne `avg_monthly_searches` i dopisuje `primary_keyword`, `secondary_keyword`, metryki oraz `keyword_candidates_json`. Konfiguracja Google Ads jest czytana z `--google-ads-config`, `GOOGLE_ADS_CONFIGURATION_FILE_PATH`, `~/google-ads.yaml` albo lokalnego `google-ads.yaml`; `--customer-id` mozna pominac, jesli YAML ma pole `customer_id`. Do testow bez API mozna uzyc `--offline-keywords` z CSV zawierajacym `keyword`, `avg_monthly_searches` i opcjonalnie `product_type`.
+
+Anatomia tytulow produktowych:
+
+```powershell
+py src/run_pipeline_with_parameters.py --input input/Alkan_Kanlux_pelne_rodziny.xlsx --sheet "7. Wszystkie SKU (master)" --parameters input/Parametry.xlsx --config configs/categories/kanlux-oswietlenie.yaml --output output/alkan_kanlux_master_names.xlsx --reports-dir reports/alkan_kanlux_master_names --title-anatomy configs/title_anatomy.yaml
+```
+
+Globalny config `configs/title_anatomy.yaml` buduje tytul wedlug schematu `primary_keyword` albo typ produktu jako fallback, potem atrybuty per typ produktu, producent i kod producenta. Jezeli dla typu nie ma zaakceptowanej reguly anatomii, pipeline wraca do starego template'u YAML i dodaje warning `title_anatomy_missing_accepted_rule`. Raporty trafiaja do `reports/<run>/title_anatomy/`: `title_type_review.xlsx`, `duplicate_titles_for_manual_review.xlsx` i `title_anatomy_warnings.csv`.
+
 Tagowanie wariantow i uzupelnianie klas wysylkowych bez zmiany nazw ani atrybutow:
 
 ```powershell

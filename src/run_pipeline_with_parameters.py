@@ -11,6 +11,7 @@ from analyze_products import (
     detect_product_columns,
     write_quality_report,
 )
+from analyze_keywords import add_keyword_pipeline_arguments, maybe_enrich_pipeline_with_keywords
 from enrich_from_parameters import (
     build_parameter_index,
     detect_parameter_columns,
@@ -19,6 +20,7 @@ from enrich_from_parameters import (
 )
 from export_results import export_outputs
 from optimize_titles import build_changes_report, optimize_titles_for_dataframe
+from title_anatomy import DEFAULT_TITLE_ANATOMY_PATH, load_title_anatomy_config, write_title_anatomy_reports
 from title_strategy import build_title_strategy_report
 from utils import ensure_dir, load_yaml, read_products
 from validate_output import classify_product_roles, validate_category_fit
@@ -51,9 +53,12 @@ def main() -> None:
     )
     parser.add_argument("--output", default="output/products_optimized_with_parameters.xlsx")
     parser.add_argument("--reports-dir", default="reports/optimized_with_parameters")
+    parser.add_argument("--title-anatomy", default=DEFAULT_TITLE_ANATOMY_PATH, help="Globalny config anatomii tytulow.")
+    add_keyword_pipeline_arguments(parser)
     args = parser.parse_args()
 
     config = enrich_config_with_catalog_knowledge(load_yaml(args.config), load_catalog_knowledge(args.catalog_knowledge))
+    anatomy_config = load_title_anatomy_config(args.title_anatomy)
     reports_dir = ensure_dir(args.reports_dir)
     parameter_reports_dir = ensure_dir(reports_dir / "parameters")
 
@@ -74,8 +79,10 @@ def main() -> None:
     write_parameter_reports(parameter_reports, unmapped, products, str(columns["sku"]), parameter_index, parameter_reports_dir)
 
     classified_df = classify_product_roles(enriched_df, config)
-    optimized_df = optimize_titles_for_dataframe(classified_df, "__working_title", config)
+    classified_df = maybe_enrich_pipeline_with_keywords(classified_df, args, reports_dir)
+    optimized_df = optimize_titles_for_dataframe(classified_df, "__working_title", config, anatomy_config)
     optimized_df, suspicious_category_df = validate_category_fit(optimized_df, config)
+    write_title_anatomy_reports(optimized_df, reports_dir, anatomy_config)
 
     missing_df = build_missing_attributes(optimized_df, columns, config)
     missing_df.to_csv(reports_dir / "missing_attributes.csv", index=False, encoding="utf-8-sig")

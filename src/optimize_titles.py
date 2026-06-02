@@ -9,15 +9,25 @@ from typing import Any
 import pandas as pd
 
 from catalog_knowledge import DEFAULT_CATALOG_KNOWLEDGE_PATH, enrich_config_with_catalog_knowledge, load_catalog_knowledge
+from title_anatomy import (
+    DEFAULT_TITLE_ANATOMY_PATH,
+    build_title_from_anatomy,
+    load_title_anatomy_config,
+    normalize_product_type_key,
+)
 from utils import compact_spaces, is_blank, load_yaml, read_products, strip_accents, write_products
 
 
 def build_title(row: pd.Series, config: dict[str, Any]) -> tuple[str, list[str]]:
-    _, title, warnings = build_title_parts(row, config)
+    _, title, warnings, _ = build_title_parts(row, config)
     return title, warnings
 
 
-def build_title_parts(row: pd.Series, config: dict[str, Any]) -> tuple[str, str, list[str]]:
+def build_title_parts(
+    row: pd.Series,
+    config: dict[str, Any],
+    anatomy_config: dict[str, Any] | None = None,
+) -> tuple[str, str, list[str], dict[str, Any]]:
     product_role = str(row.get("product_role", "main") or "main")
     template, matched_rule = resolve_title_template_and_rule(row, config, product_role)
     max_length = int(config.get("max_title_length", 110))
@@ -32,6 +42,17 @@ def build_title_parts(row: pd.Series, config: dict[str, Any]) -> tuple[str, str,
     values["accessory_type"] = "" if is_blank(row.get("accessory_type", "")) else str(row.get("accessory_type", ""))
     values["sku"] = resolve_sku_value(row, config)
     values.update(build_inflected_values(values, config))
+
+    anatomy_result = build_title_from_anatomy(row, anatomy_config or {}, values, max_length=max_length)
+    if anatomy_result is not None:
+        metadata = {
+            "title_source": anatomy_result.source,
+            "title_anatomy_rule": anatomy_result.rule_key,
+            "title_anatomy_used_attributes": ",".join(anatomy_result.used_attributes),
+            "title_anatomy_skipped_attributes": ",".join(anatomy_result.skipped_attributes),
+            "title_anatomy_product_type_key": normalize_product_type_key(values.get("typ", row.get("attr_typ", row.get("Typ", "")))),
+        }
+        return anatomy_result.title_without_code, anatomy_result.title, anatomy_result.warnings, metadata
 
     title = template
     for field in re.findall(r"{([^{}]+)}", template):
@@ -68,7 +89,18 @@ def build_title_parts(row: pd.Series, config: dict[str, Any]) -> tuple[str, str,
     if is_blank(title):
         warnings.append("empty_title")
 
-    return seo_title_without_code, title, warnings
+    title_source = "manual_template" if matched_rule is not None and matched_rule.get("source") == "manual_template" else "legacy_template"
+    metadata = {
+        "title_source": title_source,
+        "title_anatomy_rule": "",
+        "title_anatomy_used_attributes": "",
+        "title_anatomy_skipped_attributes": "",
+        "title_anatomy_product_type_key": normalize_product_type_key(values.get("typ", row.get("attr_typ", row.get("Typ", "")))),
+    }
+    if title_source == "legacy_template":
+        warnings.append("title_anatomy_missing_accepted_rule")
+
+    return seo_title_without_code, title, warnings, metadata
 
 
 def normalize_seo_title_terms(title: str) -> str:
@@ -117,7 +149,7 @@ def resolve_title_template_and_rule(row: pd.Series, config: dict[str, Any], prod
     sku = resolve_sku_value(row, config)
     manual_templates = config.get("manual_title_templates_by_sku") or {}
     if sku and sku in manual_templates:
-        return str(manual_templates[sku]), {"required_fields": []}
+        return str(manual_templates[sku]), {"required_fields": [], "source": "manual_template"}
     if product_role != "accessory":
         category = str(row.get("Kategoria", row.get("category", "")))
         product_type = first_non_blank(row.get("attr_typ", ""), row.get("Typ", ""))
@@ -227,33 +259,48 @@ def build_neuter_light_color(value: str) -> str:
     return mapping.get(value, value)
 
 
-def optimize_titles_for_dataframe(df: pd.DataFrame, title_column: str, config: dict[str, Any]) -> pd.DataFrame:
+def optimize_titles_for_dataframe(
+    df: pd.DataFrame,
+    title_column: str,
+    config: dict[str, Any],
+    anatomy_config: dict[str, Any] | None = None,
+) -> pd.DataFrame:
     result = df.copy()
     result["old_title"] = result[title_column].astype(str)
-    generated_rows: list[tuple[int, str, str, list[str], str]] = []
+    generated_rows: list[tuple[int, str, str, list[str], str, dict[str, Any], str]] = []
 
     for index, row in result.iterrows():
-        seo_title_without_code, new_title, warnings = build_title_parts(row, config)
+        seo_title_without_code, new_title, warnings, metadata = build_title_parts(row, config, anatomy_config)
         title_uniqueness_key = normalize_title_uniqueness_key(seo_title_without_code)
-        generated_rows.append((index, seo_title_without_code, new_title, warnings, title_uniqueness_key))
+        final_title_uniqueness_key = normalize_title_uniqueness_key(new_title)
+        generated_rows.append((index, seo_title_without_code, new_title, warnings, title_uniqueness_key, metadata, final_title_uniqueness_key))
 
     duplicate_counts = pd.Series(
         [item[4] for item in generated_rows if item[4]],
         dtype="object",
     ).value_counts()
+    final_duplicate_counts = pd.Series(
+        [item[6] for item in generated_rows if item[6]],
+        dtype="object",
+    ).value_counts()
 
-    for index, seo_title_without_code, new_title, warnings, title_uniqueness_key in generated_rows:
+    for index, seo_title_without_code, new_title, warnings, title_uniqueness_key, metadata, final_title_uniqueness_key in generated_rows:
         old_title = str(result.at[index, "old_title"])
         if title_uniqueness_key and int(duplicate_counts.get(title_uniqueness_key, 0)) > 1:
             warnings = [*warnings, f"duplicate_seo_title_without_code:{int(duplicate_counts[title_uniqueness_key])}"]
+        if final_title_uniqueness_key and int(final_duplicate_counts.get(final_title_uniqueness_key, 0)) > 1:
+            warnings = [*warnings, f"duplicate_final_title:{int(final_duplicate_counts[final_title_uniqueness_key])}"]
         changed_fields = ["title"] if new_title != old_title else []
         result.at[index, "seo_title_without_code"] = seo_title_without_code
         result.at[index, "title_uniqueness_key"] = title_uniqueness_key
+        result.at[index, "final_title_uniqueness_key"] = final_title_uniqueness_key
         result.at[index, "new_title"] = new_title
         result.at[index, "title_status"] = "WARNING" if warnings else "OK"
         result.at[index, "title_length"] = len(new_title)
         result.at[index, "changed_fields"] = ";".join(changed_fields)
         result.at[index, "warnings"] = ";".join(warnings)
+        for key, value in metadata.items():
+            result.at[index, key] = value
 
     return result
 
@@ -268,6 +315,11 @@ def build_changes_report(df: pd.DataFrame) -> pd.DataFrame:
         "seo_title_without_code",
         "new_title",
         "title_uniqueness_key",
+        "final_title_uniqueness_key",
+        "title_source",
+        "title_anatomy_rule",
+        "title_anatomy_used_attributes",
+        "title_anatomy_skipped_attributes",
         "title_status",
         "title_length",
         "new_attributes",
@@ -307,11 +359,12 @@ def main() -> None:
     parser.add_argument("--title-column", required=True)
     parser.add_argument("--config", default="configs/categories/oprawy-sufitowe.yaml")
     parser.add_argument("--catalog-knowledge", default=DEFAULT_CATALOG_KNOWLEDGE_PATH)
+    parser.add_argument("--title-anatomy", default=DEFAULT_TITLE_ANATOMY_PATH)
     args = parser.parse_args()
 
     df = read_products(args.input, sheet_name=args.sheet)
     config = enrich_config_with_catalog_knowledge(load_yaml(args.config), load_catalog_knowledge(args.catalog_knowledge))
-    result = optimize_titles_for_dataframe(df, args.title_column, config)
+    result = optimize_titles_for_dataframe(df, args.title_column, config, load_title_anatomy_config(args.title_anatomy))
     write_products(result, Path(args.output))
 
 

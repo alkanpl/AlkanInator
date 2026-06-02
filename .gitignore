@@ -9,3 +9,8 @@ reports/*
 
 cache/*
 !cache/.gitkeep
+
+# Local secrets / API credentials
+google-ads.yaml
+.env
+.env.*
