@@ -110,7 +110,7 @@ Anatomia tytulow produktowych:
 py src/run_pipeline_with_parameters.py --input input/Alkan_Kanlux_pelne_rodziny.xlsx --sheet "7. Wszystkie SKU (master)" --parameters input/Parametry.xlsx --config configs/categories/kanlux-oswietlenie.yaml --output output/alkan_kanlux_master_names.xlsx --reports-dir reports/alkan_kanlux_master_names --title-anatomy configs/title_anatomy.yaml
 ```
 
-Globalny config `configs/title_anatomy.yaml` buduje tytul wedlug schematu `primary_keyword` albo typ produktu jako fallback, potem atrybuty per typ produktu, producent i kod producenta. Jezeli dla typu nie ma zaakceptowanej reguly anatomii, pipeline wraca do starego template'u YAML i dodaje warning `title_anatomy_missing_accepted_rule`. Raporty trafiaja do `reports/<run>/title_anatomy/`: `title_type_review.xlsx`, `duplicate_titles_for_manual_review.xlsx` i `title_anatomy_warnings.csv`.
+Globalny config `configs/title_anatomy.yaml` buduje tytul wedlug schematu `primary_keyword` albo typ produktu jako fallback, potem atrybuty per typ produktu, producent i kod producenta. Jezeli dla typu nie ma zaakceptowanej reguly anatomii, pipeline wraca do starego template'u YAML i dodaje warning `title_anatomy_missing_accepted_rule`. Raporty trafiaja do `reports/<run>/title_anatomy/title_anatomy_review.xlsx` - jeden plik z trzema arkuszami: `Przeglad typow`, `Duplikaty` i `Ostrzezenia`. Kazdy arkusz ma dwie kolumny do recznego przegladu: `proponowana zmiana` (aktualny wynik programu) i `oczekiwany wynik` (pusta kolumna do wpisania docelowej wartosci).
 
 Tagowanie wariantow i uzupelnianie klas wysylkowych bez zmiany nazw ani atrybutow:
 
@@ -133,3 +133,22 @@ Pipeline tworzy:
 - `reports/category_summary.csv`
 
 Oryginalny plik wejsciowy nie jest nadpisywany.
+
+## Testy
+
+Testy uzywaja biblioteki standardowej `unittest` (bez dodatkowych zaleznosci):
+
+```powershell
+py -m unittest discover -s tests -p "test_*.py"
+```
+
+Kluczowe sa testy charakteryzujace (golden-file) dla ekstrakcji atrybutow i
+generowania tytulow: utrwalaja aktualne zachowanie na realnych danych, wiec
+kazda niezamierzona regresja w regexach lub regulach od razu wywala test.
+
+Po swiadomej zmianie regul ekstrakcji, configow tytulow lub slownikow
+zregeneruj snapshoty (wymaga `input/Alkan_Kanlux_pelne_rodziny.xlsx`):
+
+```powershell
+py tests/generate_snapshots.py
+```

@@ -57,7 +57,8 @@ class TitleAnatomyTest(unittest.TestCase):
         self.assertIsNotNone(result)
         assert result is not None
         self.assertTrue(result.title.startswith("Panel LED BLINGO"))
-        self.assertIn("title_anatomy_primary_keyword_type_fallback", result.warnings)
+        # Bez primary_keyword i bez title_keyword reguly: fallback na typ produktu.
+        self.assertIn("title_anatomy_missing_primary_keyword", result.warnings)
 
     def test_skips_redundant_color_when_light_attribute_contains_same_color(self) -> None:
         row = pd.Series({"primary_keyword": "panel led", "attr_typ": "Panel LED", "Kod": "12345", "Producent": "Kanlux"})

@@ -8,7 +8,7 @@ from typing import Any
 
 import pandas as pd
 
-from utils import compact_spaces, ensure_dir, is_blank, load_yaml, normalize_header, strip_accents, write_products
+from utils import compact_spaces, ensure_dir, is_blank, load_yaml, normalize_header, strip_accents
 
 
 DEFAULT_TITLE_ANATOMY_PATH = "configs/title_anatomy.yaml"
@@ -48,12 +48,28 @@ def build_title_from_anatomy(
     if not rule_is_accepted(rule, anatomy_config):
         return None
 
-    first_part = primary_keyword_for_row(row, values, anatomy_config)
+    # Oprawy na zrodlo wymienne (gwint GU10/E14/E27) nie sa zintegrowanym LED -
+    # wyekstrahowana "moc" to maks. moc zarowki, nie wlasna. Taka regula oddaje
+    # produkt do legacy (np. "Oprawa sufitowa / Plafon ... E27"), bez "LED" i bez
+    # mylacej mocy.
+    if rule.get("skip_if_socket") and not is_blank(values.get("gwint", "")):
+        return None
+
+    # Slowo kluczowe: jawny primary_keyword z danych > kanoniczne `title_keyword`
+    # reguly > surowy typ produktu (ostatecznosc, sygnalizowana ostrzezeniem).
+    first_part = explicit_primary_keyword(row, anatomy_config)
     if not first_part:
-        first_part = product_type
-        warnings.append("title_anatomy_missing_primary_keyword")
-    elif normalize_header(first_part) == normalize_header(product_type):
-        warnings.append("title_anatomy_primary_keyword_type_fallback")
+        rule_keyword = normalize_woo_like_value(rule.get("title_keyword", ""))
+        if rule_keyword:
+            first_part = rule_keyword
+        else:
+            first_part = product_type
+            warnings.append("title_anatomy_missing_primary_keyword")
+    # Nadpisanie slowa kluczowego dla nietypowych serii (np. AVAR to nie panel,
+    # tylko "Ramka oswietleniowa LED"). Ma priorytet nad title_keyword reguly.
+    override = series_keyword_override(values, anatomy_config)
+    if override:
+        first_part = override
 
     used_attributes: list[str] = []
     skipped_attributes: list[str] = []
@@ -62,13 +78,19 @@ def build_title_from_anatomy(
     for value in parts:
         remember_seen_value(seen_keys, value)
 
+    # `required_title_attributes` definiuje KOLEJNOSC i sklad tytulu (atrybut
+    # trafia do tytulu, jesli jest obecny). `warn_if_missing` zaweza, ktore z
+    # nich naprawde musza wystapic (ostrzezenie przy braku). Gdy go nie ma,
+    # ostrzegamy dla wszystkich required - zachowanie wsteczne.
+    warn_if_missing = rule.get("warn_if_missing")
     for attribute in list(rule.get("required_title_attributes") or []):
         value = anatomy_attribute_value(attribute, values)
         if should_skip_attribute(attribute, value, values, rule, seen_keys):
             skipped_attributes.append(attribute)
             continue
         if is_blank(value):
-            warnings.append(f"title_anatomy_missing_required:{attribute}")
+            if warn_if_missing is None or attribute in warn_if_missing:
+                warnings.append(f"title_anatomy_missing_required:{attribute}")
             continue
         parts.append(value)
         used_attributes.append(attribute)
@@ -116,16 +138,32 @@ def product_type_for_row(row: pd.Series, values: dict[str, str], anatomy_config:
     return ""
 
 
-def primary_keyword_for_row(row: pd.Series, values: dict[str, str], anatomy_config: dict[str, Any]) -> str:
+def series_keyword_override(values: dict[str, str], anatomy_config: dict[str, Any]) -> str:
+    """Slowo kluczowe nadpisane per seria (config: series_title_keyword).
+
+    Dla serii, ktore mimo typu sa czyms innym (np. AVAR = ramka oswietleniowa).
+    """
+    overrides = anatomy_config.get("series_title_keyword") or {}
+    if not overrides:
+        return ""
+    # Marker moze byc w serii albo w samej nazwie produktu (np. SLR = solar).
+    tokens = set(comparable_value_key(f"{values.get('seria', '')} {values.get('old_title', '')}").split())
+    for series_name, keyword in overrides.items():
+        if comparable_value_key(series_name) in tokens:
+            return normalize_woo_like_value(keyword)
+    return ""
+
+
+def explicit_primary_keyword(row: pd.Series, anatomy_config: dict[str, Any]) -> str:
+    """Jawne slowo kluczowe SEO z danych (kolumna primary_keyword).
+
+    Tylko realny primary_keyword - bez fallbacku na typ produktu. Gdy go brak,
+    slowo kluczowe pochodzi z kanonicznego `title_keyword` reguly (patrz
+    build_title_from_anatomy).
+    """
     source = str(anatomy_config.get("default_primary_keyword_source") or "primary_keyword")
     primary = first_row_value(row, [source, "primary_keyword"])
-    if primary:
-        return normalize_woo_like_value(primary)
-    fallback_fields = list(anatomy_config.get("primary_keyword_fallback_fields") or [])
-    fallback = first_row_value(row, fallback_fields)
-    if fallback:
-        return normalize_woo_like_value(fallback)
-    return normalize_woo_like_value(values.get("typ", ""))
+    return normalize_woo_like_value(primary) if primary else ""
 
 
 def anatomy_attribute_value(attribute: str, values: dict[str, str]) -> str:
@@ -135,13 +173,27 @@ def anatomy_attribute_value(attribute: str, values: dict[str, str]) -> str:
 def rule_for_product_type(normalized_type: str, anatomy_config: dict[str, Any]) -> dict[str, Any] | None:
     if not normalized_type:
         return None
+    canonical_type = resolve_type_alias(normalized_type, anatomy_config)
     for rule in anatomy_config.get("rules") or []:
         if not isinstance(rule, dict):
             continue
         rule_key = normalize_product_type_key(rule.get("normalized_product_type", ""))
-        if rule_key == normalized_type:
+        if rule_key == canonical_type:
             return rule
     return None
+
+
+def resolve_type_alias(normalized_type: str, anatomy_config: dict[str, Any]) -> str:
+    """Mapuje warianty nazwy typu na typ kanoniczny, ktory ma regule anatomii.
+
+    Aliasy mieszkaja w configu (`product_type_aliases`), wiec dopasowanie do
+    regul mozna rozszerzac bez zmian w kodzie.
+    """
+    aliases = {
+        normalize_product_type_key(key): normalize_product_type_key(value)
+        for key, value in (anatomy_config.get("product_type_aliases") or {}).items()
+    }
+    return aliases.get(normalized_type, normalized_type)
 
 
 def rule_is_accepted(rule: dict[str, Any], anatomy_config: dict[str, Any]) -> bool:
@@ -275,6 +327,8 @@ def normalize_woo_like_value(value: Any) -> str:
     value = re.sub(r"\bip\s*(\d{2})\b", r"IP\1", value, flags=re.IGNORECASE)
     value = re.sub(r"(?<=\d)\s+([WK])\b", r"\1", value, flags=re.IGNORECASE)
     value = re.sub(r"(?<=\d)\s+lm\b", "lm", value, flags=re.IGNORECASE)
+    # Jednostka skutecznosci ma byc zwarta: "120lm / W" -> "120lm/W".
+    value = re.sub(r"lm\s*/\s*W\b", "lm/W", value, flags=re.IGNORECASE)
     return compact_spaces(value)
 
 
@@ -371,13 +425,29 @@ def duplicate_titles_report(df: pd.DataFrame) -> pd.DataFrame:
                     "product_type": first_row_value(row, ["attr_typ", "Typ produktu", "Typ", "Rodzaj produktu"]),
                 }
             )
-    return pd.DataFrame(rows)
+    return pd.DataFrame(rows, columns=duplicate_titles_columns())
+
+
+def duplicate_titles_columns() -> list[str]:
+    return [
+        "duplicate_type",
+        "duplicate_key",
+        "row_index",
+        "sku",
+        "new_title",
+        "seo_title_without_code",
+        "product_type",
+    ]
+
+
+def title_anatomy_warnings_columns() -> list[str]:
+    return ["row_index", "sku", "product_type", "warning", "new_title"]
 
 
 def title_anatomy_warnings_report(df: pd.DataFrame) -> pd.DataFrame:
     rows: list[dict[str, Any]] = []
     if "warnings" not in df.columns:
-        return pd.DataFrame()
+        return pd.DataFrame(columns=title_anatomy_warnings_columns())
     for index, row in df.iterrows():
         warnings = [item for item in str(row.get("warnings", "")).split(";") if item.startswith("title_anatomy") or item.startswith("duplicate_")]
         for warning in warnings:
@@ -390,11 +460,29 @@ def title_anatomy_warnings_report(df: pd.DataFrame) -> pd.DataFrame:
                     "new_title": row.get("new_title", ""),
                 }
             )
-    return pd.DataFrame(rows)
+    return pd.DataFrame(rows, columns=title_anatomy_warnings_columns())
+
+
+def add_review_columns(df: pd.DataFrame, proposal_column: str) -> pd.DataFrame:
+    """Dokleja kolumny do recznego przegladu:
+
+    - ``proponowana zmiana`` - aktualny wynik programu (zrodlo: proposal_column),
+    - ``oczekiwany wynik`` - pusta kolumna do wpisania docelowej wartosci.
+    """
+    result = df.copy()
+    result["proponowana zmiana"] = result[proposal_column] if proposal_column in result.columns else ""
+    result["oczekiwany wynik"] = ""
+    return result
 
 
 def write_title_anatomy_reports(df: pd.DataFrame, reports_dir: str | Path, anatomy_config: dict[str, Any]) -> None:
     reports = ensure_dir(Path(reports_dir) / "title_anatomy")
-    write_products(build_title_type_review(df, anatomy_config), reports / "title_type_review.xlsx")
-    write_products(duplicate_titles_report(df), reports / "duplicate_titles_for_manual_review.xlsx")
-    title_anatomy_warnings_report(df).to_csv(reports / "title_anatomy_warnings.csv", index=False, encoding="utf-8-sig")
+    sheets = {
+        "Przeglad typow": add_review_columns(build_title_type_review(df, anatomy_config), "example_title_1"),
+        "Duplikaty": add_review_columns(duplicate_titles_report(df), "new_title"),
+        "Ostrzezenia": add_review_columns(title_anatomy_warnings_report(df), "new_title"),
+    }
+    output_path = reports / "title_anatomy_review.xlsx"
+    with pd.ExcelWriter(output_path, engine="openpyxl") as writer:
+        for sheet_name, sheet_df in sheets.items():
+            sheet_df.to_excel(writer, sheet_name=sheet_name, index=False)

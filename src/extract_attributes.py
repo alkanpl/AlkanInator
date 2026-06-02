@@ -245,6 +245,10 @@ def extract_attributes_from_text(text: str, config: dict[str, Any] | None = None
                 sources["kolor"] = "title_suffix"
                 confidence["kolor"] = 0.75
 
+    # Kolor w tytule SEO ma miec polskie znaki (biały, złoty), a nie formy ASCII.
+    if "kolor" in attributes:
+        attributes["kolor"] = to_polish_color(attributes["kolor"])
+
     if config.get("prefer_title_producer_over_column"):
         producer = extract_producer(title, config, "") or extract_producer(title, config, producer_hint)
     else:
@@ -292,6 +296,29 @@ def extract_explicit_color(title: str) -> str:
     if not match:
         return ""
     return normalize_explicit_color_phrase(match.group(1))
+
+
+POLISH_COLOR_TOKENS = {
+    "bialy": "biały",
+    "biala": "biała",
+    "biale": "białe",
+    "brazowy": "brązowy",
+    "bezowy": "beżowy",
+    "zloty": "złoty",
+    "dab": "dąb",
+}
+
+
+def to_polish_color(value: str) -> str:
+    """Zamienia formy ASCII kolorow na polskie (bialy -> biały), token po tokenie.
+
+    Zachowuje separatory (' / ', spacje) i nieznane slowa (np. 'mat', 'szary').
+    """
+    return re.sub(
+        r"[A-Za-z]+",
+        lambda m: POLISH_COLOR_TOKENS.get(m.group(0).lower(), m.group(0)),
+        str(value),
+    )
 
 
 def normalize_explicit_color_phrase(value: str) -> str:

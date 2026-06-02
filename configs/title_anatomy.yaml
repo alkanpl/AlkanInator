@@ -20,25 +20,55 @@ accepted_status_values:
 - approved
 - zaakceptowane
 - accepted
+# Serie, ktore mimo typu produktu sa czyms innym - nadpisuja slowo kluczowe.
+# SLR = marker solarny (serie SOLNAR, SONE); lm wazniejsze niz W, etykieta solarny.
+series_title_keyword:
+  AVAR: Ramka oświetleniowa LED
+  SLR: Naświetlacz solarny LED
+# Mapowanie wariantow nazwy typu na typ kanoniczny, ktory ma regule anatomii.
+# Wlaczone dla typow semantycznie rownowaznych (LED z moca). Typy o innym
+# schemacie (drewniane E27 bez mocy, akcesoria) celowo zostaja przy legacy.
+product_type_aliases:
+  plafoniera led: plafon led
+  plafoniera: plafon led
+  plafoniera dekoracyjna: plafon led
+  plafoniera led dekoracyjna: plafon led
+  plafoniera led z czujnikiem: plafon led
+  plafoniera z czujnikiem: plafon led
+  plafoniera z czujnikiem ruchu: plafon led
+  oprawa hermetyczna: oprawa hermetyczna led
+  oprawa hermetyczna na t8: oprawa hermetyczna led
+  naswietlacz led z czujnikiem: naswietlacz led
+  naswietlacz iq led: naswietlacz led
+  high bay led: high bay przemyslowy
+  panel led uniwersalny: panel led
+# `required_title_attributes` = kolejnosc i sklad tytulu (atrybut wchodzi, jesli
+# jest obecny). `warn_if_missing` = ktore z nich naprawde musza wystapic.
 rules:
 - normalized_product_type: panel led
+  title_keyword: Panel LED
   status: approved
   required_title_attributes:
+  - montaz
   - seria_clean
   - ksztalt_masculine
   - wymiary
   - moc
   - strumien
-  - barwa
+  - barwa_full
   - ip
   - kolor
   optional_title_attributes:
   - czujnik
+  warn_if_missing:
+  - moc
+  - barwa_full
   excluded_if_redundant:
     kolor:
     - barwa_swiatla
     - barwa_neuter
 - normalized_product_type: high bay przemyslowy
+  title_keyword: Oprawa High Bay LED
   status: approved
   required_title_attributes:
   - seria_clean
@@ -49,7 +79,10 @@ rules:
   - kolor_feminine
   optional_title_attributes:
   - kat_swiecenia
+  warn_if_missing:
+  - moc
 - normalized_product_type: high bay ufo
+  title_keyword: Oprawa High Bay LED
   status: approved
   required_title_attributes:
   - seria_clean
@@ -60,7 +93,10 @@ rules:
   - kolor_feminine
   optional_title_attributes:
   - kat_swiecenia
+  warn_if_missing:
+  - moc
 - normalized_product_type: oprawa hermetyczna led
+  title_keyword: Oprawa hermetyczna LED
   status: approved
   required_title_attributes:
   - seria_clean
@@ -73,7 +109,10 @@ rules:
   - kolor_feminine
   optional_title_attributes:
   - czujnik
+  warn_if_missing:
+  - moc
 - normalized_product_type: oprawa hermetyczna led duzej mocy
+  title_keyword: Oprawa hermetyczna LED
   status: approved
   required_title_attributes:
   - seria_clean
@@ -86,7 +125,10 @@ rules:
   - kolor_feminine
   optional_title_attributes:
   - czujnik
+  warn_if_missing:
+  - moc
 - normalized_product_type: naswietlacz led
+  title_keyword: Naświetlacz LED
   status: approved
   required_title_attributes:
   - seria_clean
@@ -98,23 +140,35 @@ rules:
   - ip
   - czujnik
   - kolor
+  warn_if_missing:
+  - moc
 - normalized_product_type: plafon led
+  title_keyword: Plafon LED
   status: approved
+  skip_if_socket: true
   required_title_attributes:
+  - cct
   - seria_clean
   - eco_clean
   - moc
   - strumien
   - lm_w
-  - ksztalt
+  - barwa_zakres
+  - ksztalt_masculine
   - srednica
   - wymiary
-  - barwa
+  - barwa_full
   - ip
   - czujnik
   - kolor
   - material
+  warn_if_missing: []
+  excluded_if_redundant:
+    kolor:
+    - barwa_swiatla
+    - barwa_neuter
 - normalized_product_type: zasilacz
+  title_keyword: Zasilacz
   status: approved
   required_title_attributes:
   - pasuje_do_clean
@@ -122,3 +176,5 @@ rules:
   - sterowanie
   - moc
   optional_title_attributes: []
+  warn_if_missing:
+  - moc

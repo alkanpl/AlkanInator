@@ -52,7 +52,10 @@ def build_title_parts(
             "title_anatomy_skipped_attributes": ",".join(anatomy_result.skipped_attributes),
             "title_anatomy_product_type_key": normalize_product_type_key(values.get("typ", row.get("attr_typ", row.get("Typ", "")))),
         }
-        return anatomy_result.title_without_code, anatomy_result.title, anatomy_result.warnings, metadata
+        # Te same normalizacje SEO co dla legacy (np. Plafoniera -> Plafon).
+        seo_without_code = uppercase_first_letter(normalize_seo_title_terms(anatomy_result.title_without_code))
+        final_title = uppercase_first_letter(normalize_seo_title_terms(anatomy_result.title))
+        return seo_without_code, final_title, anatomy_result.warnings, metadata
 
     title = template
     for field in re.findall(r"{([^{}]+)}", template):
@@ -214,6 +217,17 @@ def build_inflected_values(values: dict[str, str], config: dict[str, Any]) -> di
         result["barwa_slownie"] = ""
         result["barwa_swiatla"] = ""
         result["barwa_neuter"] = ""
+    # Barwa "pelna" do tytulu: zakres CCT ma priorytet (np. 3000-4000K),
+    # w przeciwnym razie punkt + slowo SEO (np. "4000K neutralne").
+    barwa_zakres = values.get("barwa_zakres", "")
+    if barwa_zakres:
+        # Zakres CCT pokazujemy osobnym atrybutem (wczesniej w tytule); nie
+        # dublujemy go punktem barwy.
+        result["barwa_full"] = ""
+    elif barwa:
+        result["barwa_full"] = compact_spaces(f"{barwa} {result['barwa_neuter']}")
+    else:
+        result["barwa_full"] = ""
     pasuje_do = values.get("pasuje_do", "")
     series = values.get("seria", "")
     if pasuje_do and series:
@@ -232,6 +246,18 @@ def build_inflected_values(values: dict[str, str], config: dict[str, Any]) -> di
     result["rgb"] = "RGB" if "rgb" in old_title_normalized else ""
     series_clean = re.sub(r"(?<![-\w])LED(?![-\w])", " ", values.get("seria", ""), flags=re.IGNORECASE)
     result["seria_clean"] = compact_spaces(series_clean) or values.get("seria", "")
+    # Sposob montazu panelu wyprowadzony z typu produktu (uniwersalny = natynkowy,
+    # zwieszany = zwieszany, pozostale panele = podtynkowy).
+    typ_normalized = normalize_text(values.get("typ", ""))
+    if "panel" in typ_normalized:
+        if "uniwersal" in typ_normalized:
+            result["montaz"] = "natynkowy"
+        elif "zwieszan" in typ_normalized:
+            result["montaz"] = "zwieszany"
+        else:
+            result["montaz"] = "podtynkowy"
+    else:
+        result["montaz"] = ""
     return result
 
 

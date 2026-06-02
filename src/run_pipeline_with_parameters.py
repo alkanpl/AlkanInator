@@ -1,42 +1,19 @@
 from __future__ import annotations
 
 import argparse
-from pathlib import Path
 
 from catalog_knowledge import DEFAULT_CATALOG_KNOWLEDGE_PATH, enrich_config_with_catalog_knowledge, load_catalog_knowledge
-from analyze_products import (
-    analyze_dataframe,
-    build_category_summary,
-    build_missing_attributes,
-    detect_product_columns,
-    write_quality_report,
-)
-from analyze_keywords import add_keyword_pipeline_arguments, maybe_enrich_pipeline_with_keywords
+from analyze_products import detect_product_columns
+from analyze_keywords import add_keyword_pipeline_arguments
 from enrich_from_parameters import (
     build_parameter_index,
     detect_parameter_columns,
     enrich_from_parameters,
     write_reports as write_parameter_reports,
 )
-from export_results import export_outputs
-from optimize_titles import build_changes_report, optimize_titles_for_dataframe
-from title_anatomy import DEFAULT_TITLE_ANATOMY_PATH, load_title_anatomy_config, write_title_anatomy_reports
-from title_strategy import build_title_strategy_report
+from pipeline_core import finalize_and_export, write_input_analysis_reports
+from title_anatomy import DEFAULT_TITLE_ANATOMY_PATH, load_title_anatomy_config
 from utils import ensure_dir, load_yaml, read_products
-from validate_output import classify_product_roles, validate_category_fit
-
-
-def add_standard_report_columns(df, columns):
-    result = df.copy()
-    mapping = {
-        "sku": columns.get("sku"),
-        "ean": columns.get("ean"),
-        "producer": columns.get("producer"),
-        "category": columns.get("category"),
-    }
-    for target, source in mapping.items():
-        result[target] = result[source] if source and source in result.columns else ""
-    return result
 
 
 def main() -> None:
@@ -69,30 +46,14 @@ def main() -> None:
     if not title_column:
         raise SystemExit("Nie wykryto kolumny tytulu/nazwy produktu.")
 
-    analyzed_summary = analyze_dataframe(products, columns, config)
-    write_quality_report(analyzed_summary, reports_dir / "quality_report.html")
-    build_category_summary(products, columns).to_csv(reports_dir / "category_summary.csv", index=False, encoding="utf-8-sig")
+    write_input_analysis_reports(products, columns, config, reports_dir)
 
     parameter_columns = detect_parameter_columns(params)
     parameter_index, unmapped = build_parameter_index(params, parameter_columns)
     enriched_df, parameter_reports = enrich_from_parameters(products, columns, config, parameter_index)
     write_parameter_reports(parameter_reports, unmapped, products, str(columns["sku"]), parameter_index, parameter_reports_dir)
 
-    classified_df = classify_product_roles(enriched_df, config)
-    classified_df = maybe_enrich_pipeline_with_keywords(classified_df, args, reports_dir)
-    optimized_df = optimize_titles_for_dataframe(classified_df, "__working_title", config, anatomy_config)
-    optimized_df, suspicious_category_df = validate_category_fit(optimized_df, config)
-    write_title_anatomy_reports(optimized_df, reports_dir, anatomy_config)
-
-    missing_df = build_missing_attributes(optimized_df, columns, config)
-    missing_df.to_csv(reports_dir / "missing_attributes.csv", index=False, encoding="utf-8-sig")
-    suspicious_category_df.to_csv(reports_dir / "suspicious_category_fit.csv", index=False, encoding="utf-8-sig")
-
-    changes_df = build_changes_report(add_standard_report_columns(optimized_df, columns))
-    title_strategy_df, title_strategy_examples_df = build_title_strategy_report(optimized_df)
-    title_strategy_df.to_csv(reports_dir / "title_strategy_report.csv", index=False, encoding="utf-8-sig")
-    title_strategy_examples_df.to_csv(reports_dir / "title_strategy_examples.csv", index=False, encoding="utf-8-sig")
-    export_outputs(optimized_df, changes_df, args.output, reports_dir)
+    finalize_and_export(enriched_df, columns, config, anatomy_config, args, reports_dir)
 
     print(f"OK: zapisano {args.output}")
     print(f"OK: zapisano raporty w {reports_dir}")

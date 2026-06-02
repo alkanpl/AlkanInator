@@ -89,11 +89,17 @@ def valid_ean(value: Any) -> bool:
         return False
     if len(set(digits)) == 1:
         return False
-    if len(digits) == 13:
-        checksum = sum((3 if index % 2 else 1) * int(digit) for index, digit in enumerate(digits[:-1]))
-        expected = (10 - checksum % 10) % 10
-        return expected == int(digits[-1])
-    return True
+    return _gtin_check_digit_valid(digits)
+
+
+def _gtin_check_digit_valid(digits: str) -> bool:
+    # Suma kontrolna GTIN (EAN-8/UPC-12/EAN-13/GTIN-14): wagi 3 i 1 od prawej.
+    checksum = sum(
+        (3 if index % 2 == 0 else 1) * int(digit)
+        for index, digit in enumerate(reversed(digits[:-1]))
+    )
+    expected = (10 - checksum % 10) % 10
+    return expected == int(digits[-1])
 
 
 def slugify(value: str) -> str:
