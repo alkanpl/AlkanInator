@@ -4,7 +4,7 @@ title_strategy_rules:
 - name: plafoniera_drewniana
   category_contains: Plafoniery
   type_contains: drewniana
-  template: Plafon drewniany {seria} {gwint} {ksztalt} {srednica} {wymiary} {kolor}
+  template: Plafon drewniany {seria} {gwint} {ksztalt_masculine} {srednica} {wymiary} {kolor}
     {producent}
 - name: oprawa_kanalowa
   category_contains: Plafoniery
@@ -15,13 +15,13 @@ title_strategy_rules:
 - name: oprawa_sufitowa
   category_contains: Plafoniery
   type_contains: Oprawa sufitowa
-  template: Oprawa sufitowa {seria} {gwint} {ip} {kolor_feminine} {producent}
+  template: Oprawa sufitowa {punktowa} {seria} {gwint} {ip} {kolor_feminine} {producent}
   required_fields:
   - producent
 - name: oprawa_punktowa
   category_contains: Plafoniery
   type_contains: oprawa punktowa
-  template: Oprawa sufitowa {seria} {gwint} {ip} {kolor_feminine} {producent}
+  template: Oprawa sufitowa {punktowa} {seria} {gwint} {ip} {kolor_feminine} {producent}
   required_fields:
   - producent
 - name: lampa_wiszaca
@@ -39,7 +39,7 @@ title_strategy_rules:
 - name: oprawa_sufitowa_aqilo
   category_contains: Plafoniery
   title_contains: AQILO
-  template: Oprawa sufitowa {seria} {gwint} {ip} {kolor_feminine} {producent}
+  template: Oprawa sufitowa {punktowa} {seria} {gwint} {ip} {kolor_feminine} {producent}
   required_fields:
   - producent
 - name: oprawa_kanalowa_milo
@@ -51,13 +51,13 @@ title_strategy_rules:
 - name: plafoniera_e14
   category_contains: Plafoniery
   title_contains: E14
-  template: Plafon {seria} {gwint} {ksztalt} {srednica} {wymiary} {ip} {kolor} {producent}
+  template: Plafon {seria} {gwint} {ksztalt_masculine} {srednica} {wymiary} {ip} {kolor} {producent}
   required_fields:
   - producent
 - name: plafoniera_gwint
   category_contains: Plafoniery
   title_contains: E27
-  template: Plafon {seria} {eco_clean} {gwint} {ksztalt} {srednica} {wymiary} {ip} {czujnik} {kolor} {producent}
+  template: Plafon {seria} {eco_clean} {gwint} {ksztalt_masculine} {srednica} {wymiary} {ip} {czujnik} {kolor} {producent}
   required_fields:
   - producent
 - name: plafoniera_wentylator
@@ -69,13 +69,13 @@ title_strategy_rules:
 - name: plafoniera_cct
   category_contains: Plafoniery
   title_contains: CCT
-  template: Plafon LED CCT {dim} {seria_clean} {eco_clean} {moc} {strumien} {lm_w} {barwa_zakres} {ksztalt} {srednica} {wymiary} {ip} {czujnik} {kolor} {producent}
+  template: Plafon LED CCT {dim} {seria_clean} {eco_clean} {moc} {strumien} {lm_w} {barwa_zakres} {ksztalt_masculine} {srednica} {wymiary} {ip} {czujnik} {kolor} {producent}
   required_fields:
   - producent
 - name: ramka_oswietleniowa_avar
   category_contains: Panele LED
   title_contains: AVAR
-  template: Ramka oświetleniowa LED podtynkowy {seria} {ksztalt_masculine} {wymiary} {moc} {strumien} {barwa} {barwa_neuter}
+  template: Ramka oświetleniowa LED podtynkowa {seria} {ksztalt_feminine} {wymiary} {moc} {strumien} {barwa} {barwa_neuter}
     {ip} {kolor} {producent}
   required_fields:
   - producent
@@ -90,7 +90,7 @@ title_strategy_rules:
   - wymiary
 - name: spotlight_gu10
   title_contains: GU10
-  template: Oprawa sufitowa {seria} {gwint} {ip} {kolor_feminine} {producent}
+  template: Oprawa sufitowa {punktowa} {seria} {gwint} {ip} {kolor_feminine} {producent}
   required_fields:
   - producent
 - name: naswietlacz_solarny
@@ -112,7 +112,7 @@ title_strategy_rules:
   template: Oprawa hermetyczna LED {seria_clean} {dlugosc} {moc} {strumien} {lm_w} {barwa} {ip} {kolor_feminine} {producent}
 - name: plafoniera
   category_contains: Plafoniery
-  template: Plafon LED {seria_clean} {eco_clean} {moc} {strumien} {lm_w} {ksztalt} {srednica} {wymiary} {barwa} {barwa_neuter} {ip} {czujnik} {kolor}
+  template: Plafon LED {seria_clean} {eco_clean} {moc} {strumien} {lm_w} {ksztalt_masculine} {srednica} {wymiary} {barwa} {barwa_neuter} {ip} {czujnik} {kolor}
     {material} {producent}
 accessory_title_template: '{accessory_type} {seria} {model} {moc} {kolor} {producent}'
 accessory_title_templates:
@@ -134,6 +134,17 @@ accessory_title_templates:
   Siatka ochronna: '{accessory_type} {pasuje_do} {moc} {producent}'
 manual_title_templates_by_sku:
   '38149': Czujnik ruchu do oprawy hermetycznej MAH PRO {producent}
+duplicate_title_disambiguation_attributes:
+- wariant
+- czujnik
+- dlugosc_przewodu
+- wysokosc
+- material
+- moc
+- srednica
+- wymiary
+- kat_swiecenia
+- model
 max_title_length: 120
 min_title_length: 35
 append_sku_after_producer: true
@@ -235,6 +246,9 @@ product_role_classification:
     - driv
     - drv
     - drvm
+    exclude_terms:
+    - z zasilaczem
+    - panel led z zasilaczem
   - accessory_type: Linka
     terms:
     - linka
@@ -324,7 +338,6 @@ accessory_attribute_policy:
     - ip
     - kolor
     Soczewka:
-    - moc
     - barwa
     - strumien
     - ip

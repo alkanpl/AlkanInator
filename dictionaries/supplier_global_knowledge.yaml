@@ -1,0 +1,278 @@
+version: 1
+description: >
+  Global reusable supplier knowledge for AlkanInator. This file stores rules and
+  decisions that should survive a single supplier batch, review file, or output.
+
+suppliers:
+  kanlux:
+    canonical_producer: Kanlux
+    producer_aliases:
+      - Kanlux
+      - KANLUX
+    sku_suffixes:
+      - KAN
+      - KANL
+    default_input:
+      workbook: input/Alkan_Kanlux_pelne_rodziny.xlsx
+      sheet: 7. Wszystkie SKU (master)
+      parameters_workbook: input/Parametry.xlsx
+      category_config: configs/categories/kanlux-oswietlenie.yaml
+      title_anatomy: configs/title_anatomy.yaml
+    workflow_principles:
+      - Supplier files are source data, not final store data.
+      - Prefer enriched parameter files over supplier names when building titles, descriptions, and features.
+      - Store categories must be Woo/Alkan categories, not supplier category labels.
+      - Product descriptions are semi-automatic review work and should not be mass-generated in the production pipeline.
+      - Descriptions must use filtered BaseLinker features, not raw supplier columns.
+      - Do not copy producer HTML descriptions into BaseLinker descriptions.
+    manufacturer_data_source:
+      rule: use_woocommerce_catalog_knowledge
+      note: Dane producenta should be read from dictionaries/woocommerce_catalog_knowledge.yaml by producer name.
+
+    category_mapping_rules:
+      source_category_hints:
+        - source_terms: [Panele LED]
+          woo_category: Oswietlenie > Oswietlenie przemyslowe wewnetrzne > Panele LED sufitowe
+        - source_terms: [Oprawy pyloszczelne, Oprawy pyłoszczelne, Hermetyczne]
+          woo_category: Oswietlenie > Oswietlenie przemyslowe wewnetrzne > Lampy hermetyczne
+        - source_terms: [High Bay, Oswietlenie hal, Oświetlenie hal]
+          woo_category: Oswietlenie > Oswietlenie przemyslowe wewnetrzne > Oprawy High-bay LED
+        - source_terms: [Naswietlacze LED, Naświetlacze LED]
+          woo_category: Oswietlenie > Oswietlenie zewnetrzne > Naswietlacze LED
+        - source_terms: [Plafoniery, Oprawy sufitowe]
+          woo_category: Oswietlenie > Oswietlenie wewnetrzne > Plafony LED
+      category_quality_rules:
+        - Category should be flagged for review when an accessory is classified as a main lighting fixture.
+        - Category should be flagged for review when a main fixture category contains driver, sensor, frame, adapter, holder, lens, clip, or grid terms.
+
+    title_rules:
+      preferred_main_title_keywords:
+        panel_led: Panel LED
+        high_bay: Oprawa High Bay LED
+        oprawa_hermetyczna: Oprawa hermetyczna LED
+        naswietlacz: Naświetlacz LED
+        naswietlacz_solarny: Naświetlacz solarny LED
+        plafon_led: Plafon LED
+        oprawa_sufitowa: Oprawa sufitowa
+        oprawa_sufitowa_punktowa: Oprawa sufitowa punktowa
+        oprawa_kanalowa: Oprawa kanałowa
+        lampa_wiszaca: Lampa wisząca
+      canonical_type_aliases:
+        plafoniera: plafon_led
+        plafoniera_led: plafon_led
+        plafoniera_z_czujnikiem: plafon_led
+        oprawa_hermetyczna: oprawa_hermetyczna
+        oprawa_hermetyczna_na_t8: oprawa_hermetyczna
+        high_bay_led: high_bay
+        panel_led_uniwersalny: panel_led
+        panel_led_z_zasilaczem_aio: panel_led
+        naswietlacz_led_z_czujnikiem: naswietlacz
+        naswietlacz_iq_led: naswietlacz
+      series_keyword_overrides:
+        AVAR: Ramka oswietleniowa LED
+        SLR: Naświetlacz solarny LED
+      duplicate_disambiguation_order:
+        - wariant
+        - czujnik
+        - dlugosc_przewodu
+        - wysokosc
+        - material
+        - moc
+        - srednica
+        - wymiary
+        - kat_swiecenia
+        - model
+      title_notes:
+        - Keep producer and product code at the end of the final title.
+        - Check uniqueness before appending producer code, because code makes almost every title artificially unique.
+        - Use "Plafon", not "Plafoniera", for LED ceiling fixtures unless the product is explicitly a different lamp type.
+        - Add "punktowa" to ceiling fixture titles when product type or source title carries that information.
+        - Do not add random extra attributes to duplicates; only add a real differentiating parameter found in the product data.
+
+    accepted_feature_values:
+      product_types:
+        - Czujnik ruchu
+        - Klips
+        - Klosz
+        - Konektor
+        - Lampa wisząca
+        - Linka do podwieszenia
+        - Łącznik
+        - Naświetlacz LED
+        - Oprawa High Bay
+        - Oprawa hermetyczna
+        - Oprawa kanałowa
+        - Oprawa sufitowa
+        - Oprawa sufitowa punktowa
+        - Panel LED
+        - Pilot do oprawy
+        - Plafon
+        - Ramka
+        - Ramka do paneli
+        - Siatka ochronna
+        - Soczewka
+        - Uchwyt
+        - Wspornik montażowy
+        - Zapinka
+        - Zasilacz
+      series:
+        - ACETE
+        - ADTR
+        - AGOR
+        - AGZAR
+        - ALIN
+        - AMAZI
+        - ANBAR
+        - ANTEM
+        - ANTO
+        - AQILO
+        - ARVOS
+        - AVAR
+        - AZPO
+        - BAREV
+        - BENO
+        - BLINGO
+        - BLURRO
+        - BONSA
+        - BORD
+        - BRAVO
+        - CARVO
+        - CORSO
+        - DABA
+        - DABER
+        - DICHT
+        - DUNO
+        - ENELO
+        - ERTON
+        - EXATE
+        - FL
+        - FLS
+        - FOGLER
+        - FT1200
+        - FT1500
+        - FTD1200
+        - FTD1500
+        - FTHL1500
+        - FTHT1500
+        - GALOBA
+        - GORD
+        - GRUN
+        - HBPA
+        - HBPHS
+        - HERMI
+        - INES
+        - IPER
+        - IQ-LED
+        - JASMIN
+        - JURBA
+        - LUMKO
+        - MAH
+        - MARC
+        - MILO
+        - NIFU
+        - PHLOX
+        - PIRES
+        - PLAFMIN
+        - PLAVE
+        - RIFA
+        - RITI
+        - S
+        - SANGA
+        - SANI
+        - SANSO
+        - SOLN
+        - STATO
+        - STIVI
+        - STOBI
+        - TOLEO
+        - TOLU
+        - TP
+        - TUNA
+        - TURA
+        - TURK
+        - TYBIA
+        - VAND
+        - VARSO
+      producer_colors:
+        - Biały mat
+        - Czarny mat
+        - Dąb sonoma
+        - Nikiel satynowy
+        - STAL INOX
+        - Wenge
+        - Złoto-brązowy
+        - Złoty dąb
+      applications:
+        - Do paneli
+
+    feature_export_rules:
+      excluded_features:
+        - EAN (GTIN)
+        - Kod producenta
+      drop_unknown_features:
+        - Model
+        - Sterowanie
+      normalize_before_review: true
+      unknown_feature_or_value_goes_to_review: true
+      review_file_format: xlsx
+      color_rules:
+        - Matte or wood-like producer colors may stay as "Kolor producenta".
+        - If producer color is equivalent to base color, remove redundant "Kolor producenta".
+        - STAL INOX should normalize to base color "Srebrny" and producer color "STAL INOX".
+      numeric_rules:
+        - Dimensions, lengths, widths, heights, diameters, power, flux, voltage, CCT, IP, IK and angle values can be accepted when normalized value matches the catalog format.
+        - Remove degree symbol from angle values before review/export.
+
+    accessory_rules:
+      product_types_without_own_power:
+        - Klips
+        - Klosz
+        - Linka do podwieszenia
+        - Pilot do oprawy
+        - Siatka ochronna
+        - Soczewka
+        - Uchwyt
+        - Wspornik montażowy
+        - Zapinka
+        - Łącznik
+      role_detection_terms:
+        Siatka ochronna: [siatka ochronna, grid]
+        Klosz: [klosz do, pokrywa, szybka, osłona, oslona]
+        Ramka: [ramka, adtr]
+        Zasilacz: [zasilacz, driver, driv, drv, drvm]
+        Linka: [linka, spn]
+        Klips: [klips, klipsy, clips panel]
+        Zapinka: [zapinka]
+        Wspornik montażowy: [wspornik montażowy, bracket]
+        Uchwyt: [uchwyt, adapter]
+        Pilot: [pilot do, remote]
+        Soczewka: [soczewka, lens]
+        Czujnik: [mah pro sensor, sensor c]
+        Konektor: [qci]
+        Kabel: [3x1mm]
+        Łącznik: [con ele, łącznik modułów, lacznik modulow]
+      description_safety:
+        - Accessory power from source title or rejected facts is not a product fact.
+        - For grid, lens, holder, clip, bracket, sensor and similar accessories, power may only describe the compatible fixture when this is explicit.
+        - 'Example 33482/KAN: "240W" can refer to compatible FL AGOR HI GRID fixture variant, not to the protective grid itself.'
+
+    parameter_priority:
+      - Final filtered BaseLinker features
+      - Enriched Parametry.xlsx columns
+      - Extracted attr_* columns
+      - Supplier title only as fallback or compatibility context
+    useful_parameter_columns:
+      - Typ
+      - Rodzina
+      - Moc [W]
+      - Barwa CCT [K]
+      - Strumień [lm]
+      - Klasa IP
+      - Kąt
+      - Kolor obudowy
+      - Wymiary
+      - Gwint
+      - Czujnik ruchu
+      - Materiał
+      - Pasuje do
+      - Zastosowanie

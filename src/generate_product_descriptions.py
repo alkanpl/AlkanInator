@@ -10,11 +10,104 @@ from typing import Any
 
 import pandas as pd
 
+import export_to_baselinker_csv as baselinker
 from utils import compact_spaces, is_blank, normalize_header, read_products, write_products
 
 
 DEFAULT_DESCRIPTION_COLUMN = "description_html"
 DEFAULT_MIN_CHARS_NO_SPACES = 1500
+DEFAULT_CODEX_BRIEF_OUTPUT = "reports/descriptions/description_codex_brief.xlsx"
+CODEX_BRIEF_SHEETS = [
+    "Produkt",
+    "Product facts",
+    "Compatibility facts",
+    "Rejected facts",
+    "Prompt dla Codex",
+    "Opis wygenerowany",
+    "Walidacja",
+]
+CODEX_MIN_CHARS_NO_SPACES = 1500
+CODEX_SPARSE_FACTS_MIN_CHARS_NO_SPACES = 900
+CODEX_MEDIUM_FACTS_MIN_CHARS_NO_SPACES = 1200
+POLISH_DIACRITICS = "ąćęłńóśźżĄĆĘŁŃÓŚŹŻ"
+MOJIBAKE_MARKERS = ["�", "Ä", "Å", "Ĺ", "Â"]
+ASCII_POLISH_MARKERS = [
+    r"\bocenic\b",
+    r"\bkatem\b",
+    r"\bpor[oó]wnac\b",
+    r"\bporown",
+    r"\boswiet",
+    r"\bswiatl",
+    r"\bDzieki\b",
+    r"\bktore\b",
+    r"\bwazne\b",
+    r"\blatwiej\b",
+    r"\bspojny\b",
+    r"\bpomylki\b",
+    r"\buzytk",
+    r"\brozwiaz",
+]
+META_DESCRIPTION_PATTERNS = [
+    r"\btaki spos[oó]b opisu\b",
+    r"\btaki zestaw danych\b",
+    r"\bod razu porz[aą]dkuje wyb[oó]r\b",
+    r"\bm[oó]wimy o elemencie\b",
+    r"\bdla klienta oznacza to\b",
+    r"\bprostszy wyb[oó]r\b",
+    r"\bmniejsze ryzyko pomy[lł]ki\b",
+    r"\bnie udaje\b",
+    r"\bnie zmienia parametr[oó]w oprawy\b",
+    r"\bsamodzielnego [źz]r[oó]d[lł]a [śs]wiat[lł]a\b",
+    r"\bsam typ produktu\b",
+    r"\bjasno wskazuje\b",
+    r"\bkomponent wspieraj[aą]cy funkcj[eę]\b",
+    r"\botrzymujesz akcesorium\b",
+    r"\bprzygotowane do pracy\b",
+    r"\bw obr[eę]bie sp[oó]jnej rodziny produktowej\b",
+    r"\bsp[oó]jna rodzina produktowa\b",
+    r"\bca[lł]ego zestawu\b",
+    r"\bopisany przez kluczowe parametry\b",
+    r"\bpozwala szybko oceni[cć]\b",
+    r"\bdoboru do projektu\b",
+    r"\bpozycjami w tej samej grupie produktowej\b",
+    r"\bprzy wyborze warto patrze[cć]\b",
+    r"\bnaj[lł]atwiej rozr[oó][zż]niaj[aą] modele\b",
+    r"\bopis pozostaje\b",
+    r"\bdanych pochodz[aą]cych z briefu\b",
+    r"\bbriefu\b",
+    r"\bsklep chce\b",
+    r"\bw praktyce pomaga to wtedy\b",
+    r"\btak przygotowany opis\b",
+    r"\bpokaza[cć] model\b",
+    r"\bbez nadmiarowych deklaracji\b",
+    r"\bbez nadmiaru og[oó]lnik[oó]w\b",
+    r"\bklient szuka rozwi[aą]zania\b",
+    r"\bjasnego opisu cech\b",
+    r"\bopis zgodno[śs]ci\b",
+    r"\bporz[aą]dkuje dob[oó]r\b",
+    r"\bporz[aą]dkuje informacje\b",
+    r"\btechniczny profil wariantu\b",
+    r"\bzachowa[cć] porz[aą]dek przy zam[oó]wieniu\b",
+]
+ROBOTIC_LANGUAGE_PATTERNS = [
+    r"\bzostal[ay] przygotowan[ay] do\b",
+    r"\bwspiera (?:zastosowanie|prace|doswietlenie|neutralny wyglad|czytelne|jasne)\b",
+    r"\bporzadkuj\w* (?:parametry|wybor|identyfikacje)\b",
+    r"\buzupelnia\w* (?:zestaw|profil)\b",
+    r"\bzestaw (?:informacji|parametrow) (?:istotnych|waznych)\b",
+    r"\bprofil produktu\b",
+    r"\bdobrze wpisuje sie\b",
+    r"\bulatwia (?:przypisanie|uwzglednienie|ocene|planowanie)\b",
+    r"\bpomaga\w* utrzymac spojnosc\b",
+    r"\bspojnosc (?:calego systemu|parametrow|wizualna)\b",
+    r"\bten model bedzie praktyczny\b",
+    r"\blatwa identyfikacja wlasciwego wariantu\b",
+    r"\bbez siegania po niepotwierdzone zalozenia\b",
+    r"\bprzewidywalnych parametrach\b",
+    r"\bspokojny wyglad sufitu\b",
+    r"\bw ktorych liczy sie\b",
+    r"\btam gdzie wazna jest\b",
+]
 
 FORBIDDEN_PHRASES = [
     "Dzięki temu klient",
@@ -23,6 +116,18 @@ FORBIDDEN_PHRASES = [
     "W praktyce oznacza to",
     "ułatwia porównanie tego wariantu",
     "opis pomaga",
+    "Taki sposób opisu",
+    "Dla klienta oznacza to",
+    "nie udaje samodzielnego źródła światła",
+    "Sam typ produktu jasno wskazuje",
+    "komponent wspierający funkcję",
+    "otrzymujesz akcesorium",
+    "spójnej rodziny produktowej",
+    "opisany przez kluczowe parametry",
+    "Taki zestaw danych",
+    "danych pochodzących z briefu",
+    "sklep chce",
+    "Tak przygotowany opis",
 ]
 
 ATTRIBUTE_SOURCE_COLUMNS = {
@@ -92,16 +197,63 @@ TECHNICAL_ORDER = [
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Generuje naturalne opisy HTML SEO na podstawie nazw i atrybutow produktow.")
-    parser.add_argument("--input", required=True, help="CSV/XLSX z produktami po AlkanInatorze.")
+    parser.add_argument("--input", default="", help="CSV/XLSX z produktami po AlkanInatorze.")
     parser.add_argument("--sheet", help="Arkusz XLSX.")
-    parser.add_argument("--output", required=True, help="Plik wynikowy CSV/XLSX.")
+    parser.add_argument("--output", default="", help="Plik wynikowy CSV/XLSX dla trybu generate.")
+    parser.add_argument("--mode", choices=["generate", "codex_brief", "write_codex_review", "validate_codex_review"], default="generate")
+    parser.add_argument("--sku", default="", help="SKU/Kod produktu dla trybu codex_brief, np. 33482/KAN.")
+    parser.add_argument("--brief-input", default="", help="XLSX brief do złożenia review w trybie write_codex_review.")
+    parser.add_argument("--brief-output", default=DEFAULT_CODEX_BRIEF_OUTPUT, help="XLSX z briefem dla Codex.")
+    parser.add_argument("--review-input", default="", help="XLSX review do walidacji w trybie validate_codex_review.")
+    parser.add_argument("--review-output", default="", help="XLSX review do zapisania w trybie write_codex_review.")
+    parser.add_argument("--description-html", default="", help="Gotowy HTML opisu dla trybu write_codex_review.")
+    parser.add_argument("--description-file", default="", help="Plik UTF-8 z gotowym HTML opisu dla trybu write_codex_review.")
+    parser.add_argument("--catalog-knowledge", default=baselinker.DEFAULT_CATALOG_KNOWLEDGE_PATH)
     parser.add_argument("--description-column", default=DEFAULT_DESCRIPTION_COLUMN)
     parser.add_argument("--title-column", default="", help="Wymusza kolumne z nazwa produktu.")
     parser.add_argument("--min-words", type=int, default=0, help="Zgodnosc wsteczna; preferuj --min-chars-no-spaces.")
     parser.add_argument("--min-chars-no-spaces", type=int, default=DEFAULT_MIN_CHARS_NO_SPACES)
     args = parser.parse_args()
 
+    if args.mode == "validate_codex_review":
+        if not args.review_input:
+            raise SystemExit("Tryb validate_codex_review wymaga --review-input.")
+        checks = validate_codex_review_file(args.review_input)
+        for check in checks:
+            print(f"{check['status']}: {check['check']} - {check['details']}")
+        if any(check["status"] in {"ERROR", "WARNING"} for check in checks):
+            raise SystemExit("Review wymaga poprawy przed oddaniem.")
+        print("OK: review przeszedł walidację.")
+        return
+
+    if args.mode == "write_codex_review":
+        if not args.brief_input:
+            raise SystemExit("Tryb write_codex_review wymaga --brief-input.")
+        if not args.review_output:
+            raise SystemExit("Tryb write_codex_review wymaga --review-output.")
+        description_html = read_description_input(args.description_html, args.description_file)
+        checks = write_codex_review_from_description(args.brief_input, args.review_output, description_html)
+        for check in checks:
+            print(f"{check['status']}: {check['check']} - {check['details']}")
+        if any(check["status"] in {"ERROR", "WARNING"} for check in checks):
+            raise SystemExit("Review zapisany, ale wymaga poprawy przed oddaniem.")
+        print(f"OK: zapisano poprawny review Codex: {args.review_output}")
+        return
+
+    if not args.input:
+        raise SystemExit(f"Tryb {args.mode} wymaga --input.")
     df = read_products(args.input, sheet_name=args.sheet)
+    if args.mode == "codex_brief":
+        if not args.sku:
+            raise SystemExit("Tryb codex_brief wymaga --sku.")
+        catalog_knowledge = baselinker.load_yaml(args.catalog_knowledge) if args.catalog_knowledge else {}
+        brief = build_codex_brief_for_sku(df, args.sku, args.title_column, catalog_knowledge)
+        write_codex_brief_report(brief, args.brief_output)
+        print(f"OK: zapisano brief Codex: {args.brief_output}")
+        return
+
+    if not args.output:
+        raise SystemExit("Tryb generate wymaga --output.")
     result = add_descriptions(df, args.description_column, args.title_column, args.min_chars_no_spaces)
     write_products(result, Path(args.output))
 
@@ -120,6 +272,575 @@ def add_descriptions(
         build_description_html(row, title_column, min_chars_no_spaces) for _, row in result.iterrows()
     ]
     return result
+
+
+def build_codex_brief_for_sku(
+    df: pd.DataFrame,
+    sku: str,
+    title_column: str = "",
+    catalog_knowledge: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    row = find_product_row_by_sku(df, sku)
+    normalizer = baselinker.build_feature_value_normalizer(catalog_knowledge or {})
+    raw_features = baselinker.build_features(row, False, feature_value_normalizer=normalizer)
+    product_name = product_title(row, title_column)
+    context = {
+        "sku": sku_for_row(row),
+        "ean": first_present(row.get("EAN", ""), row.get("ean", "")),
+        "name": product_name,
+    }
+    review_rows: list[dict[str, str]] = []
+    product_features = baselinker.filter_features_for_catalog(raw_features, normalizer, review_rows, context)
+    product_facts = build_product_facts(row, product_features)
+    compatibility_facts = build_compatibility_facts(row, raw_features)
+    rejected_facts = build_rejected_facts(raw_features, product_features, row)
+    prompt = build_codex_description_prompt(product_name, product_facts, compatibility_facts, rejected_facts)
+    validation = validate_codex_description("", product_facts, rejected_facts, prompt_only=True)
+    return {
+        "product": {
+            "sku": sku_for_row(row),
+            "requested_sku": sku,
+            "ean": first_present(row.get("EAN", ""), row.get("ean", "")),
+            "name": product_name,
+            "category": first_present(row.get("proponowana_kategoria_1", ""), row.get("category", ""), row.get("Kategoria", "")),
+            "source_row_index": int(row.name) if isinstance(row.name, int) else str(row.name),
+        },
+        "product_facts": product_facts,
+        "compatibility_facts": compatibility_facts,
+        "rejected_facts": rejected_facts,
+        "prompt": prompt,
+        "generated_description": "",
+        "validation": validation,
+    }
+
+
+def find_product_row_by_sku(df: pd.DataFrame, sku: str) -> pd.Series:
+    requested = normalize_sku_for_match(sku)
+    for _, row in df.iterrows():
+        candidates = [
+            row.get("sku", ""),
+            row.get("SKU", ""),
+            row.get("Kod", ""),
+            row.get("Kod producenta", ""),
+            row.get("Kod Producenta", ""),
+        ]
+        if any(normalize_sku_for_match(value) == requested for value in candidates if not is_blank(value)):
+            return row
+    raise SystemExit(f"Nie znaleziono produktu dla SKU/Kod: {sku}")
+
+
+def normalize_sku_for_match(value: Any) -> str:
+    text = compact_spaces(str(value or ""))
+    if re.fullmatch(r"\d+\.0", text):
+        text = text[:-2]
+    return text.split("/", 1)[0].strip().upper()
+
+
+def sku_for_row(row: pd.Series) -> str:
+    return first_present(row.get("sku", ""), row.get("SKU", ""), row.get("Kod", ""), row.get("Kod producenta", ""))
+
+
+def build_product_facts(row: pd.Series, product_features: dict[str, str]) -> list[dict[str, str]]:
+    facts: list[dict[str, str]] = []
+    for label, value in {
+        "Kod producenta": first_present(row.get("Kod", ""), row.get("Kod producenta", ""), row.get("sku", "")),
+        "EAN": first_present(row.get("EAN", ""), row.get("ean", "")),
+    }.items():
+        if value:
+            facts.append({"fact": label, "value": value, "source": "product_identity"})
+    for label, value in product_features.items():
+        if label == "Dane producenta":
+            continue
+        facts.append({"fact": label, "value": value, "source": "filtered_baselinker_features"})
+    return dedupe_fact_rows(facts)
+
+
+def build_compatibility_facts(row: pd.Series, raw_features: dict[str, str]) -> list[dict[str, str]]:
+    facts: list[dict[str, str]] = []
+    compatibility = first_present(
+        row.get("attr_pasuje_do", ""),
+        row.get("Pasuje do", ""),
+        raw_features.get("Zastosowanie", ""),
+    )
+    if compatibility:
+        facts.append({
+            "fact": "Pasuje do",
+            "value": compatibility,
+            "source": "compatibility_source",
+        })
+    return dedupe_fact_rows(facts)
+
+
+def build_rejected_facts(
+    raw_features: dict[str, str],
+    product_features: dict[str, str],
+    row: pd.Series,
+) -> list[dict[str, str]]:
+    rejected: list[dict[str, str]] = []
+    system_facts = {"EAN (GTIN)", "Kod producenta", "Dane producenta"}
+    product_type = product_features.get("Typ produktu", raw_features.get("Typ produktu", ""))
+    for label, value in raw_features.items():
+        if label in system_facts or not value:
+            continue
+        if label in product_features and product_features[label] == value:
+            continue
+        reason = "not_in_filtered_baselinker_features"
+        if label == "Moc [W]" and product_type in baselinker.ACCESSORY_PRODUCT_TYPES_WITHOUT_OWN_POWER:
+            reason = "accessory_compatible_fixture_power_not_product_power"
+        rejected.append({
+            "fact": label,
+            "value": value,
+            "source": "raw_feature_rejected_by_filter",
+            "reason": reason,
+        })
+    return dedupe_fact_rows(rejected)
+
+
+def dedupe_fact_rows(rows: list[dict[str, str]]) -> list[dict[str, str]]:
+    result: list[dict[str, str]] = []
+    seen: set[tuple[str, str, str]] = set()
+    for row in rows:
+        key = (row.get("fact", ""), row.get("value", ""), row.get("source", ""))
+        if key in seen:
+            continue
+        seen.add(key)
+        result.append(row)
+    return result
+
+
+def build_codex_description_prompt(
+    product_name: str,
+    product_facts: list[dict[str, str]],
+    compatibility_facts: list[dict[str, str]],
+    rejected_facts: list[dict[str, str]],
+) -> str:
+    return "\n".join([
+        "Napisz ręcznie unikalny opis HTML SEO dla jednego produktu do sklepu Alkan.",
+        "",
+        "Sposób pracy:",
+        "- Przed pisaniem przeczytaj wzorzec: prompts/examples/good_description_arot.html. Naśladuj poziom konkretności i strukturę, ale nie jego fakty.",
+        "- Ten opis tworzysz jako osobne zadanie. Najpierw przeczytaj fakty tego produktu, wybierz jego główny motyw i dopiero potem napisz tekst.",
+        "- Nie twórz skryptu, pętli, słownika akapitów ani szablonu generującego treść dla wielu produktów.",
+        "- Python może wyłącznie odczytać XLSX, zapisać napisany przez Ciebie HTML i uruchomić walidator.",
+        "- Jeśli przetwarzasz paczkę, zakończ opis, walidację i poprawki jednego SKU przed otwarciem następnego briefu.",
+        "",
+        "SEO i konstrukcja opisu:",
+        "- Pierwszy akapit rozpocznij od <strong>pełnej nazwy produktu</strong>, a następnie od razu wyjaśnij jego zastosowanie i najważniejsze potwierdzone cechy.",
+        "- Umieść naturalną frazę produktową w <h2>; nagłówek ma mówić o konkretnym produkcie lub jego przewadze, a nie brzmieć 'Najważniejsze cechy'.",
+        "- Po części wprowadzającej dodaj sekcję <h3>Najważniejsze zalety</h3> z korzyściami wynikającymi z faktów.",
+        "- Dodaj <h3>Specyfikacja techniczna</h3>; nazwy parametrów w liście wyróżnij tagiem <strong>.",
+        "- Sekcję o zastosowaniu dodaj tylko wtedy, gdy można ją napisać rzetelnie na podstawie typu produktu i faktów.",
+        "- Pisz językiem używanym przez człowieka kupującego produkt: najpierw zastosowanie, potem cechy i wynikające z nich korzyści, na końcu parametry.",
+        "- Zmieniaj kompozycję, argumentację i słownictwo zależnie od produktu. Stałe mogą być wyłącznie zasady HTML i nazwa sekcji specyfikacji.",
+        "- Pisz tak, jak do klienta w sklepie: krótkie, konkretne zdania, codzienne słownictwo i jasna odpowiedź, po co dana cecha jest przydatna.",
+        "- Preferuj zdania bezpośrednie: 'Obudowa ma klasę IP65 i jest chroniona przed pyłem oraz strugami wody' zamiast 'IP65 wspiera zastosowanie w wymagającym otoczeniu'.",
+        "- Najpierw nazwij cechę, potem podaj jej praktyczny skutek. Nie opisuj procesu analizowania, dobierania ani klasyfikowania produktu.",
+        "- Kod, EAN, seria, napięcie i gwarancja mogą zostać tylko w specyfikacji, jeśli nie da się z nich zbudować naturalnego i użytecznego zdania.",
+        "",
+        "Zasady bezwzględne:",
+        "- Używaj tylko faktów z sekcji PRODUCT_FACTS jako cech produktu.",
+        "- Fakty z COMPATIBILITY_FACTS możesz opisać tylko jako kompatybilność albo dopasowanie do innej oprawy/części.",
+        "- Nie używaj REJECTED_FACTS jako cech produktu.",
+        "- Jeśli REJECTED_FACTS zawiera moc, nie pisz, że opisywany produkt ma tę moc.",
+        "- Nie wymyślaj parametrów, wymiarów, certyfikatów, zastosowań ani obietnic producenta.",
+        "- Zachowaj dłuższy styl SEO, ale bez pustych zdań typu 'z danych technicznych'.",
+        "- Pisz z polskimi znakami. Opis z '?' zamiast polskich liter albo mojibake typu 'Ä', 'Å', 'Ĺ' jest błędny.",
+        "- Celuj w 1500-2200 znaków bez spacji przy bogatych danych. Przy skromnych faktach napisz krócej i konkretniej zamiast sztucznie rozciągać tekst.",
+        "- Nie kopiuj poprzedniego wyniku z pliku review. Jeśli wcześniejszy opis był krótki albo miał uszkodzone polskie znaki, napisz nowy opis od zera.",
+        "- Review XLSX zapisuj w głównym repo: C:\\Users\\Handlowiec\\Desktop\\AlkanInator\\reports\\descriptions. Nie zapisuj finalnego pliku w .codex\\worktrees.",
+        "- Nie pisz o samym opisie ani o procesie wyboru. Zakazane są zdania typu 'Taki sposób opisu...', 'dla klienta oznacza to...', 'mówimy o elemencie...'.",
+        "- Nie tłumacz, czym produkt nie jest. Zamiast 'nie udaje źródła światła' po prostu opisz go jako akcesorium/siatkę ochronną i podaj kompatybilność.",
+        "- Nie używaj abstrakcyjnych wypełniaczy typu 'sam typ produktu jasno wskazuje', 'komponent wspierający funkcję', 'otrzymujesz akcesorium', 'spójna rodzina produktowa'.",
+        "- Jeśli faktów jest mało, możesz dodać krótki, neutralny akapit o typie produktu: czym zwykle jest taka część, gdzie się ją stosuje i na co zwrócić uwagę przy doborze.",
+        "- Ogólny akapit o typie produktu nie może dopisywać niepotwierdzonych parametrów konkretnego modelu.",
+        "- Dobre rozwinięcie: 'Siatka ochronna jest akcesorium stosowanym przy oprawach, gdy potrzebna jest dodatkowa fizyczna osłona przed przypadkowym kontaktem lub uderzeniem. Przy doborze warto sprawdzić zgodność z konkretną serią i modelem oprawy.'",
+        "- Lepiej napisać krótszy, konkretny opis niż dociągać długość pustymi zdaniami.",
+        "- Nie pisz o briefie, opisie, sklepie, kliencie ani procesie porównywania produktów. Zakazane: 'opisany przez kluczowe parametry', 'taki zestaw danych', 'danych pochodzących z briefu', 'sklep chce', 'klient szuka rozwiązania', 'tak przygotowany opis'.",
+        "- Nie używaj polskich słów bez znaków diakrytycznych. Zakazane są formy typu 'ocenic', 'katem', 'porownac', 'Dzieki', 'swiatla', 'oswietlenia', 'ktore'.",
+        "- Pełna nazwa w otwarciu służy SEO, ale zdanie po niej ma być naturalne. Nie używaj automatycznej formuły 'marki ... z serii ... to ...' w każdym opisie.",
+        "- Nie nadużywaj słów 'porządkuje', 'wariant', 'profil', 'dobór', 'pozwala ocenić' ani zdań o porównywaniu modeli.",
+        "- Nie używaj urzędowo-technicznych konstrukcji: 'wspiera zastosowanie', 'uzupełnia zestaw informacji', 'profil produktu', 'ułatwia przypisanie', 'porządkuje parametry', 'dobrze wpisuje się'.",
+        "- Nie pisz, że seria produktu 'pomaga zachować spójność', jeśli brief nie potwierdza istnienia pasujących wizualnie produktów.",
+        "- Nie zamieniaj parametrów w pozorne korzyści. Napięcie 220-240 V nie 'ułatwia dopasowania', a kod producenta nie jest zaletą użytkową.",
+        "- Unikaj zdań zbudowanych według schematu 'cecha wspiera...', 'parametr ułatwia...', 'seria pomaga...'. Napisz wprost, co produkt robi.",
+        "- Przykładowy opis AROT jest wzorcem jakości i struktury, nie źródłem faktów. Nie kopiuj z niego IP, temperatur, odporności, materiału ani zastosowań do innego produktu.",
+        "",
+        "Wymagany format HTML:",
+        "- 3-5 akapitów <p>; pierwszy zaczyna się od <strong>pełnej nazwy produktu</strong>",
+        "- co najmniej jedna konkretna sekcja <h2>",
+        "- sekcja <h3>Najważniejsze zalety</h3> i lista <ul><li> z konkretnymi korzyściami",
+        "- sekcja <h3>Specyfikacja techniczna</h3> tylko z PRODUCT_FACTS; etykiety parametrów w <strong>",
+        "- elementy listy bez myślnika po tagu, czyli <li>tekst</li>, nie <li>- tekst</li>",
+        "",
+        "Walidacja gotowego review przed oddaniem:",
+        "Najpierw złóż review helperem, który istnieje w repo:",
+        'py C:\\Users\\Handlowiec\\Desktop\\AlkanInator\\src\\codex_description_agent.py --brief-input "<brief.xlsx>" --description-file "<opis.html>" --review-output "<review.xlsx>"',
+        'py src\\generate_product_descriptions.py --mode validate_codex_review --review-input "<review.xlsx>"',
+        "Jeśli ta komenda zwróci ERROR albo WARNING, popraw opis i uruchom ją ponownie.",
+        "",
+        f"PRODUCT_NAME: {product_name}",
+        "",
+        "PRODUCT_FACTS:",
+        facts_as_bullets(product_facts),
+        "",
+        "COMPATIBILITY_FACTS:",
+        facts_as_bullets(compatibility_facts),
+        "",
+        "REJECTED_FACTS:",
+        facts_as_bullets(rejected_facts),
+    ])
+
+
+def facts_as_bullets(facts: list[dict[str, str]]) -> str:
+    if not facts:
+        return "- brak"
+    return "\n".join(f"- {item.get('fact', '')}: {item.get('value', '')}" for item in facts)
+
+
+def validate_codex_description(
+    description_html: str,
+    product_facts: list[dict[str, str]],
+    rejected_facts: list[dict[str, str]],
+    prompt_only: bool = False,
+    product_name: str = "",
+) -> list[dict[str, str]]:
+    if prompt_only and not description_html:
+        return [{"status": "WAITING_FOR_CODEX", "check": "description_present", "details": "Brief gotowy, opis nie został jeszcze wygenerowany."}]
+    checks: list[dict[str, str]] = []
+    text = strip_html(description_html)
+    if not compact_spaces(text):
+        checks.append({"status": "ERROR", "check": "description_present", "details": "Brak opisu do walidacji."})
+        return checks
+    checks.append({"status": "OK", "check": "description_present", "details": "Opis jest obecny."})
+    chars_no_spaces = len(re.sub(r"\s+", "", text))
+    minimum_chars = codex_minimum_chars(product_facts)
+    if chars_no_spaces < minimum_chars:
+        checks.append({
+            "status": "WARNING",
+            "check": "description_length",
+            "details": f"Opis ma {chars_no_spaces} znaków bez spacji, wymagane minimum dla tego briefu to {minimum_chars}.",
+        })
+    else:
+        checks.append({"status": "OK", "check": "description_length", "details": "Opis spełnia minimalną długość."})
+    if not any(char in text for char in POLISH_DIACRITICS):
+        checks.append({
+            "status": "ERROR",
+            "check": "polish_diacritics",
+            "details": "Opis nie zawiera polskich znaków; prawdopodobnie został zapisany bez ogonków.",
+        })
+    if has_encoding_damage(description_html):
+        checks.append({
+            "status": "ERROR",
+            "check": "encoding_integrity",
+            "details": "Opis zawiera znaki sugerujące uszkodzone kodowanie albo zamianę polskich liter na '?'.",
+        })
+    ascii_polish_marker = find_ascii_polish_marker(text)
+    if ascii_polish_marker:
+        checks.append({
+            "status": "ERROR",
+            "check": "missing_polish_diacritics",
+            "details": f"Opis zawiera polskie słowo zapisane bez znaków diakrytycznych: {ascii_polish_marker}",
+        })
+    if re.search(r"<li[^>]*>\s*[-–—]\s*", description_html, flags=re.IGNORECASE):
+        checks.append({
+            "status": "WARNING",
+            "check": "html_list_format",
+            "details": "Elementy listy zaczynają się od myślnika; użyj <li>tekst</li> bez dodatkowego '-'.",
+        })
+    paragraph_count = len(re.findall(r"<p\b", description_html, flags=re.IGNORECASE))
+    if paragraph_count < 3 or paragraph_count > 5:
+        checks.append({
+            "status": "WARNING",
+            "check": "html_paragraph_count",
+            "details": f"Opis ma {paragraph_count} akapitów <p>; zalecane 3-5.",
+        })
+    if not re.search(r"<h2\b", description_html, flags=re.IGNORECASE):
+        checks.append({"status": "WARNING", "check": "html_h2", "details": "Opis nie zawiera sekcji <h2>."})
+    validate_seo_opening(checks, description_html, product_name)
+    validate_seo_headings(checks, description_html, product_facts)
+    if not re.search(r"<h3\b[^>]*>\s*Specyfikacja techniczna\s*</h3>", description_html, flags=re.IGNORECASE):
+        checks.append({"status": "WARNING", "check": "html_specification_h3", "details": "Brak nagłówka <h3>Specyfikacja techniczna</h3>."})
+    if not re.search(r"<h3\b[^>]*>\s*Najważniejsze zalety\s*</h3>", description_html, flags=re.IGNORECASE):
+        checks.append({"status": "WARNING", "check": "html_benefits_h3", "details": "Brak sekcji <h3>Najważniejsze zalety</h3>."})
+    if re.search(r"<h3\b[^>]*>\s*Specyfikacja techniczna\s*</h3>", description_html, flags=re.IGNORECASE):
+        specification_html = re.split(
+            r"<h3\b[^>]*>\s*Specyfikacja techniczna\s*</h3>",
+            description_html,
+            maxsplit=1,
+            flags=re.IGNORECASE,
+        )[1]
+        if not re.search(r"<li[^>]*>\s*<strong\b", specification_html, flags=re.IGNORECASE):
+            checks.append({
+                "status": "WARNING",
+                "check": "html_specification_labels",
+                "details": "Etykiety parametrów w specyfikacji powinny być wyróżnione tagiem <strong>.",
+            })
+    meta_phrase = find_meta_description_phrase(text)
+    if meta_phrase:
+        checks.append({
+            "status": "ERROR",
+            "check": "meta_description_language",
+            "details": f"Opis zawiera meta-komentarz zamiast opisu produktu: {meta_phrase}",
+        })
+    for rejected in rejected_facts:
+        fact = rejected.get("fact", "")
+        value = rejected.get("value", "")
+        if rejected_fact_used_as_product_claim(text, fact, value):
+            checks.append({
+                "status": "ERROR",
+                "check": "rejected_fact_not_used",
+                "details": f"Opis używa odrzuconego faktu jako cechy produktu: {fact}={value}",
+            })
+    for phrase in ["z danych technicznych", "opis warto odczytywać", "dane techniczne pomagają"]:
+        if phrase in text.lower():
+            checks.append({"status": "WARNING", "check": "generic_phrase", "details": f"Opis zawiera generyczną frazę: {phrase}"})
+    repeated_word = find_overused_word(text)
+    if repeated_word:
+        checks.append({
+            "status": "WARNING",
+            "check": "repetitive_language",
+            "details": f"Opis nadużywa słowa lub konstrukcji '{repeated_word}' i brzmi szablonowo.",
+        })
+    robotic_phrase = find_robotic_language_phrase(text)
+    if robotic_phrase:
+        checks.append({
+            "status": "WARNING",
+            "check": "robotic_language",
+            "details": f"Opis zawiera urzędowo-robotyczną konstrukcję: {robotic_phrase}",
+        })
+    if not any(check["status"] in {"ERROR", "WARNING"} for check in checks):
+        checks.append({"status": "OK", "check": "rejected_facts", "details": "Nie wykryto użycia odrzuconych faktów."})
+    return checks
+
+
+def codex_minimum_chars(product_facts: list[dict[str, str]]) -> int:
+    meaningful_facts = [
+        row for row in product_facts
+        if compact_spaces(str(row.get("value", "")))
+        and row.get("fact") not in {"EAN", "Kod producenta", "Producent"}
+    ]
+    if len(meaningful_facts) <= 4:
+        return CODEX_SPARSE_FACTS_MIN_CHARS_NO_SPACES
+    if len(meaningful_facts) <= 8:
+        return CODEX_MEDIUM_FACTS_MIN_CHARS_NO_SPACES
+    return CODEX_MIN_CHARS_NO_SPACES
+
+
+def validate_seo_opening(checks: list[dict[str, str]], description_html: str, product_name: str) -> None:
+    opening_match = re.search(
+        r"<p\b[^>]*>\s*<strong\b[^>]*>(.*?)</strong>",
+        description_html,
+        flags=re.IGNORECASE | re.DOTALL,
+    )
+    if not opening_match:
+        checks.append({
+            "status": "WARNING",
+            "check": "seo_opening",
+            "details": "Pierwszy akapit powinien zaczynać się od pełnej nazwy produktu w tagu <strong>.",
+        })
+        return
+    if product_name:
+        opening_name = normalize_header(strip_html(opening_match.group(1)))
+        expected_name = normalize_header(product_name)
+        if opening_name != expected_name:
+            checks.append({
+                "status": "WARNING",
+                "check": "seo_product_name",
+                "details": "Wyróżniona nazwa w otwarciu nie jest pełną nazwą produktu z briefu.",
+            })
+
+
+def validate_seo_headings(
+    checks: list[dict[str, str]],
+    description_html: str,
+    product_facts: list[dict[str, str]],
+) -> None:
+    headings = [
+        compact_spaces(strip_html(value))
+        for value in re.findall(r"<h2\b[^>]*>(.*?)</h2>", description_html, flags=re.IGNORECASE | re.DOTALL)
+    ]
+    if not headings:
+        return
+    generic_headings = {"najwazniejsze cechy", "zastosowanie i dopasowanie", "informacje o produkcie"}
+    if any(normalize_header(heading) in generic_headings for heading in headings):
+        checks.append({
+            "status": "WARNING",
+            "check": "seo_h2_specificity",
+            "details": "Nagłówek <h2> jest generyczny; powinien zawierać naturalną frazę produktową.",
+        })
+    product_type = next(
+        (compact_spaces(str(row.get("value", ""))) for row in product_facts if row.get("fact") == "Typ produktu"),
+        "",
+    )
+    if product_type and not any(normalize_header(product_type) in normalize_header(heading) for heading in headings):
+        checks.append({
+            "status": "WARNING",
+            "check": "seo_h2_product_type",
+            "details": f"Nagłówek <h2> nie zawiera typu produktu '{product_type}'.",
+        })
+
+
+def find_overused_word(text: str) -> str:
+    normalized = normalize_header(text)
+    thresholds = {
+        "porzadkuje": 2,
+        "wariant": 5,
+        "ulatwia": 5,
+        "pomaga": 5,
+        "pozwala": 5,
+    }
+    for word, maximum in thresholds.items():
+        if len(re.findall(rf"\b{word}\w*\b", normalized)) > maximum:
+            return word
+    return ""
+
+
+def find_robotic_language_phrase(text: str) -> str:
+    normalized = normalize_header(text)
+    for pattern in ROBOTIC_LANGUAGE_PATTERNS:
+        match = re.search(pattern, normalized)
+        if match:
+            return match.group(0)
+    return ""
+
+
+def has_encoding_damage(description_html: str) -> bool:
+    if any(marker in description_html for marker in MOJIBAKE_MARKERS):
+        return True
+    text = strip_html(description_html)
+    if "?" not in text:
+        return False
+    return bool(re.search(r"[A-Za-zĄĆĘŁŃÓŚŹŻąćęłńóśźż]\?|\?[A-Za-zĄĆĘŁŃÓŚŹŻąćęłńóśźż]", text))
+
+
+def find_meta_description_phrase(text: str) -> str:
+    normalized = normalize_header(text)
+    for pattern in META_DESCRIPTION_PATTERNS:
+        match = re.search(pattern, normalized)
+        if match:
+            return match.group(0)
+    return ""
+
+
+def find_ascii_polish_marker(text: str) -> str:
+    for pattern in ASCII_POLISH_MARKERS:
+        match = re.search(pattern, text, flags=re.IGNORECASE)
+        if match:
+            return match.group(0)
+    return ""
+
+
+def validate_codex_review_file(review_input: str | Path) -> list[dict[str, str]]:
+    path = Path(review_input)
+    if not path.exists():
+        raise SystemExit(f"Nie znaleziono pliku review: {path}")
+    with pd.ExcelFile(path) as xls:
+        missing_sheets = [sheet for sheet in ["Produkt", "Product facts", "Rejected facts", "Opis wygenerowany"] if sheet not in xls.sheet_names]
+        if missing_sheets:
+            raise SystemExit(f"Review nie ma wymaganych arkuszy: {', '.join(missing_sheets)}")
+        products = sheet_records(xls, "Produkt")
+        product_facts = sheet_records(xls, "Product facts")
+        rejected_facts = sheet_records(xls, "Rejected facts")
+        descriptions = sheet_records(xls, "Opis wygenerowany")
+    description_html = ""
+    if descriptions:
+        description_html = str(descriptions[0].get("description_html", "") or "")
+    product_name = str(products[0].get("name", "") or "") if products else ""
+    return validate_codex_description(description_html, product_facts, rejected_facts, product_name=product_name)
+
+
+def write_codex_review_from_description(
+    brief_input: str | Path,
+    review_output: str | Path,
+    description_html: str,
+) -> list[dict[str, str]]:
+    brief = read_codex_brief_report(brief_input)
+    brief["generated_description"] = description_html
+    brief["validation"] = validate_codex_description(
+        description_html,
+        brief["product_facts"],
+        brief["rejected_facts"],
+        product_name=str(brief.get("product", {}).get("name", "") or ""),
+    )
+    write_codex_brief_report(brief, review_output)
+    return brief["validation"]
+
+
+def read_codex_brief_report(brief_input: str | Path) -> dict[str, Any]:
+    path = Path(brief_input)
+    if not path.exists():
+        raise SystemExit(f"Nie znaleziono briefu: {path}")
+    with pd.ExcelFile(path) as xls:
+        missing_sheets = [sheet for sheet in CODEX_BRIEF_SHEETS if sheet not in xls.sheet_names]
+        if missing_sheets:
+            raise SystemExit(f"Brief nie ma wymaganych arkuszy: {', '.join(missing_sheets)}")
+        product_rows = sheet_records(xls, "Produkt")
+        product_facts = sheet_records(xls, "Product facts")
+        compatibility_facts = sheet_records(xls, "Compatibility facts")
+        rejected_facts = sheet_records(xls, "Rejected facts")
+        prompt_rows = sheet_records(xls, "Prompt dla Codex")
+    prompt = ""
+    if prompt_rows:
+        prompt = next(iter(prompt_rows[0].values()), "")
+    return {
+        "product": product_rows[0] if product_rows else {},
+        "product_facts": product_facts,
+        "compatibility_facts": compatibility_facts,
+        "rejected_facts": rejected_facts,
+        "prompt": prompt,
+        "generated_description": "",
+        "validation": [],
+    }
+
+
+def read_description_input(description_html: str, description_file: str) -> str:
+    if description_html and description_file:
+        raise SystemExit("Podaj tylko jedno: --description-html albo --description-file.")
+    if description_file:
+        path = Path(description_file)
+        if not path.exists():
+            raise SystemExit(f"Nie znaleziono pliku opisu: {path}")
+        return path.read_text(encoding="utf-8")
+    if description_html:
+        return description_html
+    raise SystemExit("Tryb write_codex_review wymaga --description-html albo --description-file.")
+
+
+def sheet_records(xls: pd.ExcelFile, sheet_name: str) -> list[dict[str, str]]:
+    df = pd.read_excel(xls, sheet_name=sheet_name, dtype=str).fillna("")
+    return [{str(key): str(value) for key, value in row.items()} for row in df.to_dict(orient="records")]
+
+
+def rejected_fact_used_as_product_claim(text: str, fact: str, value: str) -> bool:
+    if not value:
+        return False
+    normalized = normalize_header(text)
+    normalized_value = normalize_header(str(value))
+    if fact == "Moc [W]":
+        number = re.escape(normalized_value.replace("w", "").strip())
+        return bool(re.search(rf"\b(?:moc|mocy|ma moc|o mocy)\s+{number}\s*w?\b", normalized))
+    if fact and normalize_header(f"{fact}: {value}") in normalized:
+        return True
+    return False
+
+
+def write_codex_brief_report(brief: dict[str, Any], output: str | Path) -> None:
+    output_path = Path(output)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    with pd.ExcelWriter(output_path, engine="openpyxl") as writer:
+        pd.DataFrame([brief["product"]]).to_excel(writer, sheet_name="Produkt", index=False)
+        pd.DataFrame(brief["product_facts"], columns=["fact", "value", "source"]).to_excel(writer, sheet_name="Product facts", index=False)
+        pd.DataFrame(brief["compatibility_facts"], columns=["fact", "value", "source"]).to_excel(writer, sheet_name="Compatibility facts", index=False)
+        pd.DataFrame(brief["rejected_facts"], columns=["fact", "value", "source", "reason"]).to_excel(writer, sheet_name="Rejected facts", index=False)
+        pd.DataFrame([{"Prompt dla agenta Codex": brief["prompt"]}]).to_excel(writer, sheet_name="Prompt dla Codex", index=False)
+        pd.DataFrame([{"description_html": brief["generated_description"]}]).to_excel(writer, sheet_name="Opis wygenerowany", index=False)
+        pd.DataFrame(brief["validation"], columns=["status", "check", "details"]).to_excel(writer, sheet_name="Walidacja", index=False)
+        for worksheet in writer.book.worksheets:
+            worksheet.freeze_panes = "A2"
+            worksheet.auto_filter.ref = worksheet.dimensions
+            for column in worksheet.columns:
+                width = max(len(str(cell.value or "")) for cell in column[:40])
+                worksheet.column_dimensions[column[0].column_letter].width = min(max(width + 2, 14), 90)
 
 
 def build_description_html(

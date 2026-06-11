@@ -1,0 +1,4 @@
+interface:
+  display_name: "Alkan Product Description"
+  short_description: "Pisze i waliduje indywidualne opisy SEO Alkan"
+  default_prompt: "Use $alkan-product-description to wybierz najnowszy zestaw briefów, napisz każdy opis SEO osobno, zapisz review w głównym repo i popraw wszystkie błędy walidacji."

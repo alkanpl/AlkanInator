@@ -4,6 +4,7 @@ import argparse
 import csv
 import json
 import re
+import unicodedata
 from pathlib import Path
 from typing import Any
 
@@ -14,6 +15,183 @@ from utils import compact_spaces, is_blank, load_yaml, normalize_header, read_pr
 
 DEFAULT_SKU_SUFFIX_KNOWLEDGE_PATH = "dictionaries/learned_product_taxonomy.yaml"
 DEFAULT_CATALOG_KNOWLEDGE_PATH = "dictionaries/woocommerce_catalog_knowledge.yaml"
+DEFAULT_SUPPLIER_GLOBAL_KNOWLEDGE_PATH = "dictionaries/supplier_global_knowledge.yaml"
+FEATURE_REVIEW_COLUMNS = ["sku", "ean", "name", "feature_name", "feature_value", "reason"]
+EXCLUDED_BASELINKER_FEATURES = {"EAN (GTIN)", "Kod producenta"}
+MANUALLY_APPROVED_FEATURE_VALUES = {
+    "Typ produktu": {
+        "Czujnik ruchu",
+        "Klips",
+        "Konektor",
+        "Lampa wisząca",
+        "Linka do podwieszenia",
+        "Łącznik",
+        "Naświetlacz LED",
+        "Oprawa High Bay",
+        "Oprawa hermetyczna",
+        "Oprawa kanałowa",
+        "Oprawa sufitowa",
+        "Oprawa sufitowa punktowa",
+        "Ramka do paneli",
+        "Panel LED",
+        "Pilot do oprawy",
+        "Plafon",
+        "Ramka",
+        "Soczewka",
+        "Siatka ochronna",
+        "Uchwyt",
+        "Wspornik montażowy",
+        "Zapinka",
+        "Zasilacz",
+    },
+    "Seria": {
+        "ACETE",
+        "ADTR",
+        "AGOR",
+        "AGZAR",
+        "ALIN",
+        "AMAZI",
+        "ANBAR",
+        "ANTEM",
+        "ANTO",
+        "AQILO",
+        "ARVOS",
+        "AVAR",
+        "AZPO",
+        "BAREV",
+        "BENO",
+        "BLINGO",
+        "BLURRO",
+        "BONSA",
+        "BORD",
+        "BRAVO",
+        "CARVO",
+        "CORSO",
+        "DABA",
+        "DABER",
+        "DICHT",
+        "DUNO",
+        "ENELO",
+        "ERTON",
+        "EXATE",
+        "FL",
+        "FLS",
+        "FOGLER",
+        "FT1200",
+        "FT1500",
+        "FTD1200",
+        "FTD1500",
+        "FTHL1500",
+        "FTHT1500",
+        "GALOBA",
+        "GORD",
+        "GRUN",
+        "HBPA",
+        "HBPHS",
+        "HERMI",
+        "IQ-LED",
+        "IPER",
+        "INES",
+        "JASMIN",
+        "JURBA",
+        "LUMKO",
+        "MAH",
+        "MARC",
+        "MILO",
+        "NIFU",
+        "PHLOX",
+        "PIRES",
+        "PLAFMIN",
+        "PLAVE",
+        "RIFA",
+        "RITI",
+        "S",
+        "SANGA",
+        "SANI",
+        "SANSO",
+        "SOLN",
+        "STATO",
+        "STIVI",
+        "STOBI",
+        "TP",
+        "TOLEO",
+        "TOLU",
+        "TUNA",
+        "TURA",
+        "TURK",
+        "TYBIA",
+        "VARSO",
+        "VAND",
+    },
+    "Kolor producenta": {
+        "Biały mat",
+        "Czarny mat",
+        "Dąb sonoma",
+        "Nikiel satynowy",
+        "STAL INOX",
+        "Wenge",
+        "Złoto-brązowy",
+        "Złoty dąb",
+    },
+    "Zastosowanie": {"Do paneli"},
+}
+DROP_UNKNOWN_FEATURES = {"Model", "Sterowanie"}
+NON_BASE_COLORS_AS_PRODUCER_COLOR = {"Biały mat", "Czarny mat", "Dąb sonoma", "Nikiel satynowy", "STAL INOX", "Wenge", "Złoty dąb"}
+ACCESSORY_PRODUCT_TYPES_WITHOUT_OWN_POWER = {
+    "Klips",
+    "Klosz",
+    "Linka do podwieszenia",
+    "Pilot do oprawy",
+    "Siatka ochronna",
+    "Soczewka",
+    "Uchwyt",
+    "Wspornik montażowy",
+    "Zapinka",
+    "Łącznik",
+}
+
+
+def default_supplier_feature_policy() -> dict[str, Any]:
+    return {
+        "excluded_features": set(EXCLUDED_BASELINKER_FEATURES),
+        "drop_unknown_features": set(DROP_UNKNOWN_FEATURES),
+        "non_base_colors_as_producer_color": set(NON_BASE_COLORS_AS_PRODUCER_COLOR),
+        "accessory_product_types_without_own_power": set(ACCESSORY_PRODUCT_TYPES_WITHOUT_OWN_POWER),
+        "approved_feature_values": {
+            feature_name: set(values)
+            for feature_name, values in MANUALLY_APPROVED_FEATURE_VALUES.items()
+        },
+    }
+
+
+def load_supplier_feature_policy(path: str | Path | None = DEFAULT_SUPPLIER_GLOBAL_KNOWLEDGE_PATH) -> dict[str, Any]:
+    policy = default_supplier_feature_policy()
+    knowledge = load_yaml(path) if path else {}
+    supplier = ((knowledge.get("suppliers") or {}).get("kanlux") or {}) if isinstance(knowledge, dict) else {}
+    if not supplier:
+        return policy
+
+    accepted = supplier.get("accepted_feature_values") or {}
+    merge_approved_values(policy, "Typ produktu", accepted.get("product_types") or [])
+    merge_approved_values(policy, "Seria", accepted.get("series") or [])
+    merge_approved_values(policy, "Kolor producenta", accepted.get("producer_colors") or [])
+    merge_approved_values(policy, "Zastosowanie", accepted.get("applications") or [])
+
+    feature_rules = supplier.get("feature_export_rules") or {}
+    policy["excluded_features"].update(str(value) for value in feature_rules.get("excluded_features") or [])
+    policy["drop_unknown_features"].update(str(value) for value in feature_rules.get("drop_unknown_features") or [])
+    policy["non_base_colors_as_producer_color"].update(str(value) for value in accepted.get("producer_colors") or [])
+
+    accessory_rules = supplier.get("accessory_rules") or {}
+    policy["accessory_product_types_without_own_power"].update(
+        str(value) for value in accessory_rules.get("product_types_without_own_power") or []
+    )
+    return policy
+
+
+def merge_approved_values(policy: dict[str, Any], feature_name: str, values: list[Any]) -> None:
+    approved = policy["approved_feature_values"].setdefault(feature_name, set())
+    approved.update(str(value) for value in values if compact_spaces(str(value or "")))
 
 BASELINKER_COLUMNS = [
     "product_id",
@@ -41,7 +219,7 @@ FEATURE_MAP = {
     "Barwa światła": ["Barwa - kategoria", "attr_barwa_zakres", "Barwa światła"],
     "Strumień świetlny [lm]": ["attr_strumien", "Strumień [lm]", "Strumień świetlny [lm]", "Jasność"],
     "Stopień ochrony [IP]": ["attr_ip", "Klasa IP", "Stopień ochrony [IP]", "Stopień ochrony IP"],
-    "Klasa ochronności": ["attr_ik", "Klasa ochronności"],
+    "Stopień ochrony [IK]": ["attr_ik", "Klasa ochronności"],
     "Kąt świecenia": ["attr_kat_swiecenia", "Kąt", "Kąt świecenia"],
     "Kolor": ["attr_kolor", "Kolor obudowy"],
     "Kolor producenta": ["Kolor producenta", "attr_kolor_producenta", "attr_kolor", "Kolor obudowy"],
@@ -54,10 +232,10 @@ FEATURE_MAP = {
     "Wysokość": ["attr_wysokosc", "Wysokość"],
     "Średnica": ["attr_srednica", "Średnica"],
     "Czujnik ruchu": ["attr_czujnik", "Czujnik ruchu"],
-    "Liczba sztuk": ["attr_ilosc_sztuk"],
+    "Opakowanie": ["attr_ilosc_sztuk"],
     "Gwarancja": ["attr_gwarancja"],
     "Sterowanie": ["attr_sterowanie"],
-    "Pasuje do": ["attr_pasuje_do"],
+    "Zastosowanie": ["attr_pasuje_do"],
     "Klasa efektywności energetycznej": ["Klasa EEi", "Klasa efektywności energetycznej"],
 }
 
@@ -89,6 +267,11 @@ FEATURE_NAME_ALIASES = {
     "stopien ochrony ip": "Stopień ochrony [IP]",
     "stopień ochrony ip": "Stopień ochrony [IP]",
     "klasa ip": "Stopień ochrony [IP]",
+    "kat swiecenia": "Kąt świecenia",
+    "kąt świecenia": "Kąt świecenia",
+    "kat swiecenia °": "Kąt świecenia",
+    "kąt świecenia °": "Kąt świecenia",
+    "kat swiecenia deg": "Kąt świecenia",
     "rodzaj gwintu": "Trzonek",
     "gwint": "Trzonek",
     "trzonek": "Trzonek",
@@ -97,6 +280,19 @@ FEATURE_NAME_ALIASES = {
     "material": "Materiał",
     "materiał": "Materiał",
     "kolor obudowy": "Kolor",
+    "ksztalt": "Kształt",
+    "kształt": "Kształt",
+    "ksztalt oprawy": "Kształt",
+    "kształt oprawy": "Kształt",
+    "model": "Model",
+    "klasa ochronnosci": "Stopień ochrony [IK]",
+    "klasa ochronności": "Stopień ochrony [IK]",
+    "stopien ochrony ik": "Stopień ochrony [IK]",
+    "stopień ochrony ik": "Stopień ochrony [IK]",
+    "liczba sztuk": "Opakowanie",
+    "ilosc sztuk": "Opakowanie",
+    "ilość sztuk": "Opakowanie",
+    "pasuje do": "Zastosowanie",
 }
 
 
@@ -132,6 +328,16 @@ def main() -> None:
         default=DEFAULT_CATALOG_KNOWLEDGE_PATH,
         help="Slownik wiedzy katalogowej uzywany pomocniczo przy dopasowaniu suffixow.",
     )
+    parser.add_argument(
+        "--feature-review-output",
+        default="",
+        help="CSV z atrybutami/wartosciami, ktore wymagaja akceptacji przed dodaniem do Woo.",
+    )
+    parser.add_argument(
+        "--supplier-knowledge",
+        default=DEFAULT_SUPPLIER_GLOBAL_KNOWLEDGE_PATH,
+        help="Globalny slownik wiedzy o dostawcach, m.in. zaakceptowane wartosci Kanlux.",
+    )
     args = parser.parse_args()
 
     df = read_products(args.input, sheet_name=args.sheet)
@@ -147,6 +353,9 @@ def main() -> None:
     catalog_knowledge = load_yaml(args.catalog_knowledge) if args.catalog_knowledge else {}
     producer_suffixes = load_producer_suffixes(args.sku_suffix_knowledge, args.catalog_knowledge)
     manufacturer_data_by_producer = build_manufacturer_data_by_producer(catalog_knowledge)
+    feature_value_normalizer = build_feature_value_normalizer(catalog_knowledge)
+    feature_policy = load_supplier_feature_policy(args.supplier_knowledge)
+    feature_review_rows: list[dict[str, str]] = []
     exported = build_baselinker_rows(
         df,
         args.name_column,
@@ -155,13 +364,19 @@ def main() -> None:
         args.sku_format,
         producer_suffixes,
         manufacturer_data_by_producer,
+        feature_value_normalizer,
+        feature_review_rows,
+        feature_policy,
     )
     write_baselinker_csv(exported, args.output)
+    feature_review_output = args.feature_review_output or default_feature_review_output(args.output)
+    write_feature_review_file(feature_review_rows, feature_review_output)
 
     print(f"OK: wczytano {len(df)} produktow")
     if args.links_file:
         print(f"OK: przypisano zdjecia glowne: {image_matches}")
     print(f"OK: zapisano {args.output}")
+    print(f"OK: zapisano raport atrybutow do akceptacji: {feature_review_output}")
 
 
 def build_baselinker_rows(
@@ -172,6 +387,9 @@ def build_baselinker_rows(
     sku_format: str = "producer_suffix",
     producer_suffixes: dict[str, str] | None = None,
     manufacturer_data_by_producer: dict[str, str] | None = None,
+    feature_value_normalizer: dict[str, dict[str, str]] | None = None,
+    feature_review_rows: list[dict[str, str]] | None = None,
+    feature_policy: dict[str, Any] | None = None,
 ) -> list[dict[str, str]]:
     if sku_format == "producer_suffix" and producer_suffixes is None:
         producer_suffixes = load_producer_suffixes()
@@ -196,10 +414,27 @@ def build_baselinker_rows(
                 "gazetki_Kategoria",
             ],
         )
-        description = first_value(row, ["Opis HTML", "description", "Opis"])
+        description = first_value(row, ["Opis HTML", "description_html", "description", "Opis"])
         images = first_value(row, ["images_urls", "Zdjęcie URL", "Obrazki", "Zdjecia", "Zdjęcia"])
 
-        features = build_features(row, include_empty_features, manufacturer_data_by_producer, producer)
+        features = build_features(
+            row,
+            include_empty_features,
+            manufacturer_data_by_producer,
+            producer,
+            feature_value_normalizer,
+        )
+        features = filter_features_for_catalog(
+            features,
+            feature_value_normalizer,
+            feature_review_rows,
+            {
+                "sku": export_sku,
+                "ean": ean,
+                "name": name,
+            },
+            feature_policy,
+        )
         rows.append(
             {
                 "product_id": first_value(row, ["product_id", "Baselinker ID"]),
@@ -272,10 +507,12 @@ def build_features(
     include_empty: bool,
     manufacturer_data_by_producer: dict[str, str] | None = None,
     producer: str = "",
+    feature_value_normalizer: dict[str, dict[str, str]] | None = None,
 ) -> dict[str, str]:
     features: dict[str, str] = {}
     for target, source_columns in FEATURE_MAP.items():
         value = normalize_feature_value(first_value(row, source_columns), target)
+        value = normalize_to_woo_feature_value(target, value, feature_value_normalizer)
         if value or include_empty:
             features[target] = value
 
@@ -286,6 +523,7 @@ def build_features(
         raw_feature_name = column_name.replace("Parametr: ", "", 1)
         feature_name = normalize_feature_name(raw_feature_name)
         feature_value = normalize_feature_value(str(value), feature_name)
+        feature_value = normalize_to_woo_feature_value(feature_name, feature_value, feature_value_normalizer)
         if feature_value or include_empty:
             features.setdefault(feature_name, feature_value)
     add_manufacturer_data_feature(features, manufacturer_data_by_producer, producer)
@@ -334,6 +572,57 @@ def write_baselinker_csv(rows: list[dict[str, str]], output: str | Path) -> None
         writer.writerows(rows)
 
 
+def default_feature_review_output(output: str | Path) -> str:
+    output_path = Path(output)
+    return str(output_path.with_name(f"{output_path.stem}_feature_review_required.xlsx"))
+
+
+def write_feature_review_file(rows: list[dict[str, str]], output: str | Path) -> None:
+    output_path = Path(output)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    unique_rows: list[dict[str, str]] = []
+    seen: set[tuple[str, str, str, str]] = set()
+    for row in rows:
+        key = (
+            row.get("feature_name", ""),
+            row.get("feature_value", ""),
+            row.get("reason", ""),
+            row.get("sku", ""),
+        )
+        if key in seen:
+            continue
+        seen.add(key)
+        unique_rows.append(row)
+    if output_path.suffix.lower() in {".xlsx", ".xlsm"}:
+        write_feature_review_xlsx(unique_rows, output_path)
+        return
+    with output_path.open("w", encoding="utf-8-sig", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=FEATURE_REVIEW_COLUMNS)
+        writer.writeheader()
+        writer.writerows(unique_rows)
+
+
+def write_feature_review_xlsx(rows: list[dict[str, str]], output: str | Path) -> None:
+    df = pd.DataFrame(rows, columns=FEATURE_REVIEW_COLUMNS)
+    with pd.ExcelWriter(output, engine="openpyxl") as writer:
+        df.to_excel(writer, sheet_name="Do akceptacji", index=False)
+        worksheet = writer.sheets["Do akceptacji"]
+        worksheet.freeze_panes = "A2"
+        worksheet.auto_filter.ref = worksheet.dimensions
+        widths = {
+            "A": 16,
+            "B": 16,
+            "C": 72,
+            "D": 28,
+            "E": 36,
+            "F": 20,
+        }
+        for column, width in widths.items():
+            worksheet.column_dimensions[column].width = width
+        for cell in worksheet[1]:
+            cell.style = "Headline 4"
+
+
 def first_value(row: pd.Series, columns: list[str]) -> str:
     for column in columns:
         if not column or column not in row:
@@ -348,6 +637,425 @@ def normalize_feature_name(value: str) -> str:
     value = compact_spaces(value)
     normalized = normalize_header(value)
     return FEATURE_NAME_ALIASES.get(normalized, value)
+
+
+def filter_features_for_catalog(
+    features: dict[str, str],
+    feature_value_normalizer: dict[str, dict[str, str]] | None,
+    review_rows: list[dict[str, str]] | None = None,
+    context: dict[str, str] | None = None,
+    feature_policy: dict[str, Any] | None = None,
+) -> dict[str, str]:
+    filtered: dict[str, str] = {}
+    if feature_value_normalizer is None:
+        feature_value_normalizer = {}
+    policy = feature_policy or default_supplier_feature_policy()
+    context = context or {}
+    if features.get("Typ produktu"):
+        context = {**context, "typ_produktu": features.get("Typ produktu", "")}
+    for feature_name, value in features.items():
+        value = compact_spaces(str(value or ""))
+        if not value:
+            continue
+        if feature_name in policy["excluded_features"]:
+            continue
+        if drop_feature_for_product_context(feature_name, value, context, policy):
+            continue
+        if feature_name == "Kolor":
+            if add_color_features(filtered, value, feature_value_normalizer, policy):
+                continue
+        if feature_name in policy["drop_unknown_features"]:
+            continue
+        known_values = feature_value_normalizer.get(feature_name)
+        if manually_approved_feature_value(feature_name, value, policy):
+            filtered[feature_name] = value
+            continue
+        if valid_flexible_feature_value(feature_name, value):
+            filtered[feature_name] = value
+            continue
+        if known_values is None:
+            remember_feature_review(review_rows, context, feature_name, value, "UNKNOWN_ATTRIBUTE")
+            continue
+        if not feature_value_is_known(value, known_values):
+            remember_feature_review(review_rows, context, feature_name, value, "UNKNOWN_VALUE")
+            continue
+        filtered[feature_name] = value
+    return filtered
+
+
+def add_color_features(
+    filtered: dict[str, str],
+    value: str,
+    feature_value_normalizer: dict[str, dict[str, str]],
+    feature_policy: dict[str, Any] | None = None,
+) -> bool:
+    policy = feature_policy or default_supplier_feature_policy()
+    if value in policy["non_base_colors_as_producer_color"]:
+        producer_values = feature_value_normalizer.get("Kolor producenta", {})
+        filtered["Kolor"] = "Brązowy" if value in {"Dąb sonoma", "Wenge"} else base_color_from_producer_color(value)
+        filtered["Kolor producenta"] = canonical_or_original_feature_value(value, producer_values)
+        return True
+    parts = [compact_spaces(part) for part in re.split(r"\s*/\s*", value) if compact_spaces(part)]
+    if len(parts) > 1:
+        color_values = feature_value_normalizer.get("Kolor", {})
+        filtered["Kolor"] = canonical_or_original_feature_value(parts[0], color_values)
+        filtered["Kolory"] = " / ".join(canonical_or_original_feature_value(part, color_values) for part in parts)
+        return True
+    return False
+
+
+def base_color_from_producer_color(value: str) -> str:
+    normalized = comparable_feature_value(value)
+    if normalized in {"dab sonoma", "wenge", "zloto dab", "zloty dab", "złoty dab"}:
+        return "Brązowy"
+    if normalized in {"nikiel satynowy", "stal inox", "inox"}:
+        return "Srebrny"
+    if normalized in {"bialy mat", "biały mat"}:
+        return "Biały"
+    if normalized == "czarny mat":
+        return "Czarny"
+    return value
+
+
+def canonical_or_original_feature_value(value: str, known_values: dict[str, str]) -> str:
+    for key in feature_value_lookup_keys(value):
+        canonical = known_values.get(key)
+        if canonical:
+            return canonical
+    return value
+
+
+def drop_feature_for_product_context(
+    feature_name: str,
+    value: str,
+    context: dict[str, str],
+    feature_policy: dict[str, Any] | None = None,
+) -> bool:
+    policy = feature_policy or default_supplier_feature_policy()
+    name_key = comparable_feature_value(context.get("name", ""))
+    product_type = context.get("typ_produktu", "")
+    if feature_name == "Moc [W]" and product_type in policy["accessory_product_types_without_own_power"]:
+        return True
+    if feature_name == "Seria" and ("oprawa high bay" in name_key or "high bay" in name_key):
+        return True
+    if feature_name == "Kąt świecenia" and (
+        "oprawa hermetyczna" in name_key
+        or "panel led" in name_key
+        or "panel " in name_key
+        or "plafon" in name_key
+    ):
+        return True
+    if feature_name == "Zastosowanie" and not manually_approved_feature_value(feature_name, value, policy):
+        return True
+    if feature_name == "Kolor" and value in policy["non_base_colors_as_producer_color"]:
+        return False
+    if feature_name == "Seria" and (
+        "klips" in name_key
+        or "linka" in name_key
+        or "klosz" in name_key
+        or "soczewka" in name_key
+        or "zapinka" in name_key
+    ):
+        return True
+    return False
+
+
+def manually_approved_feature_value(
+    feature_name: str,
+    value: str,
+    feature_policy: dict[str, Any] | None = None,
+) -> bool:
+    policy = feature_policy or default_supplier_feature_policy()
+    approved_values = policy["approved_feature_values"].get(feature_name, set())
+    return value in approved_values
+
+
+def valid_flexible_feature_value(feature_name: str, value: str) -> bool:
+    value = compact_spaces(str(value or ""))
+    if not value:
+        return False
+    if feature_name in {"Wymiary", "Długość", "Szerokość", "Wysokość", "Średnica"}:
+        return valid_dimension_like_value(value)
+    if feature_name in {"Moc [W]", "Strumień świetlny [lm]"}:
+        return valid_number_or_range(value)
+    if feature_name == "Temperatura barwowa [K]":
+        return bool(re.fullmatch(r"\d+(?:[/-]\d+){0,3}|RGB", value, flags=re.IGNORECASE))
+    if feature_name == "Napięcie [V]":
+        return bool(re.fullmatch(r"\d+(?:[,.]\d+)?(?:-\d+(?:[,.]\d+)?){0,1}", value))
+    if feature_name == "Gwarancja":
+        return bool(re.fullmatch(r"\d+\s*(?:lat|lata|rok|roku|miesiecy|miesięcy|mies\.?)", value, flags=re.IGNORECASE))
+    if feature_name == "Stopień ochrony [IK]":
+        return bool(re.fullmatch(r"IK\s*\d{2}", value, flags=re.IGNORECASE))
+    if feature_name == "Kąt świecenia":
+        return bool(re.fullmatch(r"\d+(?:[,.]\d+)?\s*°?", value))
+    if feature_name == "Opakowanie":
+        return bool(re.fullmatch(r"\d+\s*(?:szt\.?|sztuk|sztuki)", value, flags=re.IGNORECASE))
+    return False
+
+
+def valid_dimension_like_value(value: str) -> bool:
+    return bool(
+        re.fullmatch(
+            r"\d+(?:[,.]\d+)?(?:x\d+(?:[,.]\d+)?){0,2}\s*(?:mm|cm|m)",
+            value,
+            flags=re.IGNORECASE,
+        )
+        or bool(re.fullmatch(r"\d+(?:x\d+){1,2}\s*mm2", value, flags=re.IGNORECASE))
+    )
+
+
+def valid_number_or_range(value: str) -> bool:
+    return bool(re.fullmatch(r"\d+(?:[,.]\d+)?(?:-\d+(?:[,.]\d+)?){0,1}", value))
+
+
+def feature_value_is_known(value: str, known_values: dict[str, str]) -> bool:
+    if "|" in value:
+        return all(feature_value_is_known(part, known_values) for part in value.split("|") if compact_spaces(part))
+    for key in feature_value_lookup_keys(value):
+        if key in known_values:
+            return True
+    return False
+
+
+def remember_feature_review(
+    review_rows: list[dict[str, str]] | None,
+    context: dict[str, str],
+    feature_name: str,
+    feature_value: str,
+    reason: str,
+) -> None:
+    if review_rows is None:
+        return
+    review_rows.append(
+        {
+            "sku": context.get("sku", ""),
+            "ean": context.get("ean", ""),
+            "name": context.get("name", ""),
+            "feature_name": feature_name,
+            "feature_value": feature_value,
+            "reason": reason,
+        }
+    )
+
+
+def build_feature_value_normalizer(catalog_knowledge: dict[str, Any]) -> dict[str, dict[str, str]]:
+    normalizer: dict[str, dict[str, tuple[str, int]]] = {}
+
+    def remember(feature_name: str, value: Any, count: int = 0) -> None:
+        feature_name = normalize_feature_name(str(feature_name or ""))
+        value_text = clean_catalog_feature_value(value)
+        if not feature_name or not value_text:
+            return
+        feature_values = normalizer.setdefault(feature_name, {})
+        for key in feature_value_lookup_keys(value_text):
+            previous = feature_values.get(key)
+            if not previous or count > previous[1]:
+                feature_values[key] = (value_text, count)
+
+    for row in catalog_knowledge.get("colors") or []:
+        if isinstance(row, dict):
+            remember("Kolor", row.get("color", ""), int(row.get("count") or 0))
+            remember("Kolor producenta", row.get("color", ""), int(row.get("count") or 0))
+
+    for row in catalog_knowledge.get("ip_values") or []:
+        if isinstance(row, dict):
+            remember("Stopień ochrony [IP]", row.get("ip", ""), int(row.get("count") or 0))
+
+    for row in catalog_knowledge.get("top_attributes") or []:
+        if not isinstance(row, dict):
+            continue
+        feature_name = row.get("attribute", "")
+        for value, count in parse_top_attribute_values(row.get("top_values", "")):
+            remember(feature_name, value, count)
+
+    for row in catalog_knowledge.get("top_attribute_values_by_category") or []:
+        if not isinstance(row, dict):
+            continue
+        remember(row.get("attribute", ""), row.get("value", ""), int(row.get("count") or 0))
+
+    for data in build_manufacturer_data_by_producer(catalog_knowledge).values():
+        remember("Dane producenta", data, 0)
+
+    return {
+        feature_name: {key: value for key, (value, _) in values.items()}
+        for feature_name, values in normalizer.items()
+    }
+
+
+def parse_top_attribute_values(value: Any) -> list[tuple[str, int]]:
+    text = compact_spaces(str(value or ""))
+    if not text:
+        return []
+    result: list[tuple[str, int]] = []
+    for part in re.split(r"\s*;\s*", text):
+        part = compact_spaces(part)
+        if not part:
+            continue
+        match = re.fullmatch(r"(.+?)\s+\((\d+)\)", part)
+        if match:
+            result.append((match.group(1), int(match.group(2))))
+        else:
+            result.append((part, 0))
+    return result
+
+
+def normalize_to_woo_feature_value(
+    feature_name: str,
+    value: str,
+    feature_value_normalizer: dict[str, dict[str, str]] | None = None,
+) -> str:
+    value = compact_spaces(str(value or ""))
+    if not value:
+        return ""
+
+    value = normalize_feature_value_before_lookup(feature_name, value)
+    if not feature_value_normalizer:
+        return value
+
+    known_values = feature_value_normalizer.get(normalize_feature_name(feature_name), {})
+    for key in feature_value_lookup_keys(value):
+        canonical = known_values.get(key)
+        if canonical:
+            return canonical
+    if feature_name == "Stopień ochrony [IP]":
+        split_ip = normalize_compound_ip_to_multiple_values(value, known_values)
+        if split_ip:
+            return split_ip
+    return value
+
+
+def normalize_feature_value_before_lookup(feature_name: str, value: str) -> str:
+    if feature_name == "Typ produktu":
+        return normalize_product_type_feature_value(value)
+    if feature_name == "Seria":
+        return normalize_series_feature_value(value)
+    if feature_name in {"Długość", "Szerokość", "Wysokość", "Średnica", "Wymiary"}:
+        return normalize_dimension_value(value)
+    if feature_name == "Moc [W]":
+        return normalize_power_value(value)
+    if feature_name == "Strumień świetlny [lm]":
+        return normalize_luminous_flux_value(value)
+    if feature_name == "Kształt":
+        return normalize_shape_value(value)
+    if feature_name == "Barwa światła":
+        return normalize_light_color_value(value)
+    if feature_name == "Kąt świecenia":
+        return normalize_angle_value(value)
+    if feature_name in {"Kolor", "Kolor producenta"}:
+        return normalize_feature_color_value(feature_name, value)
+    if feature_name == "Czujnik ruchu":
+        return normalize_motion_sensor_value(value)
+    if feature_name == "Zastosowanie":
+        return normalize_application_value(value)
+    if feature_name == "Opakowanie":
+        return normalize_package_value(value)
+    if feature_name == "Stopień ochrony [IK]":
+        return normalize_ik_value(value)
+    return value
+
+
+def normalize_product_type_feature_value(value: str) -> str:
+    normalized = comparable_feature_value(value)
+    if "high bay" in normalized:
+        return "Oprawa High Bay"
+    if normalized == "mah":
+        return "Czujnik ruchu"
+    if normalized in {"iq-led"}:
+        return "Konektor"
+    if "naswietlacz" in normalized:
+        return "Naświetlacz LED"
+    if normalized in {"adtr", "adtr pt"}:
+        return "Ramka do paneli"
+    if normalized == "siatka ochronna":
+        return "Siatka ochronna"
+    if normalized == "linka":
+        return "Linka do podwieszenia"
+    if normalized == "wspornik montazowy":
+        return "Wspornik montażowy"
+    if normalized in {"oprawa punktowa bord", "oprawa punktowa bord one", "oprawa sufitowa natynkowa"}:
+        return "Oprawa sufitowa"
+    if normalized in {"oprawa hermetyczna led", "oprawa hermetyczna led duzej mocy", "oprawa hermetyczna led pro", "oprawa hermetyczna na t8", "oprawa stropowa al"}:
+        return "Oprawa hermetyczna"
+    if normalized in {"pilot"}:
+        return "Pilot do oprawy"
+    if normalized in {"uchwyt montazu natynkowego"}:
+        return "Uchwyt"
+    if normalized in {"uchwyt"}:
+        return "Klips"
+    if normalized in {"phlox c", "phloxc"}:
+        return "Oprawa sufitowa"
+    if normalized in {"toleo"}:
+        return "Lampa wisząca"
+    if "panel led" in normalized:
+        return "Panel LED"
+    if "plafon" in normalized:
+        return "Plafon"
+    if normalized == "zasilacz":
+        return "Zasilacz"
+    return capitalize_first(value)
+
+
+def normalize_series_feature_value(value: str) -> str:
+    normalized = comparable_feature_value(value)
+    if normalized.startswith("al55"):
+        return "ALIN"
+    if normalized.startswith("blingo"):
+        return "BLINGO"
+    if normalized in {"varso led", "varso"}:
+        return "VARSO"
+    if normalized in {"barev bl", "barev eco"}:
+        return "BAREV"
+    if normalized in {"iq-led fl", "iq-led"}:
+        return "IQ-LED"
+    if normalized.startswith("fl agor"):
+        return "AGOR"
+    if normalized.startswith("dicht"):
+        return "DICHT"
+    if normalized.startswith("adtr"):
+        return "ADTR"
+    if normalized.startswith("fogler"):
+        return "FOGLER"
+    if normalized.startswith("mah"):
+        return "MAH"
+    if normalized.startswith("tp"):
+        return "TP"
+    if normalized.startswith("bord"):
+        return "BORD"
+    if normalized.startswith("pires"):
+        return "PIRES"
+    return value
+
+
+def clean_catalog_feature_value(value: Any) -> str:
+    return compact_spaces(str(value or "").replace("\\", "").strip())
+
+
+def feature_value_lookup_keys(value: str) -> list[str]:
+    key = comparable_feature_value(value)
+    if not key:
+        return []
+    candidates = {key}
+    candidates.add(key.replace(" ", ""))
+    if "°" in key:
+        candidates.add(key.replace("°", ""))
+    if "," in key:
+        candidates.add(key.replace(",", "."))
+    if "." in key:
+        candidates.add(key.replace(".", ","))
+    return [candidate for candidate in candidates if candidate]
+
+
+def comparable_feature_value(value: str) -> str:
+    value = clean_catalog_feature_value(value)
+    value = value.replace("×", "x").lower()
+    value = "".join(
+        char for char in unicodedata.normalize("NFKD", value)
+        if not unicodedata.combining(char)
+    )
+    value = re.sub(r"\s*/\s*", "/", value)
+    value = re.sub(r"\s*x\s*", "x", value)
+    value = re.sub(r"\s+", " ", value)
+    return value.strip()
 
 
 def normalize_feature_value(value: str, feature_name: str = "") -> str:
@@ -372,6 +1080,8 @@ def normalize_feature_value(value: str, feature_name: str = "") -> str:
         return normalize_light_color_value(value)
     if feature_name == "Trzonek":
         return normalize_socket_value(value)
+    if feature_name == "Kąt świecenia":
+        return normalize_angle_value(value)
     if feature_name == "Kolor":
         return normalize_color_value(value)
     if feature_name == "Kolor producenta":
@@ -383,13 +1093,70 @@ def normalize_feature_value(value: str, feature_name: str = "") -> str:
 
 def normalize_ip_value(value: str) -> str:
     normalized = value.upper().replace(" ", "")
-    return re.sub(r"^IP(\d+)$", r"IP \1", normalized)
+    if normalized == "IP12":
+        return "IP 20"
+    return re.sub(r"IP(\d+)", r"IP \1", normalized)
+
+
+def normalize_compound_ip_to_multiple_values(value: str, known_values: dict[str, str]) -> str:
+    parts = [compact_spaces(part) for part in re.split(r"\s*/\s*", value) if compact_spaces(part)]
+    if len(parts) < 2:
+        return ""
+    canonical_parts: list[str] = []
+    for part in parts:
+        canonical = ""
+        for key in feature_value_lookup_keys(part):
+            canonical = known_values.get(key, "")
+            if canonical:
+                break
+        if not canonical:
+            return ""
+        canonical_parts.append(canonical)
+    return "|".join(canonical_parts)
 
 
 def strip_unit(value: str, unit: str) -> str:
     value = normalize_decimal_separator(value)
     value = re.sub(rf"\s*{re.escape(unit)}\b", "", value, flags=re.IGNORECASE)
     return compact_spaces(value)
+
+
+def normalize_power_value(value: str) -> str:
+    value = compact_spaces(normalize_decimal_separator(value))
+    without_prefix = re.sub(r"^(?:max\.?|maks(?:ymalnie)?|do)\s+", "", value, flags=re.IGNORECASE)
+    if re.match(r"^\d", without_prefix):
+        return compact_spaces(without_prefix)
+    return value
+
+
+def normalize_luminous_flux_value(value: str) -> str:
+    value = strip_unit(value, "lm")
+    return compact_spaces(value)
+
+
+def normalize_dimension_value(value: str) -> str:
+    value = normalize_decimal_separator(value).replace("×", "x")
+    value = re.sub(r"\s*x\s*", "x", value, flags=re.IGNORECASE)
+    value = re.sub(r"\s*mm2\b", " mm2", value, flags=re.IGNORECASE)
+    value = re.sub(r"\s*(mm|cm|m)\b", r" \1", value, flags=re.IGNORECASE)
+    return compact_spaces(value)
+
+
+def normalize_shape_value(value: str) -> str:
+    aliases = {
+        "okragla": "Okrągły",
+        "okrągła": "Okrągły",
+        "okragly": "Okrągły",
+        "okrągły": "Okrągły",
+        "kwadratowa": "Kwadrat",
+        "kwadratowy": "Kwadrat",
+        "kwadrat": "Kwadrat",
+        "prostokatna": "Prostokątny",
+        "prostokątna": "Prostokątny",
+        "prostokatny": "Prostokątny",
+        "prostokątny": "Prostokątny",
+    }
+    return aliases.get(value.lower(), capitalize_first(value))
 
 
 def normalize_temperature_value(value: str) -> str:
@@ -409,13 +1176,28 @@ def normalize_voltage_value(value: str) -> str:
 
 
 def normalize_light_color_value(value: str) -> str:
+    normalized = comparable_feature_value(value)
     mapping = {
         "Neutralna (3500-4500K)": "Neutralna",
         "Zimna (≥5000K)": "Zimna",
         "Ciepła (≤3000K)": "Ciepła",
         "Zmienna CCT": "Zmienna",
+        "neutralna": "Neutralna",
+        "neutralne": "Neutralna",
+        "ciepla": "Ciepła",
+        "cieple": "Ciepła",
+        "cieplobiala": "Ciepła",
+        "cieplobiale": "Ciepła",
+        "zimna": "Zimna",
+        "zimne": "Zimna",
+        "chlodna": "Zimna",
+        "chlodne": "Zimna",
+        "chlodnobiala": "Zimna",
+        "chlodnobiale": "Zimna",
+        "zmienna": "Zmienna",
+        "zmienna cct": "Zmienna",
     }
-    return mapping.get(value, value)
+    return mapping.get(value, mapping.get(normalized, value))
 
 
 def normalize_socket_value(value: str) -> str:
@@ -424,12 +1206,45 @@ def normalize_socket_value(value: str) -> str:
     return match.group(1) if match else normalized
 
 
+def normalize_angle_value(value: str) -> str:
+    return compact_spaces(str(value or "").replace("°", ""))
+
+
 def normalize_color_value(value: str) -> str:
     aliases = {
         "bialy": "Biały",
         "biały": "Biały",
     }
-    return aliases.get(value, capitalize_first(value))
+    return aliases.get(value, normalize_compound_color_value(value))
+
+
+def normalize_feature_color_value(feature_name: str, value: str) -> str:
+    normalized = comparable_feature_value(value)
+    if feature_name == "Kolor" and normalized in {"stal inox", "inox"}:
+        return "Srebrny"
+    if feature_name == "Kolor producenta" and normalized in {"stal inox", "inox"}:
+        return "STAL INOX"
+    if feature_name == "Kolor" and normalized in {"bialy mat", "biały mat"}:
+        return "Biały"
+    if feature_name == "Kolor" and normalized == "czarny mat":
+        return "Czarny"
+    if feature_name == "Kolor" and normalized in {"zloto-brazowy", "złoto-brazowy"}:
+        return "Złoty"
+    if feature_name == "Kolor producenta" and normalized in {"zloto-brazowy", "złoto-brazowy"}:
+        return "Złoto-brązowy"
+    return normalize_compound_color_value(value)
+
+
+def normalize_compound_color_value(value: str) -> str:
+    value = compact_spaces(value)
+    if not value:
+        return ""
+    value = re.sub(r"\s*\|\s*", " / ", value)
+    value = re.sub(r"\s*/\s*", " / ", value)
+    parts = [compact_spaces(part) for part in value.split(" / ") if compact_spaces(part)]
+    if len(parts) > 1:
+        return " / ".join(normalize_producer_color_part(part) for part in parts)
+    return normalize_producer_color_part(value)
 
 
 def normalize_producer_color_value(value: str) -> str:
@@ -538,6 +1353,37 @@ def normalize_material_value(value: str) -> str:
         "stal nierdzewna": "Metal",
     }
     return aliases.get(value, capitalize_first(value))
+
+
+def normalize_motion_sensor_value(value: str) -> str:
+    normalized = comparable_feature_value(value)
+    if "czujnik" in normalized:
+        return "Tak"
+    if normalized in {"tak", "yes", "1"}:
+        return "Tak"
+    if normalized in {"nie", "no", "0", "brak"}:
+        return "Nie"
+    return capitalize_first(value)
+
+
+def normalize_application_value(value: str) -> str:
+    normalized = comparable_feature_value(value)
+    if normalized == "do paneli":
+        return "Do paneli"
+    return capitalize_first(value)
+
+
+def normalize_package_value(value: str) -> str:
+    value = compact_spaces(value.lower())
+    match = re.fullmatch(r"(\d+)\s*(?:szt\.?|sztuk|sztuki)", value, flags=re.IGNORECASE)
+    if match:
+        return f"{match.group(1)} szt."
+    return compact_spaces(value)
+
+
+def normalize_ik_value(value: str) -> str:
+    value = compact_spaces(value.upper().replace(" ", ""))
+    return re.sub(r"^IK(\d+)$", r"IK \1", value)
 
 
 def normalize_manufacturer_data_value(value: str) -> str:

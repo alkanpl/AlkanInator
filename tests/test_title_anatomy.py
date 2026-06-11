@@ -9,7 +9,8 @@ import pandas as pd
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from optimize_titles import optimize_titles_for_dataframe  # noqa: E402
-from title_anatomy import build_title_from_anatomy, duplicate_titles_report  # noqa: E402
+from enrich_from_parameters import build_parameter_index, detect_parameter_columns, enrich_from_parameters  # noqa: E402
+from title_anatomy import build_title_from_anatomy, build_title_type_review, duplicate_titles_report  # noqa: E402
 
 
 ANATOMY_CONFIG = {
@@ -94,6 +95,188 @@ class TitleAnatomyTest(unittest.TestCase):
         self.assertIn("duplicate_final_title:2", result.loc[0, "warnings"])
         report = duplicate_titles_report(result)
         self.assertGreaterEqual(len(report), 2)
+
+    def test_solar_keyword_override_skips_power(self) -> None:
+        config = {
+            **ANATOMY_CONFIG,
+            "series_title_keyword": {"SLR": "Naswietlacz solarny LED"},
+            "rules": [
+                {
+                    "normalized_product_type": "naswietlacz led",
+                    "status": "approved",
+                    "title_keyword": "Naswietlacz LED",
+                    "required_title_attributes": ["seria", "moc", "strumien", "lm_w", "barwa", "ip"],
+                    "optional_title_attributes": [],
+                }
+            ],
+        }
+        row = pd.Series({"attr_typ": "naswietlacz LED", "Kod": "36605", "Producent": "Kanlux"})
+        values = {
+            "typ": "naswietlacz LED",
+            "old_title": "Naswietlacz LED solarny FL SOLNAR SLR 8W",
+            "seria": "FL",
+            "moc": "8W",
+            "strumien": "800lm",
+            "lm_w": "100lm/W",
+            "barwa": "4000K",
+            "ip": "IP54",
+            "producent": "Kanlux",
+        }
+        result = build_title_from_anatomy(row, config, values)
+        self.assertIsNotNone(result)
+        assert result is not None
+        self.assertEqual(result.title, "Naswietlacz solarny LED FL 800lm 4000K IP54 Kanlux 36605")
+        self.assertIn("moc", result.skipped_attributes)
+        self.assertIn("lm_w", result.skipped_attributes)
+
+    def test_avar_frame_uses_feminine_mounting_and_shape(self) -> None:
+        config = {
+            **ANATOMY_CONFIG,
+            "series_title_keyword": {"AVAR": "Ramka oswietleniowa LED"},
+            "rules": [
+                {
+                    "normalized_product_type": "panel led",
+                    "status": "approved",
+                    "title_keyword": "Panel LED",
+                    "required_title_attributes": ["montaz", "seria", "ksztalt_masculine", "wymiary"],
+                    "optional_title_attributes": [],
+                }
+            ],
+        }
+        row = pd.Series({"attr_typ": "panel LED", "Kod": "26771", "Producent": "Kanlux"})
+        values = {
+            "typ": "panel LED",
+            "old_title": "Panel LED ramka AVAR 6060 40W-CW",
+            "montaz": "podtynkowy",
+            "seria": "AVAR",
+            "ksztalt_masculine": "kwadratowy",
+            "ksztalt_feminine": "kwadratowa",
+            "wymiary": "60x60 cm",
+            "producent": "Kanlux",
+        }
+        result = build_title_from_anatomy(row, config, values)
+        self.assertIsNotNone(result)
+        assert result is not None
+        self.assertEqual(result.title, "Ramka oswietleniowa LED podtynkowa AVAR kwadratowa 60x60 cm Kanlux 26771")
+
+    def test_review_reports_approved_rules_without_manual_review_flag_as_not_required(self) -> None:
+        df = pd.DataFrame([{"attr_typ": "Panel LED", "new_title": "Panel LED BLINGO 36W Kanlux 12345"}])
+        report = build_title_type_review(df, ANATOMY_CONFIG)
+        self.assertEqual(report.loc[0, "review_status"], "approved")
+        self.assertFalse(bool(report.loc[0, "manual_review_required"]))
+
+    def test_duplicate_titles_are_disambiguated_with_differing_attribute(self) -> None:
+        config = {
+            "title_template": "Ramka {seria} {wymiary} {ksztalt} {kolor} {producent}",
+            "append_sku_after_producer": True,
+            "sku_columns": ["Kod"],
+            "max_title_length": 120,
+            "required_fields": [],
+            "duplicate_title_disambiguation_attributes": ["wysokosc"],
+        }
+        df = pd.DataFrame(
+            [
+                {
+                    "Nazwa": "Old A",
+                    "attr_typ": "Ramka",
+                    "attr_seria": "ADTR-H",
+                    "attr_wymiary": "60x60cm",
+                    "attr_ksztalt": "kwadratowa",
+                    "attr_kolor": "biała",
+                    "attr_wysokosc": "65mm",
+                    "attr_producent": "Kanlux",
+                    "Kod": "29843",
+                },
+                {
+                    "Nazwa": "Old B",
+                    "attr_typ": "Ramka",
+                    "attr_seria": "ADTR-H",
+                    "attr_wymiary": "60x60cm",
+                    "attr_ksztalt": "kwadratowa",
+                    "attr_kolor": "biała",
+                    "attr_wysokosc": "76mm",
+                    "attr_producent": "Kanlux",
+                    "Kod": "33398",
+                },
+            ]
+        )
+        result = optimize_titles_for_dataframe(df, "Nazwa", config, {})
+        self.assertIn("wys. 65mm", result.loc[0, "new_title"])
+        self.assertIn("wys. 76mm", result.loc[1, "new_title"])
+        self.assertNotIn("duplicate_seo_title_without_code", result.loc[0, "warnings"])
+        self.assertNotIn("duplicate_seo_title_without_code", result.loc[1, "warnings"])
+
+    def test_ceiling_fixture_title_adds_pointowa_when_source_says_point_fixture(self) -> None:
+        config = {
+            "title_template": "{typ} {seria} {gwint} {ip} {producent}",
+            "title_strategy_rules": [
+                {
+                    "type_contains": "Oprawa sufitowa",
+                    "template": "Oprawa sufitowa {punktowa} {seria} {gwint} {ip} {producent}",
+                    "required_fields": ["producent"],
+                }
+            ],
+            "append_sku_after_producer": True,
+            "sku_columns": ["Kod"],
+            "max_title_length": 120,
+        }
+        df = pd.DataFrame(
+            [
+                {
+                    "Nazwa": "Oprawa sufitowa AQILO GU10",
+                    "Nazwa B2C / SEO": "Oprawa sufitowa punktowa AQILO GU10",
+                    "attr_typ": "Oprawa sufitowa",
+                    "attr_seria": "AQILO",
+                    "attr_gwint": "GU10",
+                    "attr_ip": "IP20",
+                    "attr_producent": "Kanlux",
+                    "Kod": "12345",
+                }
+            ]
+        )
+
+        result = optimize_titles_for_dataframe(df, "Nazwa", config, {})
+
+        self.assertEqual(result.loc[0, "new_title"], "Oprawa sufitowa punktowa AQILO GU10 IP20 Kanlux 12345")
+
+    def test_parameters_clear_false_sensor_and_map_cable_length(self) -> None:
+        products = pd.DataFrame(
+            [
+                {
+                    "Kod": "19001",
+                    "Nazwa B2C / SEO": "Plafoniera PIRES ECO E27",
+                    "Typ": "plafoniera z czujnikiem ruchu",
+                    "Rodzina": "PIRES ECO",
+                    "Czujnik ruchu": "z czujnikiem ruchu",
+                },
+                {
+                    "Kod": "36507",
+                    "Nazwa B2C / SEO": "Plafoniera drewniana wisząca JASMIN C 470-B",
+                    "Typ": "plafoniera drewniana dekoracyjna",
+                    "Rodzina": "JASMIN",
+                },
+            ]
+        )
+        params = pd.DataFrame(
+            [
+                {"Kod Kanlux": "19001", "Nazwa": "PIRES ECO", "Nazwa atrybutu": "Trzonek", "Wartość": "E27"},
+                {"Kod Kanlux": "36507", "Nazwa": "JASMIN", "Nazwa atrybutu": "Długość przewodu [m]", "Wartość": "1"},
+            ]
+        )
+        index, _ = build_parameter_index(params, detect_parameter_columns(params))
+        config = {
+            "title_fallback_columns": ["Nazwa Kanlux"],
+            "default_values": {"producent": "Kanlux"},
+            "input_attribute_columns": {"typ": "Typ", "seria": "Rodzina", "czujnik": "Czujnik ruchu"},
+        }
+        enriched, _ = enrich_from_parameters(
+            products,
+            {"sku": "Kod", "title": "Nazwa B2C / SEO", "category": None, "producer": None},
+            config,
+            index,
+        )
+        self.assertEqual(enriched.loc[0, "attr_czujnik"], "")
+        self.assertEqual(enriched.loc[1, "attr_dlugosc_przewodu"], "1m")
 
 
 if __name__ == "__main__":

@@ -33,3 +33,5 @@ default_category_column_candidates:
   - kategoria
   - categories
   - kategorie
+
+supplier_global_knowledge: dictionaries/supplier_global_knowledge.yaml

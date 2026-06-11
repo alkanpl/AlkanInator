@@ -38,6 +38,12 @@ def build_title_parts(
         if str(key).startswith("attr_"):
             values[str(key)[5:]] = "" if is_blank(value) else str(value)
     values["old_title"] = str(row.get("old_title", ""))
+    source_title_parts: list[str] = []
+    for column in ["Nazwa B2C / SEO", "Nazwa", "Nazwa Kanlux", "name", "old_title"]:
+        value = compact_spaces(str(row.get(column, "")))
+        if value and value not in source_title_parts:
+            source_title_parts.append(value)
+    values["source_title"] = " ".join(source_title_parts)
     values["product_role"] = product_role
     values["accessory_type"] = "" if is_blank(row.get("accessory_type", "")) else str(row.get("accessory_type", ""))
     values["sku"] = resolve_sku_value(row, config)
@@ -51,6 +57,7 @@ def build_title_parts(
             "title_anatomy_used_attributes": ",".join(anatomy_result.used_attributes),
             "title_anatomy_skipped_attributes": ",".join(anatomy_result.skipped_attributes),
             "title_anatomy_product_type_key": normalize_product_type_key(values.get("typ", row.get("attr_typ", row.get("Typ", "")))),
+            "title_duplicate_disambiguation": "",
         }
         # Te same normalizacje SEO co dla legacy (np. Plafoniera -> Plafon).
         seo_without_code = uppercase_first_letter(normalize_seo_title_terms(anatomy_result.title_without_code))
@@ -99,6 +106,7 @@ def build_title_parts(
         "title_anatomy_used_attributes": "",
         "title_anatomy_skipped_attributes": "",
         "title_anatomy_product_type_key": normalize_product_type_key(values.get("typ", row.get("attr_typ", row.get("Typ", "")))),
+        "title_duplicate_disambiguation": "",
     }
     if title_source == "legacy_template":
         warnings.append("title_anatomy_missing_accepted_rule")
@@ -115,6 +123,148 @@ def normalize_title_uniqueness_key(title: str) -> str:
     value = strip_accents(compact_spaces(title)).lower()
     value = re.sub(r"[^a-z0-9]+", " ", value)
     return compact_spaces(value)
+
+
+def duplicate_disambiguation_attributes(config: dict[str, Any]) -> list[str]:
+    configured = config.get("duplicate_title_disambiguation_attributes")
+    if configured:
+        return [str(item) for item in configured]
+    return [
+        "wariant",
+        "czujnik",
+        "dlugosc_przewodu",
+        "wysokosc",
+        "material",
+        "moc",
+        "srednica",
+        "wymiary",
+        "kat_swiecenia",
+        "model",
+    ]
+
+
+def resolve_duplicate_title_differences(
+    df: pd.DataFrame,
+    generated_rows: list[tuple[int, str, str, list[str], str, dict[str, Any], str]],
+    config: dict[str, Any],
+) -> list[tuple[int, str, str, list[str], str, dict[str, Any], str]]:
+    rows = [
+        {
+            "index": index,
+            "seo_title_without_code": seo_title_without_code,
+            "new_title": new_title,
+            "warnings": warnings,
+            "title_uniqueness_key": title_uniqueness_key,
+            "metadata": metadata,
+            "final_title_uniqueness_key": final_title_uniqueness_key,
+        }
+        for index, seo_title_without_code, new_title, warnings, title_uniqueness_key, metadata, final_title_uniqueness_key in generated_rows
+    ]
+    rows_by_key: dict[str, list[dict[str, Any]]] = {}
+    for item in rows:
+        key = str(item["title_uniqueness_key"])
+        if key:
+            rows_by_key.setdefault(key, []).append(item)
+
+    for group in rows_by_key.values():
+        if len(group) <= 1:
+            continue
+        apply_duplicate_disambiguation(df, group, config)
+
+    return [
+        (
+            int(item["index"]),
+            str(item["seo_title_without_code"]),
+            str(item["new_title"]),
+            list(item["warnings"]),
+            normalize_title_uniqueness_key(str(item["seo_title_without_code"])),
+            dict(item["metadata"]),
+            normalize_title_uniqueness_key(str(item["new_title"])),
+        )
+        for item in rows
+    ]
+
+
+def apply_duplicate_disambiguation(df: pd.DataFrame, group: list[dict[str, Any]], config: dict[str, Any]) -> None:
+    for attribute in duplicate_disambiguation_attributes(config):
+        display_values = {
+            item["index"]: duplicate_disambiguation_value(df.loc[item["index"]], attribute)
+            for item in group
+        }
+        nonblank_values = {value for value in display_values.values() if value}
+        all_values = {value or "__BLANK__" for value in display_values.values()}
+        if not nonblank_values or len(all_values) <= 1:
+            continue
+
+        proposed_keys: set[str] = set()
+        proposals: dict[int, tuple[str, str]] = {}
+        for item in group:
+            index = int(item["index"])
+            value = display_values[index]
+            seo_title = str(item["seo_title_without_code"])
+            new_title = str(item["new_title"])
+            if value and not title_contains_disambiguator(seo_title, value):
+                seo_title = insert_disambiguator_before_producer(seo_title, value, df.loc[index])
+                new_title = insert_disambiguator_before_producer(new_title, value, df.loc[index])
+            key = normalize_title_uniqueness_key(seo_title)
+            if key in proposed_keys:
+                break
+            proposed_keys.add(key)
+            proposals[index] = (seo_title, new_title)
+        else:
+            if len(proposed_keys) == len(group):
+                for item in group:
+                    index = int(item["index"])
+                    item["seo_title_without_code"], item["new_title"] = proposals[index]
+                    item["metadata"] = {**item["metadata"], "title_duplicate_disambiguation": attribute}
+                return
+
+
+def duplicate_disambiguation_value(row: pd.Series, attribute: str) -> str:
+    if attribute == "wariant":
+        return supplier_variant_for_duplicate(row)
+    value = first_non_blank(row.get(f"attr_{attribute}", ""), row.get(attribute, ""))
+    value = compact_spaces(str(value))
+    if is_blank(value):
+        return ""
+    if attribute == "dlugosc_przewodu":
+        return f"przewód {value}" if not normalize_text(value).startswith("przewod") else value
+    if attribute == "wysokosc":
+        return f"wys. {value}" if not normalize_text(value).startswith("wys") else value
+    return value
+
+
+def supplier_variant_for_duplicate(row: pd.Series) -> str:
+    supplier_name = first_non_blank(row.get("Nazwa Kanlux", ""))
+    if is_blank(supplier_name):
+        return ""
+    value = compact_spaces(str(supplier_name))
+    series = first_non_blank(row.get("attr_seria", ""), row.get("Rodzina", ""))
+    if series:
+        value = re.sub(rf"^{re.escape(str(series))}\b", " ", value, flags=re.IGNORECASE)
+    value = re.sub(r"\bLED\b", " ", value, flags=re.IGNORECASE)
+    value = re.sub(r"\b\d+(?:[,.]\d+)?\s*W(?:[-/]?(?:NW|WW|CW))?\b", " ", value, flags=re.IGNORECASE)
+    value = re.sub(r"\b(?:NW|WW|CW)\b", " ", value, flags=re.IGNORECASE)
+    return compact_spaces(value)
+
+
+def title_contains_disambiguator(title: str, value: str) -> bool:
+    return normalize_title_uniqueness_key(value) in normalize_title_uniqueness_key(title)
+
+
+def insert_disambiguator_before_producer(title: str, value: str, row: pd.Series) -> str:
+    value = compact_spaces(value)
+    if not value:
+        return title
+    producer = first_non_blank(row.get("attr_producent", ""), row.get("Producent", ""), row.get("producer", ""), "Kanlux")
+    sku = resolve_sku_value(row, {"sku_columns": ["Kod", "sku", "SKU"]})
+    if producer:
+        pattern = rf"\s+({re.escape(producer)})(\s+{re.escape(sku)})?$" if sku else rf"\s+({re.escape(producer)})$"
+        replacement = rf" {value} \1\2" if sku else rf" {value} \1"
+        updated = re.sub(pattern, replacement, title, count=1, flags=re.IGNORECASE)
+        if updated != title:
+            return compact_spaces(updated)
+    return compact_spaces(f"{title} {value}")
 
 
 def uppercase_first_letter(value: str) -> str:
@@ -244,13 +394,17 @@ def build_inflected_values(values: dict[str, str], config: dict[str, Any]) -> di
     result["cct"] = "CCT" if "cct" in old_title_normalized or values.get("barwa_zakres", "") else ""
     result["dim"] = "DIM" if "cctdim" in old_title_normalized or "sciemn" in old_title_normalized else ""
     result["rgb"] = "RGB" if "rgb" in old_title_normalized else ""
+    typ_normalized = normalize_text(values.get("typ", ""))
+    source_title_normalized = normalize_text(" ".join([values.get("old_title", ""), values.get("source_title", "")]))
+    result["punktowa"] = "punktowa" if "punktow" in typ_normalized or "punktow" in source_title_normalized else ""
     series_clean = re.sub(r"(?<![-\w])LED(?![-\w])", " ", values.get("seria", ""), flags=re.IGNORECASE)
     result["seria_clean"] = compact_spaces(series_clean) or values.get("seria", "")
     # Sposob montazu panelu wyprowadzony z typu produktu (uniwersalny = natynkowy,
     # zwieszany = zwieszany, pozostale panele = podtynkowy).
-    typ_normalized = normalize_text(values.get("typ", ""))
     if "panel" in typ_normalized:
-        if "uniwersal" in typ_normalized:
+        if "aio" in typ_normalized:
+            result["montaz"] = "podtynkowy"
+        elif "uniwersal" in typ_normalized:
             result["montaz"] = "natynkowy"
         elif "zwieszan" in typ_normalized:
             result["montaz"] = "zwieszany"
@@ -301,6 +455,8 @@ def optimize_titles_for_dataframe(
         final_title_uniqueness_key = normalize_title_uniqueness_key(new_title)
         generated_rows.append((index, seo_title_without_code, new_title, warnings, title_uniqueness_key, metadata, final_title_uniqueness_key))
 
+    generated_rows = resolve_duplicate_title_differences(result, generated_rows, config)
+
     duplicate_counts = pd.Series(
         [item[4] for item in generated_rows if item[4]],
         dtype="object",
@@ -346,6 +502,7 @@ def build_changes_report(df: pd.DataFrame) -> pd.DataFrame:
         "title_anatomy_rule",
         "title_anatomy_used_attributes",
         "title_anatomy_skipped_attributes",
+        "title_duplicate_disambiguation",
         "title_status",
         "title_length",
         "new_attributes",

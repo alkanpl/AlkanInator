@@ -501,7 +501,7 @@
       "EPREL URL": ""
     },
     "expected": {
-      "new_title": "Plafon LED CCT DIM SOLN 1460lm 2700-6500K okrągła 38cm z czujnikiem mikrofalowym czarny / złoty Kanlux 39111",
+      "new_title": "Plafon LED CCT DIM SOLN 1460lm 2700-6500K okrągły 38cm z czujnikiem mikrofalowym czarny / złoty Kanlux 39111",
       "product_role": "main",
       "title_status": "WARNING"
     }
@@ -735,7 +735,7 @@
       "EPREL URL": ""
     },
     "expected": {
-      "new_title": "Naświetlacz solarny LED FL 8W 800lm 4000K IP54 Kanlux 36605",
+      "new_title": "Naświetlacz solarny LED FL 800lm 4000K IP54 Kanlux 36605",
       "product_role": "main",
       "title_status": "OK"
     }
@@ -813,7 +813,7 @@
       "EPREL URL": ""
     },
     "expected": {
-      "new_title": "Ramka oświetleniowa LED podtynkowy AVAR 60x60 cm 32W 6500K chłodnobiałe Kanlux 26789",
+      "new_title": "Ramka oświetleniowa LED podtynkowa AVAR 60x60 cm 32W 6500K chłodnobiałe Kanlux 26789",
       "product_role": "main",
       "title_status": "OK"
     }
@@ -1242,7 +1242,7 @@
       "EPREL URL": ""
     },
     "expected": {
-      "new_title": "Oprawa sufitowa BORD DLP 1xGU10 biała / srebrna Kanlux 22559",
+      "new_title": "Oprawa sufitowa punktowa BORD DLP 1xGU10 biała / srebrna Kanlux 22559",
       "product_role": "main",
       "title_status": "WARNING"
     }
@@ -1398,7 +1398,7 @@
       "EPREL URL": ""
     },
     "expected": {
-      "new_title": "Plafon drewniany JASMIN 1xE27 okrągła 27cm dąb sonoma Kanlux 23123",
+      "new_title": "Plafon drewniany JASMIN 1xE27 okrągły 27cm dąb sonoma Kanlux 23123",
       "product_role": "main",
       "title_status": "WARNING"
     }
@@ -1437,7 +1437,7 @@
       "EPREL URL": ""
     },
     "expected": {
-      "new_title": "Plafon drewniany JASMIN 3xE27 okrągła 47cm wenge Kanlux 23122",
+      "new_title": "Plafon drewniany JASMIN 3xE27 okrągły 47cm wenge Kanlux 23122",
       "product_role": "main",
       "title_status": "WARNING"
     }

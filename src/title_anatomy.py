@@ -84,8 +84,8 @@ def build_title_from_anatomy(
     # ostrzegamy dla wszystkich required - zachowanie wsteczne.
     warn_if_missing = rule.get("warn_if_missing")
     for attribute in list(rule.get("required_title_attributes") or []):
-        value = anatomy_attribute_value(attribute, values)
-        if should_skip_attribute(attribute, value, values, rule, seen_keys):
+        value = anatomy_attribute_value(attribute, values, anatomy_config)
+        if should_skip_attribute(attribute, value, values, rule, seen_keys, anatomy_config):
             skipped_attributes.append(attribute)
             continue
         if is_blank(value):
@@ -97,8 +97,8 @@ def build_title_from_anatomy(
         remember_seen_value(seen_keys, value)
 
     for attribute in list(rule.get("optional_title_attributes") or []):
-        value = anatomy_attribute_value(attribute, values)
-        if should_skip_attribute(attribute, value, values, rule, seen_keys) or is_blank(value):
+        value = anatomy_attribute_value(attribute, values, anatomy_config)
+        if should_skip_attribute(attribute, value, values, rule, seen_keys, anatomy_config) or is_blank(value):
             continue
         parts.append(value)
         used_attributes.append(attribute)
@@ -143,15 +143,21 @@ def series_keyword_override(values: dict[str, str], anatomy_config: dict[str, An
 
     Dla serii, ktore mimo typu sa czyms innym (np. AVAR = ramka oswietleniowa).
     """
+    _, keyword = series_keyword_override_match(values, anatomy_config)
+    return keyword
+
+
+def series_keyword_override_match(values: dict[str, str], anatomy_config: dict[str, Any]) -> tuple[str, str]:
     overrides = anatomy_config.get("series_title_keyword") or {}
     if not overrides:
-        return ""
+        return "", ""
     # Marker moze byc w serii albo w samej nazwie produktu (np. SLR = solar).
     tokens = set(comparable_value_key(f"{values.get('seria', '')} {values.get('old_title', '')}").split())
     for series_name, keyword in overrides.items():
-        if comparable_value_key(series_name) in tokens:
-            return normalize_woo_like_value(keyword)
-    return ""
+        marker = comparable_value_key(series_name)
+        if marker in tokens:
+            return marker, normalize_woo_like_value(keyword)
+    return "", ""
 
 
 def explicit_primary_keyword(row: pd.Series, anatomy_config: dict[str, Any]) -> str:
@@ -166,7 +172,12 @@ def explicit_primary_keyword(row: pd.Series, anatomy_config: dict[str, Any]) -> 
     return normalize_woo_like_value(primary) if primary else ""
 
 
-def anatomy_attribute_value(attribute: str, values: dict[str, str]) -> str:
+def anatomy_attribute_value(attribute: str, values: dict[str, str], anatomy_config: dict[str, Any] | None = None) -> str:
+    if is_avar_frame(values, anatomy_config or {}):
+        if attribute == "montaz":
+            return feminine_mounting(values.get("montaz", ""))
+        if attribute == "ksztalt_masculine":
+            return normalize_woo_like_value(values.get("ksztalt_feminine", "")) or normalize_woo_like_value(values.get(attribute, ""))
     return normalize_woo_like_value(values.get(attribute, ""))
 
 
@@ -210,9 +221,12 @@ def should_skip_attribute(
     values: dict[str, str],
     rule: dict[str, Any],
     seen_keys: set[str],
+    anatomy_config: dict[str, Any] | None = None,
 ) -> bool:
     if is_blank(value):
         return False
+    if attribute in {"moc", "lm_w"} and is_solar_product(values, anatomy_config or {}):
+        return True
     value_key = comparable_value_key(value)
     if not value_key or value_key in seen_keys:
         return True
@@ -225,6 +239,37 @@ def should_skip_attribute(
     if attribute.startswith("kolor"):
         return color_redundant_with_light(value, values)
     return False
+
+
+def is_avar_frame(values: dict[str, str], anatomy_config: dict[str, Any]) -> bool:
+    marker, keyword = series_keyword_override_match(values, anatomy_config)
+    return marker == "avar" or "ramka oswietleniowa" in comparable_value_key(keyword)
+
+
+def is_solar_product(values: dict[str, str], anatomy_config: dict[str, Any]) -> bool:
+    marker, keyword = series_keyword_override_match(values, anatomy_config)
+    haystack = comparable_value_key(
+        " ".join(
+            [
+                marker,
+                keyword,
+                values.get("seria", ""),
+                values.get("old_title", ""),
+                values.get("typ", ""),
+            ]
+        )
+    )
+    return bool(re.search(r"(?<!\w)(?:slr|solar\w*|solarn\w*)(?!\w)", haystack))
+
+
+def feminine_mounting(value: str) -> str:
+    mapping = {
+        "podtynkowy": "podtynkowa",
+        "natynkowy": "natynkowa",
+        "zwieszany": "zwieszana",
+    }
+    normalized = normalize_woo_like_value(value)
+    return mapping.get(comparable_value_key(normalized), normalized)
 
 
 def color_redundant_with_light(color: str, values: dict[str, str]) -> bool:
@@ -368,7 +413,7 @@ def build_title_type_review(df: pd.DataFrame, anatomy_config: dict[str, Any], ma
                 "product_type": product_type,
                 "products_count": len(group),
                 "review_status": str(rule.get("status", "missing_rule")) if rule else "missing_rule",
-                "manual_review_required": bool(rule.get("manual_review_required", True)) if rule else True,
+                "manual_review_required": bool(rule.get("manual_review_required", not rule_is_accepted(rule, anatomy_config))) if rule else True,
                 "primary_keyword": primary,
                 "required_title_attributes": ",".join(rule.get("required_title_attributes") or []) if rule else "",
                 "optional_title_attributes": ",".join(rule.get("optional_title_attributes") or []) if rule else "",

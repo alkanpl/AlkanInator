@@ -41,7 +41,7 @@ def detect_parameter_columns(df: pd.DataFrame) -> dict[str, str | None]:
 
 def parameter_attribute_to_internal(attribute_name: str) -> str:
     name = normalize_header(attribute_name)
-    if "wspolczynnik mocy" in name or "barwa swiatla" in name:
+    if "wspolczynnik mocy" in name or "barwa swiatla" in name or "materialem termoizolacyjnym" in name:
         return ""
     rules = [
         ("barwa_zakres", ["zakres temperatury barwowej", "regulowana temperatura barwowa"]),
@@ -54,6 +54,7 @@ def parameter_attribute_to_internal(attribute_name: str) -> str:
         ("kat_swiecenia", ["kat swiecenia", "kat rozsyłu", "kat rozsylu"]),
         ("gwint", ["trzonek", "gwint"]),
         ("srednica", ["srednica"]),
+        ("dlugosc_przewodu", ["dlugosc przewodu"]),
         ("dlugosc", ["dlugosc"]),
         ("szerokosc", ["szerokosc"]),
         ("wysokosc", ["wysokosc"]),
@@ -76,6 +77,11 @@ def normalize_parameter_value(value: str, attr: str, parameter_name: str) -> str
 
     if attr in {"dlugosc", "szerokosc", "wysokosc", "srednica"}:
         unit = "mm" if "mm" in name else "cm" if "cm" in name else ""
+        match = re.search(r"\d+(?:[,.]\d+)?", value)
+        if match and unit:
+            return f"{match.group(0).replace(',', '.')}{unit}"
+    if attr == "dlugosc_przewodu":
+        unit = "m" if re.search(r"\bm\b", name) else "mm" if "mm" in name else "cm" if "cm" in name else ""
         match = re.search(r"\d+(?:[,.]\d+)?", value)
         if match and unit:
             return f"{match.group(0).replace(',', '.')}{unit}"
@@ -410,6 +416,24 @@ def enrich_from_parameters(
                         "parameter_value": parameter_value,
                         "parameter_attribute": payload["parameter_attribute"],
                         "parameter_raw_value": payload["raw_value"],
+                    }
+                )
+
+        if "czujnik" not in params and not is_blank(enriched.at[index, "attr_czujnik"] if "attr_czujnik" in enriched.columns else ""):
+            current_source = str(attribute_sources.get("czujnik", ""))
+            if current_source.startswith(("column:", "title", "row", "text_columns")):
+                old_value = enriched.at[index, "attr_czujnik"]
+                enriched.at[index, "attr_czujnik"] = ""
+                attribute_sources["czujnik"] = "parameter_negative:no_sensor_attribute"
+                attribute_confidence["czujnik"] = 0.98
+                filled.append(
+                    {
+                        "sku": sku,
+                        "attribute": "czujnik",
+                        "old_value": old_value,
+                        "new_value": "",
+                        "parameter_attribute": "brak parametru czujnika",
+                        "parameter_raw_value": "",
                     }
                 )
 

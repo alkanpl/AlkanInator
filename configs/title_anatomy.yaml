@@ -42,6 +42,8 @@ product_type_aliases:
   naswietlacz iq led: naswietlacz led
   high bay led: high bay przemyslowy
   panel led uniwersalny: panel led
+  panel led uniwersalny aio: panel led
+  panel led z zasilaczem aio: panel led
 # `required_title_attributes` = kolejnosc i sklad tytulu (atrybut wchodzi, jesli
 # jest obecny). `warn_if_missing` = ktore z nich naprawde musza wystapic.
 rules:
