@@ -1,0 +1,1693 @@
+version: 1
+source:
+  file: input/Poprawione atrybuty.xlsx
+  sha256: b55e09973ecc95059682f0e17489c8cbd6724656b2e02fd172afc0fa13a1e07a
+  imported_at: '2026-06-12'
+  catalog_knowledge: dictionaries/woocommerce_catalog_knowledge.yaml
+summary:
+  categories: 26
+  source_attribute_names: 81
+  catalog_matches: 64
+  new_attributes: 11
+  system_fields: 1
+  to_review: 0
+attribute_mappings:
+- source_name: barwa
+  canonical_name: Barwa światła
+  match_type: CATALOG_ALIAS
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 0.99
+  status: OK
+- source_name: barwa ( jeśli światło zintegrowane)
+  canonical_name: Barwa światła
+  match_type: CATALOG_ALIAS
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 0.99
+  status: OK
+- source_name: Barwa światła
+  canonical_name: Barwa światła
+  match_type: CATALOG_EXACT
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 1.0
+  status: OK
+- source_name: Bateria (np. AA)
+  canonical_name: Rodzaj baterii
+  match_type: CATALOG_SEMANTIC_ALIAS
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 0.96
+  status: OK
+- source_name: Czas podtrzymania / Czas pracy awaryjnej
+  canonical_name: Czas pracy awaryjnej
+  match_type: NEW_ATTRIBUTE
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 0.95
+  status: OK
+- source_name: Czas świecenia (tylko ładowlana)
+  canonical_name: Czas świecenia
+  match_type: NEW_ATTRIBUTE
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 0.95
+  status: OK
+- source_name: Czujnik ruchu
+  canonical_name: Czujnik ruchu
+  match_type: CATALOG_EXACT
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 1.0
+  status: OK
+- source_name: Czujnik ruchu (do sprawdzenia)
+  canonical_name: Czujnik ruchu
+  match_type: CATALOG_NORMALIZED
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 0.98
+  status: OK
+- source_name: Dane producenta
+  canonical_name: Dane producenta
+  match_type: CATALOG_EXACT
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 1.0
+  status: OK
+- source_name: Dane produceta
+  canonical_name: Dane producenta
+  match_type: CATALOG_ALIAS
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 0.99
+  status: OK
+- source_name: Długość
+  canonical_name: Długość
+  match_type: CATALOG_ALIAS
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 0.99
+  status: OK
+- source_name: Dostępność
+  canonical_name: Dostępność
+  match_type: SYSTEM_FIELD
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 1.0
+  status: OK
+- source_name: Dostępność w magazynie
+  canonical_name: Dostępność
+  match_type: SYSTEM_FIELD
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 1.0
+  status: OK
+- source_name: Ilość żródeł światła
+  canonical_name: Liczba źródeł światła
+  match_type: CATALOG_ALIAS
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 0.99
+  status: OK
+- source_name: Kąt świecenia
+  canonical_name: Kąt świecenia [°]
+  match_type: CATALOG_ALIAS
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 0.99
+  status: OK
+- source_name: Kierunek świecenia (dół, góra, góra - dół)
+  canonical_name: Kierunek świecenia
+  match_type: NEW_ATTRIBUTE
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 0.95
+  status: OK
+- source_name: Klasa efektywności energetycznej
+  canonical_name: Klasa energetyczna
+  match_type: CATALOG_ALIAS
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 0.99
+  status: OK
+- source_name: Klasa odporności IK
+  canonical_name: Stopień ochrony [IK]
+  match_type: NEW_ATTRIBUTE
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 0.95
+  status: OK
+- source_name: Kolor
+  canonical_name: Kolor
+  match_type: CATALOG_EXACT
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 1.0
+  status: OK
+- source_name: Kształt
+  canonical_name: Kształt
+  match_type: CATALOG_EXACT
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 1.0
+  status: OK
+- source_name: Liczba gniazd
+  canonical_name: Liczba źródeł światła
+  match_type: CATALOG_SEMANTIC_ALIAS
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 0.96
+  status: OK
+- source_name: Liczba źródeł światła
+  canonical_name: Liczba źródeł światła
+  match_type: CATALOG_ALIAS
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 0.99
+  status: OK
+- source_name: Maksymalna moc źródła światła
+  canonical_name: Maksymalna moc źródła światła
+  match_type: CATALOG_SEMANTIC_ALIAS
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 0.96
+  status: OK
+- source_name: Materiał
+  canonical_name: Materiał
+  match_type: CATALOG_EXACT
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 1.0
+  status: OK
+- source_name: Moc
+  canonical_name: Moc [W]
+  match_type: CATALOG_ALIAS
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 0.99
+  status: OK
+- source_name: moc ( jeśli światło zintegrowane)
+  canonical_name: Moc [W]
+  match_type: CATALOG_ALIAS
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 0.99
+  status: OK
+- source_name: Moc [W]
+  canonical_name: Moc [W]
+  match_type: CATALOG_EXACT
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 1.0
+  status: OK
+- source_name: Moc [W] (jeśli źródło światła w komplecie)
+  canonical_name: Moc [W]
+  match_type: CATALOG_NORMALIZED
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 0.98
+  status: OK
+- source_name: Możliwość łączenia przelotowego opraw
+  canonical_name: Możliwość łączenia
+  match_type: CATALOG_SEMANTIC_ALIAS
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 0.96
+  status: OK
+- source_name: MOŻLIWOŚĆ PRACY ZE ŚCIEMNIACZEM
+  canonical_name: Współpraca ze ściemniaczem
+  match_type: NEW_ATTRIBUTE
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 0.95
+  status: OK
+- source_name: Możliwość współpracy z czujnikiem ruchu
+  canonical_name: Współpraca z czujnikiem ruchu
+  match_type: NEW_ATTRIBUTE
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 0.95
+  status: OK
+- source_name: Możliwość współpracy ze ściemniaczem
+  canonical_name: Współpraca ze ściemniaczem
+  match_type: NEW_ATTRIBUTE
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 0.95
+  status: OK
+- source_name: Napięcie znamionowe
+  canonical_name: Napięcie [V]
+  match_type: CATALOG_ALIAS
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 0.99
+  status: OK
+- source_name: Optyka / Typ świecenia
+  canonical_name: Optyka
+  match_type: CATALOG_SEMANTIC_ALIAS
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 0.96
+  status: OK
+- source_name: Pojemność [mAh]
+  canonical_name: Pojemność [mAh]
+  match_type: CATALOG_EXACT
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 1.0
+  status: OK
+- source_name: Producent
+  canonical_name: Producent
+  match_type: CATALOG_EXACT
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 1.0
+  status: OK
+- source_name: Seria
+  canonical_name: Seria
+  match_type: CATALOG_EXACT
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 1.0
+  status: OK
+- source_name: Sposób montażu
+  canonical_name: Sposób montażu
+  match_type: CATALOG_EXACT
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 1.0
+  status: OK
+- source_name: Sposób montażu (natynkowe, podtynkowe)
+  canonical_name: Sposób montażu
+  match_type: CATALOG_NORMALIZED
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 0.98
+  status: OK
+- source_name: Sposób montażu (podtynkowy, natynkowy)
+  canonical_name: Sposób montażu
+  match_type: CATALOG_NORMALIZED
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 0.98
+  status: OK
+- source_name: Średnica
+  canonical_name: Średnica
+  match_type: CATALOG_ALIAS
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 0.99
+  status: OK
+- source_name: Średnica (okrągłe)
+  canonical_name: Średnica
+  match_type: CATALOG_ALIAS
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 0.99
+  status: OK
+- source_name: stopień IK
+  canonical_name: Stopień ochrony [IK]
+  match_type: NEW_ATTRIBUTE
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 0.95
+  status: OK
+- source_name: Stopień ochrony
+  canonical_name: Stopień ochrony [IP]
+  match_type: CATALOG_ALIAS
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 0.99
+  status: OK
+- source_name: Stopień ochrony [IP]
+  canonical_name: Stopień ochrony [IP]
+  match_type: CATALOG_ALIAS
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 0.99
+  status: OK
+- source_name: Stopień ochrony (sprawdzić czy są różne)
+  canonical_name: Stopień ochrony [IP]
+  match_type: CATALOG_ALIAS
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 0.99
+  status: OK
+- source_name: STRUMIEŃ ŚWIETLNY
+  canonical_name: Strumień świetlny [lm]
+  match_type: CATALOG_ALIAS
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 0.99
+  status: OK
+- source_name: Strumień świetlny [lm]
+  canonical_name: Strumień świetlny [lm]
+  match_type: CATALOG_EXACT
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 1.0
+  status: OK
+- source_name: Strumień świetlny [lm] (jeśli źródło światła w komplecie)
+  canonical_name: Strumień świetlny [lm]
+  match_type: CATALOG_NORMALIZED
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 0.98
+  status: OK
+- source_name: Szerokość
+  canonical_name: Szerokość
+  match_type: CATALOG_ALIAS
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 0.99
+  status: OK
+- source_name: Szerokość (kwadratowe)
+  canonical_name: Szerokość
+  match_type: CATALOG_ALIAS
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 0.99
+  status: OK
+- source_name: Temperatura barwowa
+  canonical_name: Temperatura barwowa [K]
+  match_type: CATALOG_ALIAS
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 0.99
+  status: OK
+- source_name: Temperatura barwowa [K]
+  canonical_name: Temperatura barwowa [K]
+  match_type: CATALOG_EXACT
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 1.0
+  status: OK
+- source_name: Temperatura barwowa [K] (jeśli źródło światła w komplecie)
+  canonical_name: Temperatura barwowa [K]
+  match_type: CATALOG_NORMALIZED
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 0.98
+  status: OK
+- source_name: temperatura ( jeśli światło zintegrowane)
+  canonical_name: Temperatura barwowa [K]
+  match_type: CATALOG_ALIAS
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 0.99
+  status: OK
+- source_name: Test (auto, manualny, centralna bateria, brak)
+  canonical_name: Tryb testu awaryjnego
+  match_type: NEW_ATTRIBUTE
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 0.95
+  status: OK
+- source_name: Trwałość [h]
+  canonical_name: Trwałość [h]
+  match_type: CATALOG_ALIAS
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 0.99
+  status: OK
+- source_name: Trzonek
+  canonical_name: Trzonek
+  match_type: CATALOG_EXACT
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 1.0
+  status: OK
+- source_name: trzonek (np. zintegrowane źródło światła)
+  canonical_name: Trzonek
+  match_type: CATALOG_NORMALIZED
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 0.98
+  status: OK
+- source_name: Trzonek (zintegrowany)
+  canonical_name: Trzonek
+  match_type: CATALOG_NORMALIZED
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 0.98
+  status: OK
+- source_name: Typ latarki
+  canonical_name: Typ produktu
+  match_type: CATALOG_ALIAS
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 0.99
+  status: OK
+- source_name: Typ produktu
+  canonical_name: Typ produktu
+  match_type: CATALOG_EXACT
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 1.0
+  status: OK
+- source_name: Typ produktu (panel, ramka)
+  canonical_name: Typ produktu
+  match_type: CATALOG_NORMALIZED
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 0.98
+  status: OK
+- source_name: Typ produktu (szyna,reflektor, akcesoria do szynoprzewodów, cały komplet)
+  canonical_name: Typ produktu
+  match_type: CATALOG_NORMALIZED
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 0.98
+  status: OK
+- source_name: UGR
+  canonical_name: Wskaźnik olśnienia [UGR]
+  match_type: NEW_ATTRIBUTE
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 0.95
+  status: OK
+- source_name: Waga
+  canonical_name: Waga
+  match_type: NEW_ATTRIBUTE
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 0.95
+  status: OK
+- source_name: Wskaźnik oddawania barw
+  canonical_name: Wskaźnik oddawania barw
+  match_type: CATALOG_EXACT
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 1.0
+  status: OK
+- source_name: Wydajność świetlna
+  canonical_name: Skuteczność świetlna [lm/W]
+  match_type: CATALOG_ALIAS
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 0.99
+  status: OK
+- source_name: Wymiar (np. 60x60, 120x60)
+  canonical_name: Wymiary [mm]
+  match_type: CATALOG_ALIAS
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 0.99
+  status: OK
+- source_name: Wymiary
+  canonical_name: Wymiary [mm]
+  match_type: CATALOG_ALIAS
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 0.99
+  status: OK
+- source_name: Wyskość
+  canonical_name: Wysokość
+  match_type: CATALOG_ALIAS
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 0.99
+  status: OK
+- source_name: Wysokość
+  canonical_name: Wysokość
+  match_type: CATALOG_ALIAS
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 0.99
+  status: OK
+- source_name: Zasięg
+  canonical_name: Zasięg
+  match_type: NEW_ATTRIBUTE
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 0.95
+  status: OK
+- source_name: Zasilanie
+  canonical_name: Zasilanie
+  match_type: CATALOG_EXACT
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 1.0
+  status: OK
+- source_name: Zasilanie (sieciowe / solarne)
+  canonical_name: Zasilanie
+  match_type: CATALOG_NORMALIZED
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 0.98
+  status: OK
+- source_name: Zasilanie (solarne)
+  canonical_name: Zasilanie
+  match_type: CATALOG_NORMALIZED
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 0.98
+  status: OK
+- source_name: Zasilanie (solarne, sieciowe)
+  canonical_name: Zasilanie
+  match_type: CATALOG_NORMALIZED
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 0.98
+  status: OK
+- source_name: Źródlo światła
+  canonical_name: Źródło światła
+  match_type: NEW_ATTRIBUTE
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 0.95
+  status: OK
+- source_name: Źródło światła w komplecie ( TAK/NIE)
+  canonical_name: Źródło światła w komplecie
+  match_type: CATALOG_ALIAS
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 0.99
+  status: OK
+- source_name: źródło światła (zintegr., niezintegro
+  canonical_name: Źródło światła
+  match_type: NEW_ATTRIBUTE
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 0.95
+  status: OK
+- source_name: żródło światła ( zintegrowane wtedy moc)
+  canonical_name: Źródło światła
+  match_type: NEW_ATTRIBUTE
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 0.95
+  status: OK
+new_attributes:
+- attribute: Czas pracy awaryjnej
+  categories:
+  - Oświetlenie awaryjne
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 0.95
+  status: OK
+- attribute: Czas świecenia
+  categories:
+  - Latarki
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 0.95
+  status: OK
+- attribute: Kierunek świecenia
+  categories:
+  - Kinkiety ścienne
+  - Lampy elewacyjne, kinkiety zewnętrzne
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 0.95
+  status: OK
+- attribute: Stopień ochrony [IK]
+  categories:
+  - High Bay
+  - Lampy uliczne
+  - Oprawy downlight
+  - Oprawy hermetyczne
+  - Oprawy liniowe, belki
+  - Oprawy najazdowe
+  - Plafony
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 0.95
+  status: OK
+- attribute: Tryb testu awaryjnego
+  categories:
+  - Oświetlenie awaryjne
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 0.95
+  status: OK
+- attribute: Waga
+  categories:
+  - Latarki
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 0.95
+  status: OK
+- attribute: Wskaźnik olśnienia [UGR]
+  categories:
+  - Panele LED
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 0.95
+  status: OK
+- attribute: Współpraca z czujnikiem ruchu
+  categories:
+  - High Bay
+  - Oprawy hermetyczne
+  - Oprawy liniowe, belki
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 0.95
+  status: OK
+- attribute: Współpraca ze ściemniaczem
+  categories:
+  - High Bay
+  - Naświetlacze LED
+  - Oprawy hermetyczne
+  - Oprawy liniowe, belki
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 0.95
+  status: OK
+- attribute: Zasięg
+  categories:
+  - Latarki
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 0.95
+  status: OK
+- attribute: Źródło światła
+  categories:
+  - Kinkiety ścienne
+  - Lampy elewacyjne, kinkiety zewnętrzne
+  - Oprawy hermetyczne
+  - Oprawy liniowe, belki
+  - Słupki ogrodowe
+  source: input/Poprawione atrybuty.xlsx
+  confidence: 0.95
+  status: OK
+system_fields:
+- Dostępność
+categories:
+- family: Oświetlenie przemysłowe i biurowe
+  category: Panele LED
+  sheet: Oświetlenie przemysłowe i biuro
+  source_row: 6
+  order_context: description
+  filters:
+  - Producent
+  - Typ produktu
+  - Sposób montażu
+  - Wymiary [mm]
+  - Moc [W]
+  - Strumień świetlny [lm]
+  - Barwa światła
+  - Stopień ochrony [IP]
+  - Wskaźnik olśnienia [UGR]
+  required_description:
+  - Producent
+  - Typ produktu
+  - Kształt
+  - Moc [W]
+  - Strumień świetlny [lm]
+  - Barwa światła
+  - Dane producenta
+  - Stopień ochrony [IP]
+  - Sposób montażu
+  - Wymiary [mm]
+  optional_description:
+  - Seria
+  - Napięcie [V]
+  - Temperatura barwowa [K]
+  - Wskaźnik oddawania barw
+  - Wysokość
+  - Szerokość
+  - Długość
+  - Trwałość [h]
+  - Kąt świecenia [°]
+  - Skuteczność świetlna [lm/W]
+  - Kolor
+  - Wskaźnik olśnienia [UGR]
+  ordered_attributes:
+  - Producent
+  - Dane producenta
+  - Typ produktu
+  - Moc [W]
+  - Strumień świetlny [lm]
+  - Skuteczność świetlna [lm/W]
+  - Barwa światła
+  - Temperatura barwowa [K]
+  - Wskaźnik oddawania barw
+  - Stopień ochrony [IP]
+  - Napięcie [V]
+  - Trwałość [h]
+  - Kąt świecenia [°]
+  - Wysokość
+  - Szerokość
+  - Długość
+  - Kształt
+  - Kolor
+  - Seria
+  notes:
+  - Sposób montażu
+  - UGR
+- family: Oświetlenie przemysłowe i biurowe
+  category: High Bay
+  sheet: Oświetlenie przemysłowe i biuro
+  source_row: 33
+  order_context: unspecified
+  filters:
+  - Producent
+  - Moc [W]
+  - Strumień świetlny [lm]
+  - Barwa światła
+  - Stopień ochrony [IP]
+  - Stopień ochrony [IK]
+  required_description:
+  - Producent
+  - Moc [W]
+  - Barwa światła
+  - Strumień świetlny [lm]
+  - Stopień ochrony [IP]
+  - Typ produktu
+  - Dane producenta
+  - Stopień ochrony [IK]
+  optional_description:
+  - Czujnik ruchu
+  - Seria
+  - Napięcie [V]
+  - Temperatura barwowa [K]
+  - Wskaźnik oddawania barw
+  - Wysokość
+  - Średnica
+  - Kąt świecenia [°]
+  - Trwałość [h]
+  - Skuteczność świetlna [lm/W]
+  - Stopień ochrony [IK]
+  - Współpraca ze ściemniaczem
+  - Współpraca z czujnikiem ruchu
+  - Kolor
+  ordered_attributes:
+  - Producent
+  - Dane producenta
+  - Typ produktu
+  - Moc [W]
+  - Strumień świetlny [lm]
+  - Skuteczność świetlna [lm/W]
+  - Barwa światła
+  - Temperatura barwowa [K]
+  - Wskaźnik oddawania barw
+  - Stopień ochrony [IP]
+  - Napięcie [V]
+  - Trwałość [h]
+  - Kąt świecenia [°]
+  - Czujnik ruchu
+  - Wysokość
+  - Średnica
+  - Kolor
+  - Seria
+  notes:
+  - klasa odporności IK
+  - Możliwość współpracy ze ściemniaczem, Możliwość współpracy z czujnikiem ruchu
+- family: Oświetlenie przemysłowe i biurowe
+  category: Oprawy hermetyczne
+  sheet: Oświetlenie przemysłowe i biuro
+  source_row: 52
+  order_context: unspecified
+  filters:
+  - Producent
+  - Moc [W]
+  - Strumień świetlny [lm]
+  - Barwa światła
+  - Stopień ochrony [IP]
+  - Długość
+  - Stopień ochrony [IK]
+  required_description:
+  - Producent
+  - Moc [W]
+  - Strumień świetlny [lm]
+  - Barwa światła
+  - Stopień ochrony [IP]
+  - Długość
+  - Typ produktu
+  - Dane producenta
+  - Źródło światła
+  optional_description:
+  - Czujnik ruchu
+  - Seria
+  - Napięcie [V]
+  - Temperatura barwowa [K]
+  - Wskaźnik oddawania barw
+  - Wysokość
+  - Szerokość
+  - Kąt świecenia [°]
+  - Trwałość [h]
+  - Skuteczność świetlna [lm/W]
+  - Stopień ochrony [IK]
+  - Możliwość łączenia
+  - Współpraca ze ściemniaczem
+  - Współpraca z czujnikiem ruchu
+  - Kolor
+  - Trzonek
+  - Liczba źródeł światła
+  ordered_attributes:
+  - Producent
+  - Dane producenta
+  - Typ produktu
+  - Moc [W]
+  - Strumień świetlny [lm]
+  - Skuteczność świetlna [lm/W]
+  - Barwa światła
+  - Temperatura barwowa [K]
+  - Wskaźnik oddawania barw
+  - Stopień ochrony [IP]
+  - Napięcie [V]
+  - Trwałość [h]
+  - Kąt świecenia [°]
+  - Czujnik ruchu
+  - Długość
+  - Szerokość
+  - Wysokość
+  - Kolor
+  - Seria
+  notes:
+  - Źródlo światła
+  - klasa odporności IK
+  - Możliwość łączenia przelotowego opraw, Możliwość współpracy ze ściemniaczem, Możliwość współpracy z czujnikiem ruchu
+- family: Oświetlenie przemysłowe i biurowe
+  category: Oprawy liniowe, belki
+  sheet: Oświetlenie przemysłowe i biuro
+  source_row: 74
+  order_context: unspecified
+  filters:
+  - Producent
+  - Moc [W]
+  - Strumień świetlny [lm]
+  - Barwa światła
+  - Stopień ochrony [IP]
+  - Długość
+  - Stopień ochrony [IK]
+  required_description:
+  - Producent
+  - Moc [W]
+  - Strumień świetlny [lm]
+  - Barwa światła
+  - Stopień ochrony [IP]
+  - Długość
+  - Typ produktu
+  - Dane producenta
+  - Kolor
+  - Zasilanie
+  - Źródło światła
+  optional_description:
+  - Czujnik ruchu
+  - Seria
+  - Napięcie [V]
+  - Temperatura barwowa [K]
+  - Wskaźnik oddawania barw
+  - Wysokość
+  - Szerokość
+  - Kąt świecenia [°]
+  - Trwałość [h]
+  - Skuteczność świetlna [lm/W]
+  - Stopień ochrony [IK]
+  - Współpraca ze ściemniaczem
+  - Współpraca z czujnikiem ruchu
+  ordered_attributes:
+  - Producent
+  - Dane producenta
+  - Typ produktu
+  - Moc [W]
+  - Strumień świetlny [lm]
+  - Skuteczność świetlna [lm/W]
+  - Barwa światła
+  - Temperatura barwowa [K]
+  - Wskaźnik oddawania barw
+  - Stopień ochrony [IP]
+  - Napięcie [V]
+  - Trwałość [h]
+  - Kąt świecenia [°]
+  - Czujnik ruchu
+  - Długość
+  - Szerokość
+  - Wysokość
+  - Kolor
+  - Seria
+  notes:
+  - Źródlo światła
+  - klasa odporności IK
+  - Możliwość współpracy ze ściemniaczem, Możliwość współpracy z czujnikiem ruchu
+- family: Oświetlenie przemysłowe i biurowe
+  category: Oprawy downlight
+  sheet: Oświetlenie przemysłowe i biuro
+  source_row: 96
+  order_context: unspecified
+  filters:
+  - Producent
+  - Moc [W]
+  - Strumień świetlny [lm]
+  - Barwa światła
+  - Kształt
+  - Sposób montażu
+  - Stopień ochrony [IP]
+  required_description:
+  - Producent
+  - Moc [W]
+  - Strumień świetlny [lm]
+  - Barwa światła
+  - Sposób montażu
+  - Typ produktu
+  - Dane producenta
+  - Kształt
+  - Stopień ochrony [IP]
+  optional_description:
+  - Czujnik ruchu
+  - Seria
+  - Napięcie [V]
+  - Temperatura barwowa [K]
+  - Wskaźnik oddawania barw
+  - Wysokość
+  - Szerokość
+  - Kąt świecenia [°]
+  - Trwałość [h]
+  - Skuteczność świetlna [lm/W]
+  - Stopień ochrony [IK]
+  - Kolor
+  ordered_attributes:
+  - Producent
+  - Dane producenta
+  - Typ produktu
+  - Sposób montażu
+  - Moc [W]
+  - Strumień świetlny [lm]
+  - Skuteczność świetlna [lm/W]
+  - Barwa światła
+  - Temperatura barwowa [K]
+  - Wskaźnik oddawania barw
+  - Stopień ochrony [IP]
+  - Napięcie [V]
+  - Trwałość [h]
+  - Kąt świecenia [°]
+  - Czujnik ruchu
+  - Długość
+  - Szerokość
+  - Wysokość
+  - Kształt
+  - Kolor
+  - Seria
+  notes:
+  - WYMIAR
+  - klasa odporności IK
+- family: Oświetlenie przemysłowe i biurowe
+  category: Oświetlenie przemysłowe i biurowe
+  sheet: Oświetlenie przemysłowe i biuro
+  source_row: 124
+  order_context: ''
+  filters:
+  - Dostępność
+  - Producent
+  required_description: []
+  optional_description: []
+  ordered_attributes: []
+  notes: []
+- family: Oświetlenie wewnętrzne
+  category: Plafony
+  sheet: Oświetlenie wewnętrzne
+  source_row: 5
+  order_context: unspecified
+  filters:
+  - Producent
+  - Moc [W]
+  - Strumień świetlny [lm]
+  - Barwa światła
+  - Stopień ochrony [IP]
+  - Czujnik ruchu
+  - Kształt
+  - Kolor
+  required_description:
+  - Producent
+  - Moc [W]
+  - Strumień świetlny [lm]
+  - Barwa światła
+  - Stopień ochrony [IP]
+  - Czujnik ruchu
+  - Kształt
+  - Kolor
+  - Dane producenta
+  - Sposób montażu
+  optional_description:
+  - Napięcie [V]
+  - Temperatura barwowa [K]
+  - Wskaźnik oddawania barw
+  - Trwałość [h]
+  - Wysokość
+  - Średnica
+  - Szerokość
+  - Seria
+  - Kąt świecenia [°]
+  - Skuteczność świetlna [lm/W]
+  - Stopień ochrony [IK]
+  - Typ produktu
+  ordered_attributes:
+  - Producent
+  - Dane producenta
+  - Moc [W]
+  - Strumień świetlny [lm]
+  - Skuteczność świetlna [lm/W]
+  - Barwa światła
+  - Temperatura barwowa [K]
+  - Wskaźnik oddawania barw
+  - Trwałość [h]
+  - Napięcie [V]
+  - Stopień ochrony [IP]
+  - Czujnik ruchu
+  - Kształt
+  - Kolor
+  - Trzonek
+  - Kąt świecenia [°]
+  - Wysokość
+  - Średnica
+  - Szerokość
+  - Seria
+  notes:
+  - Typ produktu
+  - stopień IK
+  - Sposób montażu
+- family: Oświetlenie wewnętrzne
+  category: Oprawy natynkowe
+  sheet: Oświetlenie wewnętrzne
+  source_row: 32
+  order_context: unspecified
+  filters:
+  - Producent
+  - Kolor
+  - Trzonek
+  - Stopień ochrony [IP]
+  - Liczba źródeł światła
+  required_description:
+  - Producent
+  - Kolor
+  - Trzonek
+  - Stopień ochrony [IP]
+  - Liczba źródeł światła
+  - Dane producenta
+  - Sposób montażu
+  optional_description:
+  - Materiał
+  - Wysokość
+  - Średnica
+  - Szerokość
+  - Długość
+  - Moc [W]
+  - Temperatura barwowa [K]
+  - Strumień świetlny [lm]
+  - Źródło światła w komplecie
+  - Maksymalna moc źródła światła
+  - Seria
+  - Typ produktu
+  ordered_attributes:
+  - Producent
+  - Dane producenta
+  - Typ produktu
+  - Trzonek
+  - Kolor
+  - Stopień ochrony [IP]
+  - Liczba źródeł światła
+  - Źródło światła w komplecie
+  - Maksymalna moc źródła światła
+  - Moc [W]
+  - Temperatura barwowa [K]
+  - Strumień świetlny [lm]
+  - Sposób montażu
+  - Materiał
+  - Wysokość
+  - Średnica
+  - Szerokość
+  - Długość
+  - Seria
+  notes: []
+- family: Oświetlenie wewnętrzne
+  category: Oprawy podtynkowe
+  sheet: Oświetlenie wewnętrzne
+  source_row: 57
+  order_context: unspecified
+  filters:
+  - Producent
+  - Kolor
+  - Trzonek
+  - Stopień ochrony [IP]
+  - Kształt
+  required_description:
+  - Producent
+  - Kolor
+  - Trzonek
+  - Stopień ochrony [IP]
+  - Kształt
+  - Dane producenta
+  - Sposób montażu
+  optional_description:
+  - Materiał
+  - Wysokość
+  - Średnica
+  - Szerokość
+  - Długość
+  - Moc [W]
+  - Temperatura barwowa [K]
+  - Strumień świetlny [lm]
+  - Źródło światła w komplecie
+  - Maksymalna moc źródła światła
+  - Seria
+  - Typ produktu
+  ordered_attributes:
+  - Producent
+  - Dane producenta
+  - Typ produktu
+  - Trzonek
+  - Kolor
+  - Stopień ochrony [IP]
+  - Źródło światła w komplecie
+  - Maksymalna moc źródła światła
+  - Moc [W]
+  - Temperatura barwowa [K]
+  - Strumień świetlny [lm]
+  - Sposób montażu
+  - Materiał
+  - Wysokość
+  - Średnica
+  - Szerokość
+  - Długość
+  - Seria
+  notes: []
+- family: Oświetlenie wewnętrzne
+  category: Lampy wiszące, żyrandole
+  sheet: Oświetlenie wewnętrzne
+  source_row: 80
+  order_context: title
+  filters:
+  - Producent
+  - Kolor
+  - Trzonek
+  - Liczba źródeł światła
+  required_description:
+  - Producent
+  - Kolor
+  - Trzonek
+  - Liczba źródeł światła
+  - Dane producenta
+  - Sposób montażu
+  - Typ produktu
+  - Stopień ochrony [IP]
+  optional_description:
+  - Materiał
+  - Wysokość
+  - Średnica
+  - Szerokość
+  - Długość
+  - Moc [W]
+  - Temperatura barwowa [K]
+  - Strumień świetlny [lm]
+  - Źródło światła w komplecie
+  - Maksymalna moc źródła światła
+  - Typ produktu
+  ordered_attributes:
+  - Producent
+  - Dane producenta
+  - Typ produktu
+  - Trzonek
+  - Kolor
+  - Stopień ochrony [IP]
+  - Liczba źródeł światła
+  - Źródło światła w komplecie
+  - Maksymalna moc źródła światła
+  - Moc [W]
+  - Temperatura barwowa [K]
+  - Strumień świetlny [lm]
+  - Sposób montażu
+  - Materiał
+  - Wysokość
+  - Średnica
+  - Szerokość
+  - Długość
+  - Seria
+  notes: []
+- family: Oświetlenie wewnętrzne
+  category: Kinkiety ścienne
+  sheet: Oświetlenie wewnętrzne
+  source_row: 103
+  order_context: title
+  filters:
+  - Producent
+  - Kolor
+  - Trzonek
+  - Liczba źródeł światła
+  - Źródło światła
+  - Stopień ochrony [IP]
+  required_description:
+  - Producent
+  - Kolor
+  - Trzonek
+  - Liczba źródeł światła
+  - Źródło światła
+  - Stopień ochrony [IP]
+  - Sposób montażu
+  - Typ produktu
+  optional_description:
+  - Materiał
+  - Wysokość
+  - Średnica
+  - Szerokość
+  - Długość
+  - Moc [W]
+  - Temperatura barwowa [K]
+  - Strumień świetlny [lm]
+  - Źródło światła w komplecie
+  - Maksymalna moc źródła światła
+  - Kierunek świecenia
+  ordered_attributes:
+  - Producent
+  - Dane producenta
+  - Typ produktu
+  - Trzonek
+  - Kolor
+  - Stopień ochrony [IP]
+  - Liczba źródeł światła
+  - Źródło światła w komplecie
+  - Kierunek świecenia
+  - Maksymalna moc źródła światła
+  - Moc [W]
+  - Temperatura barwowa [K]
+  - Strumień świetlny [lm]
+  - Sposób montażu
+  - Materiał
+  - Wysokość
+  - Średnica
+  - Szerokość
+  - Długość
+  - Seria
+  notes:
+  - źródło światła (zintegr., niezintegro
+- family: Oświetlenie wewnętrzne
+  category: Systemy szynowe, szynoprzewody
+  sheet: Oświetlenie wewnętrzne
+  source_row: 131
+  order_context: title
+  filters:
+  - Producent
+  - Typ produktu
+  required_description:
+  - Producent
+  - Typ produktu
+  - Dane producenta
+  - Stopień ochrony [IP]
+  - Sposób montażu
+  optional_description: []
+  ordered_attributes: []
+  notes:
+  - Zależne od typu produktu (długość, zawartość kompletu, trzonek)
+- family: Oświetlenie wewnętrzne
+  category: Oświetlenie wewnętrzne
+  sheet: Oświetlenie wewnętrzne
+  source_row: 143
+  order_context: ''
+  filters:
+  - Dostępność
+  - Producent
+  required_description: []
+  optional_description: []
+  ordered_attributes: []
+  notes: []
+- family: Oświetlenie awaryjne
+  category: Oświetlenie awaryjne
+  sheet: Oświetlenie awaryjne
+  source_row: 4
+  order_context: title
+  filters:
+  - Czas pracy awaryjnej
+  - Tryb testu awaryjnego
+  - Optyka
+  - Moc [W]
+  - Strumień świetlny [lm]
+  - Barwa światła
+  - Stopień ochrony [IP]
+  - Sposób montażu
+  required_description:
+  - Czas pracy awaryjnej
+  - Tryb testu awaryjnego
+  - Moc [W]
+  - Stopień ochrony [IP]
+  - Sposób montażu
+  - Optyka
+  - Dane producenta
+  - Typ produktu
+  optional_description:
+  - Temperatura barwowa [K]
+  - Wymiary [mm]
+  ordered_attributes:
+  - Producent
+  - Dane producenta
+  - Czas pracy awaryjnej
+  - Tryb testu awaryjnego
+  - Optyka
+  - Moc [W]
+  - Stopień ochrony [IP]
+  - Sposób montażu
+  - Temperatura barwowa [K]
+  - Barwa światła
+  - Strumień świetlny [lm]
+  - Wymiary [mm]
+  notes: []
+- family: Latarki
+  category: Latarki
+  sheet: Latarki
+  source_row: 5
+  order_context: unspecified
+  filters:
+  - Producent
+  - Typ produktu
+  - Zasilanie
+  - Strumień świetlny [lm]
+  - Czas świecenia
+  - Stopień ochrony [IP]
+  required_description:
+  - Producent
+  - Typ produktu
+  - Zasilanie
+  - Strumień świetlny [lm]
+  - Czas świecenia
+  - Dane producenta
+  - Stopień ochrony [IP]
+  - Kolor
+  optional_description:
+  - Rodzaj baterii
+  - Kolor
+  - Waga
+  - Wymiary [mm]
+  - Zasięg
+  - Pojemność [mAh]
+  ordered_attributes:
+  - Producent
+  - Dane producenta
+  - Typ produktu
+  - Zasilanie
+  - Strumień świetlny [lm]
+  - Czas świecenia
+  - Stopień ochrony [IP]
+  - Pojemność [mAh]
+  - Rodzaj baterii
+  - Zasięg
+  - Wymiary [mm]
+  - Kolor
+  - Waga
+  notes: []
+- family: Oświetlenie zewnętrzne
+  category: Naświetlacze LED
+  sheet: Oświetlenie zewnętrzne
+  source_row: 5
+  order_context: unspecified
+  filters:
+  - Producent
+  - Moc [W]
+  - Strumień świetlny [lm]
+  - Barwa światła
+  - Stopień ochrony [IP]
+  - Czujnik ruchu
+  - Zasilanie
+  - Kolor
+  required_description:
+  - Producent
+  - Moc [W]
+  - Strumień świetlny [lm]
+  - Barwa światła
+  - Stopień ochrony [IP]
+  - Czujnik ruchu
+  - Zasilanie
+  - Kolor
+  - Dane producenta
+  - Typ produktu
+  optional_description:
+  - Napięcie [V]
+  - Temperatura barwowa [K]
+  - Wskaźnik oddawania barw
+  - Trwałość [h]
+  - Wymiary [mm]
+  - Seria
+  - Kąt świecenia [°]
+  - Klasa energetyczna
+  - Skuteczność świetlna [lm/W]
+  - Współpraca ze ściemniaczem
+  ordered_attributes:
+  - Producent
+  - Dane producenta
+  - Typ produktu
+  - Moc [W]
+  - Strumień świetlny [lm]
+  - Skuteczność świetlna [lm/W]
+  - Barwa światła
+  - Temperatura barwowa [K]
+  - Wskaźnik oddawania barw
+  - Stopień ochrony [IP]
+  - Napięcie [V]
+  - Czujnik ruchu
+  - Zasilanie
+  - Trwałość [h]
+  - Kąt świecenia [°]
+  - Klasa energetyczna
+  - Kolor
+  - Wymiary [mm]
+  - Seria
+  notes:
+  - MOŻLIWOŚĆ PRACY ZE ŚCIEMNIACZEM
+- family: Oświetlenie zewnętrzne
+  category: Lampy uliczne
+  sheet: Oświetlenie zewnętrzne
+  source_row: 28
+  order_context: unspecified
+  filters:
+  - Producent
+  - Moc [W]
+  - Strumień świetlny [lm]
+  - Barwa światła
+  - Stopień ochrony [IP]
+  - Stopień ochrony [IK]
+  - Zasilanie
+  required_description:
+  - Producent
+  - Moc [W]
+  - Strumień świetlny [lm]
+  - Barwa światła
+  - Stopień ochrony [IP]
+  - Zasilanie
+  - Dane producenta
+  - Typ produktu
+  optional_description:
+  - Czujnik ruchu
+  - Napięcie [V]
+  - Barwa światła
+  - Wskaźnik oddawania barw
+  - Trwałość [h]
+  - Wymiary [mm]
+  - Seria
+  - Kąt świecenia [°]
+  - Klasa energetyczna
+  - Skuteczność świetlna [lm/W]
+  ordered_attributes:
+  - Producent
+  - Dane producenta
+  - Typ produktu
+  - Moc [W]
+  - Strumień świetlny [lm]
+  - Skuteczność świetlna [lm/W]
+  - Barwa światła
+  - Temperatura barwowa [K]
+  - Wskaźnik oddawania barw
+  - Stopień ochrony [IP]
+  - Napięcie [V]
+  - Czujnik ruchu
+  - Zasilanie
+  - Trwałość [h]
+  - Kąt świecenia [°]
+  - Klasa energetyczna
+  - Kolor
+  - Wymiary [mm]
+  - Seria
+  notes: []
+- family: Oświetlenie zewnętrzne
+  category: Oprawy ogrodowe
+  sheet: Oświetlenie zewnętrzne
+  source_row: 53
+  order_context: ''
+  filters:
+  - Dostępność
+  - Producent
+  required_description: []
+  optional_description: []
+  ordered_attributes: []
+  notes: []
+- family: Oświetlenie zewnętrzne
+  category: Lampy elewacyjne, kinkiety zewnętrzne
+  sheet: Oświetlenie zewnętrzne
+  source_row: 65
+  order_context: title
+  filters:
+  - Producent
+  - Kolor
+  - Trzonek
+  - Liczba źródeł światła
+  - Kierunek świecenia
+  - Stopień ochrony [IP]
+  - Czujnik ruchu
+  - Źródło światła
+  required_description:
+  - Producent
+  - Kolor
+  - Trzonek
+  - Liczba źródeł światła
+  - Kierunek świecenia
+  - Stopień ochrony [IP]
+  - Czujnik ruchu
+  - Źródło światła
+  - Dane producenta
+  optional_description:
+  - Wymiary [mm]
+  - Materiał
+  - Seria
+  - Moc [W]
+  - Barwa światła
+  - Temperatura barwowa [K]
+  - Maksymalna moc źródła światła
+  - Typ produktu
+  ordered_attributes:
+  - Producent
+  - Dane producenta
+  - Typ produktu
+  - Kolor
+  - Trzonek
+  - Liczba źródeł światła
+  - Kierunek świecenia
+  - Stopień ochrony [IP]
+  - Czujnik ruchu
+  - Zasilanie
+  - Moc [W]
+  - Barwa światła
+  - Temperatura barwowa [K]
+  - Maksymalna moc źródła światła
+  - Materiał
+  - Wymiary [mm]
+  - Seria
+  notes:
+  - żródło światła ( zintegrowane wtedy moc)
+- family: Oświetlenie zewnętrzne
+  category: Słupki ogrodowe
+  sheet: Oświetlenie zewnętrzne
+  source_row: 87
+  order_context: unspecified
+  filters:
+  - Producent
+  - Kolor
+  - Trzonek
+  - Wysokość
+  - Czujnik ruchu
+  - Liczba źródeł światła
+  - Stopień ochrony [IP]
+  - Źródło światła
+  required_description:
+  - Producent
+  - Kolor
+  - Trzonek
+  - Wysokość
+  - Czujnik ruchu
+  - Liczba źródeł światła
+  - Stopień ochrony [IP]
+  - Źródło światła
+  - Dane producenta
+  - Typ produktu
+  optional_description:
+  - Wymiary [mm]
+  - Materiał
+  - Seria
+  - Moc [W]
+  - Barwa światła
+  - Temperatura barwowa [K]
+  - Maksymalna moc źródła światła
+  ordered_attributes:
+  - Producent
+  - Dane producenta
+  - Typ produktu
+  - Kolor
+  - Trzonek
+  - Liczba źródeł światła
+  - Stopień ochrony [IP]
+  - Czujnik ruchu
+  - Zasilanie
+  - Moc [W]
+  - Barwa światła
+  - Temperatura barwowa [K]
+  - Maksymalna moc źródła światła
+  - Materiał
+  - Wymiary [mm]
+  - Seria
+  notes:
+  - żródło światła ( zintegrowane wtedy moc)
+- family: Oświetlenie zewnętrzne
+  category: Girlandy
+  sheet: Oświetlenie zewnętrzne
+  source_row: 109
+  order_context: unspecified
+  filters:
+  - Producent
+  - Długość
+  - Liczba źródeł światła
+  required_description:
+  - Producent
+  - Kolor
+  - Trzonek
+  - Zasilanie
+  - Liczba źródeł światła
+  - Długość
+  - Stopień ochrony [IP]
+  - Dane producenta
+  - Typ produktu
+  optional_description:
+  - Materiał
+  - Seria
+  ordered_attributes:
+  - Producent
+  - Dane producenta
+  - Typ produktu
+  - Kolor
+  - Trzonek
+  - Liczba źródeł światła
+  - Zasilanie
+  - Stopień ochrony [IP]
+  - Długość
+  - Materiał
+  - Seria
+  notes: []
+- family: Oświetlenie zewnętrzne
+  category: Reflektory ogrodowe
+  sheet: Oświetlenie zewnętrzne
+  source_row: 126
+  order_context: unspecified
+  filters:
+  - Producent
+  required_description:
+  - Producent
+  - Kolor
+  - Trzonek
+  - Zasilanie
+  - Dane producenta
+  - Stopień ochrony [IP]
+  - Typ produktu
+  optional_description:
+  - Wymiary [mm]
+  - Materiał
+  - Seria
+  ordered_attributes:
+  - Producent
+  - Dane producenta
+  - Typ produktu
+  - Kolor
+  - Trzonek
+  - Zasilanie
+  - Stopień ochrony [IP]
+  - Wymiary [mm]
+  - Materiał
+  - Seria
+  notes: []
+- family: Oświetlenie zewnętrzne
+  category: Oprawy najazdowe
+  sheet: Oświetlenie zewnętrzne
+  source_row: 141
+  order_context: unspecified
+  filters:
+  - Producent
+  - Kształt
+  - Stopień ochrony [IP]
+  - Stopień ochrony [IK]
+  required_description:
+  - Producent
+  - Kolor
+  - Trzonek
+  - Zasilanie
+  - Kształt
+  - Stopień ochrony [IP]
+  - Dane producenta
+  - Stopień ochrony [IK]
+  optional_description:
+  - Wymiary [mm]
+  - Materiał
+  - Seria
+  - Typ produktu
+  ordered_attributes:
+  - Producent
+  - Dane producenta
+  - Typ produktu
+  - Kolor
+  - Trzonek
+  - Zasilanie
+  - Stopień ochrony [IP]
+  - Kształt
+  - Wymiary [mm]
+  - Materiał
+  - Seria
+  notes:
+  - Stopień IK
+- family: Oświetlenie zewnętrzne
+  category: Lampy solarne
+  sheet: Oświetlenie zewnętrzne
+  source_row: 158
+  order_context: unspecified
+  filters:
+  - Producent
+  - Moc [W]
+  - Strumień świetlny [lm]
+  - Barwa światła
+  - Stopień ochrony [IP]
+  required_description:
+  - Producent
+  - Kolor
+  - Trzonek
+  - Zasilanie
+  - Stopień ochrony [IP]
+  - Dane producenta
+  - Moc [W]
+  - Strumień świetlny [lm]
+  - Barwa światła
+  optional_description:
+  - Wymiary [mm]
+  - Materiał
+  - Seria
+  - Kształt
+  ordered_attributes:
+  - Producent
+  - Dane producenta
+  - Typ produktu
+  - Kolor
+  - Trzonek
+  - Zasilanie
+  - Stopień ochrony [IP]
+  - Kształt
+  - Wymiary [mm]
+  - Materiał
+  - Seria
+  notes:
+  - moc, strumień świetlny, barwa
+- family: Oświetlenie zewnętrzne
+  category: Oświetlenie zewnętrzne
+  sheet: Oświetlenie zewnętrzne
+  source_row: 173
+  order_context: ''
+  filters:
+  - Producent
+  - Dostępność
+  required_description: []
+  optional_description: []
+  ordered_attributes: []
+  notes: []
+- family: Oświetlenie
+  category: Oświetlenie
+  sheet: Główna kategoria - Oświetlenie
+  source_row: 2
+  order_context: ''
+  filters:
+  - Dostępność
+  - Producent
+  required_description: []
+  optional_description: []
+  ordered_attributes: []
+  notes: []

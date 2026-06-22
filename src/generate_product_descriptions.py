@@ -17,6 +17,7 @@ from utils import compact_spaces, is_blank, normalize_header, read_products, wri
 DEFAULT_DESCRIPTION_COLUMN = "description_html"
 DEFAULT_MIN_CHARS_NO_SPACES = 1500
 DEFAULT_CODEX_BRIEF_OUTPUT = "reports/descriptions/description_codex_brief.xlsx"
+DEFAULT_SEO_KNOWLEDGE_PATH = "dictionaries/seo_description_knowledge.yaml"
 CODEX_BRIEF_SHEETS = [
     "Produkt",
     "Product facts",
@@ -209,6 +210,7 @@ def main() -> None:
     parser.add_argument("--description-html", default="", help="Gotowy HTML opisu dla trybu write_codex_review.")
     parser.add_argument("--description-file", default="", help="Plik UTF-8 z gotowym HTML opisu dla trybu write_codex_review.")
     parser.add_argument("--catalog-knowledge", default=baselinker.DEFAULT_CATALOG_KNOWLEDGE_PATH)
+    parser.add_argument("--seo-knowledge", default=DEFAULT_SEO_KNOWLEDGE_PATH)
     parser.add_argument("--description-column", default=DEFAULT_DESCRIPTION_COLUMN)
     parser.add_argument("--title-column", default="", help="Wymusza kolumne z nazwa produktu.")
     parser.add_argument("--min-words", type=int, default=0, help="Zgodnosc wsteczna; preferuj --min-chars-no-spaces.")
@@ -247,7 +249,14 @@ def main() -> None:
         if not args.sku:
             raise SystemExit("Tryb codex_brief wymaga --sku.")
         catalog_knowledge = baselinker.load_yaml(args.catalog_knowledge) if args.catalog_knowledge else {}
-        brief = build_codex_brief_for_sku(df, args.sku, args.title_column, catalog_knowledge)
+        seo_knowledge = baselinker.load_yaml(args.seo_knowledge) if args.seo_knowledge else {}
+        brief = build_codex_brief_for_sku(
+            df,
+            args.sku,
+            args.title_column,
+            catalog_knowledge,
+            seo_knowledge,
+        )
         write_codex_brief_report(brief, args.brief_output)
         print(f"OK: zapisano brief Codex: {args.brief_output}")
         return
@@ -279,6 +288,7 @@ def build_codex_brief_for_sku(
     sku: str,
     title_column: str = "",
     catalog_knowledge: dict[str, Any] | None = None,
+    seo_knowledge: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     row = find_product_row_by_sku(df, sku)
     normalizer = baselinker.build_feature_value_normalizer(catalog_knowledge or {})
@@ -291,10 +301,20 @@ def build_codex_brief_for_sku(
     }
     review_rows: list[dict[str, str]] = []
     product_features = baselinker.filter_features_for_catalog(raw_features, normalizer, review_rows, context)
+    apply_power_range_for_description(row, product_features)
     product_facts = build_product_facts(row, product_features)
     compatibility_facts = build_compatibility_facts(row, raw_features)
     rejected_facts = build_rejected_facts(raw_features, product_features, row)
-    prompt = build_codex_description_prompt(product_name, product_facts, compatibility_facts, rejected_facts)
+    seo_knowledge = seo_knowledge or load_default_seo_knowledge()
+    seo_keyword = find_seo_keyword(row, seo_knowledge)
+    prompt = build_codex_description_prompt(
+        product_name,
+        product_facts,
+        compatibility_facts,
+        rejected_facts,
+        seo_keyword,
+        seo_knowledge,
+    )
     validation = validate_codex_description("", product_facts, rejected_facts, prompt_only=True)
     return {
         "product": {
@@ -302,6 +322,7 @@ def build_codex_brief_for_sku(
             "requested_sku": sku,
             "ean": first_present(row.get("EAN", ""), row.get("ean", "")),
             "name": product_name,
+            "seo_keyword": seo_keyword,
             "category": first_present(row.get("proponowana_kategoria_1", ""), row.get("category", ""), row.get("Kategoria", "")),
             "source_row_index": int(row.name) if isinstance(row.name, int) else str(row.name),
         },
@@ -408,12 +429,38 @@ def dedupe_fact_rows(rows: list[dict[str, str]]) -> list[dict[str, str]]:
     return result
 
 
+def load_default_seo_knowledge() -> dict[str, Any]:
+    path = Path(DEFAULT_SEO_KNOWLEDGE_PATH)
+    if not path.exists():
+        return {}
+    return baselinker.load_yaml(path)
+
+
+def find_seo_keyword(row: pd.Series, seo_knowledge: dict[str, Any]) -> str:
+    columns = (
+        seo_knowledge.get("product_description", {})
+        .get("input", {})
+        .get("seo_keyword_columns", [])
+    )
+    return first_present(*(row.get(column, "") for column in columns))
+
+
 def build_codex_description_prompt(
     product_name: str,
     product_facts: list[dict[str, str]],
     compatibility_facts: list[dict[str, str]],
     rejected_facts: list[dict[str, str]],
+    seo_keyword: str = "",
+    seo_knowledge: dict[str, Any] | None = None,
 ) -> str:
+    seo_rules = (seo_knowledge or load_default_seo_knowledge()).get("product_description", {})
+    minimum_chars = int(seo_rules.get("length", {}).get("minimum_chars_with_spaces", 1200))
+    maximum_keyword_occurrences = int(seo_rules.get("seo_keyword", {}).get("maximum_occurrences", 3))
+    keyword_instruction = (
+        f'- Fraza kluczowa dla tego produktu to: "{seo_keyword}".'
+        if seo_keyword
+        else "- Fraza kluczowa nie została dostarczona; nie wymyślaj jej i stosuj naturalną frazę produktową."
+    )
     return "\n".join([
         "Napisz ręcznie unikalny opis HTML SEO dla jednego produktu do sklepu Alkan.",
         "",
@@ -425,12 +472,25 @@ def build_codex_description_prompt(
         "- Jeśli przetwarzasz paczkę, zakończ opis, walidację i poprawki jednego SKU przed otwarciem następnego briefu.",
         "",
         "SEO i konstrukcja opisu:",
+        keyword_instruction,
+        f"- Opis musi mieć co najmniej {minimum_chars} znaków ze spacjami, o ile pozwala na to liczba potwierdzonych faktów.",
+        f"- Fraza kluczowa może wystąpić maksymalnie {maximum_keyword_occurrences} razy w całym opisie.",
+        "- Gdy fraza jest dostarczona: rozpocznij nią wstęp, umieść ją naturalnie w <h2> i rozpocznij nią pierwszy akapit bezpośrednio po <h2>.",
+        "- Nagłówki <h3> nie mogą zawierać frazy kluczowej.",
+        "- Preferuj <h2> w formie naturalnego pytania o konkretny produkt, jeśli taka forma pasuje do treści.",
         "- Pierwszy akapit rozpocznij od <strong>pełnej nazwy produktu</strong>, a następnie od razu wyjaśnij jego zastosowanie i najważniejsze potwierdzone cechy.",
         "- Umieść naturalną frazę produktową w <h2>; nagłówek ma mówić o konkretnym produkcie lub jego przewadze, a nie brzmieć 'Najważniejsze cechy'.",
         "- Po części wprowadzającej dodaj sekcję <h3>Najważniejsze zalety</h3> z korzyściami wynikającymi z faktów.",
         "- Dodaj <h3>Specyfikacja techniczna</h3>; nazwy parametrów w liście wyróżnij tagiem <strong>.",
+        "- Bezpośrednio po liście specyfikacji dodaj końcowy akapit <p>. Ma podsumować potwierdzone zalety tego wariantu i naturalnie zachęcić do zakupu albo wskazać praktyczny powód wyboru.",
+        "- Końcowy akapit jest obowiązkowy i musi być ostatnim widocznym elementem opisu. Nie kończ opisu na </ul> specyfikacji.",
         "- Sekcję o zastosowaniu dodaj tylko wtedy, gdy można ją napisać rzetelnie na podstawie typu produktu i faktów.",
         "- Pisz językiem używanym przez człowieka kupującego produkt: najpierw zastosowanie, potem cechy i wynikające z nich korzyści, na końcu parametry.",
+        "- Każdą ważną cechę rozwiń według modelu: cecha -> zaleta -> praktyczna korzyść dla użytkownika.",
+        "- Akapity mają być krótkie i zawierać najwyżej 3-4 zdania; unikaj ścian tekstu.",
+        "- Lista najważniejszych cech lub korzyści powinna mieć 3-6 punktów.",
+        "- Nie używaj pustych superlatywów, takich jak: rewelacyjny, innowacyjny, najlepszy, niesamowity.",
+        "- Produkty różniące się tylko kolorem lub wariantem muszą mieć odmienną treść; nie przestawiaj tych samych zdań.",
         "- Zmieniaj kompozycję, argumentację i słownictwo zależnie od produktu. Stałe mogą być wyłącznie zasady HTML i nazwa sekcji specyfikacji.",
         "- Pisz tak, jak do klienta w sklepie: krótkie, konkretne zdania, codzienne słownictwo i jasna odpowiedź, po co dana cecha jest przydatna.",
         "- Preferuj zdania bezpośrednie: 'Obudowa ma klasę IP65 i jest chroniona przed pyłem oraz strugami wody' zamiast 'IP65 wspiera zastosowanie w wymagającym otoczeniu'.",
@@ -470,6 +530,7 @@ def build_codex_description_prompt(
         "- co najmniej jedna konkretna sekcja <h2>",
         "- sekcja <h3>Najważniejsze zalety</h3> i lista <ul><li> z konkretnymi korzyściami",
         "- sekcja <h3>Specyfikacja techniczna</h3> tylko z PRODUCT_FACTS; etykiety parametrów w <strong>",
+        "- po liście specyfikacji obowiązkowy końcowy <p> z podsumowaniem i naturalną zachętą do zakupu",
         "- elementy listy bez myślnika po tagu, czyli <li>tekst</li>, nie <li>- tekst</li>",
         "",
         "Walidacja gotowego review przed oddaniem:",
@@ -479,6 +540,7 @@ def build_codex_description_prompt(
         "Jeśli ta komenda zwróci ERROR albo WARNING, popraw opis i uruchom ją ponownie.",
         "",
         f"PRODUCT_NAME: {product_name}",
+        f"SEO_KEYWORD: {seo_keyword or 'brak'}",
         "",
         "PRODUCT_FACTS:",
         facts_as_bullets(product_facts),
@@ -503,6 +565,8 @@ def validate_codex_description(
     rejected_facts: list[dict[str, str]],
     prompt_only: bool = False,
     product_name: str = "",
+    seo_keyword: str = "",
+    seo_knowledge: dict[str, Any] | None = None,
 ) -> list[dict[str, str]]:
     if prompt_only and not description_html:
         return [{"status": "WAITING_FOR_CODEX", "check": "description_present", "details": "Brief gotowy, opis nie został jeszcze wygenerowany."}]
@@ -512,6 +576,20 @@ def validate_codex_description(
         checks.append({"status": "ERROR", "check": "description_present", "details": "Brak opisu do walidacji."})
         return checks
     checks.append({"status": "OK", "check": "description_present", "details": "Opis jest obecny."})
+    seo_rules = (seo_knowledge or load_default_seo_knowledge()).get("product_description", {})
+    minimum_chars_with_spaces = int(seo_rules.get("length", {}).get("minimum_chars_with_spaces", 1200))
+    if len(text) < minimum_chars_with_spaces:
+        checks.append({
+            "status": "WARNING",
+            "check": "description_length_with_spaces",
+            "details": f"Opis ma {len(text)} znaków ze spacjami; wymagane minimum to {minimum_chars_with_spaces}.",
+        })
+    else:
+        checks.append({
+            "status": "OK",
+            "check": "description_length_with_spaces",
+            "details": "Opis spełnia minimalną długość liczoną ze spacjami.",
+        })
     chars_no_spaces = len(re.sub(r"\s+", "", text))
     minimum_chars = codex_minimum_chars(product_facts)
     if chars_no_spaces < minimum_chars:
@@ -558,6 +636,8 @@ def validate_codex_description(
         checks.append({"status": "WARNING", "check": "html_h2", "details": "Opis nie zawiera sekcji <h2>."})
     validate_seo_opening(checks, description_html, product_name)
     validate_seo_headings(checks, description_html, product_facts)
+    if seo_keyword:
+        validate_seo_keyword_placement(checks, description_html, seo_keyword, seo_rules)
     if not re.search(r"<h3\b[^>]*>\s*Specyfikacja techniczna\s*</h3>", description_html, flags=re.IGNORECASE):
         checks.append({"status": "WARNING", "check": "html_specification_h3", "details": "Brak nagłówka <h3>Specyfikacja techniczna</h3>."})
     if not re.search(r"<h3\b[^>]*>\s*Najważniejsze zalety\s*</h3>", description_html, flags=re.IGNORECASE):
@@ -575,6 +655,7 @@ def validate_codex_description(
                 "check": "html_specification_labels",
                 "details": "Etykiety parametrów w specyfikacji powinny być wyróżnione tagiem <strong>.",
             })
+        validate_closing_summary(checks, description_html)
     meta_phrase = find_meta_description_phrase(text)
     if meta_phrase:
         checks.append({
@@ -680,6 +761,80 @@ def validate_seo_headings(
         })
 
 
+def validate_seo_keyword_placement(
+    checks: list[dict[str, str]],
+    description_html: str,
+    seo_keyword: str,
+    seo_rules: dict[str, Any],
+) -> None:
+    normalized_keyword = normalize_header(seo_keyword)
+    normalized_text = normalize_header(strip_html(description_html))
+    maximum = int(seo_rules.get("seo_keyword", {}).get("maximum_occurrences", 3))
+    occurrences = len(re.findall(rf"(?<!\w){re.escape(normalized_keyword)}(?!\w)", normalized_text))
+    if occurrences > maximum:
+        checks.append({
+            "status": "WARNING",
+            "check": "seo_keyword_occurrences",
+            "details": f"Fraza kluczowa '{seo_keyword}' występuje {occurrences} razy; maksimum to {maximum}.",
+        })
+
+    opening = re.search(r"<p\b[^>]*>(.*?)</p>", description_html, flags=re.IGNORECASE | re.DOTALL)
+    opening_text = normalize_header(strip_html(opening.group(1))) if opening else ""
+    if not opening_text.startswith(normalized_keyword):
+        checks.append({
+            "status": "WARNING",
+            "check": "seo_keyword_opening",
+            "details": f"Pierwszy akapit powinien zaczynać się od frazy kluczowej '{seo_keyword}'.",
+        })
+
+    h2_values = re.findall(r"<h2\b[^>]*>(.*?)</h2>", description_html, flags=re.IGNORECASE | re.DOTALL)
+    if not any(normalized_keyword in normalize_header(strip_html(value)) for value in h2_values):
+        checks.append({
+            "status": "WARNING",
+            "check": "seo_keyword_h2",
+            "details": f"Nagłówek <h2> powinien zawierać frazę kluczową '{seo_keyword}'.",
+        })
+
+    after_h2 = re.search(
+        r"</h2>\s*<p\b[^>]*>(.*?)</p>",
+        description_html,
+        flags=re.IGNORECASE | re.DOTALL,
+    )
+    after_h2_text = normalize_header(strip_html(after_h2.group(1))) if after_h2 else ""
+    if not after_h2_text.startswith(normalized_keyword):
+        checks.append({
+            "status": "WARNING",
+            "check": "seo_keyword_after_h2",
+            "details": f"Pierwszy akapit po <h2> powinien zaczynać się od frazy kluczowej '{seo_keyword}'.",
+        })
+
+    h3_values = re.findall(r"<h3\b[^>]*>(.*?)</h3>", description_html, flags=re.IGNORECASE | re.DOTALL)
+    if any(normalized_keyword in normalize_header(strip_html(value)) for value in h3_values):
+        checks.append({
+            "status": "WARNING",
+            "check": "seo_keyword_h3",
+            "details": "Nagłówki <h3> nie powinny zawierać frazy kluczowej.",
+        })
+
+
+def validate_closing_summary(checks: list[dict[str, str]], description_html: str) -> None:
+    summary_match = re.search(
+        r"<h3\b[^>]*>\s*Specyfikacja techniczna\s*</h3>"
+        r".*?</ul>\s*<p\b[^>]*>(.*?)</p>\s*(?:<!--.*?-->\s*)?$",
+        description_html,
+        flags=re.IGNORECASE | re.DOTALL,
+    )
+    if not summary_match or not compact_spaces(strip_html(summary_match.group(1))):
+        checks.append({
+            "status": "WARNING",
+            "check": "html_closing_summary",
+            "details": (
+                "Po liście specyfikacji brakuje końcowego akapitu <p> z podsumowaniem "
+                "potwierdzonych zalet i naturalną zachętą do zakupu."
+            ),
+        })
+
+
 def find_overused_word(text: str) -> str:
     normalized = normalize_header(text)
     thresholds = {
@@ -746,7 +901,14 @@ def validate_codex_review_file(review_input: str | Path) -> list[dict[str, str]]
     if descriptions:
         description_html = str(descriptions[0].get("description_html", "") or "")
     product_name = str(products[0].get("name", "") or "") if products else ""
-    return validate_codex_description(description_html, product_facts, rejected_facts, product_name=product_name)
+    seo_keyword = str(products[0].get("seo_keyword", "") or "") if products else ""
+    return validate_codex_description(
+        description_html,
+        product_facts,
+        rejected_facts,
+        product_name=product_name,
+        seo_keyword=seo_keyword,
+    )
 
 
 def write_codex_review_from_description(
@@ -761,6 +923,7 @@ def write_codex_review_from_description(
         brief["product_facts"],
         brief["rejected_facts"],
         product_name=str(brief.get("product", {}).get("name", "") or ""),
+        seo_keyword=str(brief.get("product", {}).get("seo_keyword", "") or ""),
     )
     write_codex_brief_report(brief, review_output)
     return brief["validation"]
@@ -915,7 +1078,27 @@ def collect_attributes(row: pd.Series) -> dict[str, str]:
         value = first_present(*(row.get(column, "") for column in columns))
         if value:
             attrs[target] = normalize_attribute_value(target, value)
+    apply_power_range_for_description(row, attrs)
     return {key: value for key, value in attrs.items() if value}
+
+
+def apply_power_range_for_description(row: pd.Series, attrs: dict[str, str]) -> None:
+    power_range = normalized_power_range(first_present(row.get("Moc - zakres", ""), row.get("attr_moc_zakres", "")))
+    if power_range:
+        attrs["Moc [W]"] = power_range
+
+
+def normalized_power_range(value: str) -> str:
+    value = compact_spaces(str(value or ""))
+    match = re.fullmatch(
+        r"(\d+(?:[,.]\d+)?)\s*(?:W\s*)?(?:-|/|–|—)\s*(\d+(?:[,.]\d+)?)\s*W?",
+        value,
+        flags=re.IGNORECASE,
+    )
+    if not match:
+        return ""
+    left, right = (part.replace(",", ".") for part in match.groups())
+    return f"{left}-{right}W"
 
 
 def read_features_json(row: pd.Series) -> dict[str, str]:

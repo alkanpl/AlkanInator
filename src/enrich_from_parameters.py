@@ -15,11 +15,36 @@ from utils import compact_spaces, detect_column, ensure_dir, is_blank, load_yaml
 
 PARAMETER_ATTRIBUTE_COLUMNS = ATTRIBUTE_COLUMNS + [
     "barwa_zakres",
+    "cri",
+    "klasa_energetyczna",
+    "laczenie_przelotowe",
+    "liczba_gniazd",
     "lm_w",
     "eco",
+    "moc_max_zrodla",
     "pasuje_do",
+    "sciemnianie",
+    "sposob_montazu",
     "sterowanie",
+    "trwalosc",
+    "ugr",
+    "zrodlo_swiatla",
+    "zrodlo_w_komplecie",
 ]
+
+# Parametry producenta, ktore wygladaja jak znane atrybuty, ale nimi nie sa
+# (np. "MLS" przy "napieciem sieciowym" to typ zrodla, nie napiecie).
+IGNORED_PARAMETER_NAME_PARTS = (
+    "wspolczynnik mocy",
+    "barwa swiatla",
+    "materialem termoizolacyjnym",
+    "napieciem sieciowym",
+    "maksymalna moc opraw",
+    "pobor mocy",
+    "moc transmisji",
+    "moc maksymalna va",
+    "klasa energetyczna statecznika",
+)
 
 
 def normalize_sku(value: Any) -> str:
@@ -41,8 +66,22 @@ def detect_parameter_columns(df: pd.DataFrame) -> dict[str, str | None]:
 
 def parameter_attribute_to_internal(attribute_name: str) -> str:
     name = normalize_header(attribute_name)
-    if "wspolczynnik mocy" in name or "barwa swiatla" in name or "materialem termoizolacyjnym" in name:
+    if any(part in name for part in IGNORED_PARAMETER_NAME_PARTS):
         return ""
+    exact_rules = {
+        "ugr": "ugr",
+        "wspolczynnik oddawania barw ra": "cri",
+        "trwalosc h": "trwalosc",
+        "klasa efektywnosci energetycznej": "klasa_energetyczna",
+        "miejsce montazu": "sposob_montazu",
+        "mozliwosc laczenia przelotowego opraw": "laczenie_przelotowe",
+        "mozliwosc wspolpracy ze sciemniaczem": "sciemnianie",
+        "zrodlo swiatla": "zrodlo_swiatla",
+        "zrodlo swiatla w komplecie": "zrodlo_w_komplecie",
+        "zintegrowane zrodlo swiatla led": "zrodlo_w_komplecie",
+    }
+    if name in exact_rules:
+        return exact_rules[name]
     rules = [
         ("barwa_zakres", ["zakres temperatury barwowej", "regulowana temperatura barwowa"]),
         ("lm_w", ["skutecznosc swietlna", "lm w"]),
@@ -88,6 +127,34 @@ def normalize_parameter_value(value: str, attr: str, parameter_name: str) -> str
     if attr == "lm_w":
         match = re.search(r"\d+(?:[,.]\d+)?", value)
         return f"{match.group(0).replace(',', '.')}lm/W" if match else ""
+    if attr == "ugr":
+        match = re.search(r"(?:<|≤|<=)?\s*\d{1,2}", value)
+        return re.sub(r"\s+", "", match.group(0)).replace("<=", "≤") if match else ""
+    if attr == "cri":
+        match = re.search(r"\d{2,3}", value)
+        return match.group(0) if match else ""
+    if attr == "trwalosc":
+        match = re.search(r"\d+", value.replace(" ", ""))
+        return match.group(0) if match else ""
+    if attr == "laczenie_przelotowe":
+        lowered = normalize_header(value)
+        return "Tak" if lowered in {"1", "tak", "yes", "true"} else "Nie" if lowered in {"0", "nie", "no", "false"} else ""
+    if attr == "sciemnianie":
+        lowered = normalize_header(value)
+        if lowered in {"nie", "no", "0", "false"}:
+            return "Nie"
+        if lowered in {"tak", "yes", "1", "true"}:
+            return "Tak"
+        return value
+    if attr == "zrodlo_swiatla":
+        return value
+    if attr == "zrodlo_w_komplecie":
+        lowered = normalize_header(value)
+        if lowered in {"1", "tak", "yes", "true"}:
+            return "Tak"
+        if lowered in {"0", "nie", "no", "false"}:
+            return "Nie"
+        return ""
     if attr == "barwa_zakres":
         values = [int(v) for v in re.findall(r"[23645]\d{3}", value)]
         return f"{min(values)}-{max(values)}K" if len(set(values)) >= 2 else ""
@@ -95,6 +162,21 @@ def normalize_parameter_value(value: str, attr: str, parameter_name: str) -> str
         values = [int(v) for v in re.findall(r"[23645]\d{3}", value)]
         if len(set(values)) >= 2:
             return f"{min(values)}-{max(values)}K"
+    if attr == "klasa_energetyczna":
+        match = re.fullmatch(r"[A-G]\+{0,3}", value.strip().upper())
+        return match.group(0) if match else ""
+    if attr == "sposob_montazu":
+        lowered = normalize_header(value)
+        surface = "do nadbudowania" in lowered or "na podlozu" in lowered
+        recessed = "do wbudowania" in lowered
+        if surface and not recessed:
+            return "Natynkowy"
+        if recessed and not surface:
+            return "Podtynkowy"
+        return ""
+    if attr == "moc_max_zrodla":
+        match = re.search(r"(\d+(?:[,.]\d+)?)\s*W?\s*$", value, flags=re.IGNORECASE)
+        return f"{match.group(1).replace(',', '.')}W" if match else ""
     if attr == "moc":
         max_match = re.search(r"max\s*(\d+(?:[,.]\d+)?)\s*W?", value, flags=re.IGNORECASE)
         if max_match:
@@ -275,6 +357,17 @@ def build_parameter_index(params: pd.DataFrame, columns: dict[str, str | None]) 
             continue
 
         internal = parameter_attribute_to_internal(parameter_name)
+        socket_count = ""
+        if internal == "moc" and "maksymalna" in normalize_header(parameter_name) and (
+            re.search(r"\bmax\b", raw_value, flags=re.IGNORECASE)
+            or re.fullmatch(r"\d+(?:[,.]\d+)?\s*x\s*\d+(?:[,.]\d+)?\s*W?", raw_value, flags=re.IGNORECASE)
+        ):
+            # "max 60" / "2 x max 40" / "2 x 36" przy oprawie na wymienne zrodlo
+            # to maksymalna moc zrodla swiatla, nie moc oprawy.
+            internal = "moc_max_zrodla"
+            count_match = re.match(r"^\s*(\d{1,2})\s*x\b", raw_value, flags=re.IGNORECASE)
+            if count_match:
+                socket_count = count_match.group(1)
         if not internal:
             unmapped_rows.append(
                 {
@@ -290,13 +383,25 @@ def build_parameter_index(params: pd.DataFrame, columns: dict[str, str | None]) 
             continue
 
         product = index.setdefault(sku, {})
-        if internal not in product:
+        existing = product.get(internal)
+        explicit_included_source = normalize_header(parameter_name) == "zrodlo swiatla w komplecie"
+        existing_is_inferred_source = existing and normalize_header(existing["parameter_attribute"]) == "zintegrowane zrodlo swiatla led"
+        if internal not in product or (explicit_included_source and existing_is_inferred_source):
             product[internal] = {
                 "value": normalized_value,
                 "parameter_attribute": parameter_name,
                 "raw_value": raw_value,
                 "parameter_product_name": compact_spaces(str(row.get(name_column, ""))) if name_column else "",
             }
+        if socket_count and "liczba_gniazd" not in product:
+            product["liczba_gniazd"] = {
+                "value": socket_count,
+                "parameter_attribute": parameter_name,
+                "raw_value": raw_value,
+                "parameter_product_name": compact_spaces(str(row.get(name_column, ""))) if name_column else "",
+            }
+
+    reroute_integrated_led_max_power(index)
 
     unmapped = pd.DataFrame(unmapped_rows)
     if not unmapped.empty:
@@ -309,6 +414,22 @@ def build_parameter_index(params: pd.DataFrame, columns: dict[str, str | None]) 
     else:
         unmapped = pd.DataFrame(columns=["parameter_attribute", "value", "count"])
     return index, unmapped
+
+
+def reroute_integrated_led_max_power(index: dict[str, dict[str, dict[str, str]]]) -> None:
+    """Przy zintegrowanym LED bez trzonka "max NN W" to moc oprawy, nie moc zarowki."""
+    for product in index.values():
+        moc_max = product.get("moc_max_zrodla")
+        if not moc_max or "gwint" in product:
+            continue
+        integrated = product.get("zrodlo_w_komplecie")
+        if (
+            integrated
+            and normalize_header(integrated["parameter_attribute"]) == "zintegrowane zrodlo swiatla led"
+            and integrated["value"] == "Tak"
+        ):
+            product.setdefault("moc", moc_max)
+            del product["moc_max_zrodla"]
 
 
 def add_working_title_column(df: pd.DataFrame, title_column: str, config: dict[str, Any]) -> tuple[pd.DataFrame, str]:

@@ -115,6 +115,9 @@ suppliers:
         - Wspornik montażowy
         - Zapinka
         - Zasilacz
+        - Ogranicznik przepięć
+        - Lampa ogrodowa
+        - Oprawa elewacyjna solarna LED
       series:
         - ACETE
         - ADTR
@@ -193,6 +196,9 @@ suppliers:
         - TYBIA
         - VAND
         - VARSO
+        - KSPD-T2
+        - STONO
+        - REKA
       producer_colors:
         - Biały mat
         - Czarny mat
@@ -222,6 +228,42 @@ suppliers:
       numeric_rules:
         - Dimensions, lengths, widths, heights, diameters, power, flux, voltage, CCT, IP, IK and angle values can be accepted when normalized value matches the catalog format.
         - Remove degree symbol from angle values before review/export.
+      manufacturer_data_separator: ", "
+      multi_value_features: []
+      value_conventions:
+        - 'Pojedyncze wymiary uzywaja nazw sklepu bez jednostki w nazwie ("Dlugosc", "Szerokosc", "Wysokosc", "Srednica", "Glebokosc"); jednostka jest w wartosci po spacji, np. "600 mm" (format z Woo catalog knowledge). Nie tworzymy duplikatow typu "Dlugosc [mm]".'
+        - 'Dane producenta rozdzielamy przecinkami, np. "KANLUX, Objazdowa 1-3 41-922 Radzionkow, kanlux@kanlux.pl".'
+        - 'Zapisy typu "3xGU10" rozbijamy: Trzonek=GU10, Liczba zrodel swiatla=3 (krotnosc takze z tytulu, np. "JASMIN 3xE27"). Krotnosc trzonkow idzie do "Liczba zrodel swiatla", nie do "Liczba gniazd" (ta dotyczy gniazdek elektrycznych).'
+        - 'Atrybut "Zrodlo swiatla" ma tylko dwie wartosci: "Zintegrowane" i "Nie zintegrowane". Wyprowadzamy go z "Zrodlo swiatla w komplecie" (Tak -> Zintegrowane) albo z obecnosci trzonka / maks. mocy zrodla (-> Nie zintegrowane).'
+        - 'Przy zintegrowanym zrodle produkt nie ma atrybutow Trzonek, Liczba zrodel swiatla ani Kierunek swiecenia (np. EAN 5905339289971 / REKA 28997).'
+        - 'Barwa swiatla wynika z Temperatury barwowej [K]: <3300 Ciepla, 3300-5300 Neutralna, >5300 Zimna, zakres -> Zmienna. Dozwolone wartosci: Neutralna, Ciepla, Zimna, Zmienna.'
+        - 'Zasilanie mowi, jak zasilany jest produkt: Solarne / Akumulator / Sieciowe (wyprowadzane z tytulu i napiecia, wazne zwlaszcza dla naswietlaczy).'
+        - 'Schematy atrybutow i tytulow dotycza typu produktu, nie kategorii sklepu: akcesoria (ramki, zasilacze, czujniki itd.) nie ida schematem oprawy, a "Oprawa kanalowa"/"Oprawa sufitowa" to nie plafony - ida schematem opraw natynkowych.'
+        - 'Ksztalt zgadujemy z wymiarow, gdy go brak: srednica -> Okragly, dlugosc == szerokosc -> Kwadrat, dlugosc != szerokosc -> Prostokatny.'
+        - 'Seria TOLEO (DTL) to natynkowa oprawa punktowa "Oprawa sufitowa", nie lampa wiszaca.'
+        - 'Wskaznik olsnienia [UGR] jest opcjonalny, nie wymagany - producent podaje go tylko dla czesci rodzin.'
+        - 'Reczne uzupelnienia atrybutow mieszkaja w input/kanlux_braki_wymaganych_uzupelnione.xlsx (format skoroszytu brakow); wygrywaja z danymi automatycznymi, wartosci "n/d" sa pomijane.'
+        - 'Kolumna "Typ" producenta bywa mylna (np. "plafoniera LED" dla opraw sufitowych AQILO/RITI, "Plafoniera" dla kanalowej MILO) - typ produktu kotwiczymy we frazie na poczatku nazwy wygenerowanej przez pipeline nazw.'
+        - 'Gdy nazwa referencyjna (stare Woo) klosci sie z typem produktu (np. "Zasilacz BLINGO AIO" dla panelu), do importu idzie nazwa wygenerowana przez pipeline nazw.'
+        - 'Nazwa panelu ma zgadzac sie ze sposobem montazu: BLINGO AIO/UAIO w wariancie SRM to panele natynkowe, mimo ze pipeline domyslnie nazywa panele "podtynkowy".'
+        - 'Wartosci z wieloma kolorami ida do "Kolor producenta"; w "Kolor" zostaje pierwszy kolor. Nie generujemy juz osobnego atrybutu "Kolory".'
+        - 'Dla zakresu mocy (np. 12-18W) w atrybucie "Moc [W]" zapisujemy najwieksza wartosc liczbowa, a w tytule i opisie zostawiamy zakres.'
+        - 'Panele LED musza miec w tytule moc i wymiar; ramki do paneli musza miec wymiar, a moc tylko gdy rzeczywiscie dotyczy produktu.'
+        - 'Dla Kanlux zachowujemy pelniejszy model producenta w tytule, jesli rozroznia wariant produktu (np. ADTR SKY, ADTR SKY-V, ADTR PT, ADTR-H).'
+        - 'Naswietlacze AGOR/A sa asymetryczne, a AGOR bez /A symetryczne; tytul naswietlacza AGOR ma zawierac odpowiednio "asymetryczny" albo "symetryczny".'
+        - 'Maksymalna moc wymiennego zrodla idzie do atrybutu "Maksymalna moc zrodla swiatla" (nie "Moc maksymalna zarowki"). Lapiemy zapisy "max 60", "2 x max 40", "2 x 36" i "10 LED".'
+        - 'Produkt bez zrodla swiatla w srodku (Zrodlo swiatla w komplecie != Tak) nie ma "Moc [W]" - zostaje tylko "Maksymalna moc zrodla swiatla". Wyjatek: zintegrowany LED bez trzonka, gdzie "max NN" to moc oprawy.'
+        - 'Napiecie [V] zostaje w eksporcie zawsze i zawiera rodzaj pradu, np. "220-240 AC"; dla typowych napiec sieciowych bez oznaczenia dopisujemy "AC".'
+        - 'Parametr "Zrodlo swiatla zasilane lub niezasilane napieciem sieciowym" (wartosci MLS/NLS) nie jest zrodlem "Napiecie [V]".'
+        - 'Klasa energetyczna pochodzi z parametru "Klasa efektywnosci energetycznej" (litery A-G) i ma byc eksportowana zawsze, gdy jest znana.'
+        - 'Sposob montazu mapujemy z "Miejsce montazu": "do nadbudowania..." -> Natynkowy, "do wbudowania..." -> Podtynkowy; wartosci mieszane pomijamy.'
+        - 'Kilka materialow w jednym polu ("ABS,PE") to osobne wartosci atrybutu Material rozdzielane "|".'
+        - 'Brak "Czujnik ruchu" i "Liczba gniazd" nie jest brakiem atrybutu wymaganego - pusty czujnik znaczy "nie ma", a liczba gniazd dotyczy tylko opraw na wymienne zrodla.'
+        - 'Przy wymiennym zrodle swiatla takze Moc [W], Barwa swiatla, Strumien swietlny i Temperatura barwowa nie sa atrybutami wymaganymi - zaleza od wkreconej zarowki.'
+        - 'Produkty ze zmienna/przelaczalna moca (np. naswietlacz solarny FL 36607 z wyborem 10/15W, panele ze zmiennymi lumenami bez zasilacza) moga miec "Maksymalna moc zrodla swiatla" mimo braku trzonka - to nie blad danych.'
+        - 'Produkt EDO111111 (dane producenta ELHURT) to znana anomalia poprawiana recznie przez uzytkownika - nie ruszac automatycznie.'
+        - 'Przy rozbieznosci mocy miedzy starym Woo a parametrami producenta wygrywaja parametry producenta - taka roznica nie jest bledem ani nie wymaga flagowania.'
+        - 'Oprawy hermetyczne z trzonkiem (swietlowki T8) zachowuja Trzonek i Liczbe gniazd, a tytul dostaje "do swietlowek LED" (np. "Oprawa hermetyczna do swietlowek LED DICHT...").'
 
     accessory_rules:
       product_types_without_own_power:
@@ -229,6 +271,8 @@ suppliers:
         - Klosz
         - Linka do podwieszenia
         - Pilot do oprawy
+        - Ramka
+        - Ramka do paneli
         - Siatka ochronna
         - Soczewka
         - Uchwyt

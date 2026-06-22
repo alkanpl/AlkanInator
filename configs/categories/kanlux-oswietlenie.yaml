@@ -102,7 +102,7 @@ title_strategy_rules:
   - producent
 - name: naswietlacz
   category_contains: Naświetlacze
-  template: Naświetlacz LED {seria_clean} {moc} {strumien} {lm_w} {barwa} {kat_swiecenia} {ip} {czujnik} {kolor}
+  template: Naświetlacz LED {seria_clean} {optyka} {moc} {strumien} {lm_w} {barwa} {kat_swiecenia} {ip} {czujnik} {kolor}
     {producent}
 - name: high_bay
   category_contains: High Bay

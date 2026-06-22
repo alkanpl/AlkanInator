@@ -15,6 +15,9 @@ Use `C:\Users\Handlowiec\Desktop\AlkanInator` as the main repository. Read
 `prompts\codex_description_agent.md` before writing; it is the current style
 and quality contract. Also read
 `prompts\examples\good_description_arot.html` as the approved quality example.
+Read `dictionaries\seo_description_knowledge.yaml` before writing. It is the
+source of truth for global SEO-description rules. If an older prompt or example
+differs from this YAML, follow the YAML while preserving factual safety.
 
 ## Brief Selection
 
@@ -78,16 +81,33 @@ build a shared template, or postpone validation until the end.
 
 ## SEO Structure
 
+- Use the supplied SEO keyword from the brief. Never invent or replace it.
+- Use the exact keyword no more than 3 times in the whole visible description.
 - Start the first `<p>` with `<strong>the exact full product name</strong>`.
+  The opening must also begin with the supplied keyword; normally the keyword
+  is the leading product-type phrase in the full name.
 - Explain the product, relevant use, and strongest confirmed features early.
-- Add a specific `<h2>` with a natural product phrase.
+- Add a specific `<h2>` containing the supplied keyword in a natural context.
+  Prefer a useful question when it reads naturally.
+- Start the first `<p>` immediately after `<h2>` with the supplied keyword.
+- Do not use the supplied keyword in any `<h3>`.
 - Add `<h3>Najważniejsze zalety</h3>` with fact-based benefits.
+- Put 3-6 concrete features or benefits in its `<ul>`.
 - Add `<h3>Specyfikacja techniczna</h3>` using only `Product facts`.
 - Format specification rows as
   `<li><strong>Parameter:</strong> value</li>`.
+- Immediately after the specification list, add a separate final `<p>` that
+  summarizes the strongest confirmed reason to choose the product and gives a
+  natural purchase encouragement. Never end the description on the
+  specification `</ul>`.
 - Add an application section only when supportable.
-- Target 1500-2200 non-space characters for rich briefs. For sparse
-  accessories, prefer a shorter concrete description to filler.
+- Keep paragraphs short: normally 3-4 sentences maximum.
+- Close with a factual summary or purchase-oriented recommendation without
+  unsupported promises.
+- Write at least 1200 visible characters including spaces. For rich briefs,
+  target 1500-2200 non-space characters. For sparse accessories, factual
+  accuracy takes priority over padding. If confirmed facts do not support the
+  required length, do not invent content; report the conflict for manual review.
 
 The user's AROT/Kopoflex example defines the expected specificity, readable SEO
 hierarchy, and relation between features and benefits. It is not a source of
@@ -97,6 +117,10 @@ facts for Kanlux products.
 
 Vary the reasoning, section wording, benefits, and prose for every product.
 Only the HTML hierarchy and specification heading may remain stable.
+
+Write every SKU independently. Products that differ only by color, size, or
+another variant must still have different sentences, argumentation, and
+composition. Do not reuse a description with reordered sentences.
 
 Write for a person buying or installing the product. Prefer direct statements:
 
@@ -109,8 +133,19 @@ Do not manufacture benefits from database fields. Voltage, code, EAN, series,
 and warranty may remain only in specifications when they do not support a
 natural, useful sentence.
 
+For every important claim, use this reasoning:
+
+1. Feature: what the product has or does.
+2. Advantage: what the feature enables.
+3. Benefit: what the user gains in practice.
+
+Do not force a benefit when the facts support only a technical statement.
+Use `<strong>` sparingly for information that genuinely deserves emphasis.
+
 Do not write:
 
+- empty superlatives such as `rewelacyjny`, `innowacyjny`, `najlepszy`, or
+  `niesamowity`;
 - meta-commentary about descriptions, briefs, customers, or comparison;
 - `porządkuje dobór`, `techniczny profil wariantu`, or similar filler;
 - `wspiera zastosowanie`, `uzupełnia zestaw informacji`, `profil produktu`;
@@ -123,6 +158,22 @@ Do not write:
 - generic promises such as `spełni wszystkie wymagania`;
 - claims not supported by the brief;
 - Polish text without diacritics.
+
+Do not copy producer descriptions, external website text, or facts from the
+AROT example. Do not describe something visible in a photo unless the statement
+adds useful, confirmed product information.
+
+Before saving, verify:
+
+- at least 1200 visible characters including spaces;
+- keyword at the opening, in `<h2>`, and at the start of the first paragraph
+  after `<h2>`;
+- no keyword in `<h3>` and no more than 3 total occurrences;
+- short paragraphs and a 3-6 item benefits list;
+- factual consistency with `Product facts`, `Compatibility facts`, and
+  `Rejected facts`;
+- a separate final summary paragraph after the technical specification;
+- spelling, Polish diacritics, HTML structure, and natural readability.
 
 Do not create or use scripts resembling `generate_new_descriptions.py`,
 `build_paragraphs`, dictionaries of paragraphs, or product-type prose

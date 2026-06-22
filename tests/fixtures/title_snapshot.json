@@ -113,7 +113,7 @@
     "expected": {
       "new_title": "Panel LED podtynkowy BLINGO kwadratowy 34W 4080lm 4000K neutralne biały Kanlux 37171",
       "product_role": "main",
-      "title_status": "OK"
+      "title_status": "WARNING"
     }
   },
   {
@@ -150,7 +150,7 @@
       "EPREL URL": ""
     },
     "expected": {
-      "new_title": "Panel LED natynkowy BLINGO U 35W Kanlux 37278",
+      "new_title": "Panel LED natynkowy BLINGO U 29-35W Kanlux 37278",
       "product_role": "main",
       "title_status": "WARNING"
     }
@@ -384,7 +384,7 @@
       "EPREL URL": ""
     },
     "expected": {
-      "new_title": "Ramka do paneli ADTR 60x60 cm Kanlux 39755",
+      "new_title": "Ramka do paneli ADTR SKY-V 60x60 cm Kanlux 39755",
       "product_role": "accessory",
       "title_status": "WARNING"
     }
@@ -579,7 +579,7 @@
       "EPREL URL": ""
     },
     "expected": {
-      "new_title": "Naświetlacz LED FL AGOR 100W 13500lm 4000K IP65 czarny Kanlux 38423",
+      "new_title": "Naświetlacz LED FL AGOR PRO asymetryczny 100W 13500lm 4000K IP65 czarny Kanlux 38423",
       "product_role": "main",
       "title_status": "OK"
     }
@@ -618,7 +618,7 @@
       "EPREL URL": ""
     },
     "expected": {
-      "new_title": "Naświetlacz LED FL AGOR 300W 45000lm 150lm/W 4000K IP65 czarny Kanlux 33479",
+      "new_title": "Naświetlacz LED FL AGOR HI asymetryczny 300W 45000lm 150lm/W 4000K IP65 czarny Kanlux 33479",
       "product_role": "main",
       "title_status": "OK"
     }
@@ -891,7 +891,7 @@
       "EPREL URL": ""
     },
     "expected": {
-      "new_title": "Plafon LED VARSO 36W 3600lm okrągły 33cm 4000K neutralne biały Kanlux 26448",
+      "new_title": "Plafon LED VARSO HI 36W 3600lm okrągły 33cm 4000K neutralne biały Kanlux 26448",
       "product_role": "main",
       "title_status": "OK"
     }
@@ -1281,7 +1281,7 @@
       "EPREL URL": ""
     },
     "expected": {
-      "new_title": "Plafon LED DABA 26W 2800lm okrągły 30cm 4000K neutralne IP65 z czujnikiem ruchu biały Kanlux 19066",
+      "new_title": "Plafon LED DABA PRO 26W 2800lm okrągły 30cm 4000K neutralne IP65 z czujnikiem ruchu biały Kanlux 19066",
       "product_role": "main",
       "title_status": "OK"
     }

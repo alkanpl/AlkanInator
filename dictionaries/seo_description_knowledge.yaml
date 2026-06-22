@@ -1,0 +1,96 @@
+version: 1
+description: >
+  Global rules for writing unique Polish product descriptions optimized for SEO.
+  The rules were transcribed from input/Instrukcja SEO poprawiona.docx.
+
+product_description:
+  input:
+    required_fields:
+      - product_title
+      - product_parameters
+      - seo_keyword
+    seo_keyword_columns:
+      - Fraza kluczowa
+      - fraza_kluczowa
+      - primary_keyword
+      - keyword
+
+  length:
+    minimum_chars_with_spaces: 1200
+    note: >
+      When confirmed product facts are sparse, factual accuracy is more important
+      than artificially extending the description with unsupported claims.
+
+  uniqueness:
+    - Every product description must be original.
+    - Do not copy producer descriptions or content from other websites.
+    - Products that differ only by color or variant still require independently written text.
+    - Do not reuse the same sentences in a different order between similar products.
+
+  seo_keyword:
+    maximum_occurrences: 3
+    placements:
+      - The opening paragraph starts with the supplied SEO keyword, preferably in the first sentence.
+      - The H2 heading contains the SEO keyword in a natural context.
+      - The first paragraph immediately after H2 starts with the SEO keyword.
+      - H3 headings do not contain the SEO keyword.
+    h2_preference: Use a natural question about the concrete product when it reads well.
+    priority: Readability and natural language take precedence over mechanical keyword stuffing.
+
+  structure:
+    paragraph_max_sentences: 4
+    paragraphs_should_be_short: true
+    benefits_list:
+      minimum_items: 3
+      maximum_items: 6
+    use_bold_sparingly: true
+    required_sections:
+      - introduction
+      - h2_with_keyword
+      - paragraph_after_h2_starting_with_keyword
+      - h3_without_keyword
+      - key_benefits_list
+      - technical_specification
+      - closing_summary
+    closing_summary:
+      required: true
+      position: final_paragraph_after_technical_specification
+      html_element: p
+      content:
+        - Summarize why the confirmed product features make this variant worth choosing.
+        - End with a natural purchase encouragement or practical recommendation.
+        - Use only confirmed facts and avoid empty promises or unsupported guarantees.
+
+  writing_model:
+    sequence:
+      - feature
+      - advantage
+      - customer_benefit
+    rule: >
+      Explain what the product has or does, what this enables, and what practical
+      value the user receives. Do not turn technical identifiers into fake benefits.
+
+  avoid:
+    empty_superlatives:
+      - rewelacyjny
+      - innowacyjny
+      - najlepszy
+      - niesamowity
+    rules:
+      - Do not describe visible appearance without adding useful context.
+      - Do not invent facts, applications, certificates, guarantees, or parameters.
+      - Do not exceed the SEO keyword occurrence limit.
+      - Avoid language errors, typos, keyword stuffing, and walls of text.
+
+  final_review:
+    - Check factual consistency against the supplied product data.
+    - Check the keyword placement and occurrence count.
+    - Check that a separate closing paragraph appears after the technical specification.
+    - Check language, spelling, HTML structure, and readability.
+    - Write for a person first; SEO rules must still sound natural.
+
+  example_policy:
+    rule: >
+      Examples in the source document illustrate structure only. Their product facts,
+      claims, parameters, applications, certificates, and benefits must never be
+      transferred to another product.

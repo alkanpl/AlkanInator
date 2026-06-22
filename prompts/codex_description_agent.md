@@ -60,6 +60,9 @@ jest krótszą ścieżką albo pojawił się jako pierwszy w wynikach wyszukiwan
 - Dodaj `<h3>Najważniejsze zalety</h3>` oraz listę korzyści wynikających z faktów.
 - Dodaj `<h3>Specyfikacja techniczna</h3>`. Każdy parametr zapisz jako
   `<li><strong>Nazwa:</strong> wartość</li>`.
+- Bezpośrednio po liście specyfikacji dodaj osobny końcowy `<p>`. Podsumuj w nim
+  najważniejszy praktyczny powód wyboru produktu i naturalnie zachęć do zakupu.
+  Używaj wyłącznie potwierdzonych faktów. Opis nie może kończyć się na `</ul>`.
 - Opcjonalnie dodaj sekcję zastosowań, jeśli wynika ona z typu produktu i nie
   wymaga wymyślania właściwości.
 - Przy bogatych danych celuj w 1500-2200 znaków bez spacji. Przy skromnym

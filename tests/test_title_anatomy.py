@@ -206,6 +206,170 @@ class TitleAnatomyTest(unittest.TestCase):
         self.assertNotIn("duplicate_seo_title_without_code", result.loc[0, "warnings"])
         self.assertNotIn("duplicate_seo_title_without_code", result.loc[1, "warnings"])
 
+    def test_legacy_title_normalizes_wooden_plafon_gender(self) -> None:
+        config = {
+            "title_template": "Plafon {material} {seria} {producent}",
+            "append_sku_after_producer": True,
+            "sku_columns": ["Kod"],
+            "max_title_length": 120,
+            "required_fields": [],
+        }
+        df = pd.DataFrame(
+            [
+                {
+                    "Nazwa": "Old",
+                    "attr_material": "drewniana",
+                    "attr_seria": "JASMIN",
+                    "attr_producent": "Kanlux",
+                    "Kod": "36507",
+                }
+            ]
+        )
+
+        result = optimize_titles_for_dataframe(df, "Nazwa", config, {})
+
+        self.assertEqual(result.loc[0, "new_title"], "Plafon drewniany JASMIN Kanlux 36507")
+
+    def test_power_range_is_used_in_title_while_attribute_can_hold_maximum(self) -> None:
+        config = {
+            **ANATOMY_CONFIG,
+            "rules": [
+                {
+                    "normalized_product_type": "panel led",
+                    "status": "approved",
+                    "title_keyword": "Panel LED",
+                    "required_title_attributes": ["seria", "wymiary", "moc"],
+                    "optional_title_attributes": [],
+                }
+            ],
+        }
+        df = pd.DataFrame(
+            [
+                {
+                    "Nazwa": "Old",
+                    "attr_typ": "Panel LED",
+                    "attr_seria": "BLINGO",
+                    "attr_wymiary": "60x60 cm",
+                    "attr_moc": "18W",
+                    "Moc - zakres": "12 - 18W",
+                    "Producent": "Kanlux",
+                    "Kod": "11111",
+                }
+            ]
+        )
+
+        result = optimize_titles_for_dataframe(df, "Nazwa", TITLE_CONFIG, config)
+
+        self.assertIn("12-18W", result.loc[0, "new_title"])
+        self.assertNotRegex(result.loc[0, "new_title"], r"(?<!-)18W\b")
+
+    def test_panel_title_uses_max_power_when_regular_power_is_missing(self) -> None:
+        config = {
+            **ANATOMY_CONFIG,
+            "rules": [
+                {
+                    "normalized_product_type": "panel led",
+                    "status": "approved",
+                    "title_keyword": "Panel LED",
+                    "required_title_attributes": ["seria", "wymiary", "moc"],
+                    "optional_title_attributes": [],
+                }
+            ],
+        }
+        df = pd.DataFrame(
+            [
+                {
+                    "Nazwa": "Old",
+                    "attr_typ": "Panel LED",
+                    "attr_seria": "BLINGO UHRA",
+                    "attr_wymiary": "595x595mm",
+                    "attr_moc_max_zrodla": "max 40",
+                    "Producent": "Kanlux",
+                    "Kod": "39170",
+                }
+            ]
+        )
+
+        result = optimize_titles_for_dataframe(df, "Nazwa", TITLE_CONFIG, config)
+
+        self.assertIn("40W", result.loc[0, "new_title"])
+
+    def test_adtr_frame_preserves_supplier_model_family(self) -> None:
+        config = {
+            "title_template": "{typ} {seria} {producent}",
+            "accessory_title_templates": {
+                "Ramka": "{accessory_type} do paneli {seria} {wymiary} {ksztalt} {kolor} {producent}",
+            },
+            "append_sku_after_producer": True,
+            "sku_columns": ["Kod"],
+            "max_title_length": 120,
+            "required_fields_by_role": {"accessory": []},
+        }
+        df = pd.DataFrame(
+            [
+                {
+                    "Nazwa": "Old",
+                    "product_role": "accessory",
+                    "accessory_type": "Ramka",
+                    "attr_seria": "ADTR",
+                    "attr_wymiary": "60x60 cm",
+                    "attr_ksztalt": "kwadratowa",
+                    "attr_kolor": "biała",
+                    "Nazwa Kanlux": "ADTR SKY 6060 W",
+                    "attr_producent": "Kanlux",
+                    "Kod": "27618",
+                }
+            ]
+        )
+
+        result = optimize_titles_for_dataframe(df, "Nazwa", config, {})
+
+        self.assertIn("ADTR SKY", result.loc[0, "new_title"])
+        self.assertIn("60x60 cm", result.loc[0, "new_title"])
+
+    def test_agor_floodlight_title_gets_beam_type_from_supplier_name(self) -> None:
+        config = {
+            **ANATOMY_CONFIG,
+            "rules": [
+                {
+                    "normalized_product_type": "naswietlacz led",
+                    "status": "approved",
+                    "title_keyword": "Naswietlacz LED",
+                    "required_title_attributes": ["seria_clean", "optyka", "moc", "kat_swiecenia"],
+                    "optional_title_attributes": [],
+                }
+            ],
+        }
+        df = pd.DataFrame(
+            [
+                {
+                    "Nazwa": "Old asym",
+                    "attr_typ": "naswietlacz LED",
+                    "attr_seria": "FL AGOR",
+                    "attr_moc": "100W",
+                    "attr_kat_swiecenia": "125°",
+                    "Nazwa Kanlux": "FL AGOR/A PRO 100W NW",
+                    "Producent": "Kanlux",
+                    "Kod": "38423",
+                },
+                {
+                    "Nazwa": "Old sym",
+                    "attr_typ": "naswietlacz LED",
+                    "attr_seria": "FL AGOR",
+                    "attr_moc": "100W",
+                    "attr_kat_swiecenia": "110°",
+                    "Nazwa Kanlux": "FL AGOR PRO 100W NW",
+                    "Producent": "Kanlux",
+                    "Kod": "38420",
+                },
+            ]
+        )
+
+        result = optimize_titles_for_dataframe(df, "Nazwa", TITLE_CONFIG, config)
+
+        self.assertIn("FL AGOR PRO asymetryczny", result.loc[0, "new_title"])
+        self.assertIn("FL AGOR PRO symetryczny", result.loc[1, "new_title"])
+
     def test_ceiling_fixture_title_adds_pointowa_when_source_says_point_fixture(self) -> None:
         config = {
             "title_template": "{typ} {seria} {gwint} {ip} {producent}",

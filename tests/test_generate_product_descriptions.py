@@ -246,6 +246,52 @@ class CodexDescriptionBriefTest(unittest.TestCase):
         self.assertEqual(checks_by_name["seo_opening"], "WARNING")
         self.assertEqual(checks_by_name["html_benefits_h3"], "WARNING")
 
+    def test_validator_enforces_supplied_keyword_placement_and_limit(self) -> None:
+        checks = validate_codex_description(
+            """
+            <p><strong>Kanlux BLINGO 40W</strong> zapewnia neutralne światło.</p>
+            <h2>Panel LED do sufitu kasetonowego</h2>
+            <p>Ten model ma moc 40 W.</p>
+            <h3>Panel LED - najważniejsze zalety</h3>
+            <p>Panel LED sprawdza się we wnętrzach. Panel LED ma stalową obudowę.</p>
+            <h3>Specyfikacja techniczna</h3>
+            <ul><li><strong>Moc:</strong> 40 W</li></ul>
+            """,
+            [{"fact": "Typ produktu", "value": "Panel LED", "source": "test"}],
+            [],
+            product_name="Kanlux BLINGO 40W",
+            seo_keyword="panel led",
+        )
+        checks_by_name = {check["check"]: check["status"] for check in checks}
+
+        self.assertEqual(checks_by_name["seo_keyword_opening"], "WARNING")
+        self.assertEqual(checks_by_name["seo_keyword_after_h2"], "WARNING")
+        self.assertEqual(checks_by_name["seo_keyword_h3"], "WARNING")
+        self.assertEqual(checks_by_name["seo_keyword_occurrences"], "WARNING")
+
+    def test_validator_requires_closing_summary_after_specification(self) -> None:
+        checks = validate_codex_description(
+            """
+            <p><strong>Panel LED Kanlux BLINGO</strong> daje neutralne światło do pracy.</p>
+            <h2>Panel LED do sufitu kasetonowego</h2>
+            <p><strong>Panel LED</strong> ma moc 40 W i strumień 3800 lm.</p>
+            <h3>Najważniejsze zalety</h3>
+            <ul>
+              <li>Neutralna barwa światła.</li>
+              <li>Podtynkowy sposób montażu.</li>
+              <li>Wysoki strumień świetlny.</li>
+            </ul>
+            <h3>Specyfikacja techniczna</h3>
+            <ul><li><strong>Moc:</strong> 40 W</li></ul>
+            """,
+            [{"fact": "Typ produktu", "value": "Panel LED", "source": "test"}],
+            [],
+            product_name="Panel LED Kanlux BLINGO",
+        )
+
+        checks_by_name = {check["check"]: check["status"] for check in checks}
+        self.assertEqual(checks_by_name["html_closing_summary"], "WARNING")
+
     def test_validator_detects_template_language_from_bulk_generator(self) -> None:
         repeated = (
             "Stopień ochrony IP65 porządkuje dobór do przestrzeni technicznych. "
@@ -329,6 +375,7 @@ class CodexDescriptionBriefTest(unittest.TestCase):
                     "attr_typ": "Siatka ochronna",
                     "attr_moc": "240W",
                     "attr_pasuje_do": "do FL AGOR HI GRID",
+                    "primary_keyword": "siatka ochronna",
                 }
             ]
         )
@@ -347,6 +394,8 @@ class CodexDescriptionBriefTest(unittest.TestCase):
         self.assertIn("Nie twórz skryptu", brief["prompt"])
         self.assertIn('"<brief.xlsx>"', brief["prompt"])
         self.assertIn("good_description_arot.html", brief["prompt"])
+        self.assertIn("SEO_KEYWORD: siatka ochronna", brief["prompt"])
+        self.assertEqual(brief["product"]["seo_keyword"], "siatka ochronna")
         pd.testing.assert_frame_equal(df, original)
 
     def test_validate_codex_review_file_detects_bad_generated_description(self) -> None:
@@ -395,6 +444,11 @@ class CodexDescriptionBriefTest(unittest.TestCase):
                 "<li><strong>Seria:</strong> AGOR</li>",
                 "<li><strong>Materiał:</strong> Metal</li>",
                 "</ul>",
+                (
+                    "<p>Metalowa siatka Kanlux 33482 jest właściwym wyborem, gdy potrzebna jest "
+                    "potwierdzona kompatybilność z oprawą FL AGOR HI GRID i dodatkowa fizyczna "
+                    "osłona. Wybierz ten model do wskazanej serii opraw.</p>"
+                ),
             ]
         )
         brief = {

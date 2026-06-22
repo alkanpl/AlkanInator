@@ -38,6 +38,8 @@ def build_title_parts(
         if str(key).startswith("attr_"):
             values[str(key)[5:]] = "" if is_blank(value) else str(value)
     values["old_title"] = str(row.get("old_title", ""))
+    values["nazwa_kanlux"] = first_non_blank(row.get("Nazwa Kanlux", ""), row.get("Nazwa producenta", ""))
+    values["moc_zakres"] = first_non_blank(row.get("Moc - zakres", ""), row.get("attr_moc_zakres", ""))
     source_title_parts: list[str] = []
     for column in ["Nazwa B2C / SEO", "Nazwa", "Nazwa Kanlux", "name", "old_title"]:
         value = compact_spaces(str(row.get(column, "")))
@@ -116,6 +118,7 @@ def build_title_parts(
 
 def normalize_seo_title_terms(title: str) -> str:
     title = re.sub(r"\bPlafoniera\b", "Plafon", title, flags=re.IGNORECASE)
+    title = re.sub(r"\bPlafon\s+drewniana\b", "Plafon drewniany", title, flags=re.IGNORECASE)
     return compact_spaces(title)
 
 
@@ -397,7 +400,18 @@ def build_inflected_values(values: dict[str, str], config: dict[str, Any]) -> di
     typ_normalized = normalize_text(values.get("typ", ""))
     source_title_normalized = normalize_text(" ".join([values.get("old_title", ""), values.get("source_title", "")]))
     result["punktowa"] = "punktowa" if "punktow" in typ_normalized or "punktow" in source_title_normalized else ""
-    series_clean = re.sub(r"(?<![-\w])LED(?![-\w])", " ", values.get("seria", ""), flags=re.IGNORECASE)
+    supplier_family = supplier_model_family(values)
+    if supplier_family:
+        result["seria"] = supplier_family
+    title_power_range = normalize_title_power_range(values.get("moc_zakres", ""))
+    if title_power_range:
+        result["moc"] = title_power_range
+    elif not values.get("moc", "") and "panel" in typ_normalized:
+        panel_max_power = normalize_title_power(values.get("moc_max_zrodla", ""))
+        if panel_max_power:
+            result["moc"] = panel_max_power
+    result["optyka"] = agor_beam_type(values)
+    series_clean = re.sub(r"(?<![-\w])LED(?![-\w])", " ", result.get("seria", values.get("seria", "")), flags=re.IGNORECASE)
     result["seria_clean"] = compact_spaces(series_clean) or values.get("seria", "")
     # Sposob montazu panelu wyprowadzony z typu produktu (uniwersalny = natynkowy,
     # zwieszany = zwieszany, pozostale panele = podtynkowy).
@@ -413,6 +427,132 @@ def build_inflected_values(values: dict[str, str], config: dict[str, Any]) -> di
     else:
         result["montaz"] = ""
     return result
+
+
+def normalize_title_power_range(value: str) -> str:
+    value = compact_spaces(str(value or ""))
+    if not value:
+        return ""
+    match = re.fullmatch(
+        r"(\d+(?:[,.]\d+)?)\s*(?:W\s*)?(?:-|/|–|—)\s*(\d+(?:[,.]\d+)?)\s*W?",
+        value,
+        flags=re.IGNORECASE,
+    )
+    if not match:
+        return ""
+    left, right = (part.replace(",", ".") for part in match.groups())
+    return f"{left}-{right}W"
+
+
+def normalize_title_power(value: str) -> str:
+    value = compact_spaces(str(value or ""))
+    if not value:
+        return ""
+    value = re.sub(r"^(?:max\.?|maks(?:ymalnie)?|do)\s+", "", value, flags=re.IGNORECASE)
+    match = re.fullmatch(r"(\d+(?:[,.]\d+)?)\s*W?", value, flags=re.IGNORECASE)
+    if not match:
+        return ""
+    return f"{match.group(1).replace(',', '.')}W"
+
+
+def supplier_model_family(values: dict[str, str]) -> str:
+    producer_name = compact_spaces(values.get("nazwa_kanlux", ""))
+    if not producer_name:
+        return ""
+    normalized = normalize_text(producer_name)
+    if not normalized:
+        return ""
+    tokens = producer_name.split()
+    collected: list[str] = []
+    for token in tokens:
+        cleaned = compact_spaces(token.strip(",;"))
+        if not cleaned:
+            continue
+        prefix = supplier_model_prefix_before_spec(cleaned)
+        if prefix:
+            collected.append(prefix)
+            break
+        if supplier_model_token_is_spec(cleaned):
+            break
+        collected.append(cleaned)
+        if len(collected) >= 4:
+            break
+    candidate = compact_spaces(" ".join(collected))
+    candidate = re.sub(r"\bAGOR/A\b", "AGOR", candidate, flags=re.IGNORECASE)
+    candidate = re.sub(r"\s+", " ", candidate).strip()
+    series = compact_spaces(values.get("seria", ""))
+    if not candidate or not series:
+        return candidate
+    if not supplier_model_candidate_is_supported(candidate, series):
+        return ""
+    if normalize_text(candidate) == normalize_text(series):
+        return ""
+    if normalize_text(candidate).startswith(normalize_text(series)):
+        return candidate
+    return ""
+
+
+def supplier_model_candidate_is_supported(candidate: str, series: str) -> bool:
+    candidate_key = normalize_text(candidate)
+    series_key = normalize_text(series)
+    if not candidate_key.startswith(series_key):
+        return False
+    suffix = compact_spaces(candidate[len(series):].strip(" -/"))
+    if not suffix:
+        return False
+    supported_suffixes = {
+        "sky",
+        "sky-v",
+        "pt",
+        "pro",
+        "hi",
+        "aio",
+    }
+    suffix_key = normalize_text(suffix).replace(" ", "-")
+    return suffix_key in supported_suffixes
+
+
+def supplier_model_prefix_before_spec(token: str) -> str:
+    match = re.fullmatch(r"([A-Z]{1,4})\d+(?:[,.]\d+)?(?:-|/)\d+(?:[,.]\d+)?W", token, flags=re.IGNORECASE)
+    return match.group(1).upper() if match else ""
+
+
+def supplier_model_token_is_spec(token: str) -> bool:
+    return bool(
+        re.fullmatch(r"\d+(?:[,.]\d+)?\s*W(?:[-/]?(?:NW|WW|CW))?", token, flags=re.IGNORECASE)
+        or re.fullmatch(r"[A-Z]{1,3}\d+(?:[,.]\d+)?W(?:[-/]?(?:NW|WW|CW))?", token, flags=re.IGNORECASE)
+        or bool(re.search(r"\d", token))
+        or re.fullmatch(r"\d+(?:[,.]\d+)?(?:-|/)\d+(?:[,.]\d+)?W?", token, flags=re.IGNORECASE)
+        or re.fullmatch(r"\d{3,5}(?:-[A-Z]+)?", token, flags=re.IGNORECASE)
+        or re.fullmatch(r"\d+(?:[,.]\d+)?MM", token, flags=re.IGNORECASE)
+        or re.fullmatch(r"\d+CCT", token, flags=re.IGNORECASE)
+        or re.fullmatch(r"(?:NW|WW|CW|CCT|RGB|W|B|SR|G-BR)", token, flags=re.IGNORECASE)
+    )
+
+
+def agor_beam_type(values: dict[str, str]) -> str:
+    haystack = " ".join(
+        [
+            values.get("nazwa_kanlux", ""),
+            values.get("source_title", ""),
+            values.get("seria", ""),
+        ]
+    )
+    normalized = normalize_text(haystack)
+    if "agor" not in normalized:
+        return ""
+    if re.search(r"\bAGOR/A\b", haystack, flags=re.IGNORECASE):
+        return "asymetryczny"
+    angle = compact_spaces(values.get("kat_swiecenia", ""))
+    if angle:
+        angle_number = re.sub(r"[^\d,.]", "", angle).replace(",", ".")
+        if angle_number in {"125", "40"}:
+            return "asymetryczny"
+        if angle_number in {"110", "90"}:
+            return "symetryczny"
+    if re.search(r"\bFL\s+AGOR\b", haystack, flags=re.IGNORECASE):
+        return "symetryczny"
+    return ""
 
 
 def inflect_value(value: str, mapping: dict[str, Any]) -> str:

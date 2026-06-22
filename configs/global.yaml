@@ -35,3 +35,4 @@ default_category_column_candidates:
   - kategorie
 
 supplier_global_knowledge: dictionaries/supplier_global_knowledge.yaml
+attribute_knowledge: dictionaries/lighting_attribute_knowledge.yaml

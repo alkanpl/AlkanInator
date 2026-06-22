@@ -31,6 +31,15 @@ Oba dziela wspolny rdzen w `src/pipeline_core.py` (analiza wejscia,
 klasyfikacja rol, slowa kluczowe, tytuly, walidacja kategorii, eksport).
 Roznia sie tylko sposobem zbudowania kolumny roboczej `__working_title`.
 
+Lancuch poprawek atrybutow Kanlux (Woo + Baselinker):
+`import_attribute_knowledge.py` (macierz "Poprawione atrybuty.xlsx" -> wiedza) ->
+`run_pipeline_with_parameters.py` (enriched) -> `build_kanlux_baselinker_update.py`
+(CSV importu, raporty brakow/audytu, skoroszyt brakow) ->
+`build_kanlux_woocommerce_update.py` (plik Woo). Reczne uzupelnienia atrybutow
+czyta z `input/kanlux_braki_wymaganych_uzupelnione.xlsx` (wygrywaja z automatem,
+"n/d" pomijane). Decyzje sklepu o wartosciach atrybutow sa skodyfikowane w
+`dictionaries/supplier_global_knowledge.yaml` -> `value_conventions`.
+
 ## Architektura - mapa modulow
 
 - `utils.py` - I/O (XLSX/CSV jako string, auto-separator), wykrywanie kolumn,
@@ -43,6 +52,10 @@ Roznia sie tylko sposobem zbudowania kolumny roboczej `__working_title`.
 - `validate_output.py` - role produktow (glowny vs akcesorium), zgodnosc z
   kategoria.
 - `catalog_knowledge.py` - wstrzykiwanie wiedzy z eksportu WooCommerce do configu.
+- `dictionaries/supplier_global_knowledge.yaml` - globalna wiedza o dostawcach,
+  obecnie przede wszystkim Kanlux: suffixy, zasady kategorii, tytulow,
+  akcesoriow, atrybutow i bezpiecznych opisow. Przy zadaniach Kanlux czytaj ten
+  plik razem z `docs/kanlux_workflow.md`.
 - `analyze_keywords.py` - Google Ads Keyword Planner (zaleznosc opcjonalna,
   importowana leniwie; dziala tez offline z `--offline-keywords`).
 - Pozostale `enrich_*`, `recommend_*`, `export_*`, `build_kobi_baselinker.py`,

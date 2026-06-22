@@ -16,6 +16,7 @@ from utils import compact_spaces, is_blank, load_yaml, normalize_header, read_pr
 DEFAULT_SKU_SUFFIX_KNOWLEDGE_PATH = "dictionaries/learned_product_taxonomy.yaml"
 DEFAULT_CATALOG_KNOWLEDGE_PATH = "dictionaries/woocommerce_catalog_knowledge.yaml"
 DEFAULT_SUPPLIER_GLOBAL_KNOWLEDGE_PATH = "dictionaries/supplier_global_knowledge.yaml"
+DEFAULT_ATTRIBUTE_KNOWLEDGE_PATH = "dictionaries/lighting_attribute_knowledge.yaml"
 FEATURE_REVIEW_COLUMNS = ["sku", "ean", "name", "feature_name", "feature_value", "reason"]
 EXCLUDED_BASELINKER_FEATURES = {"EAN (GTIN)", "Kod producenta"}
 MANUALLY_APPROVED_FEATURE_VALUES = {
@@ -142,6 +143,8 @@ ACCESSORY_PRODUCT_TYPES_WITHOUT_OWN_POWER = {
     "Klosz",
     "Linka do podwieszenia",
     "Pilot do oprawy",
+    "Ramka",
+    "Ramka do paneli",
     "Siatka ochronna",
     "Soczewka",
     "Uchwyt",
@@ -220,23 +223,36 @@ FEATURE_MAP = {
     "Strumień świetlny [lm]": ["attr_strumien", "Strumień [lm]", "Strumień świetlny [lm]", "Jasność"],
     "Stopień ochrony [IP]": ["attr_ip", "Klasa IP", "Stopień ochrony [IP]", "Stopień ochrony IP"],
     "Stopień ochrony [IK]": ["attr_ik", "Klasa ochronności"],
-    "Kąt świecenia": ["attr_kat_swiecenia", "Kąt", "Kąt świecenia"],
+    "Kąt świecenia [°]": ["attr_kat_swiecenia", "Kąt", "Kąt świecenia"],
     "Kolor": ["attr_kolor", "Kolor obudowy"],
     "Kolor producenta": ["Kolor producenta", "attr_kolor_producenta", "attr_kolor", "Kolor obudowy"],
     "Trzonek": ["attr_gwint", "Gwint", "Trzonek", "Rodzaj gwintu"],
     "Materiał": ["attr_material", "Materiał"],
     "Kształt": ["attr_ksztalt", "Kształt"],
-    "Wymiary": ["attr_wymiary", "Wymiary"],
-    "Długość": ["attr_dlugosc", "Długość"],
-    "Szerokość": ["attr_szerokosc", "Szerokość"],
-    "Wysokość": ["attr_wysokosc", "Wysokość"],
-    "Średnica": ["attr_srednica", "Średnica"],
+    "Wymiary [mm]": ["attr_wymiary", "Wymiary"],
+    "Długość": ["attr_dlugosc", "Długość [mm]", "Długość"],
+    "Szerokość": ["attr_szerokosc", "Szerokość [mm]", "Szerokość"],
+    "Wysokość": ["attr_wysokosc", "Wysokość [mm]", "Wysokość"],
+    "Średnica": ["attr_srednica", "Średnica [mm]", "Średnica"],
+    "Głębokość": ["attr_glebokosc", "Głębokość [mm]", "Głębokość"],
     "Czujnik ruchu": ["attr_czujnik", "Czujnik ruchu"],
     "Opakowanie": ["attr_ilosc_sztuk"],
     "Gwarancja": ["attr_gwarancja"],
+    "Skuteczność świetlna [lm/W]": ["attr_lm_w"],
+    "Wskaźnik oddawania barw": ["attr_cri"],
+    "Trwałość [h]": ["attr_trwalosc"],
+    "Wskaźnik olśnienia [UGR]": ["attr_ugr", "UGR<19"],
+    "Możliwość łączenia": ["attr_laczenie_przelotowe"],
+    "Współpraca ze ściemniaczem": ["attr_sciemnianie", "Ściemnialne"],
+    "Źródło światła": ["attr_zrodlo_swiatla"],
+    "Źródło światła w komplecie": ["attr_zrodlo_w_komplecie"],
     "Sterowanie": ["attr_sterowanie"],
     "Zastosowanie": ["attr_pasuje_do"],
-    "Klasa efektywności energetycznej": ["Klasa EEi", "Klasa efektywności energetycznej"],
+    "Klasa energetyczna": ["attr_klasa_energetyczna", "Klasa EEi", "Klasa efektywności energetycznej"],
+    "Sposób montażu": ["attr_sposob_montazu", "Sposób montażu"],
+    "Maksymalna moc źródła światła": ["attr_moc_max_zrodla"],
+    "Liczba źródeł światła": ["attr_liczba_gniazd", "Liczba źródeł światła", "Liczba gniazd"],
+    "Zasilanie": ["attr_zasilanie", "Zasilanie"],
 }
 
 FEATURE_NAME_ALIASES = {
@@ -267,11 +283,11 @@ FEATURE_NAME_ALIASES = {
     "stopien ochrony ip": "Stopień ochrony [IP]",
     "stopień ochrony ip": "Stopień ochrony [IP]",
     "klasa ip": "Stopień ochrony [IP]",
-    "kat swiecenia": "Kąt świecenia",
-    "kąt świecenia": "Kąt świecenia",
-    "kat swiecenia °": "Kąt świecenia",
-    "kąt świecenia °": "Kąt świecenia",
-    "kat swiecenia deg": "Kąt świecenia",
+    "kat swiecenia": "Kąt świecenia [°]",
+    "kąt świecenia": "Kąt świecenia [°]",
+    "kat swiecenia °": "Kąt świecenia [°]",
+    "kąt świecenia °": "Kąt świecenia [°]",
+    "kat swiecenia deg": "Kąt świecenia [°]",
     "rodzaj gwintu": "Trzonek",
     "gwint": "Trzonek",
     "trzonek": "Trzonek",
@@ -280,6 +296,7 @@ FEATURE_NAME_ALIASES = {
     "material": "Materiał",
     "materiał": "Materiał",
     "kolor obudowy": "Kolor",
+    "kolor producenta": "Kolor producenta",
     "ksztalt": "Kształt",
     "kształt": "Kształt",
     "ksztalt oprawy": "Kształt",
@@ -293,6 +310,48 @@ FEATURE_NAME_ALIASES = {
     "ilosc sztuk": "Opakowanie",
     "ilość sztuk": "Opakowanie",
     "pasuje do": "Zastosowanie",
+    "wymiary": "Wymiary [mm]",
+    "wymiary mm": "Wymiary [mm]",
+    "dlugosc": "Długość",
+    "długość": "Długość",
+    "dlugosc mm": "Długość",
+    "długość mm": "Długość",
+    "szerokosc": "Szerokość",
+    "szerokość": "Szerokość",
+    "szerokosc mm": "Szerokość",
+    "szerokość mm": "Szerokość",
+    "wysokosc": "Wysokość",
+    "wysokość": "Wysokość",
+    "wysokosc mm": "Wysokość",
+    "wysokość mm": "Wysokość",
+    "srednica": "Średnica",
+    "średnica": "Średnica",
+    "srednica mm": "Średnica",
+    "średnica mm": "Średnica",
+    "glebokosc": "Głębokość",
+    "głębokość": "Głębokość",
+    "glebokosc mm": "Głębokość",
+    "głębokość mm": "Głębokość",
+    "sposob montazu": "Sposób montażu",
+    "sposób montażu": "Sposób montażu",
+    "miejsce montazu": "Sposób montażu",
+    "klasa energetyczna": "Klasa energetyczna",
+    "liczba gniazd": "Liczba źródeł światła",
+    "ilosc gniazd": "Liczba źródeł światła",
+    "liczba zrodel swiatla": "Liczba źródeł światła",
+    "moc maksymalna zarowki": "Maksymalna moc źródła światła",
+    "maksymalna moc zrodla swiatla": "Maksymalna moc źródła światła",
+    "skutecznosc swietlna": "Skuteczność świetlna [lm/W]",
+    "skuteczność świetlna": "Skuteczność świetlna [lm/W]",
+    "skutecznosc swietlna lm w": "Skuteczność świetlna [lm/W]",
+    "skuteczność świetlna lm w": "Skuteczność świetlna [lm/W]",
+    "trwalosc": "Trwałość [h]",
+    "trwałość": "Trwałość [h]",
+    "trwalosc h": "Trwałość [h]",
+    "trwałość h": "Trwałość [h]",
+    "zrodlo swiatla w komplecie": "Źródło światła w komplecie",
+    "źródło światła w komplecie": "Źródło światła w komplecie",
+    "klasa efektywnosci energetycznej": "Klasa energetyczna",
 }
 
 
@@ -338,6 +397,11 @@ def main() -> None:
         default=DEFAULT_SUPPLIER_GLOBAL_KNOWLEDGE_PATH,
         help="Globalny slownik wiedzy o dostawcach, m.in. zaakceptowane wartosci Kanlux.",
     )
+    parser.add_argument(
+        "--attribute-knowledge",
+        default=DEFAULT_ATTRIBUTE_KNOWLEDGE_PATH,
+        help="Reguly doboru i kolejnosci atrybutow dla kategorii oswietleniowych.",
+    )
     args = parser.parse_args()
 
     df = read_products(args.input, sheet_name=args.sheet)
@@ -355,6 +419,7 @@ def main() -> None:
     manufacturer_data_by_producer = build_manufacturer_data_by_producer(catalog_knowledge)
     feature_value_normalizer = build_feature_value_normalizer(catalog_knowledge)
     feature_policy = load_supplier_feature_policy(args.supplier_knowledge)
+    attribute_knowledge = load_yaml(args.attribute_knowledge) if args.attribute_knowledge else {}
     feature_review_rows: list[dict[str, str]] = []
     exported = build_baselinker_rows(
         df,
@@ -367,6 +432,7 @@ def main() -> None:
         feature_value_normalizer,
         feature_review_rows,
         feature_policy,
+        attribute_knowledge,
     )
     write_baselinker_csv(exported, args.output)
     feature_review_output = args.feature_review_output or default_feature_review_output(args.output)
@@ -390,6 +456,7 @@ def build_baselinker_rows(
     feature_value_normalizer: dict[str, dict[str, str]] | None = None,
     feature_review_rows: list[dict[str, str]] | None = None,
     feature_policy: dict[str, Any] | None = None,
+    attribute_knowledge: dict[str, Any] | None = None,
 ) -> list[dict[str, str]]:
     if sku_format == "producer_suffix" and producer_suffixes is None:
         producer_suffixes = load_producer_suffixes()
@@ -424,6 +491,7 @@ def build_baselinker_rows(
             producer,
             feature_value_normalizer,
         )
+        features = apply_category_attribute_knowledge(features, row, category, attribute_knowledge)
         features = filter_features_for_catalog(
             features,
             feature_value_normalizer,
@@ -449,6 +517,181 @@ def build_baselinker_rows(
             }
         )
     return rows
+
+
+def apply_category_attribute_knowledge(
+    features: dict[str, str],
+    row: pd.Series,
+    store_category: str,
+    attribute_knowledge: dict[str, Any] | None,
+) -> dict[str, str]:
+    if not attribute_knowledge:
+        return features
+    rule = match_attribute_category_rule(row, store_category, attribute_knowledge, features)
+    if not rule:
+        return features
+
+    # Reguly-placeholdery (bez listy atrybutow do opisu) nie przycinaja eksportu.
+    has_attribute_lists = any(
+        rule.get(role) for role in ("ordered_attributes", "required_description", "optional_description")
+    )
+    if not has_attribute_lists:
+        return features
+    ordered = category_attribute_order(rule)
+    if not ordered:
+        return features
+    allowed_keys = {normalize_header(name) for name in ordered}
+    # Atrybuty spoza macierzy, ktore maja zostac w eksporcie zawsze, gdy istnieja
+    # (m.in. "Klasa energetyczna", "Kolor producenta" i "Napiecie [V]" dodane na zyczenie sklepu).
+    requested = [
+        "Producent",
+        "Dane producenta",
+        "Typ produktu",
+        "Klasa energetyczna",
+        "Kolor producenta",
+        "Liczba źródeł światła",
+        "Maksymalna moc źródła światła",
+        "Napięcie [V]",
+        *ordered,
+    ]
+    by_normalized = {normalize_header(name): (name, value) for name, value in features.items()}
+    result: dict[str, str] = {}
+    seen: set[str] = set()
+    for requested_name in requested:
+        normalized = normalize_header(requested_name)
+        if normalized in seen:
+            continue
+        seen.add(normalized)
+        item = by_normalized.get(normalized)
+        if item:
+            result[item[0]] = item[1]
+    for name, value in features.items():
+        normalized = normalize_header(name)
+        if normalized in allowed_keys and name not in result:
+            result[name] = value
+    return result
+
+
+# Atrybutowe schematy kategorii dotycza typu produktu, nie kategorii sklepu:
+# akcesoria nie wchodza w schemat oprawy, a np. "Oprawa kanalowa" to nie plafon.
+ACCESSORY_PRODUCT_TYPE_TERMS = (
+    "ramka",
+    "zasilacz",
+    "siatka",
+    "soczewka",
+    "klips",
+    "linka",
+    "wspornik",
+    "klosz",
+    "zapinka",
+    "czujnik",
+    "konektor",
+    "pilot",
+    "uchwyt",
+    "lacznik",
+    "kabel",
+    "oprawka",
+    "adapter",
+)
+
+PRODUCT_TYPE_RULE_ALIASES = [
+    # Oprawy kanalowe i sufitowe (punktowe, na GU10/E27) ida schematem opraw natynkowych.
+    ("oprawa kanalowa", "oprawy natynkowe"),
+    ("oprawa sufitowa", "oprawy natynkowe"),
+    ("plafon", "plafony"),
+    ("oprawa hermetyczna", "oprawy hermetyczne"),
+    ("naswietlacz", "naswietlacze led"),
+    ("panel", "panele led"),
+    ("high bay", "high bay"),
+    ("lampa wiszaca", "lampy wiszace zyrandole"),
+    ("zyrandol", "lampy wiszace zyrandole"),
+    ("oprawa natynkowa", "oprawy natynkowe"),
+    ("oprawa podtynkowa", "oprawy podtynkowe"),
+    ("downlight", "oprawy downlight"),
+    ("lampa ogrodowa", "oprawy ogrodowe"),
+    ("oprawa elewacyjna", "lampy elewacyjne kinkiety zewnetrzne"),
+    ("kinkiet", "lampy elewacyjne kinkiety zewnetrzne"),
+    ("lampa uliczna", "lampy uliczne"),
+    ("latarka", "latarki"),
+]
+
+
+def is_accessory_product_type(product_type: str) -> bool:
+    normalized = normalize_header(product_type)
+    return bool(normalized) and any(term in normalized for term in ACCESSORY_PRODUCT_TYPE_TERMS)
+
+
+def find_rule_by_category_name(attribute_knowledge: dict[str, Any], target: str) -> dict[str, Any] | None:
+    for rule in attribute_knowledge.get("categories") or []:
+        text = normalize_header(str(rule.get("category", "")))
+        if text and all(part in text for part in target.split()):
+            return rule
+    return None
+
+
+def match_attribute_category_rule(
+    row: pd.Series,
+    store_category: str,
+    attribute_knowledge: dict[str, Any],
+    features: dict[str, str] | None = None,
+) -> dict[str, Any] | None:
+    product_type = ""
+    if features:
+        product_type = compact_spaces(str(features.get("Typ produktu", "")))
+    if not product_type:
+        product_type = first_value(row, ["attr_typ", "Typ"])
+    normalized_type = normalize_header(product_type)
+    if normalized_type:
+        if is_accessory_product_type(normalized_type):
+            return None
+        for needle, target in PRODUCT_TYPE_RULE_ALIASES:
+            if needle in normalized_type:
+                return find_rule_by_category_name(attribute_knowledge, target) if target else None
+
+    source_category = first_value(row, ["Kategoria", "category", "Kategorie"])
+    store_text = normalize_header(store_category)
+    source_text = normalize_header(source_category)
+    aliases = [
+        ("oprawy natynkowe", "oprawy natynkowe"),
+        ("oprawy podtynkowe", "oprawy podtynkowe"),
+        ("panele led", "panele led"),
+        ("high bay", "high bay"),
+        ("pyloszczelne hermetyczne", "oprawy hermetyczne"),
+        ("lampy hermetyczne", "oprawy hermetyczne"),
+        ("naswietlacze", "naswietlacze led"),
+        ("plafoniery oprawy sufitowe", "plafony"),
+        ("plafony led", "plafony"),
+        ("kinkiety zewnetrzne", "lampy elewacyjne kinkiety zewnetrzne"),
+        ("lampy ogrodowe", "oprawy ogrodowe"),
+    ]
+    target = match_category_alias(store_text, aliases)
+    if not target:
+        target = match_category_alias(source_text, aliases)
+    if not target:
+        return None
+    for rule in attribute_knowledge.get("categories") or []:
+        if normalize_header(str(rule.get("category", ""))) == target:
+            return rule
+    return None
+
+
+def match_category_alias(text: str, aliases: list[tuple[str, str]]) -> str:
+    for needle, category in aliases:
+        if all(part in text for part in needle.split()):
+            return category
+    return ""
+
+
+def category_attribute_order(rule: dict[str, Any]) -> list[str]:
+    result: list[str] = []
+    seen: set[str] = set()
+    for role in ("ordered_attributes", "required_description", "filters", "optional_description"):
+        for name in rule.get(role) or []:
+            normalized = normalize_header(str(name))
+            if normalized and normalized not in seen:
+                seen.add(normalized)
+                result.append(str(name))
+    return result
 
 
 def assign_main_images(
@@ -520,15 +763,275 @@ def build_features(
         column_name = str(column)
         if not column_name.startswith("Parametr: "):
             continue
+        if pd.isna(value):
+            continue
         raw_feature_name = column_name.replace("Parametr: ", "", 1)
         feature_name = normalize_feature_name(raw_feature_name)
         feature_value = normalize_feature_value(str(value), feature_name)
         feature_value = normalize_to_woo_feature_value(feature_name, feature_value, feature_value_normalizer)
         if feature_value or include_empty:
             features.setdefault(feature_name, feature_value)
+    align_product_type_with_pipeline_title(features, row)
+    reclassify_max_bulb_power_feature(features)
+    drop_fixture_power_for_products_without_light_source(features)
+    promote_panel_max_power_feature(features)
+    derive_socket_count_feature(features, row)
+    derive_light_source_feature(features)
+    drop_socket_features_for_integrated_source(features)
+    derive_light_color_from_cct(features)
+    derive_power_supply_feature(features, row)
+    derive_shape_from_dimensions(features)
     add_manufacturer_data_feature(features, manufacturer_data_by_producer, producer)
     remove_redundant_producer_color(features)
     return features
+
+
+def dimension_in_mm(value: str) -> float | None:
+    match = re.fullmatch(r"(\d+(?:[,.]\d+)?)\s*(?:mm)?", compact_spaces(value))
+    return float(match.group(1).replace(",", ".")) if match else None
+
+
+def derive_shape_from_dimensions(features: dict[str, str]) -> None:
+    """Ksztalt z wymiarow: srednica -> Okragly, D == S -> Kwadrat, D != S -> Prostokatny."""
+    if features.get("Kształt"):
+        return
+    if features.get("Średnica"):
+        features["Kształt"] = "Okrągły"
+        return
+    length = dimension_in_mm(features.get("Długość", ""))
+    width = dimension_in_mm(features.get("Szerokość", ""))
+    if length is None or width is None:
+        match = re.fullmatch(
+            r"(\d+(?:[,.]\d+)?)x(\d+(?:[,.]\d+)?)",
+            compact_spaces(features.get("Wymiary [mm]", "")).replace(" ", ""),
+        )
+        if not match:
+            return
+        length = float(match.group(1).replace(",", "."))
+        width = float(match.group(2).replace(",", "."))
+    features["Kształt"] = "Kwadrat" if abs(length - width) < 0.001 else "Prostokątny"
+
+
+# Frazy typu na poczatku tytulu (najdluzsze najpierw) - tytuly z pipeline'u
+# nazw sa kotwica klasyfikacji typu produktu.
+TITLE_TYPE_PHRASES = [
+    ("oprawa sufitowa punktowa", "Oprawa sufitowa punktowa"),
+    ("oprawa hermetyczna", "Oprawa hermetyczna"),
+    ("oprawa sufitowa", "Oprawa sufitowa"),
+    ("oprawa kanalowa", "Oprawa kanałowa"),
+    ("oprawa natynkowa", "Oprawa natynkowa"),
+    ("oprawa podtynkowa", "Oprawa podtynkowa"),
+    ("oprawa najazdowa", "Oprawa najazdowa"),
+    ("panel led", "Panel LED"),
+    ("plafon", "Plafon"),
+    ("naswietlacz", "Naświetlacz LED"),
+    ("lampa wiszaca", "Lampa wisząca"),
+    ("lampa ogrodowa", "Lampa ogrodowa"),
+    ("lampa uliczna", "Lampa uliczna"),
+    ("ramka do paneli", "Ramka do paneli"),
+    ("ramka", "Ramka"),
+    ("zasilacz", "Zasilacz"),
+]
+
+
+def product_type_from_title(title: str) -> str:
+    normalized = normalize_header(title)
+    for phrase, type_name in TITLE_TYPE_PHRASES:
+        if normalized.startswith(phrase):
+            return type_name
+    return ""
+
+
+def product_types_agree(type_a: str, type_b: str) -> bool:
+    a, b = normalize_header(type_a), normalize_header(type_b)
+    return bool(a) and bool(b) and (a.startswith(b) or b.startswith(a))
+
+
+def align_product_type_with_pipeline_title(features: dict[str, str], row: pd.Series) -> None:
+    """Typ z nazwy wygenerowanej przez pipeline wygrywa nad kolumna "Typ" producenta.
+
+    Producent potrafi nazwac oprawe sufitowa "plafoniera LED" - klasyfikacja
+    z naszego pipeline'u nazw jest wiarygodniejsza.
+    """
+    pipeline_title = first_value(row, ["pipeline_title"])
+    title_type = product_type_from_title(pipeline_title)
+    if not title_type:
+        return
+    current = compact_spaces(str(features.get("Typ produktu", "")))
+    if not current or not product_types_agree(current, title_type):
+        features["Typ produktu"] = title_type
+
+
+def normalize_light_source_value(value: str) -> str:
+    """Zrodlo swiatla ma tylko dwie wartosci: Zintegrowane albo Nie zintegrowane."""
+    normalized = comparable_feature_value(value)
+    if not normalized:
+        return ""
+    if normalized.startswith("nie zintegrowan"):
+        return "Nie zintegrowane"
+    if "zintegrowan" in normalized or normalized in {"led", "led smd", "cob"}:
+        return "Zintegrowane"
+    replaceable_terms = (
+        "wymienn", "t8", "gls", "cfl", "zarowk", "swietlowk",
+        "par16", "par20", "par30", "par38", "mr16",
+        "gu10", "e27", "e14", "g13", "gx53", "g9",
+    )
+    if any(term in normalized for term in replaceable_terms):
+        return "Nie zintegrowane"
+    return value
+
+
+def derive_light_source_feature(features: dict[str, str]) -> None:
+    if features.get("Źródło światła"):
+        return
+    if features.get("Źródło światła w komplecie") == "Tak":
+        features["Źródło światła"] = "Zintegrowane"
+    elif features.get("Trzonek") or features.get("Maksymalna moc źródła światła"):
+        features["Źródło światła"] = "Nie zintegrowane"
+
+
+def drop_socket_features_for_integrated_source(features: dict[str, str]) -> None:
+    """Zintegrowane zrodlo nie ma trzonka ani liczby wymiennych zrodel."""
+    if features.get("Źródło światła") != "Zintegrowane":
+        return
+    features.pop("Trzonek", None)
+    features.pop("Liczba źródeł światła", None)
+
+
+def derive_light_color_from_cct(features: dict[str, str]) -> None:
+    """Barwa swiatla wynika z temperatury barwowej: Ciepla / Neutralna / Zimna / Zmienna."""
+    if features.get("Barwa światła"):
+        return
+    cct = compact_spaces(features.get("Temperatura barwowa [K]", ""))
+    numbers = [int(number) for number in re.findall(r"\d{4}", cct)]
+    if not numbers:
+        return
+    if len(set(numbers)) > 1:
+        features["Barwa światła"] = "Zmienna"
+    elif numbers[0] < 3300:
+        features["Barwa światła"] = "Ciepła"
+    elif numbers[0] <= 5300:
+        features["Barwa światła"] = "Neutralna"
+    else:
+        features["Barwa światła"] = "Zimna"
+
+
+def derive_power_supply_feature(features: dict[str, str], row: pd.Series) -> None:
+    """Zasilanie mowi, jak zasilany jest produkt: Solarne / Akumulator / Sieciowe."""
+    if features.get("Zasilanie"):
+        return
+    name = first_value(
+        row,
+        ["new_title", "Nazwa B2C / SEO final", "Nazwa", "Nazwa Kanlux", "__working_title", "Title"],
+    )
+    text = comparable_feature_value(f"{name} {features.get('Typ produktu', '')}")
+    voltage = comparable_feature_value(features.get("Napięcie [V]", ""))
+    if "solarn" in text:
+        features["Zasilanie"] = "Solarne"
+    elif "akumulator" in text or "accu" in voltage:
+        features["Zasilanie"] = "Akumulator"
+    elif voltage.startswith("220-240"):
+        features["Zasilanie"] = "Sieciowe"
+
+
+def reclassify_max_bulb_power_feature(features: dict[str, str]) -> None:
+    """Zapisy "max 20" / "3 x max 20" / "10 LED" w mocy to maksymalna moc zrodla, nie moc oprawy."""
+    value = compact_spaces(features.get("Moc [W]", ""))
+    match = re.fullmatch(
+        r"(?:(\d{1,2})\s*x\s*)?(?:max\.?\s*)?(\d+(?:[,.]\d+)?)\s*W?\s*LED",
+        value,
+        flags=re.IGNORECASE,
+    ) or re.fullmatch(
+        r"(?:(\d{1,2})\s*x\s*)?max\.?\s*(\d+(?:[,.]\d+)?)\s*W?",
+        value,
+        flags=re.IGNORECASE,
+    )
+    if not match:
+        return
+    features.pop("Moc [W]", None)
+    features.setdefault("Maksymalna moc źródła światła", match.group(2).replace(",", "."))
+    if match.group(1):
+        features.setdefault("Liczba źródeł światła", match.group(1))
+
+
+def drop_fixture_power_for_products_without_light_source(features: dict[str, str]) -> None:
+    """Produkt bez zrodla swiatla w srodku nie ma wlasnej mocy - zostaje tylko maksymalna moc zrodla."""
+    if features.get("Źródło światła w komplecie") == "Tak":
+        return
+    has_max_source_power = bool(features.get("Maksymalna moc źródła światła"))
+    replaceable_source = comparable_feature_value(features.get("Źródło światła", "")) in {"wymienne", "nie zintegrowane"}
+    if has_max_source_power or replaceable_source:
+        features.pop("Moc [W]", None)
+
+
+def promote_panel_max_power_feature(features: dict[str, str]) -> None:
+    """Panele bez zasilacza moga miec moc producenta tylko jako "Moc maksymalna [W]"."""
+    product_type = comparable_feature_value(features.get("Typ produktu", ""))
+    if product_type != "panel led" or features.get("Moc [W]"):
+        return
+    maximum_power = normalize_power_value(features.get("Maksymalna moc źródła światła", ""))
+    if maximum_power:
+        features["Moc [W]"] = maximum_power
+
+
+def hermetic_fluorescent_title(title: str, features: dict[str, str]) -> str:
+    """Oprawy hermetyczne z trzonkiem to oprawy na swietlowki - tytul ma to mowic wprost.
+
+    Reguly tytulow dotycza typu produktu, nie kategorii: akcesoria (np. czujnik ruchu
+    do oprawy hermetycznej) nie ida tym schematem.
+    """
+    if not features.get("Trzonek"):
+        return title
+    lowered = title.lower()
+    if not lowered.startswith("oprawa hermetyczna"):
+        return title
+    if "świetlówk" in lowered or "swietlowk" in lowered:
+        return title
+    return re.sub(r"\bhermetyczna LED\b", "hermetyczna do świetlówek LED", title)
+
+
+def derive_socket_count_feature(features: dict[str, str], row: pd.Series) -> None:
+    """Rozbija zapisy typu "3xGU10": trzonek zostaje w Trzonek, krotnosc w Liczba zrodel swiatla."""
+    if features.get("Liczba źródeł światła"):
+        return
+    socket = features.get("Trzonek", "")
+    if not socket:
+        return
+    raw_socket = first_value(row, ["attr_gwint", "Gwint", "Trzonek", "Rodzaj gwintu"])
+    match = re.match(r"^\s*(\d{1,2})\s*[xX]", raw_socket)
+    if not match:
+        name = first_value(
+            row,
+            ["new_title", "Nazwa B2C / SEO final", "Nazwa", "Nazwa Kanlux", "__working_title", "Title"],
+        )
+        match = re.search(rf"\b(\d{{1,2}})\s*[xX]\s*{re.escape(socket)}\b", name, flags=re.IGNORECASE)
+    if match:
+        features["Liczba źródeł światła"] = match.group(1)
+
+
+def split_multi_color_feature(features: dict[str, str]) -> None:
+    """Pelny kolor producenta zostaje w "Kolor producenta"; "Kolor" dostaje pierwszy kolor."""
+    value = compact_spaces(features.get("Kolor", ""))
+    parts = split_color_parts(value)
+    if len(parts) > 1:
+        features["Kolor"] = parts[0]
+        features["Kolor producenta"] = " / ".join(parts)
+        features.pop("Kolory", None)
+
+
+def split_color_parts(value: str) -> list[str]:
+    value = normalize_compound_color_value(value)
+    parts = [compact_spaces(part) for part in re.split(r"\s*[/|]\s*", value) if compact_spaces(part)]
+    if len(parts) > 1:
+        return parts
+    hyphen_parts = [compact_spaces(part) for part in re.split(r"\s*-\s*", value) if compact_spaces(part)]
+    if len(hyphen_parts) == 2 and all(is_base_color_part(part) for part in hyphen_parts):
+        return [normalize_producer_color_part(part) for part in hyphen_parts]
+    return [value] if value else []
+
+
+def is_base_color_part(value: str) -> bool:
+    return normalize_color_adjective(value).lower() in BASE_COLOR_ALIASES
 
 
 def add_manufacturer_data_feature(
@@ -628,6 +1131,8 @@ def first_value(row: pd.Series, columns: list[str]) -> str:
         if not column or column not in row:
             continue
         value = row.get(column, "")
+        if pd.isna(value):
+            continue
         if not is_blank(value):
             return compact_spaces(str(value))
     return ""
@@ -695,11 +1200,14 @@ def add_color_features(
         filtered["Kolor"] = "Brązowy" if value in {"Dąb sonoma", "Wenge"} else base_color_from_producer_color(value)
         filtered["Kolor producenta"] = canonical_or_original_feature_value(value, producer_values)
         return True
-    parts = [compact_spaces(part) for part in re.split(r"\s*/\s*", value) if compact_spaces(part)]
+    parts = split_color_parts(value)
     if len(parts) > 1:
         color_values = feature_value_normalizer.get("Kolor", {})
+        producer_values = feature_value_normalizer.get("Kolor producenta", {})
         filtered["Kolor"] = canonical_or_original_feature_value(parts[0], color_values)
-        filtered["Kolory"] = " / ".join(canonical_or_original_feature_value(part, color_values) for part in parts)
+        filtered["Kolor producenta"] = " / ".join(
+            canonical_or_original_feature_value(part, producer_values) for part in parts
+        )
         return True
     return False
 
@@ -736,9 +1244,11 @@ def drop_feature_for_product_context(
     product_type = context.get("typ_produktu", "")
     if feature_name == "Moc [W]" and product_type in policy["accessory_product_types_without_own_power"]:
         return True
+    if feature_name == "Wymiary [mm]" and re.search(r"\bmm2\b", value, flags=re.IGNORECASE):
+        return True
     if feature_name == "Seria" and ("oprawa high bay" in name_key or "high bay" in name_key):
         return True
-    if feature_name == "Kąt świecenia" and (
+    if feature_name == "Kąt świecenia [°]" and (
         "oprawa hermetyczna" in name_key
         or "panel led" in name_key
         or "panel " in name_key
@@ -774,20 +1284,43 @@ def valid_flexible_feature_value(feature_name: str, value: str) -> bool:
     value = compact_spaces(str(value or ""))
     if not value:
         return False
-    if feature_name in {"Wymiary", "Długość", "Szerokość", "Wysokość", "Średnica"}:
-        return valid_dimension_like_value(value)
-    if feature_name in {"Moc [W]", "Strumień świetlny [lm]"}:
+    if feature_name == "Wymiary [mm]":
+        return bool(
+            re.fullmatch(r"\d+(?:[,.]\d+)?(?:x\d+(?:[,.]\d+)?){0,2}", value)
+            or valid_dimension_like_value(value)
+        )
+    if feature_name in {"Długość", "Szerokość", "Wysokość", "Średnica", "Głębokość"}:
+        return bool(re.fullmatch(r"\d+(?:[,.]\d+)?(?:x\d+(?:[,.]\d+)?){0,2}(?:\s*(?:mm|cm|m))?", value, flags=re.IGNORECASE))
+    if feature_name in {"Moc [W]", "Strumień świetlny [lm]", "Maksymalna moc źródła światła"}:
         return valid_number_or_range(value)
+    if feature_name == "Klasa energetyczna":
+        return bool(re.fullmatch(r"[A-G]\+{0,3}", value))
+    if feature_name == "Liczba źródeł światła":
+        return bool(re.fullmatch(r"\d{1,2}", value))
+    if feature_name == "Źródło światła":
+        return value in {"Zintegrowane", "Nie zintegrowane"}
     if feature_name == "Temperatura barwowa [K]":
         return bool(re.fullmatch(r"\d+(?:[/-]\d+){0,3}|RGB", value, flags=re.IGNORECASE))
     if feature_name == "Napięcie [V]":
-        return bool(re.fullmatch(r"\d+(?:[,.]\d+)?(?:-\d+(?:[,.]\d+)?){0,1}", value))
+        return bool(re.fullmatch(r"\d+(?:[,.]\d+)?(?:-\d+(?:[,.]\d+)?){0,1}(?:\s(?:AC|DC))?", value))
     if feature_name == "Gwarancja":
         return bool(re.fullmatch(r"\d+\s*(?:lat|lata|rok|roku|miesiecy|miesięcy|mies\.?)", value, flags=re.IGNORECASE))
     if feature_name == "Stopień ochrony [IK]":
         return bool(re.fullmatch(r"IK\s*\d{2}", value, flags=re.IGNORECASE))
-    if feature_name == "Kąt świecenia":
+    if feature_name == "Kąt świecenia [°]":
         return bool(re.fullmatch(r"\d+(?:[,.]\d+)?\s*°?", value))
+    if feature_name == "Skuteczność świetlna [lm/W]":
+        return bool(re.fullmatch(r"\d+(?:[,.]\d+)?\s*(?:lm/W)?", value, flags=re.IGNORECASE))
+    if feature_name == "Wskaźnik oddawania barw":
+        return bool(re.fullmatch(r"\d{2,3}", value))
+    if feature_name == "Trwałość [h]":
+        return bool(re.fullmatch(r"\d+", value))
+    if feature_name == "Wskaźnik olśnienia [UGR]":
+        return bool(re.fullmatch(r"(?:<|≤)?\d{1,2}", value))
+    if feature_name == "Współpraca ze ściemniaczem":
+        return value in {"Tak", "Nie", "DALI", "1-10V", "0-10V"}
+    if feature_name == "Źródło światła w komplecie":
+        return value in {"Tak", "Nie"}
     if feature_name == "Opakowanie":
         return bool(re.fullmatch(r"\d+\s*(?:szt\.?|sztuk|sztuki)", value, flags=re.IGNORECASE))
     return False
@@ -929,8 +1462,10 @@ def normalize_feature_value_before_lookup(feature_name: str, value: str) -> str:
         return normalize_product_type_feature_value(value)
     if feature_name == "Seria":
         return normalize_series_feature_value(value)
-    if feature_name in {"Długość", "Szerokość", "Wysokość", "Średnica", "Wymiary"}:
-        return normalize_dimension_value(value)
+    if feature_name == "Wymiary [mm]":
+        return normalize_dimensions_to_mm(value)
+    if feature_name in {"Długość", "Szerokość", "Wysokość", "Średnica", "Głębokość"}:
+        return normalize_dimension_to_mm_with_unit(value)
     if feature_name == "Moc [W]":
         return normalize_power_value(value)
     if feature_name == "Strumień świetlny [lm]":
@@ -939,8 +1474,10 @@ def normalize_feature_value_before_lookup(feature_name: str, value: str) -> str:
         return normalize_shape_value(value)
     if feature_name == "Barwa światła":
         return normalize_light_color_value(value)
-    if feature_name == "Kąt świecenia":
+    if feature_name == "Kąt świecenia [°]":
         return normalize_angle_value(value)
+    if feature_name == "Skuteczność świetlna [lm/W]":
+        return normalize_luminous_efficacy_value(value)
     if feature_name in {"Kolor", "Kolor producenta"}:
         return normalize_feature_color_value(feature_name, value)
     if feature_name == "Czujnik ruchu":
@@ -951,6 +1488,9 @@ def normalize_feature_value_before_lookup(feature_name: str, value: str) -> str:
         return normalize_package_value(value)
     if feature_name == "Stopień ochrony [IK]":
         return normalize_ik_value(value)
+    if feature_name == "Źródło światła w komplecie":
+        normalized = normalize_header(value)
+        return "Tak" if normalized in {"1", "tak", "yes", "true"} else "Nie" if normalized in {"0", "nie", "no", "false"} else ""
     return value
 
 
@@ -985,7 +1525,8 @@ def normalize_product_type_feature_value(value: str) -> str:
     if normalized in {"phlox c", "phloxc"}:
         return "Oprawa sufitowa"
     if normalized in {"toleo"}:
-        return "Lampa wisząca"
+        # TOLEO DTL to natynkowa oprawa punktowa (downlight tube), nie lampa wiszaca.
+        return "Oprawa sufitowa"
     if "panel led" in normalized:
         return "Panel LED"
     if "plafon" in normalized:
@@ -1069,7 +1610,7 @@ def normalize_feature_value(value: str, feature_name: str = "") -> str:
     if feature_name == "Stopień ochrony [IP]":
         return normalize_ip_value(value)
     if feature_name == "Moc [W]":
-        return strip_unit(value, "W")
+        return normalize_power_value(value)
     if feature_name == "Temperatura barwowa [K]":
         return normalize_temperature_value(value)
     if feature_name == "Strumień świetlny [lm]":
@@ -1080,14 +1621,34 @@ def normalize_feature_value(value: str, feature_name: str = "") -> str:
         return normalize_light_color_value(value)
     if feature_name == "Trzonek":
         return normalize_socket_value(value)
-    if feature_name == "Kąt świecenia":
+    if feature_name == "Kąt świecenia [°]":
         return normalize_angle_value(value)
+    if feature_name == "Wymiary [mm]":
+        return normalize_dimensions_to_mm(value)
+    if feature_name in {"Długość", "Szerokość", "Wysokość", "Średnica", "Głębokość"}:
+        return normalize_dimension_to_mm_with_unit(value)
+    if feature_name == "Maksymalna moc źródła światła":
+        value = re.sub(r"^(?:max\.?|maks(?:ymalnie)?|do)\s+", "", value, flags=re.IGNORECASE)
+        return strip_unit(value, "W")
+    if feature_name == "Klasa energetyczna":
+        return value.upper() if re.fullmatch(r"[a-gA-G]\+{0,3}", value.strip()) else value
+    if feature_name == "Liczba źródeł światła":
+        return value if re.fullmatch(r"\d{1,2}", value) else ""
+    if feature_name == "Źródło światła":
+        return normalize_light_source_value(value)
+    if feature_name == "Skuteczność świetlna [lm/W]":
+        return normalize_luminous_efficacy_value(value)
+    if feature_name == "Wskaźnik olśnienia [UGR]":
+        return compact_spaces(value).replace(" ", "").replace("<=", "≤")
     if feature_name == "Kolor":
         return normalize_color_value(value)
     if feature_name == "Kolor producenta":
         return normalize_producer_color_value(value)
     if feature_name == "Materiał":
         return normalize_material_value(value)
+    if feature_name == "Źródło światła w komplecie":
+        normalized = normalize_header(value)
+        return "Tak" if normalized in {"1", "tak", "yes", "true"} else "Nie" if normalized in {"0", "nie", "no", "false"} else ""
     return value
 
 
@@ -1124,8 +1685,17 @@ def strip_unit(value: str, unit: str) -> str:
 def normalize_power_value(value: str) -> str:
     value = compact_spaces(normalize_decimal_separator(value))
     without_prefix = re.sub(r"^(?:max\.?|maks(?:ymalnie)?|do)\s+", "", value, flags=re.IGNORECASE)
+    range_match = re.fullmatch(
+        r"(\d+(?:[,.]\d+)?)\s*(?:W\s*)?(?:-|/|–|—)\s*(\d+(?:[,.]\d+)?)\s*W?",
+        without_prefix,
+        flags=re.IGNORECASE,
+    )
+    if range_match:
+        numbers = [float(group.replace(",", ".")) for group in range_match.groups()]
+        maximum = max(numbers)
+        return str(int(maximum)) if maximum.is_integer() else str(maximum).rstrip("0").rstrip(".")
     if re.match(r"^\d", without_prefix):
-        return compact_spaces(without_prefix)
+        return strip_unit(without_prefix, "W")
     return value
 
 
@@ -1134,12 +1704,46 @@ def normalize_luminous_flux_value(value: str) -> str:
     return compact_spaces(value)
 
 
+def normalize_luminous_efficacy_value(value: str) -> str:
+    value = normalize_decimal_separator(value)
+    value = re.sub(r"\s*lm\s*/\s*W\b", "", value, flags=re.IGNORECASE)
+    return compact_spaces(value)
+
+
+def normalize_dimensions_to_mm(value: str) -> str:
+    normalized = normalize_dimension_value(value)
+    match = re.fullmatch(
+        r"(\d+(?:[,.]\d+)?(?:x\d+(?:[,.]\d+)?){0,2})\s*(mm|cm|m)",
+        normalized,
+        flags=re.IGNORECASE,
+    )
+    if not match:
+        return normalized
+    factor = {"mm": 1.0, "cm": 10.0, "m": 1000.0}[match.group(2).lower()]
+    values = [float(part.replace(",", ".")) * factor for part in match.group(1).split("x")]
+    formatted = [str(int(number)) if number.is_integer() else str(number).rstrip("0").rstrip(".") for number in values]
+    return " x ".join(formatted)
+
+
 def normalize_dimension_value(value: str) -> str:
     value = normalize_decimal_separator(value).replace("×", "x")
     value = re.sub(r"\s*x\s*", "x", value, flags=re.IGNORECASE)
     value = re.sub(r"\s*mm2\b", " mm2", value, flags=re.IGNORECASE)
     value = re.sub(r"\s*(mm|cm|m)\b", r" \1", value, flags=re.IGNORECASE)
     return compact_spaces(value)
+
+
+def normalize_dimension_to_mm_with_unit(value: str) -> str:
+    # Pojedyncze wymiary sklep zapisuje w mm z jednostka po spacji, np. "600 mm"
+    # (tak wygladaja wartosci "Wysokosc"/"Szerokosc" w Woo catalog knowledge).
+    normalized = normalize_dimension_value(value)
+    match = re.fullmatch(r"(\d+(?:[,.]\d+)?)\s*(mm|cm|m)", normalized, flags=re.IGNORECASE)
+    if not match:
+        return normalized
+    factor = {"mm": 1.0, "cm": 10.0, "m": 1000.0}[match.group(2).lower()]
+    number = float(match.group(1).replace(",", ".")) * factor
+    formatted = str(int(number)) if number.is_integer() else str(number).rstrip("0").rstrip(".")
+    return f"{formatted} mm"
 
 
 def normalize_shape_value(value: str) -> str:
@@ -1167,12 +1771,21 @@ def normalize_temperature_value(value: str) -> str:
 
 
 def normalize_voltage_value(value: str) -> str:
+    # Sklep chce napiecie z rodzajem pradu, np. "220-240 AC".
     if value == "MLS":
         return ""
-    value = re.sub(r"\s*AC\b", "", value, flags=re.IGNORECASE)
-    value = re.sub(r"\s*DC\b", "", value, flags=re.IGNORECASE)
-    value = re.sub(r"\s*V\b", "", value, flags=re.IGNORECASE)
-    return compact_spaces(normalize_decimal_separator(value))
+    current_type = ""
+    if re.search(r"\bAC\b", value, flags=re.IGNORECASE):
+        current_type = "AC"
+    elif re.search(r"\bDC\b", value, flags=re.IGNORECASE):
+        current_type = "DC"
+    value = re.sub(r"\s*(?:AC|DC|V)\b", "", value, flags=re.IGNORECASE)
+    value = compact_spaces(normalize_decimal_separator(value))
+    if not value:
+        return ""
+    if not current_type and re.fullmatch(r"(?:220-240|230|220|240|110-240)", value):
+        current_type = "AC"
+    return f"{value} {current_type}" if current_type else value
 
 
 def normalize_light_color_value(value: str) -> str:
@@ -1259,20 +1872,25 @@ def normalize_producer_color_value(value: str) -> str:
     return normalize_producer_color_part(value)
 
 
+BASE_COLOR_ALIASES = {
+    "bialy": "Biały",
+    "biały": "Biały",
+    "czarny": "Czarny",
+    "szary": "Szary",
+    "srebrny": "Srebrny",
+    "grafitowy": "Grafitowy",
+    "brazowy": "Brązowy",
+    "brązowy": "Brązowy",
+    "bezowy": "Beżowy",
+    "beżowy": "Beżowy",
+    "zloty": "Złoty",
+    "złoty": "Złoty",
+}
+
+
 def normalize_producer_color_part(value: str) -> str:
     aliases = {
-        "bialy": "Biały",
-        "biały": "Biały",
-        "czarny": "Czarny",
-        "szary": "Szary",
-        "srebrny": "Srebrny",
-        "grafitowy": "Grafitowy",
-        "brazowy": "Brązowy",
-        "brązowy": "Brązowy",
-        "bezowy": "Beżowy",
-        "beżowy": "Beżowy",
-        "zloty": "Złoty",
-        "złoty": "Złoty",
+        **BASE_COLOR_ALIASES,
         "bialy mat": "Biały mat",
         "biały mat": "Biały mat",
         "czarny mat": "Czarny mat",
@@ -1285,14 +1903,37 @@ def normalize_producer_color_part(value: str) -> str:
         "wenge": "Wenge",
         "drewno": "Drewno",
     }
-    return aliases.get(value.lower(), capitalize_first(value))
+    normalized = normalize_color_adjective(value).lower()
+    return aliases.get(normalized, aliases.get(value.lower(), capitalize_first(value)))
+
+
+def normalize_color_adjective(value: str) -> str:
+    normalized = comparable_feature_value(value)
+    adjective_forms = {
+        "biala": "bialy",
+        "biale": "bialy",
+        "bialo": "bialy",
+        "czarna": "czarny",
+        "czarne": "czarny",
+        "czarno": "czarny",
+        "szara": "szary",
+        "szare": "szary",
+        "srebrna": "srebrny",
+        "srebrne": "srebrny",
+        "grafitowa": "grafitowy",
+        "grafitowe": "grafitowy",
+        "brazowa": "brazowy",
+        "brazowe": "brazowy",
+        "bezowa": "bezowy",
+        "bezowe": "bezowy",
+        "zlota": "zloty",
+        "zlote": "zloty",
+    }
+    return adjective_forms.get(normalized, normalized)
 
 
 def remove_redundant_producer_color(features: dict[str, str]) -> None:
-    color = features.get("Kolor", "")
-    producer_color = features.get("Kolor producenta", "")
-    if colors_are_equivalent(color, producer_color):
-        features.pop("Kolor producenta", None)
+    return
 
 
 def colors_are_equivalent(color: str, producer_color: str) -> bool:
@@ -1352,7 +1993,22 @@ def normalize_material_value(value: str) -> str:
         "stal": "Metal",
         "stal nierdzewna": "Metal",
     }
+    # Kilka materialow w jednym polu to osobne wartosci atrybutu.
+    parts = [compact_spaces(part) for part in re.split(r"\s*[,|]\s*", value) if compact_spaces(part)]
+    if len(parts) > 1:
+        normalized_parts = [
+            aliases.get(part, aliases.get(part.lower(), capitalize_first(part))) for part in parts
+        ]
+        return "|".join(unique_values(normalized_parts))
     return aliases.get(value, capitalize_first(value))
+
+
+def unique_values(values: list[str]) -> list[str]:
+    result: list[str] = []
+    for value in values:
+        if value and value not in result:
+            result.append(value)
+    return result
 
 
 def normalize_motion_sensor_value(value: str) -> str:
@@ -1387,8 +2043,9 @@ def normalize_ik_value(value: str) -> str:
 
 
 def normalize_manufacturer_data_value(value: str) -> str:
+    # Sklep rozdziela czlony danych producenta przecinkami, nie srednikami.
     parts = manufacturer_data_parts(value)
-    return "; ".join(parts) if parts else compact_spaces(value.replace("\\", ""))
+    return ", ".join(parts) if parts else compact_spaces(value.replace("\\", ""))
 
 
 def manufacturer_data_parts(value: Any) -> list[str]:
@@ -1433,7 +2090,7 @@ def build_manufacturer_data_by_producer(catalog_knowledge: dict[str, Any]) -> di
             current_parts = []
             current_count = None
             return
-        data = "; ".join(current_parts)
+        data = ", ".join(current_parts)
         remember(current_parts[0], data, current_count, len(current_parts))
         data_candidates.append((current_category, current_count, current_parts[0], data, len(current_parts)))
         current_parts = []

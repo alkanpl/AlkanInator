@@ -64,6 +64,7 @@ rules:
   - czujnik
   warn_if_missing:
   - moc
+  - wymiary
   - barwa_full
   excluded_if_redundant:
     kolor:
@@ -134,6 +135,7 @@ rules:
   status: approved
   required_title_attributes:
   - seria_clean
+  - optyka
   - moc
   - strumien
   - lm_w
