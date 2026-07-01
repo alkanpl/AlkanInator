@@ -1,8 +1,2 @@
-Czujnik ruchu do oprawy hermetycznej MAH PRO Kanlux 38149 to akcesorium one nie idą tym samym schematem to inne tytuły z tej kategorii, te zasady budowania tytułów bardziej się tyczą typu produktu niż samej kategorii
-W atrybucie Źródlo światła chodzi głównie o to czy jest zintegoriwane czy nie. Więc będą tylko 2 wartości atrybutu. 1 to Zintegrowane 2. Nie zintegrowane 
-Czemu oprawa kanałowa i oprawy sufitowe są w plafonach? To nie są plafony 
-Ramki do paneli to akcesoria nie idą tym samym schematem tak jak zasilacz. 
-Barwa światła powinna być ustalana po temperaturze barwowej i wartości w niej to powinny być. Neutralna, Ciepła, Zimna, Zmienna 
-W zasilaniu w Naświetlaczach chodzi o to jak jest zasilaczy Naświetlacz czy solarnie, czy akumulatorowo, te sprawy
-Liczba źródeł światła to jest to co dawaliśmy do Liczba gniazd, to będzie nowy atrybut. Weź wszystko z Liczba gniazd i przypisz to do Liczba źródeł światła
-5905339289971 ma wbudowane źródło światła więc nie potrzebuje atrybutów jak Trzonek	Liczba źródeł światła	Kierunek świecenia
+Ogólnie z tego co widze to czasami w opisach formułują się zdania o takim samym znaczeniu np w 45930/KAN 
+W w pierwszym paragrafie jest zdanie Obudowa z klasą IP 65 zapewnia pełną pyłoszczelność i odporność na strugę wody, co pozwala na montaż na zewnątrz, więc łatwiej dopasować oprawę do warunków montażu. a po tym w innym <p> jest zdanie  Obudowa z klasą IP 65 zapewnia pełną pyłoszczelność i odporność na strugę wody, co pozwala na montaż na zewnątrz, więc łatwiej dopasować oprawę do warunków pracy. to jest niedopuszczalne żeby pisać coś 2 razy bo jest to w zupełności bezsens

@@ -19,7 +19,7 @@ DEFAULT_SUMMARY = "reports/kanlux_woocommerce_update_2026-06-11/summary.json"
 DEFAULT_OUTPUT = "reports/kanlux_woocommerce_update_2026-06-11/raport_aktualizacji_atrybutow.html"
 NEW_ATTRIBUTES = [
     "Skuteczność świetlna [lm/W]",
-    "Stopień ochrony [IK]",
+    "Stopień odporności [IK]",
     "Trwałość [h]",
     "Wskaźnik olśnienia [UGR]",
     "Źródło światła",

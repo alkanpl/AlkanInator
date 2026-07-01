@@ -225,7 +225,7 @@ def apply_duplicate_disambiguation(df: pd.DataFrame, group: list[dict[str, Any]]
 
 def duplicate_disambiguation_value(row: pd.Series, attribute: str) -> str:
     if attribute == "wariant":
-        return supplier_variant_for_duplicate(row)
+        return readable_duplicate_variant(row)
     value = first_non_blank(row.get(f"attr_{attribute}", ""), row.get(attribute, ""))
     value = compact_spaces(str(value))
     if is_blank(value):
@@ -235,6 +235,86 @@ def duplicate_disambiguation_value(row: pd.Series, attribute: str) -> str:
     if attribute == "wysokosc":
         return f"wys. {value}" if not normalize_text(value).startswith("wys") else value
     return value
+
+
+def readable_duplicate_variant(row: pd.Series) -> str:
+    """Czytelny rozroznik wariantu zamiast surowego kodu z Nazwa Kanlux.
+
+    Dla znanych rodzin (soczewki, akcesoria do paneli, DICHT, MILO, JASMIN)
+    zwraca fraze po polsku; w pozostalych przypadkach - dotychczasowy
+    `supplier_variant_for_duplicate` (oczyszczony kod producenta).
+    """
+    nazwa = compact_spaces(str(first_non_blank(row.get("Nazwa Kanlux", ""))))
+    up = nazwa.upper()
+    typ = normalize_text(str(first_non_blank(row.get("attr_typ", ""), row.get("Typ", ""))))
+
+    # Soczewki HB PRO STRONG (HBPHS LENS 200W/150W) - rozroznia moc docelowej oprawy.
+    if "soczewka" in typ or "HBPHS" in up or "LENS" in up:
+        power = first_non_blank(row.get("Moc [W]", ""), row.get("attr_moc", ""))
+        match = re.search(r"(\d{2,4})", str(power)) or re.search(r"(\d{2,4})\s*W", up)
+        if match:
+            return f"{match.group(1)}W"
+
+    # Klipsy / linki do paneli - format panela (+ ilosc w opakowaniu, jesli znana).
+    if any(token in typ for token in ("klips", "linka")) or re.search(r"\b(CLIPS|SPN)\b", up):
+        size = panel_format_from_supplier_name(up)
+        fmt = f"do paneli {size}" if size else ""
+        qty = compact_spaces(str(first_non_blank(row.get("attr_ilosc_sztuk", ""))))
+        if qty and "szt" not in qty.lower():
+            qty = f"{qty} szt."
+        parts = [part for part in [fmt, qty] if part]
+        if parts:
+            return " ".join(parts)
+
+    # DICHT 4LED - wersja z odblysnikiem (PI) + material klosza (PS/PC).
+    if "DICHT" in up:
+        bits: list[str] = []
+        if re.search(r"\bPI\b", up):
+            bits.append("z odbłyśnikiem")
+        klosz = re.search(r"/(PS|PC)\b", up)
+        if klosz:
+            bits.append(f"klosz {klosz.group(1)}")
+        if bits:
+            return " ".join(bits)
+
+    # MILO - rodzaj siatki ochronnej (sufiks /P = plastikowa).
+    if "MILO" in up:
+        return "siatka plastikowa" if re.search(r"/P\b", up) else "siatka metalowa"
+
+    # JASMIN - wariant "C" to wersja wiszaca.
+    if "JASMIN" in up:
+        return "wiszący" if re.search(r"\bC\b", up) else ""
+
+    return supplier_variant_for_duplicate(row)
+
+
+def hermetic_bulb_count(values: dict[str, str], base_power: str) -> int:
+    """Liczba swietlowek w oprawie hermetycznej (do "Nx58W").
+
+    Najpierw z atrybutu "Liczba zrodel swiatla", a w razie braku z kodu Kanlux
+    "-{count}{power}" (np. MAH PLUS-258 = 2x58W) - z dowiazaniem do mocy, zeby nie
+    zlapac przypadkowych liczb.
+    """
+    if "hermetyczn" not in normalize_text(values.get("typ", "")):
+        return 0
+    count_attr = re.search(r"\d+", str(values.get("liczba_zrodel", "")))
+    if count_attr and int(count_attr.group(0)) > 1:
+        return int(count_attr.group(0))
+    power_digits = re.search(r"\d+", str(base_power))
+    if power_digits:
+        match = re.search(rf"-([2-4]){re.escape(power_digits.group(0))}\b", str(values.get("nazwa_kanlux", "")))
+        if match:
+            return int(match.group(1))
+    return 0
+
+
+def panel_format_from_supplier_name(up: str) -> str:
+    """Rozmiar panela z nazwy serii Kanlux: 60-62 -> 60x60/62x62 cm; 120/12030 -> 120x30 cm."""
+    if "12030" in up or re.search(r"\b120\b", up):
+        return "120x30 cm"
+    if "60-62" in up or "6060" in up:
+        return "60x60/62x62 cm"
+    return ""
 
 
 def supplier_variant_for_duplicate(row: pd.Series) -> str:
@@ -251,6 +331,16 @@ def supplier_variant_for_duplicate(row: pd.Series) -> str:
     return compact_spaces(value)
 
 
+def insert_after_material_adjective(title: str, value: str) -> str:
+    """Wstawia slowo montazu zaraz po przymiotniku materialu (drewniany/drewniana)."""
+    if normalize_text(value) not in {"wiszacy", "wiszaca"}:
+        return ""
+    match = re.search(r"\b(drewniany|drewniana)\b", title, flags=re.IGNORECASE)
+    if not match:
+        return ""
+    return compact_spaces(f"{title[:match.end()]} {value}{title[match.end():]}")
+
+
 def title_contains_disambiguator(title: str, value: str) -> bool:
     return normalize_title_uniqueness_key(value) in normalize_title_uniqueness_key(title)
 
@@ -259,6 +349,11 @@ def insert_disambiguator_before_producer(title: str, value: str, row: pd.Series)
     value = compact_spaces(value)
     if not value:
         return title
+    # Slowo montazu (np. "wiszacy") czytelniej brzmi tuz po przymiotniku materialu
+    # (np. "Plafon drewniany wiszacy JASMIN...") niz na koncu nazwy.
+    placed = insert_after_material_adjective(title, value)
+    if placed:
+        return placed
     producer = first_non_blank(row.get("attr_producent", ""), row.get("Producent", ""), row.get("producer", ""), "Kanlux")
     sku = resolve_sku_value(row, {"sku_columns": ["Kod", "sku", "SKU"]})
     if producer:
@@ -410,7 +505,19 @@ def build_inflected_values(values: dict[str, str], config: dict[str, Any]) -> di
         panel_max_power = normalize_title_power(values.get("moc_max_zrodla", ""))
         if panel_max_power:
             result["moc"] = panel_max_power
+    # Krotnosc swietlowek w oprawach hermetycznych: "MAH PLUS-258" -> 2x58W
+    # (DICHT ma juz "2x36W" z ekstrakcji - guard "x" zapobiega podwojeniu).
+    base_power = result.get("moc", "") or values.get("moc", "")
+    bulb_count = hermetic_bulb_count(values, base_power)
+    if bulb_count > 1 and base_power and "x" not in base_power.lower():
+        result["moc"] = f"{bulb_count}x{base_power}"
     result["optyka"] = agor_beam_type(values)
+    # Format panela dla akcesoriow (klipsy/linki): "CLIPS PANEL 60-62" -> 60x60/62x62 cm.
+    panel_size = panel_format_from_supplier_name(str(values.get("nazwa_kanlux", "")).upper())
+    result["format_panela"] = f"do paneli {panel_size}" if panel_size else ""
+    # Kod klosza opraw FTD (OPL/RYF/INT/ASY) z Nazwa Kanlux do tytulu - rozroznia warianty.
+    klosz_match = re.search(r"-(OPL|RYF|INT|ASY)\b", str(values.get("nazwa_kanlux", "")).upper())
+    result["klosz_kod"] = klosz_match.group(1) if klosz_match else ""
     series_clean = re.sub(r"(?<![-\w])LED(?![-\w])", " ", result.get("seria", values.get("seria", "")), flags=re.IGNORECASE)
     result["seria_clean"] = compact_spaces(series_clean) or values.get("seria", "")
     # Sposob montazu panelu wyprowadzony z typu produktu (uniwersalny = natynkowy,

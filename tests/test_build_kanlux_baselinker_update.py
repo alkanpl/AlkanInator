@@ -12,12 +12,82 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 from build_kanlux_baselinker_update import (  # noqa: E402
     add_woo_feature_fallbacks,
     add_woo_values_to_feature_normalizer,
+    apply_pipeline_titles_for_duplicate_names,
+    build_control_rows,
     apply_pipeline_titles_for_mismatched_names,
     build_attribute_aliases,
     build_missing_required_rows,
     compare_feature_sets,
+    duplicate_name_key,
+    remaining_duplicate_name_rows,
     woo_features,
 )
+
+
+class ControlRowsOutsideReferenceTests(unittest.TestCase):
+    def test_enriched_woo_products_outside_reference_are_included(self) -> None:
+        reference = pd.DataFrame([{"Sku": "100/KAN", "hwp_product_gtin": "", "id": "1", "Title": "Ref 100"}])
+        enriched = pd.DataFrame(
+            [
+                {"Kod": "100", "EAN": "", "new_title": "Plafon 100", "attr_typ": "plafon led"},
+                {"Kod": "200", "EAN": "", "new_title": "Plafon 200", "attr_typ": "plafon led"},
+            ]
+        )
+        accepted = pd.DataFrame(columns=["Kod", "EAN"])
+        woo = pd.DataFrame(
+            [
+                {"SKU": "100/KAN", "id": "11", "Title": "Woo 100"},
+                {"SKU": "200/KAN", "id": "22", "Title": "Woo 200"},
+            ]
+        )
+        control, _ = build_control_rows(reference, enriched, accepted, woo, {})
+        status = dict(zip(control["SKU"], control["source_match_status"]))
+        self.assertEqual(status.get("100/KAN"), "MATCHED_MASTER")
+        # 200 jest w master+woo, ale nie w referencji -> trafia do Woo (nie do Baselinkera).
+        self.assertEqual(status.get("200/KAN"), "MATCHED_OUTSIDE_REFERENCE")
+        outside = control[control["source_match_status"] == "MATCHED_OUTSIDE_REFERENCE"].iloc[0]
+        self.assertEqual(outside["product_id"], "22")  # id z WooCommerce, nie z Baselinkera
+
+
+class DuplicateNameDisambiguationTests(unittest.TestCase):
+    def test_swaps_to_pipeline_title_when_names_collide_ignoring_code(self) -> None:
+        control = pd.DataFrame(
+            [
+                {"pipeline_title": "Plafon ERTON E27 330mm IP44 biały Kanlux 35771"},
+                {"pipeline_title": "Plafon ERTON E27 252mm IP44 biały Kanlux 35770"},
+            ]
+        )
+        exported = [
+            {"sku": "35771/KAN", "name": "Plafon ERTON E27 IP44 biały Kanlux 35771", "features": "{}"},
+            {"sku": "35770/KAN", "name": "Plafon ERTON E27 IP44 biały Kanlux 35770", "features": "{}"},
+        ]
+        renamed = apply_pipeline_titles_for_duplicate_names(control, exported)
+        self.assertEqual(len(renamed), 2)
+        self.assertEqual(exported[0]["name"], "Plafon ERTON E27 330mm IP44 biały Kanlux 35771")
+        self.assertEqual(exported[1]["name"], "Plafon ERTON E27 252mm IP44 biały Kanlux 35770")
+        self.assertEqual(remaining_duplicate_name_rows(exported), [])
+
+    def test_keeps_name_when_pipeline_title_does_not_distinguish(self) -> None:
+        # Pipeline nie rozroznia (ten sam klucz) - nie podmieniamy, zostaje duplikat.
+        control = pd.DataFrame(
+            [
+                {"pipeline_title": "Plafon TUNA E27 IP44 biały Kanlux 4260"},
+                {"pipeline_title": "Plafon TUNA E27 IP44 biały Kanlux 8091"},
+            ]
+        )
+        exported = [
+            {"sku": "4260/KAN", "name": "Plafon TUNA E27 IP44 biały Kanlux 4260", "features": "{}"},
+            {"sku": "8091/KAN", "name": "Plafon TUNA E27 IP44 biały Kanlux 8091", "features": "{}"},
+        ]
+        renamed = apply_pipeline_titles_for_duplicate_names(control, exported)
+        self.assertEqual(renamed, [])
+        self.assertEqual(len(remaining_duplicate_name_rows(exported)), 2)
+
+    def test_duplicate_name_key_ignores_trailing_code(self) -> None:
+        self.assertEqual(
+            duplicate_name_key("Plafon ERTON E27 IP44 biały Kanlux 35770"),
+            duplicate_name_key("Plafon ERTON E27 IP44 biały Kanlux 99999"),
+        )
 
 
 class KanluxBaselinkerUpdateTests(unittest.TestCase):

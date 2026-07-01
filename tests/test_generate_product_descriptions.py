@@ -12,13 +12,87 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from generate_product_descriptions import (  # noqa: E402
     CODEX_BRIEF_SHEETS,
+    H2_QUESTION_BUILDERS,
+    algorithmic_style_issues,
     build_codex_brief_for_sku,
+    build_description_html,
+    classify_family,
+    prose_material,
+    render_benefit_item,
     validate_codex_description,
     validate_codex_review_file,
+    validate_generated_description,
     write_codex_review_from_description,
     write_codex_brief_report,
 )
 from codex_description_agent import discover_latest_brief_batch  # noqa: E402
+
+
+class AlgorithmicDescriptionTest(unittest.TestCase):
+    def test_garden_lamp_family(self) -> None:
+        self.assertEqual(classify_family("Lampa ogrodowa kula STONO 200mm IP65 biała", {}), "ogrodowa")
+        self.assertEqual(classify_family("Oprawa elewacyjna LED REKA 7W z czujnikiem", {}), "ogrodowa")
+        # "z czujnikiem ruchu" w nazwie oprawy NIE czyni jej akcesorium
+        self.assertNotEqual(classify_family("Plafon LED z czujnikiem ruchu BENO", {}), "akcesorium")
+
+    def test_h2_questions_keep_keyword_in_nominative(self) -> None:
+        # Zadna forma H2 nie wymusza odmiany frazy (brak "wybrać <fraza>").
+        for builder in H2_QUESTION_BUILDERS:
+            self.assertNotIn("wybrać", builder("lampa ogrodowa STONO").lower())
+
+    def test_benefit_item_bolds_feature_before_dash(self) -> None:
+        self.assertEqual(
+            render_benefit_item("Trzonek E27 - daje swobodę doboru żarówki."),
+            "  <li>- <strong>Trzonek E27</strong> - daje swobodę doboru żarówki.</li>",
+        )
+
+    def test_prose_material_replaces_pipe(self) -> None:
+        self.assertEqual(prose_material({"Materiał": "ABS|PE"}), "ABS i PE")
+
+    def test_full_description_passes_own_validation(self) -> None:
+        row = pd.Series({
+            "name": "Lampa ogrodowa kula STONO 200mm IP65 biała Kanlux 45930",
+            "sku": "45930/KAN",
+            "features": (
+                '{"Typ produktu": "Lampa ogrodowa", "Seria": "STONO", "Trzonek": "E27",'
+                ' "Stopień ochrony [IP]": "IP 65", "Kolor": "Biały", "Materiał": "ABS|PE",'
+                ' "Kształt": "Okrągły", "Źródło światła": "Niezintegrowane"}'
+            ),
+        })
+        html = build_description_html(row)
+        from generate_product_descriptions import DEFAULT_MIN_CHARS_NO_SPACES, build_seo_keyword, collect_attributes
+        keyword = build_seo_keyword(collect_attributes(row), "Lampa ogrodowa kula STONO")
+        self.assertEqual(validate_generated_description(html, keyword, DEFAULT_MIN_CHARS_NO_SPACES), [])
+        self.assertNotIn("|", html.split("Specyfikacja")[0])  # brak surowego separatora w prozie
+
+    def test_algorithmic_style_validator_detects_parameter_list(self) -> None:
+        html = """
+        <p>Plafon LED TEST to produkt do korytarza.</p>
+        <h3>Najważniejsze cechy</h3>
+        <ul>
+          <li>- <strong>Moc 12 W</strong> - pozwala dobrać oprawę do pomieszczenia.</li>
+          <li>- <strong>Trzonek E27</strong> - ułatwia dobór żarówki.</li>
+          <li>- <strong>Stopień ochrony IP54</strong> - oznacza ochronę przed pyłem.</li>
+        </ul>
+        <h3>Specyfikacja techniczna</h3>
+        """
+        self.assertIn("lista cech zaczyna sie od parametrow zamiast decyzji kupujacego", algorithmic_style_issues(html))
+
+    def test_planned_plafon_description_uses_buyer_decision_highlights(self) -> None:
+        row = pd.Series({
+            "name": "Plafon LED BENO 18W 4000K IP54 biały Kanlux",
+            "sku": "TEST/KAN",
+            "features": (
+                '{"Typ produktu": "Plafon LED", "Seria": "BENO", "Moc [W]": "18",'
+                ' "Temperatura barwowa [K]": "4000", "Czujnik ruchu": "Tak",'
+                ' "Stopień ochrony [IP]": "IP 54", "Kolor": "Biały"}'
+            ),
+        })
+        html = build_description_html(row)
+        before_spec = html.split("Specyfikacja techniczna")[0]
+        self.assertIn("Automatyczne światło", before_spec)
+        self.assertNotIn("będzie dobrym wyborem wtedy, gdy", before_spec)
+        self.assertNotRegex(before_spec, r"<strong>(Moc|Trzonek|Stopień ochrony|Kolor)")
 
 
 class CodexDescriptionBriefTest(unittest.TestCase):
@@ -127,7 +201,7 @@ class CodexDescriptionBriefTest(unittest.TestCase):
         checks_by_name = {check["check"]: check["status"] for check in checks}
         self.assertEqual(checks_by_name["encoding_integrity"], "ERROR")
         self.assertEqual(checks_by_name["description_length"], "WARNING")
-        self.assertEqual(checks_by_name["html_list_format"], "WARNING")
+        self.assertEqual(checks_by_name["html_specification_labels"], "WARNING")
 
     def test_validator_detects_meta_description_language(self) -> None:
         repeated_context = (
@@ -275,7 +349,7 @@ class CodexDescriptionBriefTest(unittest.TestCase):
             <p><strong>Panel LED Kanlux BLINGO</strong> daje neutralne światło do pracy.</p>
             <h2>Panel LED do sufitu kasetonowego</h2>
             <p><strong>Panel LED</strong> ma moc 40 W i strumień 3800 lm.</p>
-            <h3>Najważniejsze zalety</h3>
+            <h3>Najważniejsze cechy</h3>
             <ul>
               <li>Neutralna barwa światła.</li>
               <li>Podtynkowy sposób montażu.</li>
@@ -304,7 +378,7 @@ class CodexDescriptionBriefTest(unittest.TestCase):
             <p>{repeated * 3}</p>
             <p>{repeated * 3}</p>
             <h2>Oprawa hermetyczna LED IP65</h2>
-            <h3>Najważniejsze zalety</h3>
+            <h3>Najważniejsze cechy</h3>
             <ul><li>Stopień ochrony IP65.</li></ul>
             <h3>Specyfikacja techniczna</h3>
             <ul><li><strong>Stopień ochrony:</strong> IP65</li></ul>
@@ -328,7 +402,7 @@ class CodexDescriptionBriefTest(unittest.TestCase):
             dopasowanie modelu do instalacji.</p>
             <p>Gwarancja uzupełnia zestaw informacji ważnych przy wyborze.</p>
             <h2>Plafon LED do wnętrz</h2>
-            <h3>Najważniejsze zalety</h3>
+            <h3>Najważniejsze cechy</h3>
             <ul><li>Klasa IP54.</li></ul>
             <h3>Specyfikacja techniczna</h3>
             <ul><li><strong>Stopień ochrony:</strong> IP54</li></ul>
@@ -354,7 +428,7 @@ class CodexDescriptionBriefTest(unittest.TestCase):
             <p>{paragraph * 2}</p>
             <p>{paragraph * 2}</p>
             <h2>Plafon LED IP54 z neutralnym światłem</h2>
-            <h3>Najważniejsze zalety</h3>
+            <h3>Najważniejsze cechy</h3>
             <ul><li>Obudowa IP54 ogranicza wnikanie pyłu i wody.</li></ul>
             <h3>Specyfikacja techniczna</h3>
             <ul><li><strong>Stopień ochrony:</strong> IP54</li></ul>
@@ -416,7 +490,7 @@ class CodexDescriptionBriefTest(unittest.TestCase):
 
         checks_by_name = {check["check"]: check["status"] for check in checks}
         self.assertEqual(checks_by_name["encoding_integrity"], "ERROR")
-        self.assertEqual(checks_by_name["html_list_format"], "WARNING")
+        self.assertEqual(checks_by_name["html_specification_h3"], "WARNING")
 
     def test_write_codex_review_from_description_writes_valid_review(self) -> None:
         paragraph = (
@@ -430,7 +504,7 @@ class CodexDescriptionBriefTest(unittest.TestCase):
                 f"<p>{paragraph * 2}</p>",
                 f"<p>{paragraph * 2}</p>",
                 "<h2>Siatka ochronna do opraw FL AGOR HI GRID</h2>",
-                "<h3>Najważniejsze zalety</h3>",
+                "<h3>Najważniejsze cechy</h3>",
                 "<ul>",
                 "<li>Metalowe wykonanie tworzy fizyczną osłonę oprawy.</li>",
                 "<li>Kompatybilność z FL AGOR HI GRID pomaga dobrać właściwy element do oprawy.</li>",

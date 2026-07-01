@@ -28,7 +28,8 @@ from export_to_baselinker_csv import (
     write_feature_review_file,
 )
 from extract_attributes import extract_attributes_from_text
-from utils import compact_spaces, ensure_dir, load_yaml, normalize_header, read_products
+from optimize_titles import normalize_seo_title_terms, normalize_title_uniqueness_key
+from utils import color_stem, compact_spaces, ensure_dir, load_yaml, normalize_header, read_products
 
 
 DEFAULT_REFERENCE = "input/Kanlux (4).xlsx"
@@ -42,7 +43,7 @@ DEFAULT_MISSING_XLSX = "output/kanlux_braki_wymaganych_2026-06-11.xlsx"
 DEFAULT_MANUAL_FILLS = "input/kanlux_braki_wymaganych_uzupelnione.xlsx"
 DEFAULT_REPORTS = "reports/kanlux_baselinker_update_2026-06-11"
 WOO_ATTRIBUTE_PREFIX = "Atrybut Produktu: "
-ATTRIBUTE_UPDATE_COLUMNS = ["product_id", "sku", "features"]
+ATTRIBUTE_UPDATE_COLUMNS = ["product_id", "sku", "name", "features"]
 
 UNMATCHED_OVERRIDES = {
     "36312": {
@@ -242,6 +243,7 @@ def build_control_rows(
     rows: list[dict[str, Any]] = []
     unmatched: list[dict[str, str]] = []
 
+    added_codes: set[str] = set()
     for _, reference_row in reference.iterrows():
         code = normalize_sku(reference_row.get("Sku", ""))
         ean = normalize_ean(reference_row.get("hwp_product_gtin", ""))
@@ -267,6 +269,7 @@ def build_control_rows(
                 }
             )
             rows.append(row)
+            added_codes.add(code)
             continue
 
         row = source.to_dict()
@@ -287,6 +290,40 @@ def build_control_rows(
             row["description_html"] = str(approved.get("description_html", "")).strip()
         add_woo_feature_fallbacks(row, woo_row, attribute_aliases)
         rows.append(row)
+        added_codes.add(code)
+
+    # Produkty istniejace w WooCommerce + w master (enriched), ktorych NIE ma na liscie
+    # referencyjnej Baselinkera - wzbogacamy je gotowymi danymi do pliku Woo (nie ida do
+    # importu Baselinkera, bo nie maja ID Baselinkera - patrz source_match_status).
+    for code, woo_row in woo_by_sku.items():
+        if code in added_codes:
+            continue
+        source = enriched_by_sku.get(code)
+        if source is None:
+            continue
+        ean = normalize_ean(source.get("EAN", "")) or normalize_ean(woo_row.get("EAN", ""))
+        approved = accepted_by_sku.get(code)
+        if approved is None:
+            approved = accepted_by_ean.get(ean)
+        row = source.to_dict()
+        row["pipeline_title"] = compact_spaces(str(source.get("new_title", "")))
+        row.update(
+            {
+                "product_id": reference_value(woo_row, "id"),
+                "new_title": reference_value(woo_row, "Title"),
+                "SKU": reference_value(woo_row, "SKU") or code,
+                "EAN": ean,
+                "Producent": "Kanlux",
+                "attr_producent": "Kanlux",
+                "source_match_status": "MATCHED_OUTSIDE_REFERENCE",
+            }
+        )
+        if approved is not None:
+            row["proponowana_kategoria_1"] = compact_spaces(str(approved.get("proponowana_kategoria_1", "")))
+            row["description_html"] = str(approved.get("description_html", "")).strip()
+        add_woo_feature_fallbacks(row, woo_row, attribute_aliases)
+        rows.append(row)
+        added_codes.add(code)
     return pd.DataFrame(rows), pd.DataFrame(unmatched)
 
 
@@ -407,6 +444,8 @@ def write_reports(
     missing_required: list[dict[str, Any]] | None = None,
     power_voltage_audit: list[dict[str, Any]] | None = None,
     manual_fills_applied: list[dict[str, Any]] | None = None,
+    duplicate_disambiguated: list[dict[str, Any]] | None = None,
+    remaining_duplicates: list[dict[str, Any]] | None = None,
 ) -> None:
     ensure_dir(reports_dir)
     (reports_dir / "summary.json").write_text(json.dumps(metrics, ensure_ascii=False, indent=2), encoding="utf-8")
@@ -444,6 +483,14 @@ def write_reports(
             "flagi",
         ],
     ).to_csv(reports_dir / "power_voltage_audit.csv", index=False, encoding="utf-8-sig")
+    pd.DataFrame(
+        duplicate_disambiguated or [],
+        columns=["sku", "old_name", "new_name", "group_key"],
+    ).to_csv(reports_dir / "duplicate_disambiguated.csv", index=False, encoding="utf-8-sig")
+    pd.DataFrame(
+        remaining_duplicates or [],
+        columns=["group_key", "sku", "name", "count"],
+    ).to_csv(reports_dir / "duplicate_names_remaining.csv", index=False, encoding="utf-8-sig")
     write_feature_review_file(review_rows, reports_dir / "feature_review_required.xlsx")
 
 
@@ -557,6 +604,91 @@ def apply_pipeline_titles_for_mismatched_names(
     return renamed
 
 
+def strip_product_code(name: str) -> str:
+    """Ucina koncowy kod produktu ("... Kanlux 36504"), zostawiajac sama nazwe."""
+    return re.sub(r"\s*Kanlux\s+[\w/.\-]+\s*$", "", compact_spaces(name), flags=re.IGNORECASE).strip()
+
+
+def duplicate_name_key(name: str) -> str:
+    return normalize_title_uniqueness_key(strip_product_code(name))
+
+
+def apply_pipeline_titles_for_duplicate_names(
+    control: pd.DataFrame,
+    exported: list[dict[str, str]],
+) -> list[dict[str, str]]:
+    """Gdy kilka produktow ma identyczna nazwe (po odcieciu kodu), bierzemy
+    rozrozniajaca nazwe z pipeline'u.
+
+    Stary tytul legacy ze starego Woo gubil wymiary/warianty/czujnik, ktore
+    pipeline juz policzyl (np. "Plafon ERTON E27 IP44 bialy" -> "...252mm..."),
+    ale chain trzymal sie nazwy referencyjnej, bo nie bylo konfliktu typu/atrybutu.
+    """
+    pipeline_titles: list[str] = []
+    for _, control_row in control.iterrows():
+        title = compact_spaces(str(control_row.get("pipeline_title", "") or ""))
+        if title.lower() in {"nan", "none"}:
+            title = ""
+        pipeline_titles.append(title)
+
+    groups: dict[str, list[int]] = {}
+    for index, exported_row in enumerate(exported):
+        groups.setdefault(duplicate_name_key(exported_row.get("name", "")), []).append(index)
+
+    renamed: list[dict[str, str]] = []
+    for group_key, indexes in groups.items():
+        if not group_key or len(indexes) < 2:
+            continue
+        for index in indexes:
+            exported_row = exported[index]
+            pipeline_title = pipeline_titles[index]
+            if not pipeline_title:
+                continue
+            current = exported_row.get("name", "")
+            name_type = product_type_from_title(current)
+            pipeline_type = product_type_from_title(pipeline_title)
+            if name_type and pipeline_type and not product_types_agree(name_type, pipeline_type):
+                continue
+            # Pipeline nie rozroznia tego produktu - nie podmieniamy (zostaje duplikatem).
+            if duplicate_name_key(pipeline_title) == group_key:
+                continue
+            features = json.loads(exported_row.get("features", "{}") or "{}")
+            new_name = hermetic_fluorescent_title(normalize_seo_title_terms(pipeline_title), features)
+            if compact_spaces(new_name) == compact_spaces(current):
+                continue
+            renamed.append(
+                {
+                    "sku": exported_row.get("sku", ""),
+                    "old_name": current,
+                    "new_name": new_name,
+                    "group_key": group_key,
+                }
+            )
+            exported_row["name"] = new_name
+    return renamed
+
+
+def remaining_duplicate_name_rows(exported: list[dict[str, str]]) -> list[dict[str, str]]:
+    """Produkty, ktore po dysambiguacji nadal maja identyczna nazwe (do scalenia w sklepie)."""
+    groups: dict[str, list[dict[str, str]]] = {}
+    for exported_row in exported:
+        groups.setdefault(duplicate_name_key(exported_row.get("name", "")), []).append(exported_row)
+    rows: list[dict[str, str]] = []
+    for group_key, members in groups.items():
+        if not group_key or len(members) < 2:
+            continue
+        for member in members:
+            rows.append(
+                {
+                    "group_key": group_key,
+                    "sku": member.get("sku", ""),
+                    "name": member.get("name", ""),
+                    "count": str(len(members)),
+                }
+            )
+    return rows
+
+
 def title_has_feature_conflict(title: str, pipeline_title: str, features: dict[str, Any]) -> bool:
     return (
         title_mounting_conflicts_with_feature(title, pipeline_title, features)
@@ -613,7 +745,14 @@ def mounting_from_title(title: str) -> str:
 
 
 def title_word_feature_missing(title: str, pipeline_title: str, features: dict[str, Any], normalized_name: str) -> bool:
-    expected = normalized_title_words(feature_by_normalized_name(features, normalized_name))
+    feature_value = feature_by_normalized_name(features, normalized_name)
+    if normalized_name == "kolor":
+        # Kolor porownujemy po rdzeniu (szary/szara/szare -> szar), zeby wykryc realny
+        # konflikt koloru obudowy niezaleznie od formy gramatycznej.
+        stem = color_stem(feature_value)
+        if stem:
+            return stem in normalize_header(pipeline_title) and stem not in normalize_header(title)
+    expected = normalized_title_words(feature_value)
     if not expected:
         return False
     current = normalize_header(title)
@@ -743,7 +882,7 @@ def row_skip_for_features(features: dict[str, Any]) -> set[str]:
     light_source = compact_spaces(str(features.get("Źródło światła", ""))).lower()
     replaceable_source = (
         "Maksymalna moc źródła światła" in features
-        or light_source in {"wymienne", "nie zintegrowane"}
+        or light_source in {"wymienne", "nie zintegrowane", "niezintegrowane"}
     )
     if replaceable_source:
         skip.update(normalize_header(name) for name in REQUIRED_ATTRIBUTES_DEPENDENT_ON_LIGHT_SOURCE)
@@ -961,14 +1100,21 @@ def main() -> None:
     )
     renamed_from_pipeline = apply_pipeline_titles_for_mismatched_names(control, exported)
     for exported_row in exported:
+        # Normalizacja SEO (np. "Plafon drewniana" -> "Plafon drewniany") dotyczy
+        # takze tytulow legacy zachowanych ze starego Woo, nie tylko przebudowanych.
+        name = normalize_seo_title_terms(exported_row["name"])
         exported_row["name"] = hermetic_fluorescent_title(
-            exported_row["name"], json.loads(exported_row["features"] or "{}")
+            name, json.loads(exported_row["features"] or "{}")
         )
     manual_fills_applied = apply_manual_attribute_fills(exported, load_manual_attribute_fills(args.manual_fills))
     metrics, issues = validate_export(exported, len(control), review_rows)
     metrics["manual_fills_applied"] = len(manual_fills_applied)
     metrics["renamed_from_pipeline"] = len(renamed_from_pipeline)
     metrics["panel_mounting_names_fixed"] = align_panel_mounting_in_names(exported)
+    duplicate_disambiguated = apply_pipeline_titles_for_duplicate_names(control, exported)
+    metrics["duplicate_disambiguated"] = len(duplicate_disambiguated)
+    remaining_duplicates = remaining_duplicate_name_rows(exported)
+    metrics["duplicate_names_remaining_groups"] = len({row["group_key"] for row in remaining_duplicates})
     metrics["woo_matches"] = int((control["woo_match_status"] == "MATCHED").sum())
     metrics["woo_missing_matches"] = int((control["woo_match_status"] != "MATCHED").sum())
     control_with_export = add_export_columns(control, exported)
@@ -987,7 +1133,13 @@ def main() -> None:
     metrics["power_voltage_audit_rows"] = len(power_voltage_audit)
     summary_rows = [{"metric": key, "value": value} for key, value in metrics.items()]
 
-    write_baselinker_csv(exported, args.csv_output)
+    # Import Baselinkera tylko dla produktow z listy referencyjnej (maja ID Baselinkera).
+    # Produkty spoza referencji ida wylacznie do pliku Woo (przez atrybutowy CSV).
+    baselinker_export = [row for row in exported if not row.get("_outside_reference")]
+    metrics["outside_reference_woo_only"] = len(exported) - len(baselinker_export)
+    for row in exported:
+        row.pop("_outside_reference", None)
+    write_baselinker_csv(baselinker_export, args.csv_output)
     write_attribute_update_csv(exported, args.attribute_csv_output)
     write_control_workbook(Path(args.control_output), control_with_export, exported, unmatched, summary_rows)
     write_reports(
@@ -1000,6 +1152,8 @@ def main() -> None:
         missing_required,
         power_voltage_audit,
         manual_fills_applied,
+        duplicate_disambiguated,
+        remaining_duplicates,
     )
     print(json.dumps(metrics, ensure_ascii=True, sort_keys=True))
 

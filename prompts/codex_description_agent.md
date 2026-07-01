@@ -56,8 +56,9 @@ jest krótszą ścieżką albo pojawił się jako pierwszy w wynikach wyszukiwan
 - Pierwsze 2-3 zdania mają wyjaśnić, czym jest produkt, gdzie się sprawdza i
   jakie potwierdzone cechy są najważniejsze.
 - Dodaj konkretne `<h2>` zawierające naturalną frazę produktową i sensowną
-  korzyść lub wyróżnik.
-- Dodaj `<h3>Najważniejsze zalety</h3>` oraz listę korzyści wynikających z faktów.
+  korzyść lub wyróżnik. Akapit bezpośrednio po `<h2>` zaczyna się frazą
+  kluczową i rozwija realne zastosowanie produktu.
+- Dodaj `<h3>Najważniejsze cechy</h3>` oraz listę korzyści wynikających z faktów.
 - Dodaj `<h3>Specyfikacja techniczna</h3>`. Każdy parametr zapisz jako
   `<li><strong>Nazwa:</strong> wartość</li>`.
 - Bezpośrednio po liście specyfikacji dodaj osobny końcowy `<p>`. Podsumuj w nim

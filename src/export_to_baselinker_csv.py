@@ -222,12 +222,13 @@ FEATURE_MAP = {
     "Barwa światła": ["Barwa - kategoria", "attr_barwa_zakres", "Barwa światła"],
     "Strumień świetlny [lm]": ["attr_strumien", "Strumień [lm]", "Strumień świetlny [lm]", "Jasność"],
     "Stopień ochrony [IP]": ["attr_ip", "Klasa IP", "Stopień ochrony [IP]", "Stopień ochrony IP"],
-    "Stopień ochrony [IK]": ["attr_ik", "Klasa ochronności"],
+    "Stopień odporności [IK]": ["attr_ik", "Klasa ochronności"],
     "Kąt świecenia [°]": ["attr_kat_swiecenia", "Kąt", "Kąt świecenia"],
     "Kolor": ["attr_kolor", "Kolor obudowy"],
     "Kolor producenta": ["Kolor producenta", "attr_kolor_producenta", "attr_kolor", "Kolor obudowy"],
     "Trzonek": ["attr_gwint", "Gwint", "Trzonek", "Rodzaj gwintu"],
     "Materiał": ["attr_material", "Materiał"],
+    "Klosz": ["attr_klosz", "Typ klosza"],
     "Kształt": ["attr_ksztalt", "Kształt"],
     "Wymiary [mm]": ["attr_wymiary", "Wymiary"],
     "Długość": ["attr_dlugosc", "Długość [mm]", "Długość"],
@@ -264,6 +265,8 @@ FEATURE_NAME_ALIASES = {
     "rodzaj produktu": "Typ produktu",
     "typ": "Typ produktu",
     "typ produktu": "Typ produktu",
+    "klosz": "Klosz",
+    "typ klosza": "Klosz",
     "moc": "Moc [W]",
     "moc w": "Moc [W]",
     "moc znamionowa": "Moc [W]",
@@ -302,10 +305,10 @@ FEATURE_NAME_ALIASES = {
     "ksztalt oprawy": "Kształt",
     "kształt oprawy": "Kształt",
     "model": "Model",
-    "klasa ochronnosci": "Stopień ochrony [IK]",
-    "klasa ochronności": "Stopień ochrony [IK]",
-    "stopien ochrony ik": "Stopień ochrony [IK]",
-    "stopień ochrony ik": "Stopień ochrony [IK]",
+    "klasa ochronnosci": "Stopień odporności [IK]",
+    "klasa ochronności": "Stopień odporności [IK]",
+    "stopien ochrony ik": "Stopień odporności [IK]",
+    "stopień ochrony ik": "Stopień odporności [IK]",
     "liczba sztuk": "Opakowanie",
     "ilosc sztuk": "Opakowanie",
     "ilość sztuk": "Opakowanie",
@@ -514,6 +517,9 @@ def build_baselinker_rows(
                 "description": description,
                 "features": json.dumps(features, ensure_ascii=False, separators=(",", ":")),
                 "images_urls": images,
+                # Produkty spoza listy referencyjnej Baselinkera: trafiaja tylko do pliku Woo,
+                # nie do importu Baselinkera (brak prawdziwego ID Baselinkera).
+                "_outside_reference": str(first_value(row, ["source_match_status"])) == "MATCHED_OUTSIDE_REFERENCE",
             }
         )
     return rows
@@ -549,6 +555,7 @@ def apply_category_attribute_knowledge(
         "Typ produktu",
         "Klasa energetyczna",
         "Kolor producenta",
+        "Klosz",
         "Liczba źródeł światła",
         "Maksymalna moc źródła światła",
         "Napięcie [V]",
@@ -569,6 +576,12 @@ def apply_category_attribute_knowledge(
         normalized = normalize_header(name)
         if normalized in allowed_keys and name not in result:
             result[name] = value
+    # Czujnik ruchu jest atrybutem filtrowalnym tej kategorii: brak czujnika
+    # (puste lub brak informacji) zapisujemy jawnie jako "Nie", zeby filtr mial wartosc.
+    if "czujnik ruchu" in allowed_keys and not any(
+        normalize_header(name) == "czujnik ruchu" and compact_spaces(str(value)) for name, value in result.items()
+    ):
+        result["Czujnik ruchu"] = "Nie"
     return result
 
 
@@ -863,12 +876,12 @@ def align_product_type_with_pipeline_title(features: dict[str, str], row: pd.Ser
 
 
 def normalize_light_source_value(value: str) -> str:
-    """Zrodlo swiatla ma tylko dwie wartosci: Zintegrowane albo Nie zintegrowane."""
+    """Zrodlo swiatla ma tylko dwie wartosci: Zintegrowane albo Niezintegrowane."""
     normalized = comparable_feature_value(value)
     if not normalized:
         return ""
     if normalized.startswith("nie zintegrowan"):
-        return "Nie zintegrowane"
+        return "Niezintegrowane"
     if "zintegrowan" in normalized or normalized in {"led", "led smd", "cob"}:
         return "Zintegrowane"
     replaceable_terms = (
@@ -877,7 +890,7 @@ def normalize_light_source_value(value: str) -> str:
         "gu10", "e27", "e14", "g13", "gx53", "g9",
     )
     if any(term in normalized for term in replaceable_terms):
-        return "Nie zintegrowane"
+        return "Niezintegrowane"
     return value
 
 
@@ -887,7 +900,7 @@ def derive_light_source_feature(features: dict[str, str]) -> None:
     if features.get("Źródło światła w komplecie") == "Tak":
         features["Źródło światła"] = "Zintegrowane"
     elif features.get("Trzonek") or features.get("Maksymalna moc źródła światła"):
-        features["Źródło światła"] = "Nie zintegrowane"
+        features["Źródło światła"] = "Niezintegrowane"
 
 
 def drop_socket_features_for_integrated_source(features: dict[str, str]) -> None:
@@ -959,7 +972,7 @@ def drop_fixture_power_for_products_without_light_source(features: dict[str, str
     if features.get("Źródło światła w komplecie") == "Tak":
         return
     has_max_source_power = bool(features.get("Maksymalna moc źródła światła"))
-    replaceable_source = comparable_feature_value(features.get("Źródło światła", "")) in {"wymienne", "nie zintegrowane"}
+    replaceable_source = comparable_feature_value(features.get("Źródło światła", "")) in {"wymienne", "nie zintegrowane", "niezintegrowane"}
     if has_max_source_power or replaceable_source:
         features.pop("Moc [W]", None)
 
@@ -1298,14 +1311,14 @@ def valid_flexible_feature_value(feature_name: str, value: str) -> bool:
     if feature_name == "Liczba źródeł światła":
         return bool(re.fullmatch(r"\d{1,2}", value))
     if feature_name == "Źródło światła":
-        return value in {"Zintegrowane", "Nie zintegrowane"}
+        return value in {"Zintegrowane", "Niezintegrowane"}
     if feature_name == "Temperatura barwowa [K]":
         return bool(re.fullmatch(r"\d+(?:[/-]\d+){0,3}|RGB", value, flags=re.IGNORECASE))
     if feature_name == "Napięcie [V]":
         return bool(re.fullmatch(r"\d+(?:[,.]\d+)?(?:-\d+(?:[,.]\d+)?){0,1}(?:\s(?:AC|DC))?", value))
     if feature_name == "Gwarancja":
         return bool(re.fullmatch(r"\d+\s*(?:lat|lata|rok|roku|miesiecy|miesięcy|mies\.?)", value, flags=re.IGNORECASE))
-    if feature_name == "Stopień ochrony [IK]":
+    if feature_name == "Stopień odporności [IK]":
         return bool(re.fullmatch(r"IK\s*\d{2}", value, flags=re.IGNORECASE))
     if feature_name == "Kąt świecenia [°]":
         return bool(re.fullmatch(r"\d+(?:[,.]\d+)?\s*°?", value))
@@ -1323,6 +1336,10 @@ def valid_flexible_feature_value(feature_name: str, value: str) -> bool:
         return value in {"Tak", "Nie"}
     if feature_name == "Opakowanie":
         return bool(re.fullmatch(r"\d+\s*(?:szt\.?|sztuk|sztuki)", value, flags=re.IGNORECASE))
+    if feature_name == "Klosz":
+        return bool(re.fullmatch(r"[a-ząćęłńóśźż, ]+", value, flags=re.IGNORECASE))
+    if feature_name == "Czujnik ruchu":
+        return value in {"Tak", "Nie"}
     return False
 
 
@@ -1486,7 +1503,7 @@ def normalize_feature_value_before_lookup(feature_name: str, value: str) -> str:
         return normalize_application_value(value)
     if feature_name == "Opakowanie":
         return normalize_package_value(value)
-    if feature_name == "Stopień ochrony [IK]":
+    if feature_name == "Stopień odporności [IK]":
         return normalize_ik_value(value)
     if feature_name == "Źródło światła w komplecie":
         normalized = normalize_header(value)
@@ -1626,7 +1643,15 @@ def normalize_feature_value(value: str, feature_name: str = "") -> str:
     if feature_name == "Wymiary [mm]":
         return normalize_dimensions_to_mm(value)
     if feature_name in {"Długość", "Szerokość", "Wysokość", "Średnica", "Głębokość"}:
+        # Wartosc "1" to zwykle dlugosc kabla (1 m) blednie wpisana jako wymiar oprawy.
+        if re.fullmatch(r"1(?:[.,]0+)?", value.strip()):
+            return ""
         return normalize_dimension_to_mm_with_unit(value)
+    if feature_name == "Współpraca ze ściemniaczem":
+        normalized = normalize_header(value)
+        return "Nie" if normalized in {"nie", "no", "0", "false", ""} else "Tak"
+    if feature_name == "Klosz":
+        return compact_spaces(re.sub(r"\s*,\s*", ", ", value))
     if feature_name == "Maksymalna moc źródła światła":
         value = re.sub(r"^(?:max\.?|maks(?:ymalnie)?|do)\s+", "", value, flags=re.IGNORECASE)
         return strip_unit(value, "W")

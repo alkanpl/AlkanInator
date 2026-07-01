@@ -16,7 +16,26 @@ from enrich_from_parameters import (  # noqa: E402
     build_parameter_index,
     normalize_parameter_value,
     parameter_attribute_to_internal,
+    should_parameter_override,
 )
+
+
+class ParameterPriorityTests(unittest.TestCase):
+    def test_parameters_override_master_columns(self) -> None:
+        # Parametry producenta wygrywaja z kolumna master (np. zly kolor z tytulu).
+        self.assertTrue(should_parameter_override("kolor", "biały", "szary", "column:Kolor obudowy"))
+        self.assertTrue(should_parameter_override("barwa", "6500K", "3000-6500K", "column:Barwa"))
+        self.assertTrue(should_parameter_override("gwint", "1xGU10", "GU10", "title"))
+
+    def test_material_and_power_keep_master(self) -> None:
+        # Material (Parametry podaja klosz, np. szklo) i moc (przelaczana, np. "52 / 44")
+        # zostaja przy wartosci master.
+        self.assertFalse(should_parameter_override("material", "drewniana", "szkło", "column:Materiał"))
+        self.assertFalse(should_parameter_override("moc", "52", "52 / 44", "title"))
+
+    def test_no_override_when_parameter_or_current_empty(self) -> None:
+        self.assertFalse(should_parameter_override("kolor", "", "szary", "column"))
+        self.assertFalse(should_parameter_override("kolor", "biały", "", "column"))
 
 
 class EnrichFromParametersTests(unittest.TestCase):
@@ -108,9 +127,14 @@ class EnrichFromParametersTests(unittest.TestCase):
             normalize_parameter_value("1", "laczenie_przelotowe", "Możliwość łączenia przelotowego opraw"),
             "Tak",
         )
+        # Wspolpraca ze sciemniaczem ma tylko Tak/Nie - kazdy protokol (DALI/1-10V...) -> Tak.
         self.assertEqual(
             normalize_parameter_value("DALI", "sciemnianie", "Możliwość współpracy ze ściemniaczem"),
-            "DALI",
+            "Tak",
+        )
+        self.assertEqual(
+            normalize_parameter_value("Nie", "sciemnianie", "Możliwość współpracy ze ściemniaczem"),
+            "Nie",
         )
         self.assertEqual(
             normalize_parameter_value("tak", "zrodlo_w_komplecie", "Źródło światła w komplecie"),

@@ -110,6 +110,7 @@ rules:
   - barwa
   - ip
   - kolor_feminine
+  - klosz_kod
   optional_title_attributes:
   - czujnik
   warn_if_missing:
@@ -126,6 +127,7 @@ rules:
   - barwa
   - ip
   - kolor_feminine
+  - klosz_kod
   optional_title_attributes:
   - czujnik
   warn_if_missing:

@@ -143,6 +143,48 @@ class BaselinkerFeatureNormalizationTest(unittest.TestCase):
         self.assertEqual(features["Maksymalna moc źródła światła"], "20")
         self.assertEqual(features["Liczba źródeł światła"], "3")
 
+    def test_dimmer_collapses_to_yes_no(self) -> None:
+        self.assertEqual(normalize_feature_value("DALI", "Współpraca ze ściemniaczem"), "Tak")
+        self.assertEqual(normalize_feature_value("1-10V", "Współpraca ze ściemniaczem"), "Tak")
+        self.assertEqual(normalize_feature_value("Nie", "Współpraca ze ściemniaczem"), "Nie")
+
+    def test_cable_length_one_is_dropped(self) -> None:
+        self.assertEqual(normalize_feature_value("1", "Długość"), "")
+        self.assertEqual(normalize_feature_value("1180 mm", "Długość"), "1180 mm")
+
+    def test_klosz_comma_spacing(self) -> None:
+        self.assertEqual(normalize_feature_value("opalowy", "Klosz"), "opalowy")
+        self.assertEqual(
+            normalize_feature_value("pryzmatyczny,wąskostrumieniowy", "Klosz"),
+            "pryzmatyczny, wąskostrumieniowy",
+        )
+
+    def test_motion_sensor_filled_with_no_when_filterable_and_absent(self) -> None:
+        knowledge = {
+            "categories": [
+                {
+                    "category": "Plafony",
+                    "ordered_attributes": ["Moc [W]", "Czujnik ruchu"],
+                    "required_description": ["Moc [W]"],
+                }
+            ]
+        }
+        row = pd.Series({"category": "Plafony LED"})
+        # Brak czujnika -> jawne "Nie" (kategoria ma czujnik jako atrybut filtrowalny).
+        result = apply_category_attribute_knowledge({"Moc [W]": "20"}, row, "Plafony LED", knowledge)
+        self.assertEqual(result.get("Czujnik ruchu"), "Nie")
+        # Obecny czujnik zostaje bez zmian.
+        kept = apply_category_attribute_knowledge(
+            {"Moc [W]": "20", "Czujnik ruchu": "Tak"}, row, "Plafony LED", knowledge
+        )
+        self.assertEqual(kept.get("Czujnik ruchu"), "Tak")
+
+    def test_motion_sensor_not_added_when_not_filterable(self) -> None:
+        knowledge = {"categories": [{"category": "Plafony", "ordered_attributes": ["Moc [W]"], "required_description": ["Moc [W]"]}]}
+        row = pd.Series({"category": "Plafony LED"})
+        result = apply_category_attribute_knowledge({"Moc [W]": "20"}, row, "Plafony LED", knowledge)
+        self.assertNotIn("Czujnik ruchu", result)
+
     def test_voltage_keeps_current_type(self) -> None:
         self.assertEqual(normalize_feature_value("220-240 AC", "Napięcie [V]"), "220-240 AC")
         self.assertEqual(normalize_feature_value("220-240", "Napięcie [V]"), "220-240 AC")
@@ -187,9 +229,9 @@ class BaselinkerFeatureNormalizationTest(unittest.TestCase):
         self.assertNotIn("Moc [W]", features)
 
     def test_light_source_has_two_values_and_is_derived(self) -> None:
-        self.assertEqual(normalize_feature_value("Wymienne", "Źródło światła"), "Nie zintegrowane")
-        self.assertEqual(normalize_feature_value("T8 LED", "Źródło światła"), "Nie zintegrowane")
-        self.assertEqual(normalize_feature_value("GLS/CFL/LED", "Źródło światła"), "Nie zintegrowane")
+        self.assertEqual(normalize_feature_value("Wymienne", "Źródło światła"), "Niezintegrowane")
+        self.assertEqual(normalize_feature_value("T8 LED", "Źródło światła"), "Niezintegrowane")
+        self.assertEqual(normalize_feature_value("GLS/CFL/LED", "Źródło światła"), "Niezintegrowane")
         self.assertEqual(normalize_feature_value("LED", "Źródło światła"), "Zintegrowane")
 
         features = build_features(
@@ -197,7 +239,7 @@ class BaselinkerFeatureNormalizationTest(unittest.TestCase):
             False,
             feature_value_normalizer=self.normalizer,
         )
-        self.assertEqual(features["Źródło światła"], "Nie zintegrowane")
+        self.assertEqual(features["Źródło światła"], "Niezintegrowane")
 
     def test_integrated_source_drops_socket_features(self) -> None:
         features = build_features(
@@ -589,7 +631,7 @@ class BaselinkerFeatureNormalizationTest(unittest.TestCase):
         self.assertEqual(filtered["Opakowanie"], "2 szt.")
         self.assertEqual(filtered["Zastosowanie"], "Do paneli")
         self.assertEqual(filtered["Czujnik ruchu"], "Tak")
-        self.assertEqual(filtered["Stopień ochrony [IK]"], "IK 08")
+        self.assertEqual(filtered["Stopień odporności [IK]"], "IK 08")
         self.assertEqual(filtered["Stopień ochrony [IP]"], "IP 54|IP 20")
         self.assertEqual(filtered["Kolor"], "Złoty")
         self.assertEqual(filtered["Kolor producenta"], "Złoto-brązowy")

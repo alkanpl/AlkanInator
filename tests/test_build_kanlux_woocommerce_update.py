@@ -11,6 +11,7 @@ from build_kanlux_woocommerce_update import (  # noqa: E402
     existing_features_by_sku,
     normalize_sku,
     serialize_product_attributes,
+    title_with_verified_product_type,
     update_workbook,
 )
 from openpyxl import Workbook, load_workbook  # noqa: E402
@@ -20,6 +21,11 @@ class KanluxWooCommerceUpdateTests(unittest.TestCase):
     def test_normalizes_kanlux_sku_suffix(self) -> None:
         self.assertEqual(normalize_sku("29002/KAN"), "29002")
         self.assertEqual(normalize_sku("29002/KANLUX"), "29002")
+
+    def test_max_power_uses_short_slug_override(self) -> None:
+        result = serialize_product_attributes(["Maksymalna moc źródła światła"])
+        self.assertIn('"pa_max-moc-zrodla"', result)
+        self.assertNotIn("pa_maksymalna-moc-zrodla-swiatla", result)
 
     def test_serializes_product_attributes_in_input_format(self) -> None:
         result = serialize_product_attributes(["Producent", "Stopień ochrony [IP]"])
@@ -42,6 +48,17 @@ class KanluxWooCommerceUpdateTests(unittest.TestCase):
         self.assertEqual(result["TEST"]["Długość"], "1200 mm")
         self.assertEqual(result["TEST"]["Wysokość"], "85 mm")
 
+
+    def test_legacy_plafon_title_gender_is_normalized(self) -> None:
+        # "Plafon drewniana" (kobieca odmiana z Plafoniera) ma byc "Plafon drewniany"
+        # takze gdy zachowujemy tytul legacy (brak verified_title wymuszajacego przebudowe).
+        result = title_with_verified_product_type(
+            "Plafon drewniana JASMIN 3xE27 okrągły 47cm biały matowa Kanlux 36504",
+            {"Typ produktu": "plafon"},
+        )
+        self.assertEqual(
+            result, "Plafon drewniany JASMIN 3xE27 okrągły 47cm biały matowa Kanlux 36504"
+        )
 
     def test_updates_title_when_verified_title_matches_feature_product_type(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:

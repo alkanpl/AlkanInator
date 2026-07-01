@@ -774,7 +774,7 @@
       "EPREL URL": ""
     },
     "expected": {
-      "new_title": "Oprawa hermetyczna LED FTHL1500 73W 10200lm 4000K biała Kanlux 28867",
+      "new_title": "Oprawa hermetyczna LED FTHL1500 73W 10200lm 4000K biała RYF Kanlux 28867",
       "product_role": "main",
       "title_status": "OK"
     }
@@ -852,7 +852,7 @@
       "EPREL URL": ""
     },
     "expected": {
-      "new_title": "Klips do montażu paneli karton-gipsie CLIPS Kanlux 28503",
+      "new_title": "Klips do montażu paneli karton-gipsie CLIPS do paneli 120x30 cm Kanlux 28503",
       "product_role": "accessory",
       "title_status": "WARNING"
     }
@@ -930,7 +930,7 @@
       "EPREL URL": ""
     },
     "expected": {
-      "new_title": "Oprawa hermetyczna LED FT1200 37W 5000lm 4000K biała Kanlux 28630",
+      "new_title": "Oprawa hermetyczna LED FT1200 37W 5000lm 4000K biała OPL Kanlux 28630",
       "product_role": "main",
       "title_status": "OK"
     }
@@ -969,7 +969,7 @@
       "EPREL URL": ""
     },
     "expected": {
-      "new_title": "Oprawa hermetyczna LED FTD1200 37W 5000lm 4000K biała Kanlux 28637",
+      "new_title": "Oprawa hermetyczna LED FTD1200 37W 5000lm 4000K biała OPL Kanlux 28637",
       "product_role": "main",
       "title_status": "OK"
     }
@@ -1008,7 +1008,7 @@
       "EPREL URL": ""
     },
     "expected": {
-      "new_title": "Oprawa hermetyczna LED FT1500 55W 7500lm 4000K biała Kanlux 28665",
+      "new_title": "Oprawa hermetyczna LED FT1500 55W 7500lm 4000K biała OPL Kanlux 28665",
       "product_role": "main",
       "title_status": "OK"
     }

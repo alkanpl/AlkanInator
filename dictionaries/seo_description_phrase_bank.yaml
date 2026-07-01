@@ -1,0 +1,3007 @@
+# Bank naturalnych zwrotow do opisow SEO Alkan
+# Zrodlo: opisy z eksportu WooCommerce. Wzorce sa do parafrazowania, nie do kopiowania calego opisu.
+metadata:
+  version: 1
+  generated_at: "2026-06-25"
+  source_file: "input/wc-product-export-25-6-2026-1782378099885.csv"
+  source_rows: 34888
+  source_columns:
+    - name: "Opis"
+      nonempty: 31706
+      chars: 11152456
+    - name: "Pola: _aioseo_description"
+      nonempty: 633
+      chars: 75932
+    - name: "Pola: _aioseo_og_description"
+      nonempty: 15
+      chars: 93
+    - name: "Pola: _aioseo_twitter_description"
+      nonempty: 15
+      chars: 138
+    - name: "Pola: _aioseop_description"
+      nonempty: 95
+      chars: 4365
+    - name: "Pola: sf_product_description"
+      nonempty: 795
+      chars: 59586
+    - name: "Pola: sf_product_short_description"
+      nonempty: 7
+      chars: 477
+  sentence_candidates: 49
+  phrase_count: 704
+  note: "Zwroty sa parafrazami i wzorcami inspirowanymi opisami Woo; nie nalezy kopiowac calych zdan producenta 1:1."
+
+usage_rules:
+  - "Nie kopiuj kilku wzorcow pod rzad bez dopasowania do produktu."
+  - "Najpierw wybierz sytuacje uzycia, potem dobierz zwrot."
+  - "Parametry techniczne lacz w sensowne paczki: swiatlo, odpornosc, montaz, kompatybilnosc."
+  - "Specyfikacja pozostaje miejscem na suche dane; proza ma tlumaczyc decyzje zakupowa."
+  - "Unikaj konstrukcji typu cecha -> pozwala/u?atwia/oznacza w kazdym zdaniu."
+
+phrase_families:
+  accessory_compatibility:
+    - id: accessory_compatibility_001
+      pattern: "Przy akcesorium najwa?niejsza jest zgodno?? z konkretn? opraw?, a nie sama nazwa kategorii."
+      use_when: "akcesoria, ramki, zasilacze, cz??ci wymienne"
+      source_signal: "pasuje do / seria / kompatybilno??"
+    - id: accessory_compatibility_002
+      pattern: "Podobne elementy mog? r??ni? si? mocowaniem, dlatego warto por?wna? seri? i wymiary."
+      use_when: "akcesoria, ramki, zasilacze, cz??ci wymienne"
+      source_signal: "pasuje do / seria / kompatybilno??"
+    - id: accessory_compatibility_003
+      pattern: "Je?eli cz??? ma zast?pi? uszkodzony element, najlepiej sprawdzi? oznaczenie na starym produkcie."
+      use_when: "akcesoria, ramki, zasilacze, cz??ci wymienne"
+      source_signal: "pasuje do / seria / kompatybilno??"
+    - id: accessory_compatibility_004
+      pattern: "Dob?r do w?a?ciwej serii ogranicza ryzyko zakupu elementu, kt?ry wygl?da podobnie, ale nie pasuje."
+      use_when: "akcesoria, ramki, zasilacze, cz??ci wymienne"
+      source_signal: "pasuje do / seria / kompatybilno??"
+    - id: accessory_compatibility_005
+      pattern: "Akcesorium sprawdzi si? wtedy, gdy zgadza si? z miejscem monta?u i sposobem mocowania."
+      use_when: "akcesoria, ramki, zasilacze, cz??ci wymienne"
+      source_signal: "pasuje do / seria / kompatybilno??"
+    - id: accessory_compatibility_006
+      pattern: "Przy cz??ciach pomocniczych lepiej nie dopowiada? funkcji, kt?rych nie potwierdza producent."
+      use_when: "akcesoria, ramki, zasilacze, cz??ci wymienne"
+      source_signal: "pasuje do / seria / kompatybilno??"
+    - id: accessory_compatibility_007
+      pattern: "Taki element warto traktowa? jako cz??? serwisow? lub uzupe?niaj?c? konkretn? opraw?."
+      use_when: "akcesoria, ramki, zasilacze, cz??ci wymienne"
+      source_signal: "pasuje do / seria / kompatybilno??"
+    - id: accessory_compatibility_008
+      pattern: "Wymiana samego elementu mo?e wystarczy?, je?li oprawa jest sprawna i pasuje do niej dana cz???."
+      use_when: "akcesoria, ramki, zasilacze, cz??ci wymienne"
+      source_signal: "pasuje do / seria / kompatybilno??"
+    - id: accessory_compatibility_009
+      pattern: "Kolor akcesorium ma znaczenie wtedy, gdy element pozostaje widoczny po monta?u."
+      use_when: "akcesoria, ramki, zasilacze, cz??ci wymienne"
+      source_signal: "pasuje do / seria / kompatybilno??"
+    - id: accessory_compatibility_010
+      pattern: "Wymiary cz??ci warto por?wna? z produktem, kt?ry jest ju? w instalacji."
+      use_when: "akcesoria, ramki, zasilacze, cz??ci wymienne"
+      source_signal: "pasuje do / seria / kompatybilno??"
+    - id: accessory_compatibility_011
+      pattern: "Przy ramkach i uchwytach liczy si? format, stabilno?? monta?u i estetyczne wyko?czenie."
+      use_when: "akcesoria, ramki, zasilacze, cz??ci wymienne"
+      source_signal: "pasuje do / seria / kompatybilno??"
+    - id: accessory_compatibility_012
+      pattern: "Przy zasilaczach wygl?d ma mniejsze znaczenie ni? zgodno?? elektryczna."
+      use_when: "akcesoria, ramki, zasilacze, cz??ci wymienne"
+      source_signal: "pasuje do / seria / kompatybilno??"
+    - id: accessory_compatibility_013
+      pattern: "Dane kompatybilno?ci powinny trafia? do prozy tylko wtedy, gdy pomagaj? unikn?? pomy?ki."
+      use_when: "akcesoria, ramki, zasilacze, cz??ci wymienne"
+      source_signal: "pasuje do / seria / kompatybilno??"
+    - id: accessory_compatibility_014
+      pattern: "Kod producenta najlepiej zostawi? w specyfikacji, chyba ?e s?u?y do jednoznacznej identyfikacji cz??ci."
+      use_when: "akcesoria, ramki, zasilacze, cz??ci wymienne"
+      source_signal: "pasuje do / seria / kompatybilno??"
+    - id: accessory_compatibility_015
+      pattern: "Seria jest u?yteczna wtedy, gdy realnie zaw??a dob?r do pasuj?cych element?w."
+      use_when: "akcesoria, ramki, zasilacze, cz??ci wymienne"
+      source_signal: "pasuje do / seria / kompatybilno??"
+  closings:
+    - id: closings_001
+      pattern: "Wybierz ten wariant, je?li pasuje do {place} i warunk?w monta?u opisanych w specyfikacji."
+      use_when: "ko?cowy akapit po specyfikacji"
+      source_signal: "zam?w / wybierz / przed zakupem"
+      slots: ["place"]
+    - id: closings_002
+      pattern: "To dobry wyb?r do instalacji, w kt?rej {goal}."
+      use_when: "ko?cowy akapit po specyfikacji"
+      source_signal: "zam?w / wybierz / przed zakupem"
+      slots: ["goal"]
+    - id: closings_003
+      pattern: "Zam?w ten model, je?li jego {key_facts} odpowiadaj? planowanemu zastosowaniu."
+      use_when: "ko?cowy akapit po specyfikacji"
+      source_signal: "zam?w / wybierz / przed zakupem"
+      slots: ["key_facts"]
+    - id: closings_004
+      pattern: "Przed zakupem por?wnaj {decision_points}, a potem dobierz wariant do konkretnego miejsca."
+      use_when: "ko?cowy akapit po specyfikacji"
+      source_signal: "zam?w / wybierz / przed zakupem"
+      slots: ["decision_points"]
+    - id: closings_005
+      pattern: "Je?li szukasz oprawy do {place}, ten model warto zestawi? z wymaganiami monta?u i oczekiwanym efektem ?wiat?a."
+      use_when: "ko?cowy akapit po specyfikacji"
+      source_signal: "zam?w / wybierz / przed zakupem"
+      slots: ["place"]
+    - id: closings_006
+      pattern: "Dobierz go wtedy, gdy {goal}, a parametry ze specyfikacji zgadzaj? si? z instalacj?."
+      use_when: "ko?cowy akapit po specyfikacji"
+      source_signal: "zam?w / wybierz / przed zakupem"
+      slots: ["goal"]
+    - id: closings_007
+      pattern: "To praktyczny wyb?r tam, gdzie najwa?niejsze s? {main_benefits}."
+      use_when: "ko?cowy akapit po specyfikacji"
+      source_signal: "zam?w / wybierz / przed zakupem"
+      slots: ["main_benefits"]
+    - id: closings_008
+      pattern: "Warto wybra? ten wariant, je?li {condition} i nie potrzebujesz dodatkowych funkcji poza potwierdzonymi w specyfikacji."
+      use_when: "ko?cowy akapit po specyfikacji"
+      source_signal: "zam?w / wybierz / przed zakupem"
+      slots: ["condition"]
+    - id: closings_009
+      pattern: "Je?eli produkt ma trafi? do istniej?cej instalacji, por?wnaj najpierw wymiary i spos?b monta?u."
+      use_when: "ko?cowy akapit po specyfikacji"
+      source_signal: "zam?w / wybierz / przed zakupem"
+    - id: closings_010
+      pattern: "W przypadku akcesorium upewnij si?, ?e seria i oznaczenie zgadzaj? si? z opraw?."
+      use_when: "ko?cowy akapit po specyfikacji"
+      source_signal: "zam?w / wybierz / przed zakupem"
+    - id: closings_011
+      pattern: "Do nowego monta?u sprawd? najpierw miejsce, wysoko?? i oczekiwany kierunek ?wiecenia."
+      use_when: "ko?cowy akapit po specyfikacji"
+      source_signal: "zam?w / wybierz / przed zakupem"
+    - id: closings_012
+      pattern: "Je?eli zale?y Ci na spokojnym ?wietle w codziennym u?ytkowaniu, zestaw ten model z planowan? stref? pracy."
+      use_when: "ko?cowy akapit po specyfikacji"
+      source_signal: "zam?w / wybierz / przed zakupem"
+  environment_resistance:
+    - id: environment_resistance_001
+      pattern: "Obudowa z klas? {ip} lepiej znosi {condition}, dlatego pasuje do {place}."
+      use_when: "IP, IK, warunki pracy, hermetyczne i zewn?trzne"
+      source_signal: "ochrona / odporno?? / warunki"
+      slots: ["condition", "ip", "place"]
+    - id: environment_resistance_002
+      pattern: "Klasa {ip} ma znaczenie tam, gdzie oprawa mo?e mie? kontakt z {condition}."
+      use_when: "IP, IK, warunki pracy, hermetyczne i zewn?trzne"
+      source_signal: "ochrona / odporno?? / warunki"
+      slots: ["condition", "ip"]
+    - id: environment_resistance_003
+      pattern: "Przy {place} odporno?? obudowy jest wa?na, bo oprawa nie pracuje w idealnych warunkach."
+      use_when: "IP, IK, warunki pracy, hermetyczne i zewn?trzne"
+      source_signal: "ochrona / odporno?? / warunki"
+      slots: ["place"]
+    - id: environment_resistance_004
+      pattern: "{ip_meaning} przydaje si? szczeg?lnie w {place}."
+      use_when: "IP, IK, warunki pracy, hermetyczne i zewn?trzne"
+      source_signal: "ochrona / odporno?? / warunki"
+      slots: ["ip_meaning", "place"]
+    - id: environment_resistance_005
+      pattern: "Je?li w miejscu monta?u pojawia si? {condition}, warto zwr?ci? uwag? na klas? ochrony."
+      use_when: "IP, IK, warunki pracy, hermetyczne i zewn?trzne"
+      source_signal: "ochrona / odporno?? / warunki"
+      slots: ["condition"]
+    - id: environment_resistance_006
+      pattern: "Odporno?? na {condition} pozwala spokojniej zaplanowa? monta? w {place}."
+      use_when: "IP, IK, warunki pracy, hermetyczne i zewn?trzne"
+      source_signal: "ochrona / odporno?? / warunki"
+      slots: ["condition", "place"]
+    - id: environment_resistance_007
+      pattern: "Do suchych wn?trz wystarczy inna ochrona ni? do miejsc nara?onych na wilgo? lub zachlapanie."
+      use_when: "IP, IK, warunki pracy, hermetyczne i zewn?trzne"
+      source_signal: "ochrona / odporno?? / warunki"
+    - id: environment_resistance_008
+      pattern: "W gara?u, warsztacie i zapleczu obudowa musi znosi? wi?cej ni? tylko kurz z pomieszczenia."
+      use_when: "IP, IK, warunki pracy, hermetyczne i zewn?trzne"
+      source_signal: "ochrona / odporno?? / warunki"
+    - id: environment_resistance_009
+      pattern: "Na zewn?trz znaczenie ma nie tylko ?wiat?o, ale te? odporno?? oprawy na warunki pracy."
+      use_when: "IP, IK, warunki pracy, hermetyczne i zewn?trzne"
+      source_signal: "ochrona / odporno?? / warunki"
+    - id: environment_resistance_010
+      pattern: "W strefach technicznych ?atwo doceni? opraw?, kt?r? mo?na utrzyma? w czysto?ci."
+      use_when: "IP, IK, warunki pracy, hermetyczne i zewn?trzne"
+      source_signal: "ochrona / odporno?? / warunki"
+    - id: environment_resistance_011
+      pattern: "Tam, gdzie pojawia si? wilgo?, klasa ochrony nie jest dodatkiem, tylko podstaw? doboru."
+      use_when: "IP, IK, warunki pracy, hermetyczne i zewn?trzne"
+      source_signal: "ochrona / odporno?? / warunki"
+    - id: environment_resistance_012
+      pattern: "W przej?ciach i przy wej?ciach oprawa powinna dobrze znosi? codzienne u?ytkowanie."
+      use_when: "IP, IK, warunki pracy, hermetyczne i zewn?trzne"
+      source_signal: "ochrona / odporno?? / warunki"
+    - id: environment_resistance_013
+      pattern: "Im trudniejsze miejsce pracy, tym wi?ksze znaczenie ma obudowa i spos?b jej zabezpieczenia."
+      use_when: "IP, IK, warunki pracy, hermetyczne i zewn?trzne"
+      source_signal: "ochrona / odporno?? / warunki"
+    - id: environment_resistance_014
+      pattern: "Odporno?? warto zestawi? z realnym miejscem monta?u, a nie tylko z nazw? produktu."
+      use_when: "IP, IK, warunki pracy, hermetyczne i zewn?trzne"
+      source_signal: "ochrona / odporno?? / warunki"
+    - id: environment_resistance_015
+      pattern: "W miejscach nara?onych na kurz i zachlapanie lepiej wybiera? opraw? z wy?sz? klas? ochrony."
+      use_when: "IP, IK, warunki pracy, hermetyczne i zewn?trzne"
+      source_signal: "ochrona / odporno?? / warunki"
+    - id: environment_resistance_016
+      pattern: "W suchym pomieszczeniu najwa?niejsze mog? by? ?wiat?o i wygl?d, ale w zapleczu dochodzi odporno??."
+      use_when: "IP, IK, warunki pracy, hermetyczne i zewn?trzne"
+      source_signal: "ochrona / odporno?? / warunki"
+    - id: environment_resistance_017
+      pattern: "Przy monta?u pod os?oni?t? elewacj? trzeba uwzgl?dni? py?, wilgo? i mo?liwo?? zachlapania."
+      use_when: "IP, IK, warunki pracy, hermetyczne i zewn?trzne"
+      source_signal: "ochrona / odporno?? / warunki"
+    - id: environment_resistance_018
+      pattern: "W pomieszczeniu technicznym trwa?o?? obudowy cz?sto jest wa?niejsza ni? dekoracyjny charakter."
+      use_when: "IP, IK, warunki pracy, hermetyczne i zewn?trzne"
+      source_signal: "ochrona / odporno?? / warunki"
+    - id: environment_resistance_019
+      pattern: "Dobrze dobrana klasa ochrony ogranicza ryzyko monta?u oprawy w miejscu, do kt?rego nie pasuje."
+      use_when: "IP, IK, warunki pracy, hermetyczne i zewn?trzne"
+      source_signal: "ochrona / odporno?? / warunki"
+    - id: environment_resistance_020
+      pattern: "Warunki pracy powinny decydowa? o wyborze klasy ochrony bardziej ni? sama estetyka oprawy."
+      use_when: "IP, IK, warunki pracy, hermetyczne i zewn?trzne"
+      source_signal: "ochrona / odporno?? / warunki"
+  faq_question_stems:
+    - id: faq_question_stems_001
+      pattern: "Czy {keyword} sprawdzi si? w {place}?"
+      use_when: "FAQ pod opisem"
+      source_signal: "pytania u?ytkownika"
+      slots: ["keyword", "place"]
+    - id: faq_question_stems_002
+      pattern: "Jak dobra? {keyword} do miejsca monta?u?"
+      use_when: "FAQ pod opisem"
+      source_signal: "pytania u?ytkownika"
+      slots: ["keyword"]
+    - id: faq_question_stems_003
+      pattern: "Na co zwr?ci? uwag? przed zakupem {keyword}?"
+      use_when: "FAQ pod opisem"
+      source_signal: "pytania u?ytkownika"
+      slots: ["keyword"]
+    - id: faq_question_stems_004
+      pattern: "Czy {keyword} wymaga dodatkowego ?r?d?a ?wiat?a?"
+      use_when: "FAQ pod opisem"
+      source_signal: "pytania u?ytkownika"
+      slots: ["keyword"]
+    - id: faq_question_stems_005
+      pattern: "Jakie znaczenie ma klasa {ip} w tym produkcie?"
+      use_when: "FAQ pod opisem"
+      source_signal: "pytania u?ytkownika"
+      slots: ["ip"]
+    - id: faq_question_stems_006
+      pattern: "Czy ten wariant pasuje do istniej?cej instalacji?"
+      use_when: "FAQ pod opisem"
+      source_signal: "pytania u?ytkownika"
+    - id: faq_question_stems_007
+      pattern: "Jak sprawdzi? kompatybilno?? akcesorium?"
+      use_when: "FAQ pod opisem"
+      source_signal: "pytania u?ytkownika"
+    - id: faq_question_stems_008
+      pattern: "Czy barwa {tone} b?dzie dobra do codziennego u?ytkowania?"
+      use_when: "FAQ pod opisem"
+      source_signal: "pytania u?ytkownika"
+      slots: ["tone"]
+    - id: faq_question_stems_009
+      pattern: "Gdzie najlepiej zamontowa? ten typ oprawy?"
+      use_when: "FAQ pod opisem"
+      source_signal: "pytania u?ytkownika"
+    - id: faq_question_stems_010
+      pattern: "Czy produkt nadaje si? do pomieszcze? technicznych?"
+      use_when: "FAQ pod opisem"
+      source_signal: "pytania u?ytkownika"
+  goal_reframes:
+    - id: goal_reframes_001
+      pattern: "W takim miejscu najwa?niejsze jest to, ?eby {goal}."
+      use_when: "zamiennik dla sztucznego ?b?dzie dobrym wyborem wtedy, gdy?"
+      source_signal: "w praktyce / warto wybra?"
+      slots: ["goal"]
+    - id: goal_reframes_002
+      pattern: "To przydatne zw?aszcza wtedy, gdy {goal}."
+      use_when: "zamiennik dla sztucznego ?b?dzie dobrym wyborem wtedy, gdy?"
+      source_signal: "w praktyce / warto wybra?"
+      slots: ["goal"]
+    - id: goal_reframes_003
+      pattern: "Taki dob?r ma sens, gdy {goal}."
+      use_when: "zamiennik dla sztucznego ?b?dzie dobrym wyborem wtedy, gdy?"
+      source_signal: "w praktyce / warto wybra?"
+      slots: ["goal"]
+    - id: goal_reframes_004
+      pattern: "W praktyce chodzi o sytuacj?, w kt?rej {goal}."
+      use_when: "zamiennik dla sztucznego ?b?dzie dobrym wyborem wtedy, gdy?"
+      source_signal: "w praktyce / warto wybra?"
+      slots: ["goal"]
+    - id: goal_reframes_005
+      pattern: "Najlepiej my?le? o nim przez pryzmat miejsca, w kt?rym {goal}."
+      use_when: "zamiennik dla sztucznego ?b?dzie dobrym wyborem wtedy, gdy?"
+      source_signal: "w praktyce / warto wybra?"
+      slots: ["goal"]
+    - id: goal_reframes_006
+      pattern: "Dobrze sprawdza si? w uk?adach, gdzie {goal}."
+      use_when: "zamiennik dla sztucznego ?b?dzie dobrym wyborem wtedy, gdy?"
+      source_signal: "w praktyce / warto wybra?"
+      slots: ["goal"]
+    - id: goal_reframes_007
+      pattern: "Warto go wybra? tam, gdzie {goal}."
+      use_when: "zamiennik dla sztucznego ?b?dzie dobrym wyborem wtedy, gdy?"
+      source_signal: "w praktyce / warto wybra?"
+      slots: ["goal"]
+    - id: goal_reframes_008
+      pattern: "To rozwi?zanie dla miejsc, w kt?rych {goal}."
+      use_when: "zamiennik dla sztucznego ?b?dzie dobrym wyborem wtedy, gdy?"
+      source_signal: "w praktyce / warto wybra?"
+      slots: ["goal"]
+    - id: goal_reframes_009
+      pattern: "Najwi?cej sensu ma w przestrzeni, gdzie {goal}."
+      use_when: "zamiennik dla sztucznego ?b?dzie dobrym wyborem wtedy, gdy?"
+      source_signal: "w praktyce / warto wybra?"
+      slots: ["goal"]
+    - id: goal_reframes_010
+      pattern: "Takie rozwi?zanie przydaje si?, kiedy {goal}."
+      use_when: "zamiennik dla sztucznego ?b?dzie dobrym wyborem wtedy, gdy?"
+      source_signal: "w praktyce / warto wybra?"
+      slots: ["goal"]
+    - id: goal_reframes_011
+      pattern: "Sprawdza si? szczeg?lnie w scenariuszu, w kt?rym {goal}."
+      use_when: "zamiennik dla sztucznego ?b?dzie dobrym wyborem wtedy, gdy?"
+      source_signal: "w praktyce / warto wybra?"
+      slots: ["goal"]
+    - id: goal_reframes_012
+      pattern: "Dobrze pasuje do instalacji, gdzie {goal}."
+      use_when: "zamiennik dla sztucznego ?b?dzie dobrym wyborem wtedy, gdy?"
+      source_signal: "w praktyce / warto wybra?"
+      slots: ["goal"]
+    - id: goal_reframes_013
+      pattern: "To naturalny wyb?r tam, gdzie {goal}."
+      use_when: "zamiennik dla sztucznego ?b?dzie dobrym wyborem wtedy, gdy?"
+      source_signal: "w praktyce / warto wybra?"
+      slots: ["goal"]
+    - id: goal_reframes_014
+      pattern: "W codziennym u?yciu liczy si? tu przede wszystkim to, ?e {goal}."
+      use_when: "zamiennik dla sztucznego ?b?dzie dobrym wyborem wtedy, gdy?"
+      source_signal: "w praktyce / warto wybra?"
+      slots: ["goal"]
+    - id: goal_reframes_015
+      pattern: "W?a?nie w takich warunkach znaczenie ma to, ?e {goal}."
+      use_when: "zamiennik dla sztucznego ?b?dzie dobrym wyborem wtedy, gdy?"
+      source_signal: "w praktyce / warto wybra?"
+      slots: ["goal"]
+  installation_and_fit:
+    - id: installation_and_fit_001
+      pattern: "Przed monta?em warto por?wna? {mounting} oraz {dimensions} z przygotowanym miejscem."
+      use_when: "monta?, wymiary, dopasowanie do miejsca"
+      source_signal: "monta? / wymiary"
+      slots: ["dimensions", "mounting"]
+    - id: installation_and_fit_002
+      pattern: "Wymiary najlepiej sprawdzi? jeszcze przed zakupem, zw?aszcza gdy oprawa trafia do istniej?cej zabudowy."
+      use_when: "monta?, wymiary, dopasowanie do miejsca"
+      source_signal: "monta? / wymiary"
+    - id: installation_and_fit_003
+      pattern: "Monta? {mounting} pasuje do sytuacji, w kt?rej {mount_goal}."
+      use_when: "monta?, wymiary, dopasowanie do miejsca"
+      source_signal: "monta? / wymiary"
+      slots: ["mount_goal", "mounting"]
+    - id: installation_and_fit_004
+      pattern: "Przy wymianie starego elementu najwa?niejsze jest por?wnanie wymiar?w i sposobu mocowania."
+      use_when: "monta?, wymiary, dopasowanie do miejsca"
+      source_signal: "monta? / wymiary"
+    - id: installation_and_fit_005
+      pattern: "Je?eli oprawa ma by? widoczna, znaczenie ma nie tylko monta?, ale te? proporcja do sufitu lub ?ciany."
+      use_when: "monta?, wymiary, dopasowanie do miejsca"
+      source_signal: "monta? / wymiary"
+    - id: installation_and_fit_006
+      pattern: "W suficie modu?owym format oprawy warto zestawi? z uk?adem kaseton?w."
+      use_when: "monta?, wymiary, dopasowanie do miejsca"
+      source_signal: "monta? / wymiary"
+    - id: installation_and_fit_007
+      pattern: "Przy monta?u natynkowym ?atwiej zaplanowa? instalacj? bez ingerencji w sufit podwieszany."
+      use_when: "monta?, wymiary, dopasowanie do miejsca"
+      source_signal: "monta? / wymiary"
+    - id: installation_and_fit_008
+      pattern: "Przy monta?u podtynkowym trzeba wcze?niej sprawdzi? dost?pn? przestrze? i g??boko?? zabudowy."
+      use_when: "monta?, wymiary, dopasowanie do miejsca"
+      source_signal: "monta? / wymiary"
+    - id: installation_and_fit_009
+      pattern: "Dost?p serwisowy warto zaplanowa? od razu, szczeg?lnie przy oprawach technicznych."
+      use_when: "monta?, wymiary, dopasowanie do miejsca"
+      source_signal: "monta? / wymiary"
+    - id: installation_and_fit_010
+      pattern: "W?skie przej?cia i wn?ki wymagaj? sprawdzenia wymiaru oprawy przed monta?em."
+      use_when: "monta?, wymiary, dopasowanie do miejsca"
+      source_signal: "monta? / wymiary"
+    - id: installation_and_fit_011
+      pattern: "Przy wi?kszej liczbie punkt?w ?wiat?a dobrze zachowa? powtarzalny rozstaw i ten sam spos?b monta?u."
+      use_when: "monta?, wymiary, dopasowanie do miejsca"
+      source_signal: "monta? / wymiary"
+    - id: installation_and_fit_012
+      pattern: "Miejsce monta?u powinno wynika? z tego, gdzie ?wiat?o jest faktycznie potrzebne."
+      use_when: "monta?, wymiary, dopasowanie do miejsca"
+      source_signal: "monta? / wymiary"
+    - id: installation_and_fit_013
+      pattern: "Na elewacji wa?ny jest kierunek ?wiecenia oraz mo?liwo?? p??niejszej regulacji lub czyszczenia."
+      use_when: "monta?, wymiary, dopasowanie do miejsca"
+      source_signal: "monta? / wymiary"
+    - id: installation_and_fit_014
+      pattern: "W gara?u i warsztacie oprawa powinna by? zamontowana tak, aby nie przeszkadza?a w pracy."
+      use_when: "monta?, wymiary, dopasowanie do miejsca"
+      source_signal: "monta? / wymiary"
+    - id: installation_and_fit_015
+      pattern: "W korytarzu liczy si? r?wnomierne rozmieszczenie ?wiat?a na ca?ej d?ugo?ci przej?cia."
+      use_when: "monta?, wymiary, dopasowanie do miejsca"
+      source_signal: "monta? / wymiary"
+    - id: installation_and_fit_016
+      pattern: "Przy panelach LED format i spos?b monta?u s? r?wnie wa?ne jak moc ?wiat?a."
+      use_when: "monta?, wymiary, dopasowanie do miejsca"
+      source_signal: "monta? / wymiary"
+    - id: installation_and_fit_017
+      pattern: "Przy akcesoriach podobny wygl?d nie wystarcza; trzeba sprawdzi? mocowanie i seri?."
+      use_when: "monta?, wymiary, dopasowanie do miejsca"
+      source_signal: "monta? / wymiary"
+    - id: installation_and_fit_018
+      pattern: "Je?eli element ma zast?pi? star? cz???, najlepiej por?wna? go z oznaczeniem na demontowanym produkcie."
+      use_when: "monta?, wymiary, dopasowanie do miejsca"
+      source_signal: "monta? / wymiary"
+    - id: installation_and_fit_019
+      pattern: "W instalacji technicznej lepiej zostawi? dost?p do oprawy na potrzeby czyszczenia lub wymiany."
+      use_when: "monta?, wymiary, dopasowanie do miejsca"
+      source_signal: "monta? / wymiary"
+    - id: installation_and_fit_020
+      pattern: "Monta? warto planowa? razem z kierunkiem ?wiecenia, a nie dopiero po wyborze oprawy."
+      use_when: "monta?, wymiary, dopasowanie do miejsca"
+      source_signal: "monta? / wymiary"
+  light_effect_and_comfort:
+    - id: light_effect_and_comfort_001
+      pattern: "Zestawienie {power_flux} z barw? {tone} daje ?wiat?o odpowiednie do {place}."
+      use_when: "akapity o ?wietle, mocy, lumenach, barwie, k?cie"
+      source_signal: "?wiat?o / barwa / strumie?"
+      slots: ["place", "power_flux", "tone"]
+    - id: light_effect_and_comfort_002
+      pattern: "Przy {place} lepiej sprawdzi si? ?wiat?o, kt?re {light_goal}, dlatego znaczenie maj? {light_facts}."
+      use_when: "akapity o ?wietle, mocy, lumenach, barwie, k?cie"
+      source_signal: "?wiat?o / barwa / strumie?"
+      slots: ["light_facts", "light_goal", "place"]
+    - id: light_effect_and_comfort_003
+      pattern: "{tone} pomaga uzyska? {visual_effect}, bez przypadkowego ocieplania lub och?adzania przestrzeni."
+      use_when: "akapity o ?wietle, mocy, lumenach, barwie, k?cie"
+      source_signal: "?wiat?o / barwa / strumie?"
+      slots: ["tone", "visual_effect"]
+    - id: light_effect_and_comfort_004
+      pattern: "Strumie? {flux} warto odnie?? do wielko?ci {place}, a nie traktowa? jako sam? liczb? z tabeli."
+      use_when: "akapity o ?wietle, mocy, lumenach, barwie, k?cie"
+      source_signal: "?wiat?o / barwa / strumie?"
+      slots: ["flux", "place"]
+    - id: light_effect_and_comfort_005
+      pattern: "Moc {power} ma sens dopiero w po??czeniu z tym, jak du?a jest o?wietlana strefa."
+      use_when: "akapity o ?wietle, mocy, lumenach, barwie, k?cie"
+      source_signal: "?wiat?o / barwa / strumie?"
+      slots: ["power"]
+    - id: light_effect_and_comfort_006
+      pattern: "Je?eli ?wiat?o ma pracowa? wiele godzin dziennie, znaczenie ma nie tylko moc, ale te? komfort odbioru."
+      use_when: "akapity o ?wietle, mocy, lumenach, barwie, k?cie"
+      source_signal: "?wiat?o / barwa / strumie?"
+    - id: light_effect_and_comfort_007
+      pattern: "W pomieszczeniach roboczych najlepiej sprawdza si? ?wiat?o czytelne i r?wnomierne."
+      use_when: "akapity o ?wietle, mocy, lumenach, barwie, k?cie"
+      source_signal: "?wiat?o / barwa / strumie?"
+    - id: light_effect_and_comfort_008
+      pattern: "W przej?ciach wa?ne jest szybkie do?wietlenie drogi, a nie dekoracyjny efekt."
+      use_when: "akapity o ?wietle, mocy, lumenach, barwie, k?cie"
+      source_signal: "?wiat?o / barwa / strumie?"
+    - id: light_effect_and_comfort_009
+      pattern: "W strefach wypoczynku lepiej sprawdza si? spokojniejszy odbi?r ?wiat?a."
+      use_when: "akapity o ?wietle, mocy, lumenach, barwie, k?cie"
+      source_signal: "?wiat?o / barwa / strumie?"
+    - id: light_effect_and_comfort_010
+      pattern: "W biurze i lokalu us?ugowym ?wiat?o powinno wspiera? koncentracj? oraz dobr? widoczno?? detali."
+      use_when: "akapity o ?wietle, mocy, lumenach, barwie, k?cie"
+      source_signal: "?wiat?o / barwa / strumie?"
+    - id: light_effect_and_comfort_011
+      pattern: "Do zewn?trznej strefy wej?cia warto dobra? ?wiat?o, kt?re poprawia orientacj? po zmroku."
+      use_when: "akapity o ?wietle, mocy, lumenach, barwie, k?cie"
+      source_signal: "?wiat?o / barwa / strumie?"
+    - id: light_effect_and_comfort_012
+      pattern: "Przy podje?dzie i bramie liczy si? widoczno?? konkretnego fragmentu terenu."
+      use_when: "akapity o ?wietle, mocy, lumenach, barwie, k?cie"
+      source_signal: "?wiat?o / barwa / strumie?"
+    - id: light_effect_and_comfort_013
+      pattern: "W ogrodzie ?wiat?o mo?e jednocze?nie prowadzi? po ?cie?ce i budowa? nastr?j."
+      use_when: "akapity o ?wietle, mocy, lumenach, barwie, k?cie"
+      source_signal: "?wiat?o / barwa / strumie?"
+    - id: light_effect_and_comfort_014
+      pattern: "Neutralna barwa ?wiat?a sprawdza si? tam, gdzie pomieszczenie ma by? czytelne i praktyczne."
+      use_when: "akapity o ?wietle, mocy, lumenach, barwie, k?cie"
+      source_signal: "?wiat?o / barwa / strumie?"
+    - id: light_effect_and_comfort_015
+      pattern: "Cieplejsza barwa ?wiat?a lepiej pasuje do miejsc, w kt?rych liczy si? spokojny klimat."
+      use_when: "akapity o ?wietle, mocy, lumenach, barwie, k?cie"
+      source_signal: "?wiat?o / barwa / strumie?"
+    - id: light_effect_and_comfort_016
+      pattern: "Ch?odniejsze ?wiat?o warto stosowa? tam, gdzie najwa?niejsza jest wyra?na widoczno??."
+      use_when: "akapity o ?wietle, mocy, lumenach, barwie, k?cie"
+      source_signal: "?wiat?o / barwa / strumie?"
+    - id: light_effect_and_comfort_017
+      pattern: "Przy wysokim monta?u liczy si? nie tylko moc, ale te? spos?b rozprowadzenia ?wiat?a."
+      use_when: "akapity o ?wietle, mocy, lumenach, barwie, k?cie"
+      source_signal: "?wiat?o / barwa / strumie?"
+    - id: light_effect_and_comfort_018
+      pattern: "Szeroki k?t ?wiecenia lepiej obejmuje wi?ksz? stref?, a w??szy pomaga prowadzi? ?wiat?o punktowo."
+      use_when: "akapity o ?wietle, mocy, lumenach, barwie, k?cie"
+      source_signal: "?wiat?o / barwa / strumie?"
+    - id: light_effect_and_comfort_019
+      pattern: "Dobrze dobrane ?wiat?o nie powinno ?wieci? przypadkowo poza u?ywan? stref?."
+      use_when: "akapity o ?wietle, mocy, lumenach, barwie, k?cie"
+      source_signal: "?wiat?o / barwa / strumie?"
+    - id: light_effect_and_comfort_020
+      pattern: "?wiat?o warto planowa? od funkcji miejsca, a dopiero potem od samych parametr?w."
+      use_when: "akapity o ?wietle, mocy, lumenach, barwie, k?cie"
+      source_signal: "?wiat?o / barwa / strumie?"
+    - id: light_effect_and_comfort_021
+      pattern: "W codziennym u?ytkowaniu wa?ne jest, czy ?wiat?o b?dzie wygodne przez d?u?szy czas."
+      use_when: "akapity o ?wietle, mocy, lumenach, barwie, k?cie"
+      source_signal: "?wiat?o / barwa / strumie?"
+    - id: light_effect_and_comfort_022
+      pattern: "Dla korytarza wa?niejsza bywa przewidywalno?? i r?wnomierno?? ni? mocny efekt dekoracyjny."
+      use_when: "akapity o ?wietle, mocy, lumenach, barwie, k?cie"
+      source_signal: "?wiat?o / barwa / strumie?"
+    - id: light_effect_and_comfort_023
+      pattern: "Dla magazynu i zaplecza liczy si? ?wiat?o, kt?re pomaga bezpiecznie porusza? si? mi?dzy strefami."
+      use_when: "akapity o ?wietle, mocy, lumenach, barwie, k?cie"
+      source_signal: "?wiat?o / barwa / strumie?"
+    - id: light_effect_and_comfort_024
+      pattern: "Dla elewacji i podjazdu wa?ne jest, ?eby ?wiat?o obejmowa?o dok?adnie t? cz???, kt?rej u?ywasz."
+      use_when: "akapity o ?wietle, mocy, lumenach, barwie, k?cie"
+      source_signal: "?wiat?o / barwa / strumie?"
+    - id: light_effect_and_comfort_025
+      pattern: "Je?eli oprawa ma ?wieci? blisko u?ytkownika, komfort odbioru jest r?wnie wa?ny jak sama jasno??."
+      use_when: "akapity o ?wietle, mocy, lumenach, barwie, k?cie"
+      source_signal: "?wiat?o / barwa / strumie?"
+  openings_application:
+    - id: openings_application_001
+      pattern: "{keyword} sprawdzi si? w {place}, gdzie {goal}."
+      use_when: "pierwszy akapit albo akapit po H2"
+      source_signal: "sprawdzi si? / przeznaczony"
+      slots: ["goal", "keyword", "place"]
+    - id: openings_application_002
+      pattern: "{keyword} pasuje do {place}, w kt?rym {goal}."
+      use_when: "pierwszy akapit albo akapit po H2"
+      source_signal: "sprawdzi si? / przeznaczony"
+      slots: ["goal", "keyword", "place"]
+    - id: openings_application_003
+      pattern: "{keyword} dobrze odnajdzie si? w {place}, szczeg?lnie gdy {goal}."
+      use_when: "pierwszy akapit albo akapit po H2"
+      source_signal: "sprawdzi si? / przeznaczony"
+      slots: ["goal", "keyword", "place"]
+    - id: openings_application_004
+      pattern: "{keyword} warto rozwa?y? do {place}, je?li {goal}."
+      use_when: "pierwszy akapit albo akapit po H2"
+      source_signal: "sprawdzi si? / przeznaczony"
+      slots: ["goal", "keyword", "place"]
+    - id: openings_application_005
+      pattern: "{keyword} jest praktycznym wyborem do {place}, gdzie {goal}."
+      use_when: "pierwszy akapit albo akapit po H2"
+      source_signal: "sprawdzi si? / przeznaczony"
+      slots: ["goal", "keyword", "place"]
+    - id: openings_application_006
+      pattern: "{keyword} b?dzie odpowiedni do {place}, w kt?rych {goal}."
+      use_when: "pierwszy akapit albo akapit po H2"
+      source_signal: "sprawdzi si? / przeznaczony"
+      slots: ["goal", "keyword", "place"]
+    - id: openings_application_007
+      pattern: "{keyword} mo?esz zastosowa? w {place}, kiedy {goal}."
+      use_when: "pierwszy akapit albo akapit po H2"
+      source_signal: "sprawdzi si? / przeznaczony"
+      slots: ["goal", "keyword", "place"]
+    - id: openings_application_008
+      pattern: "{keyword} jest przeznaczony do {place}, gdzie wa?ne jest {goal}."
+      use_when: "pierwszy akapit albo akapit po H2"
+      source_signal: "sprawdzi si? / przeznaczony"
+      slots: ["goal", "keyword", "place"]
+    - id: openings_application_009
+      pattern: "{keyword} dobrze pasuje do {place}, gdy liczy si? {goal}."
+      use_when: "pierwszy akapit albo akapit po H2"
+      source_signal: "sprawdzi si? / przeznaczony"
+      slots: ["goal", "keyword", "place"]
+    - id: openings_application_010
+      pattern: "{keyword} sprawdzi si? przede wszystkim tam, gdzie {goal}."
+      use_when: "pierwszy akapit albo akapit po H2"
+      source_signal: "sprawdzi si? / przeznaczony"
+      slots: ["goal", "keyword"]
+    - id: openings_application_011
+      pattern: "{keyword} to rozwi?zanie do {place}, w kt?rych potrzebne jest {goal}."
+      use_when: "pierwszy akapit albo akapit po H2"
+      source_signal: "sprawdzi si? / przeznaczony"
+      slots: ["goal", "keyword", "place"]
+    - id: openings_application_012
+      pattern: "{keyword} wybierz do {place}, je?li zale?y Ci na {goal}."
+      use_when: "pierwszy akapit albo akapit po H2"
+      source_signal: "sprawdzi si? / przeznaczony"
+      slots: ["goal", "keyword", "place"]
+    - id: openings_application_013
+      pattern: "{keyword} pasuje do instalacji, w kt?rej {goal}."
+      use_when: "pierwszy akapit albo akapit po H2"
+      source_signal: "sprawdzi si? / przeznaczony"
+      slots: ["goal", "keyword"]
+    - id: openings_application_014
+      pattern: "{keyword} ma sens w miejscach, gdzie {goal}."
+      use_when: "pierwszy akapit albo akapit po H2"
+      source_signal: "sprawdzi si? / przeznaczony"
+      slots: ["goal", "keyword"]
+    - id: openings_application_015
+      pattern: "{keyword} najlepiej wykorzysta? tam, gdzie {goal}."
+      use_when: "pierwszy akapit albo akapit po H2"
+      source_signal: "sprawdzi si? / przeznaczony"
+      slots: ["goal", "keyword"]
+    - id: openings_application_016
+      pattern: "{keyword} odpowiada na potrzeby {place}, w kt?rych {goal}."
+      use_when: "pierwszy akapit albo akapit po H2"
+      source_signal: "sprawdzi si? / przeznaczony"
+      slots: ["goal", "keyword", "place"]
+    - id: openings_application_017
+      pattern: "{keyword} dobrze wpisuje si? w {place}, ale tylko wtedy, gdy {goal}."
+      use_when: "pierwszy akapit albo akapit po H2"
+      source_signal: "sprawdzi si? / przeznaczony"
+      slots: ["goal", "keyword", "place"]
+    - id: openings_application_018
+      pattern: "{keyword} warto dobra? do {place}, je?li o?wietlenie ma {goal}."
+      use_when: "pierwszy akapit albo akapit po H2"
+      source_signal: "sprawdzi si? / przeznaczony"
+      slots: ["goal", "keyword", "place"]
+    - id: openings_application_019
+      pattern: "{keyword} sprawdzi si? przy {use_case}, zw?aszcza gdy {goal}."
+      use_when: "pierwszy akapit albo akapit po H2"
+      source_signal: "sprawdzi si? / przeznaczony"
+      slots: ["goal", "keyword", "use_case"]
+    - id: openings_application_020
+      pattern: "{keyword} jest dobr? opcj? przy {use_case}, gdzie {goal}."
+      use_when: "pierwszy akapit albo akapit po H2"
+      source_signal: "sprawdzi si? / przeznaczony"
+      slots: ["goal", "keyword", "use_case"]
+  source_and_socket:
+    - id: source_and_socket_001
+      pattern: "Gwint {socket} zostawia swobod? wyboru ?ar?wki pod barw?, jasno?? i p??niejsz? wymian?."
+      use_when: "trzonek, wymienne ?r?d?o, zintegrowany LED"
+      source_signal: "gwint / ?r?d?o ?wiat?a"
+      slots: ["socket"]
+    - id: source_and_socket_002
+      pattern: "Dzi?ki popularnemu gwintowi {socket} mo?na dobra? ?r?d?o ?wiat?a do funkcji miejsca."
+      use_when: "trzonek, wymienne ?r?d?o, zintegrowany LED"
+      source_signal: "gwint / ?r?d?o ?wiat?a"
+      slots: ["socket"]
+    - id: source_and_socket_003
+      pattern: "Wymienne ?r?d?o ?wiat?a przydaje si? wtedy, gdy chcesz samodzielnie zdecydowa? o barwie i mocy ?ar?wki."
+      use_when: "trzonek, wymienne ?r?d?o, zintegrowany LED"
+      source_signal: "gwint / ?r?d?o ?wiat?a"
+    - id: source_and_socket_004
+      pattern: "Brak zintegrowanej ?ar?wki nie jest wad?, je?li zale?y Ci na doborze konkretnego efektu ?wiat?a."
+      use_when: "trzonek, wymienne ?r?d?o, zintegrowany LED"
+      source_signal: "gwint / ?r?d?o ?wiat?a"
+    - id: source_and_socket_005
+      pattern: "Zintegrowane ?r?d?o LED ogranicza liczb? element?w potrzebnych do pierwszego uruchomienia."
+      use_when: "trzonek, wymienne ?r?d?o, zintegrowany LED"
+      source_signal: "gwint / ?r?d?o ?wiat?a"
+    - id: source_and_socket_006
+      pattern: "Przy oprawach z wymiennym ?r?d?em warto sprawdzi? dopuszczaln? moc ?ar?wki."
+      use_when: "trzonek, wymienne ?r?d?o, zintegrowany LED"
+      source_signal: "gwint / ?r?d?o ?wiat?a"
+    - id: source_and_socket_007
+      pattern: "Dob?r ?ar?wki warto uzale?ni? od tego, czy miejsce ma by? robocze, przej?ciowe czy dekoracyjne."
+      use_when: "trzonek, wymienne ?r?d?o, zintegrowany LED"
+      source_signal: "gwint / ?r?d?o ?wiat?a"
+    - id: source_and_socket_008
+      pattern: "Ten sam gwint mo?e da? zupe?nie inny efekt, je?li zmienisz barw? i moc ?ar?wki."
+      use_when: "trzonek, wymienne ?r?d?o, zintegrowany LED"
+      source_signal: "gwint / ?r?d?o ?wiat?a"
+    - id: source_and_socket_009
+      pattern: "W oprawie widocznej we wn?trzu ?r?d?o ?wiat?a wp?ywa tak?e na ko?cowy wygl?d aran?acji."
+      use_when: "trzonek, wymienne ?r?d?o, zintegrowany LED"
+      source_signal: "gwint / ?r?d?o ?wiat?a"
+    - id: source_and_socket_010
+      pattern: "Przy ogrodzie cieplejsza ?ar?wka da spokojniejszy efekt, a neutralna poprawi widoczno?? doj?cia."
+      use_when: "trzonek, wymienne ?r?d?o, zintegrowany LED"
+      source_signal: "gwint / ?r?d?o ?wiat?a"
+    - id: source_and_socket_011
+      pattern: "W korytarzu i zapleczu lepiej dobra? ?ar?wk? pod czytelno?? ni? pod dekoracyjny klimat."
+      use_when: "trzonek, wymienne ?r?d?o, zintegrowany LED"
+      source_signal: "gwint / ?r?d?o ?wiat?a"
+    - id: source_and_socket_012
+      pattern: "Wymienna ?ar?wka u?atwia p??niejsz? zmian? charakteru ?wiat?a bez wymiany ca?ej oprawy."
+      use_when: "trzonek, wymienne ?r?d?o, zintegrowany LED"
+      source_signal: "gwint / ?r?d?o ?wiat?a"
+    - id: source_and_socket_013
+      pattern: "Je?eli oprawa ?wieci cz?sto, warto dobra? ?r?d?o ?wiat?a pod zu?ycie energii i oczekiwan? jasno??."
+      use_when: "trzonek, wymienne ?r?d?o, zintegrowany LED"
+      source_signal: "gwint / ?r?d?o ?wiat?a"
+    - id: source_and_socket_014
+      pattern: "?r?d?o ?wiat?a powinno pasowa? do trzonka oraz do maksymalnej mocy dopuszczonej przez producenta."
+      use_when: "trzonek, wymienne ?r?d?o, zintegrowany LED"
+      source_signal: "gwint / ?r?d?o ?wiat?a"
+    - id: source_and_socket_015
+      pattern: "Przy oprawie z gwintem {socket} ?atwiej dopasowa? ?wiat?o do r??nych pomieszcze?."
+      use_when: "trzonek, wymienne ?r?d?o, zintegrowany LED"
+      source_signal: "gwint / ?r?d?o ?wiat?a"
+      slots: ["socket"]
+  transitions_and_bridges:
+    - id: transitions_and_bridges_001
+      pattern: "W praktyce oznacza to, ?e {practical_result}."
+      use_when: "??czenie zda? w akapicie"
+      source_signal: "dzi?ki temu / dlatego / w praktyce"
+      slots: ["practical_result"]
+    - id: transitions_and_bridges_002
+      pattern: "Dlatego przed zakupem warto sprawdzi? {decision_points}."
+      use_when: "??czenie zda? w akapicie"
+      source_signal: "dzi?ki temu / dlatego / w praktyce"
+      slots: ["decision_points"]
+    - id: transitions_and_bridges_003
+      pattern: "Ma to znaczenie zw?aszcza w {place}."
+      use_when: "??czenie zda? w akapicie"
+      source_signal: "dzi?ki temu / dlatego / w praktyce"
+      slots: ["place"]
+    - id: transitions_and_bridges_004
+      pattern: "Takie po??czenie cech przydaje si?, gdy {goal}."
+      use_when: "??czenie zda? w akapicie"
+      source_signal: "dzi?ki temu / dlatego / w praktyce"
+      slots: ["goal"]
+    - id: transitions_and_bridges_005
+      pattern: "Nie chodzi wi?c tylko o pojedynczy parametr, ale o dopasowanie do {context}."
+      use_when: "??czenie zda? w akapicie"
+      source_signal: "dzi?ki temu / dlatego / w praktyce"
+      slots: ["context"]
+    - id: transitions_and_bridges_006
+      pattern: "Dzi?ki temu ?atwiej zaplanowa? {next_step}."
+      use_when: "??czenie zda? w akapicie"
+      source_signal: "dzi?ki temu / dlatego / w praktyce"
+      slots: ["next_step"]
+    - id: transitions_and_bridges_007
+      pattern: "Z tego powodu warto zestawi? produkt z {comparison_point}."
+      use_when: "??czenie zda? w akapicie"
+      source_signal: "dzi?ki temu / dlatego / w praktyce"
+      slots: ["comparison_point"]
+    - id: transitions_and_bridges_008
+      pattern: "W codziennym u?yciu wa?ne b?dzie przede wszystkim {daily_value}."
+      use_when: "??czenie zda? w akapicie"
+      source_signal: "dzi?ki temu / dlatego / w praktyce"
+      slots: ["daily_value"]
+    - id: transitions_and_bridges_009
+      pattern: "To szczeg?lnie przydatne, je?li {condition}."
+      use_when: "??czenie zda? w akapicie"
+      source_signal: "dzi?ki temu / dlatego / w praktyce"
+      slots: ["condition"]
+    - id: transitions_and_bridges_010
+      pattern: "W?a?nie dlatego ten parametr warto czyta? razem z miejscem monta?u."
+      use_when: "??czenie zda? w akapicie"
+      source_signal: "dzi?ki temu / dlatego / w praktyce"
+    - id: transitions_and_bridges_011
+      pattern: "Przy takim zastosowaniu najwi?ksze znaczenie ma {main_factor}."
+      use_when: "??czenie zda? w akapicie"
+      source_signal: "dzi?ki temu / dlatego / w praktyce"
+      slots: ["main_factor"]
+    - id: transitions_and_bridges_012
+      pattern: "Je?li warunki s? trudniejsze, lepiej zwr?ci? uwag? na {resistance_factor}."
+      use_when: "??czenie zda? w akapicie"
+      source_signal: "dzi?ki temu / dlatego / w praktyce"
+      slots: ["resistance_factor"]
+    - id: transitions_and_bridges_013
+      pattern: "Je?eli oprawa ma by? widoczna, dochodzi jeszcze {visual_factor}."
+      use_when: "??czenie zda? w akapicie"
+      source_signal: "dzi?ki temu / dlatego / w praktyce"
+      slots: ["visual_factor"]
+    - id: transitions_and_bridges_014
+      pattern: "W przypadku wymiany starego elementu kluczowe b?dzie {compatibility_factor}."
+      use_when: "??czenie zda? w akapicie"
+      source_signal: "dzi?ki temu / dlatego / w praktyce"
+      slots: ["compatibility_factor"]
+    - id: transitions_and_bridges_015
+      pattern: "Przy nowej instalacji warto od razu przewidzie? {installation_factor}."
+      use_when: "??czenie zda? w akapicie"
+      source_signal: "dzi?ki temu / dlatego / w praktyce"
+      slots: ["installation_factor"]
+  visual_fit:
+    - id: visual_fit_001
+      pattern: "Wariant w kolorze {color} ?atwiej zestawi? z {surface}."
+      use_when: "kolor, kszta?t, widoczno?? oprawy"
+      source_signal: "kolor / forma / aran?acja"
+      slots: ["color", "surface"]
+    - id: visual_fit_002
+      pattern: "Kolor ma znaczenie szczeg?lnie wtedy, gdy oprawa pozostaje widoczna po monta?u."
+      use_when: "kolor, kszta?t, widoczno?? oprawy"
+      source_signal: "kolor / forma / aran?acja"
+    - id: visual_fit_003
+      pattern: "Prosta forma sprawdza si? tam, gdzie oprawa nie powinna dominowa? nad aran?acj?."
+      use_when: "kolor, kszta?t, widoczno?? oprawy"
+      source_signal: "kolor / forma / aran?acja"
+    - id: visual_fit_004
+      pattern: "Ciemna obudowa dobrze wygl?da na kontrastowym tle elewacji lub sufitu."
+      use_when: "kolor, kszta?t, widoczno?? oprawy"
+      source_signal: "kolor / forma / aran?acja"
+    - id: visual_fit_005
+      pattern: "Bia?a oprawa zwykle spokojniej ??czy si? z jasnym sufitem i ?cian?."
+      use_when: "kolor, kszta?t, widoczno?? oprawy"
+      source_signal: "kolor / forma / aran?acja"
+    - id: visual_fit_006
+      pattern: "W pomieszczeniach technicznych wygl?d jest drugorz?dny, ale czytelny monta? nadal ma znaczenie."
+      use_when: "kolor, kszta?t, widoczno?? oprawy"
+      source_signal: "kolor / forma / aran?acja"
+    - id: visual_fit_007
+      pattern: "W ogrodzie lampa jest widoczna tak?e za dnia, dlatego warto dopasowa? j? do otoczenia."
+      use_when: "kolor, kszta?t, widoczno?? oprawy"
+      source_signal: "kolor / forma / aran?acja"
+    - id: visual_fit_008
+      pattern: "Je?eli oprawa ma by? elementem aran?acji, kolor i kszta?t warto oceni? razem ze ?wiat?em."
+      use_when: "kolor, kszta?t, widoczno?? oprawy"
+      source_signal: "kolor / forma / aran?acja"
+    - id: visual_fit_009
+      pattern: "Dyskretna oprawa lepiej pasuje do miejsc, w kt?rych ?wiat?o ma by? wa?niejsze ni? sam produkt."
+      use_when: "kolor, kszta?t, widoczno?? oprawy"
+      source_signal: "kolor / forma / aran?acja"
+    - id: visual_fit_010
+      pattern: "Widoczna oprawa powinna pasowa? do sufitu, ?ciany lub elewacji tak?e wtedy, gdy jest wy??czona."
+      use_when: "kolor, kszta?t, widoczno?? oprawy"
+      source_signal: "kolor / forma / aran?acja"
+    - id: visual_fit_011
+      pattern: "Przy kilku oprawach w jednym pomieszczeniu sp?jny wygl?d pomaga zachowa? porz?dek wizualny."
+      use_when: "kolor, kszta?t, widoczno?? oprawy"
+      source_signal: "kolor / forma / aran?acja"
+    - id: visual_fit_012
+      pattern: "W?ska oprawa lepiej sprawdzi si? tam, gdzie przestrze? monta?u jest ograniczona."
+      use_when: "kolor, kszta?t, widoczno?? oprawy"
+      source_signal: "kolor / forma / aran?acja"
+
+# Dodatkowa duza warstwa wariantow kontekstowych.
+  plafon_context_variants:
+    - id: plafon_context_variants_001
+      pattern: "Plafon sprawdzi si? w korytarzu, gdzie ?wiat?o ma dzia?a? od razu po wej?ciu."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: plafon_context_variants_002
+      pattern: "Do korytarzu warto dobra? plafon tak, aby ?wiat?o ma dzia?a? od razu po wej?ciu."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: plafon_context_variants_003
+      pattern: "Plafon sprawdzi si? w korytarzu, gdzie liczy si? r?wnomierne do?wietlenie przej?cia."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: plafon_context_variants_004
+      pattern: "Do korytarzu warto dobra? plafon tak, aby liczy si? r?wnomierne do?wietlenie przej?cia."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: plafon_context_variants_005
+      pattern: "Plafon sprawdzi si? w korytarzu, gdzie oprawa ma by? prosta w codziennym u?ytkowaniu."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: plafon_context_variants_006
+      pattern: "Do korytarzu warto dobra? plafon tak, aby oprawa ma by? prosta w codziennym u?ytkowaniu."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: plafon_context_variants_007
+      pattern: "Plafon sprawdzi si? w korytarzu, gdzie potrzebne jest spokojne ?wiat?o bez mocnego akcentu dekoracyjnego."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: plafon_context_variants_008
+      pattern: "Do korytarzu warto dobra? plafon tak, aby potrzebne jest spokojne ?wiat?o bez mocnego akcentu dekoracyjnego."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: plafon_context_variants_009
+      pattern: "Plafon sprawdzi si? w korytarzu, gdzie wa?na jest wygoda przy cz?stym w??czaniu ?wiat?a."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: plafon_context_variants_010
+      pattern: "Do korytarzu warto dobra? plafon tak, aby wa?na jest wygoda przy cz?stym w??czaniu ?wiat?a."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: plafon_context_variants_011
+      pattern: "Plafon sprawdzi si? w wej?ciu, gdzie ?wiat?o ma dzia?a? od razu po wej?ciu."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: plafon_context_variants_012
+      pattern: "Do wej?ciu warto dobra? plafon tak, aby ?wiat?o ma dzia?a? od razu po wej?ciu."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: plafon_context_variants_013
+      pattern: "Plafon sprawdzi si? w wej?ciu, gdzie liczy si? r?wnomierne do?wietlenie przej?cia."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: plafon_context_variants_014
+      pattern: "Do wej?ciu warto dobra? plafon tak, aby liczy si? r?wnomierne do?wietlenie przej?cia."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: plafon_context_variants_015
+      pattern: "Plafon sprawdzi si? w wej?ciu, gdzie oprawa ma by? prosta w codziennym u?ytkowaniu."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: plafon_context_variants_016
+      pattern: "Do wej?ciu warto dobra? plafon tak, aby oprawa ma by? prosta w codziennym u?ytkowaniu."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: plafon_context_variants_017
+      pattern: "Plafon sprawdzi si? w wej?ciu, gdzie potrzebne jest spokojne ?wiat?o bez mocnego akcentu dekoracyjnego."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: plafon_context_variants_018
+      pattern: "Do wej?ciu warto dobra? plafon tak, aby potrzebne jest spokojne ?wiat?o bez mocnego akcentu dekoracyjnego."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: plafon_context_variants_019
+      pattern: "Plafon sprawdzi si? w wej?ciu, gdzie wa?na jest wygoda przy cz?stym w??czaniu ?wiat?a."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: plafon_context_variants_020
+      pattern: "Do wej?ciu warto dobra? plafon tak, aby wa?na jest wygoda przy cz?stym w??czaniu ?wiat?a."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: plafon_context_variants_021
+      pattern: "Plafon sprawdzi si? w pomieszczeniu pomocniczym, gdzie ?wiat?o ma dzia?a? od razu po wej?ciu."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: plafon_context_variants_022
+      pattern: "Do pomieszczeniu pomocniczym warto dobra? plafon tak, aby ?wiat?o ma dzia?a? od razu po wej?ciu."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: plafon_context_variants_023
+      pattern: "Plafon sprawdzi si? w pomieszczeniu pomocniczym, gdzie liczy si? r?wnomierne do?wietlenie przej?cia."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: plafon_context_variants_024
+      pattern: "Do pomieszczeniu pomocniczym warto dobra? plafon tak, aby liczy si? r?wnomierne do?wietlenie przej?cia."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: plafon_context_variants_025
+      pattern: "Plafon sprawdzi si? w pomieszczeniu pomocniczym, gdzie oprawa ma by? prosta w codziennym u?ytkowaniu."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: plafon_context_variants_026
+      pattern: "Do pomieszczeniu pomocniczym warto dobra? plafon tak, aby oprawa ma by? prosta w codziennym u?ytkowaniu."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: plafon_context_variants_027
+      pattern: "Plafon sprawdzi si? w pomieszczeniu pomocniczym, gdzie potrzebne jest spokojne ?wiat?o bez mocnego akcentu dekoracyjnego."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: plafon_context_variants_028
+      pattern: "Do pomieszczeniu pomocniczym warto dobra? plafon tak, aby potrzebne jest spokojne ?wiat?o bez mocnego akcentu dekoracyjnego."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: plafon_context_variants_029
+      pattern: "Plafon sprawdzi si? w pomieszczeniu pomocniczym, gdzie wa?na jest wygoda przy cz?stym w??czaniu ?wiat?a."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: plafon_context_variants_030
+      pattern: "Do pomieszczeniu pomocniczym warto dobra? plafon tak, aby wa?na jest wygoda przy cz?stym w??czaniu ?wiat?a."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: plafon_context_variants_031
+      pattern: "Plafon sprawdzi si? w klatce schodowej, gdzie ?wiat?o ma dzia?a? od razu po wej?ciu."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: plafon_context_variants_032
+      pattern: "Do klatce schodowej warto dobra? plafon tak, aby ?wiat?o ma dzia?a? od razu po wej?ciu."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: plafon_context_variants_033
+      pattern: "Plafon sprawdzi si? w klatce schodowej, gdzie liczy si? r?wnomierne do?wietlenie przej?cia."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: plafon_context_variants_034
+      pattern: "Do klatce schodowej warto dobra? plafon tak, aby liczy si? r?wnomierne do?wietlenie przej?cia."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: plafon_context_variants_035
+      pattern: "Plafon sprawdzi si? w klatce schodowej, gdzie oprawa ma by? prosta w codziennym u?ytkowaniu."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: plafon_context_variants_036
+      pattern: "Do klatce schodowej warto dobra? plafon tak, aby oprawa ma by? prosta w codziennym u?ytkowaniu."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: plafon_context_variants_037
+      pattern: "Plafon sprawdzi si? w klatce schodowej, gdzie potrzebne jest spokojne ?wiat?o bez mocnego akcentu dekoracyjnego."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: plafon_context_variants_038
+      pattern: "Do klatce schodowej warto dobra? plafon tak, aby potrzebne jest spokojne ?wiat?o bez mocnego akcentu dekoracyjnego."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: plafon_context_variants_039
+      pattern: "Plafon sprawdzi si? w klatce schodowej, gdzie wa?na jest wygoda przy cz?stym w??czaniu ?wiat?a."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: plafon_context_variants_040
+      pattern: "Do klatce schodowej warto dobra? plafon tak, aby wa?na jest wygoda przy cz?stym w??czaniu ?wiat?a."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: plafon_context_variants_041
+      pattern: "Plafon sprawdzi si? w przej?ciu, gdzie ?wiat?o ma dzia?a? od razu po wej?ciu."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: plafon_context_variants_042
+      pattern: "Do przej?ciu warto dobra? plafon tak, aby ?wiat?o ma dzia?a? od razu po wej?ciu."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: plafon_context_variants_043
+      pattern: "Plafon sprawdzi si? w przej?ciu, gdzie liczy si? r?wnomierne do?wietlenie przej?cia."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: plafon_context_variants_044
+      pattern: "Do przej?ciu warto dobra? plafon tak, aby liczy si? r?wnomierne do?wietlenie przej?cia."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: plafon_context_variants_045
+      pattern: "Plafon sprawdzi si? w przej?ciu, gdzie oprawa ma by? prosta w codziennym u?ytkowaniu."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: plafon_context_variants_046
+      pattern: "Do przej?ciu warto dobra? plafon tak, aby oprawa ma by? prosta w codziennym u?ytkowaniu."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: plafon_context_variants_047
+      pattern: "Plafon sprawdzi si? w przej?ciu, gdzie potrzebne jest spokojne ?wiat?o bez mocnego akcentu dekoracyjnego."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: plafon_context_variants_048
+      pattern: "Do przej?ciu warto dobra? plafon tak, aby potrzebne jest spokojne ?wiat?o bez mocnego akcentu dekoracyjnego."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: plafon_context_variants_049
+      pattern: "Plafon sprawdzi si? w przej?ciu, gdzie wa?na jest wygoda przy cz?stym w??czaniu ?wiat?a."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: plafon_context_variants_050
+      pattern: "Do przej?ciu warto dobra? plafon tak, aby wa?na jest wygoda przy cz?stym w??czaniu ?wiat?a."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: plafon_context_variants_051
+      pattern: "Plafon sprawdzi si? w ganku, gdzie ?wiat?o ma dzia?a? od razu po wej?ciu."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: plafon_context_variants_052
+      pattern: "Do ganku warto dobra? plafon tak, aby ?wiat?o ma dzia?a? od razu po wej?ciu."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: plafon_context_variants_053
+      pattern: "Plafon sprawdzi si? w ganku, gdzie liczy si? r?wnomierne do?wietlenie przej?cia."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: plafon_context_variants_054
+      pattern: "Do ganku warto dobra? plafon tak, aby liczy si? r?wnomierne do?wietlenie przej?cia."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: plafon_context_variants_055
+      pattern: "Plafon sprawdzi si? w ganku, gdzie oprawa ma by? prosta w codziennym u?ytkowaniu."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: plafon_context_variants_056
+      pattern: "Do ganku warto dobra? plafon tak, aby oprawa ma by? prosta w codziennym u?ytkowaniu."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: plafon_context_variants_057
+      pattern: "Plafon sprawdzi si? w ganku, gdzie potrzebne jest spokojne ?wiat?o bez mocnego akcentu dekoracyjnego."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: plafon_context_variants_058
+      pattern: "Do ganku warto dobra? plafon tak, aby potrzebne jest spokojne ?wiat?o bez mocnego akcentu dekoracyjnego."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: plafon_context_variants_059
+      pattern: "Plafon sprawdzi si? w ganku, gdzie wa?na jest wygoda przy cz?stym w??czaniu ?wiat?a."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: plafon_context_variants_060
+      pattern: "Do ganku warto dobra? plafon tak, aby wa?na jest wygoda przy cz?stym w??czaniu ?wiat?a."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: plafon_context_variants_061
+      pattern: "Plafon sprawdzi si? w zapleczu, gdzie ?wiat?o ma dzia?a? od razu po wej?ciu."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: plafon_context_variants_062
+      pattern: "Do zapleczu warto dobra? plafon tak, aby ?wiat?o ma dzia?a? od razu po wej?ciu."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: plafon_context_variants_063
+      pattern: "Plafon sprawdzi si? w zapleczu, gdzie liczy si? r?wnomierne do?wietlenie przej?cia."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: plafon_context_variants_064
+      pattern: "Do zapleczu warto dobra? plafon tak, aby liczy si? r?wnomierne do?wietlenie przej?cia."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: plafon_context_variants_065
+      pattern: "Plafon sprawdzi si? w zapleczu, gdzie oprawa ma by? prosta w codziennym u?ytkowaniu."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: plafon_context_variants_066
+      pattern: "Do zapleczu warto dobra? plafon tak, aby oprawa ma by? prosta w codziennym u?ytkowaniu."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: plafon_context_variants_067
+      pattern: "Plafon sprawdzi si? w zapleczu, gdzie potrzebne jest spokojne ?wiat?o bez mocnego akcentu dekoracyjnego."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: plafon_context_variants_068
+      pattern: "Do zapleczu warto dobra? plafon tak, aby potrzebne jest spokojne ?wiat?o bez mocnego akcentu dekoracyjnego."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: plafon_context_variants_069
+      pattern: "Plafon sprawdzi si? w zapleczu, gdzie wa?na jest wygoda przy cz?stym w??czaniu ?wiat?a."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: plafon_context_variants_070
+      pattern: "Do zapleczu warto dobra? plafon tak, aby wa?na jest wygoda przy cz?stym w??czaniu ?wiat?a."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+  panel_context_variants:
+    - id: panel_context_variants_001
+      pattern: "Panel LED pasuje do pracy w biurze, gdzie r?wnomierne ?wiat?o by?o wa?niejsze ni? dekoracyjna forma."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: panel_context_variants_002
+      pattern: "W biurze panel LED warto dobra? tak, ?eby r?wnomierne ?wiat?o by?o wa?niejsze ni? dekoracyjna forma."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: panel_context_variants_003
+      pattern: "Panel LED pasuje do pracy w biurze, gdzie sufit wygl?da? spokojnie i technicznie czysto."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: panel_context_variants_004
+      pattern: "W biurze panel LED warto dobra? tak, ?eby sufit wygl?da? spokojnie i technicznie czysto."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: panel_context_variants_005
+      pattern: "Panel LED pasuje do pracy w biurze, gdzie ?wiat?o nie tworzy?o mocnych punktowych kontrast?w."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: panel_context_variants_006
+      pattern: "W biurze panel LED warto dobra? tak, ?eby ?wiat?o nie tworzy?o mocnych punktowych kontrast?w."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: panel_context_variants_007
+      pattern: "Panel LED pasuje do pracy w biurze, gdzie oprawa pasowa?a do uk?adu sufitu modu?owego."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: panel_context_variants_008
+      pattern: "W biurze panel LED warto dobra? tak, ?eby oprawa pasowa?a do uk?adu sufitu modu?owego."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: panel_context_variants_009
+      pattern: "Panel LED pasuje do pracy w biurze, gdzie modernizacja o?wietlenia nie wymaga?a zmiany ca?ej aran?acji."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: panel_context_variants_010
+      pattern: "W biurze panel LED warto dobra? tak, ?eby modernizacja o?wietlenia nie wymaga?a zmiany ca?ej aran?acji."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: panel_context_variants_011
+      pattern: "Panel LED pasuje do pracy w recepcji, gdzie r?wnomierne ?wiat?o by?o wa?niejsze ni? dekoracyjna forma."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: panel_context_variants_012
+      pattern: "W recepcji panel LED warto dobra? tak, ?eby r?wnomierne ?wiat?o by?o wa?niejsze ni? dekoracyjna forma."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: panel_context_variants_013
+      pattern: "Panel LED pasuje do pracy w recepcji, gdzie sufit wygl?da? spokojnie i technicznie czysto."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: panel_context_variants_014
+      pattern: "W recepcji panel LED warto dobra? tak, ?eby sufit wygl?da? spokojnie i technicznie czysto."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: panel_context_variants_015
+      pattern: "Panel LED pasuje do pracy w recepcji, gdzie ?wiat?o nie tworzy?o mocnych punktowych kontrast?w."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: panel_context_variants_016
+      pattern: "W recepcji panel LED warto dobra? tak, ?eby ?wiat?o nie tworzy?o mocnych punktowych kontrast?w."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: panel_context_variants_017
+      pattern: "Panel LED pasuje do pracy w recepcji, gdzie oprawa pasowa?a do uk?adu sufitu modu?owego."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: panel_context_variants_018
+      pattern: "W recepcji panel LED warto dobra? tak, ?eby oprawa pasowa?a do uk?adu sufitu modu?owego."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: panel_context_variants_019
+      pattern: "Panel LED pasuje do pracy w recepcji, gdzie modernizacja o?wietlenia nie wymaga?a zmiany ca?ej aran?acji."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: panel_context_variants_020
+      pattern: "W recepcji panel LED warto dobra? tak, ?eby modernizacja o?wietlenia nie wymaga?a zmiany ca?ej aran?acji."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: panel_context_variants_021
+      pattern: "Panel LED pasuje do pracy w sali sprzeda?y, gdzie r?wnomierne ?wiat?o by?o wa?niejsze ni? dekoracyjna forma."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: panel_context_variants_022
+      pattern: "W sali sprzeda?y panel LED warto dobra? tak, ?eby r?wnomierne ?wiat?o by?o wa?niejsze ni? dekoracyjna forma."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: panel_context_variants_023
+      pattern: "Panel LED pasuje do pracy w sali sprzeda?y, gdzie sufit wygl?da? spokojnie i technicznie czysto."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: panel_context_variants_024
+      pattern: "W sali sprzeda?y panel LED warto dobra? tak, ?eby sufit wygl?da? spokojnie i technicznie czysto."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: panel_context_variants_025
+      pattern: "Panel LED pasuje do pracy w sali sprzeda?y, gdzie ?wiat?o nie tworzy?o mocnych punktowych kontrast?w."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: panel_context_variants_026
+      pattern: "W sali sprzeda?y panel LED warto dobra? tak, ?eby ?wiat?o nie tworzy?o mocnych punktowych kontrast?w."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: panel_context_variants_027
+      pattern: "Panel LED pasuje do pracy w sali sprzeda?y, gdzie oprawa pasowa?a do uk?adu sufitu modu?owego."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: panel_context_variants_028
+      pattern: "W sali sprzeda?y panel LED warto dobra? tak, ?eby oprawa pasowa?a do uk?adu sufitu modu?owego."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: panel_context_variants_029
+      pattern: "Panel LED pasuje do pracy w sali sprzeda?y, gdzie modernizacja o?wietlenia nie wymaga?a zmiany ca?ej aran?acji."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: panel_context_variants_030
+      pattern: "W sali sprzeda?y panel LED warto dobra? tak, ?eby modernizacja o?wietlenia nie wymaga?a zmiany ca?ej aran?acji."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: panel_context_variants_031
+      pattern: "Panel LED pasuje do pracy w korytarzu biurowym, gdzie r?wnomierne ?wiat?o by?o wa?niejsze ni? dekoracyjna forma."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: panel_context_variants_032
+      pattern: "W korytarzu biurowym panel LED warto dobra? tak, ?eby r?wnomierne ?wiat?o by?o wa?niejsze ni? dekoracyjna forma."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: panel_context_variants_033
+      pattern: "Panel LED pasuje do pracy w korytarzu biurowym, gdzie sufit wygl?da? spokojnie i technicznie czysto."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: panel_context_variants_034
+      pattern: "W korytarzu biurowym panel LED warto dobra? tak, ?eby sufit wygl?da? spokojnie i technicznie czysto."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: panel_context_variants_035
+      pattern: "Panel LED pasuje do pracy w korytarzu biurowym, gdzie ?wiat?o nie tworzy?o mocnych punktowych kontrast?w."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: panel_context_variants_036
+      pattern: "W korytarzu biurowym panel LED warto dobra? tak, ?eby ?wiat?o nie tworzy?o mocnych punktowych kontrast?w."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: panel_context_variants_037
+      pattern: "Panel LED pasuje do pracy w korytarzu biurowym, gdzie oprawa pasowa?a do uk?adu sufitu modu?owego."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: panel_context_variants_038
+      pattern: "W korytarzu biurowym panel LED warto dobra? tak, ?eby oprawa pasowa?a do uk?adu sufitu modu?owego."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: panel_context_variants_039
+      pattern: "Panel LED pasuje do pracy w korytarzu biurowym, gdzie modernizacja o?wietlenia nie wymaga?a zmiany ca?ej aran?acji."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: panel_context_variants_040
+      pattern: "W korytarzu biurowym panel LED warto dobra? tak, ?eby modernizacja o?wietlenia nie wymaga?a zmiany ca?ej aran?acji."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: panel_context_variants_041
+      pattern: "Panel LED pasuje do pracy w gabinecie, gdzie r?wnomierne ?wiat?o by?o wa?niejsze ni? dekoracyjna forma."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: panel_context_variants_042
+      pattern: "W gabinecie panel LED warto dobra? tak, ?eby r?wnomierne ?wiat?o by?o wa?niejsze ni? dekoracyjna forma."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: panel_context_variants_043
+      pattern: "Panel LED pasuje do pracy w gabinecie, gdzie sufit wygl?da? spokojnie i technicznie czysto."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: panel_context_variants_044
+      pattern: "W gabinecie panel LED warto dobra? tak, ?eby sufit wygl?da? spokojnie i technicznie czysto."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: panel_context_variants_045
+      pattern: "Panel LED pasuje do pracy w gabinecie, gdzie ?wiat?o nie tworzy?o mocnych punktowych kontrast?w."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: panel_context_variants_046
+      pattern: "W gabinecie panel LED warto dobra? tak, ?eby ?wiat?o nie tworzy?o mocnych punktowych kontrast?w."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: panel_context_variants_047
+      pattern: "Panel LED pasuje do pracy w gabinecie, gdzie oprawa pasowa?a do uk?adu sufitu modu?owego."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: panel_context_variants_048
+      pattern: "W gabinecie panel LED warto dobra? tak, ?eby oprawa pasowa?a do uk?adu sufitu modu?owego."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: panel_context_variants_049
+      pattern: "Panel LED pasuje do pracy w gabinecie, gdzie modernizacja o?wietlenia nie wymaga?a zmiany ca?ej aran?acji."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: panel_context_variants_050
+      pattern: "W gabinecie panel LED warto dobra? tak, ?eby modernizacja o?wietlenia nie wymaga?a zmiany ca?ej aran?acji."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: panel_context_variants_051
+      pattern: "Panel LED pasuje do pracy w pomieszczeniu us?ugowym, gdzie r?wnomierne ?wiat?o by?o wa?niejsze ni? dekoracyjna forma."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: panel_context_variants_052
+      pattern: "W pomieszczeniu us?ugowym panel LED warto dobra? tak, ?eby r?wnomierne ?wiat?o by?o wa?niejsze ni? dekoracyjna forma."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: panel_context_variants_053
+      pattern: "Panel LED pasuje do pracy w pomieszczeniu us?ugowym, gdzie sufit wygl?da? spokojnie i technicznie czysto."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: panel_context_variants_054
+      pattern: "W pomieszczeniu us?ugowym panel LED warto dobra? tak, ?eby sufit wygl?da? spokojnie i technicznie czysto."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: panel_context_variants_055
+      pattern: "Panel LED pasuje do pracy w pomieszczeniu us?ugowym, gdzie ?wiat?o nie tworzy?o mocnych punktowych kontrast?w."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: panel_context_variants_056
+      pattern: "W pomieszczeniu us?ugowym panel LED warto dobra? tak, ?eby ?wiat?o nie tworzy?o mocnych punktowych kontrast?w."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: panel_context_variants_057
+      pattern: "Panel LED pasuje do pracy w pomieszczeniu us?ugowym, gdzie oprawa pasowa?a do uk?adu sufitu modu?owego."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: panel_context_variants_058
+      pattern: "W pomieszczeniu us?ugowym panel LED warto dobra? tak, ?eby oprawa pasowa?a do uk?adu sufitu modu?owego."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: panel_context_variants_059
+      pattern: "Panel LED pasuje do pracy w pomieszczeniu us?ugowym, gdzie modernizacja o?wietlenia nie wymaga?a zmiany ca?ej aran?acji."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: panel_context_variants_060
+      pattern: "W pomieszczeniu us?ugowym panel LED warto dobra? tak, ?eby modernizacja o?wietlenia nie wymaga?a zmiany ca?ej aran?acji."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: panel_context_variants_061
+      pattern: "Panel LED pasuje do pracy w sali konferencyjnej, gdzie r?wnomierne ?wiat?o by?o wa?niejsze ni? dekoracyjna forma."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: panel_context_variants_062
+      pattern: "W sali konferencyjnej panel LED warto dobra? tak, ?eby r?wnomierne ?wiat?o by?o wa?niejsze ni? dekoracyjna forma."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: panel_context_variants_063
+      pattern: "Panel LED pasuje do pracy w sali konferencyjnej, gdzie sufit wygl?da? spokojnie i technicznie czysto."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: panel_context_variants_064
+      pattern: "W sali konferencyjnej panel LED warto dobra? tak, ?eby sufit wygl?da? spokojnie i technicznie czysto."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: panel_context_variants_065
+      pattern: "Panel LED pasuje do pracy w sali konferencyjnej, gdzie ?wiat?o nie tworzy?o mocnych punktowych kontrast?w."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: panel_context_variants_066
+      pattern: "W sali konferencyjnej panel LED warto dobra? tak, ?eby ?wiat?o nie tworzy?o mocnych punktowych kontrast?w."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: panel_context_variants_067
+      pattern: "Panel LED pasuje do pracy w sali konferencyjnej, gdzie oprawa pasowa?a do uk?adu sufitu modu?owego."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: panel_context_variants_068
+      pattern: "W sali konferencyjnej panel LED warto dobra? tak, ?eby oprawa pasowa?a do uk?adu sufitu modu?owego."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: panel_context_variants_069
+      pattern: "Panel LED pasuje do pracy w sali konferencyjnej, gdzie modernizacja o?wietlenia nie wymaga?a zmiany ca?ej aran?acji."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: panel_context_variants_070
+      pattern: "W sali konferencyjnej panel LED warto dobra? tak, ?eby modernizacja o?wietlenia nie wymaga?a zmiany ca?ej aran?acji."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+  hermetic_context_variants:
+    - id: hermetic_context_variants_001
+      pattern: "Oprawa hermetyczna ma sens w gara?u, gdzie oprawa znosi?a kurz i cz?st? eksploatacj?."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: hermetic_context_variants_002
+      pattern: "Do gara?u warto wybra? opraw?, kt?ra oprawa znosi?a kurz i cz?st? eksploatacj?."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: hermetic_context_variants_003
+      pattern: "Oprawa hermetyczna ma sens w gara?u, gdzie ?wiat?o by?o pewne mimo trudniejszych warunk?w."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: hermetic_context_variants_004
+      pattern: "Do gara?u warto wybra? opraw?, kt?ra ?wiat?o by?o pewne mimo trudniejszych warunk?w."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: hermetic_context_variants_005
+      pattern: "Oprawa hermetyczna ma sens w gara?u, gdzie obudowa by?a ?atwa do utrzymania w czysto?ci."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: hermetic_context_variants_006
+      pattern: "Do gara?u warto wybra? opraw?, kt?ra obudowa by?a ?atwa do utrzymania w czysto?ci."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: hermetic_context_variants_007
+      pattern: "Oprawa hermetyczna ma sens w gara?u, gdzie o?wietlenie dzia?a?o stabilnie podczas codziennej pracy."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: hermetic_context_variants_008
+      pattern: "Do gara?u warto wybra? opraw?, kt?ra o?wietlenie dzia?a?o stabilnie podczas codziennej pracy."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: hermetic_context_variants_009
+      pattern: "Oprawa hermetyczna ma sens w gara?u, gdzie monta? by? praktyczny, a nie dekoracyjny."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: hermetic_context_variants_010
+      pattern: "Do gara?u warto wybra? opraw?, kt?ra monta? by? praktyczny, a nie dekoracyjny."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: hermetic_context_variants_011
+      pattern: "Oprawa hermetyczna ma sens w warsztacie, gdzie oprawa znosi?a kurz i cz?st? eksploatacj?."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: hermetic_context_variants_012
+      pattern: "Do warsztacie warto wybra? opraw?, kt?ra oprawa znosi?a kurz i cz?st? eksploatacj?."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: hermetic_context_variants_013
+      pattern: "Oprawa hermetyczna ma sens w warsztacie, gdzie ?wiat?o by?o pewne mimo trudniejszych warunk?w."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: hermetic_context_variants_014
+      pattern: "Do warsztacie warto wybra? opraw?, kt?ra ?wiat?o by?o pewne mimo trudniejszych warunk?w."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: hermetic_context_variants_015
+      pattern: "Oprawa hermetyczna ma sens w warsztacie, gdzie obudowa by?a ?atwa do utrzymania w czysto?ci."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: hermetic_context_variants_016
+      pattern: "Do warsztacie warto wybra? opraw?, kt?ra obudowa by?a ?atwa do utrzymania w czysto?ci."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: hermetic_context_variants_017
+      pattern: "Oprawa hermetyczna ma sens w warsztacie, gdzie o?wietlenie dzia?a?o stabilnie podczas codziennej pracy."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: hermetic_context_variants_018
+      pattern: "Do warsztacie warto wybra? opraw?, kt?ra o?wietlenie dzia?a?o stabilnie podczas codziennej pracy."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: hermetic_context_variants_019
+      pattern: "Oprawa hermetyczna ma sens w warsztacie, gdzie monta? by? praktyczny, a nie dekoracyjny."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: hermetic_context_variants_020
+      pattern: "Do warsztacie warto wybra? opraw?, kt?ra monta? by? praktyczny, a nie dekoracyjny."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: hermetic_context_variants_021
+      pattern: "Oprawa hermetyczna ma sens w magazynie, gdzie oprawa znosi?a kurz i cz?st? eksploatacj?."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: hermetic_context_variants_022
+      pattern: "Do magazynie warto wybra? opraw?, kt?ra oprawa znosi?a kurz i cz?st? eksploatacj?."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: hermetic_context_variants_023
+      pattern: "Oprawa hermetyczna ma sens w magazynie, gdzie ?wiat?o by?o pewne mimo trudniejszych warunk?w."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: hermetic_context_variants_024
+      pattern: "Do magazynie warto wybra? opraw?, kt?ra ?wiat?o by?o pewne mimo trudniejszych warunk?w."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: hermetic_context_variants_025
+      pattern: "Oprawa hermetyczna ma sens w magazynie, gdzie obudowa by?a ?atwa do utrzymania w czysto?ci."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: hermetic_context_variants_026
+      pattern: "Do magazynie warto wybra? opraw?, kt?ra obudowa by?a ?atwa do utrzymania w czysto?ci."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: hermetic_context_variants_027
+      pattern: "Oprawa hermetyczna ma sens w magazynie, gdzie o?wietlenie dzia?a?o stabilnie podczas codziennej pracy."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: hermetic_context_variants_028
+      pattern: "Do magazynie warto wybra? opraw?, kt?ra o?wietlenie dzia?a?o stabilnie podczas codziennej pracy."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: hermetic_context_variants_029
+      pattern: "Oprawa hermetyczna ma sens w magazynie, gdzie monta? by? praktyczny, a nie dekoracyjny."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: hermetic_context_variants_030
+      pattern: "Do magazynie warto wybra? opraw?, kt?ra monta? by? praktyczny, a nie dekoracyjny."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: hermetic_context_variants_031
+      pattern: "Oprawa hermetyczna ma sens w kot?owni, gdzie oprawa znosi?a kurz i cz?st? eksploatacj?."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: hermetic_context_variants_032
+      pattern: "Do kot?owni warto wybra? opraw?, kt?ra oprawa znosi?a kurz i cz?st? eksploatacj?."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: hermetic_context_variants_033
+      pattern: "Oprawa hermetyczna ma sens w kot?owni, gdzie ?wiat?o by?o pewne mimo trudniejszych warunk?w."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: hermetic_context_variants_034
+      pattern: "Do kot?owni warto wybra? opraw?, kt?ra ?wiat?o by?o pewne mimo trudniejszych warunk?w."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: hermetic_context_variants_035
+      pattern: "Oprawa hermetyczna ma sens w kot?owni, gdzie obudowa by?a ?atwa do utrzymania w czysto?ci."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: hermetic_context_variants_036
+      pattern: "Do kot?owni warto wybra? opraw?, kt?ra obudowa by?a ?atwa do utrzymania w czysto?ci."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: hermetic_context_variants_037
+      pattern: "Oprawa hermetyczna ma sens w kot?owni, gdzie o?wietlenie dzia?a?o stabilnie podczas codziennej pracy."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: hermetic_context_variants_038
+      pattern: "Do kot?owni warto wybra? opraw?, kt?ra o?wietlenie dzia?a?o stabilnie podczas codziennej pracy."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: hermetic_context_variants_039
+      pattern: "Oprawa hermetyczna ma sens w kot?owni, gdzie monta? by? praktyczny, a nie dekoracyjny."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: hermetic_context_variants_040
+      pattern: "Do kot?owni warto wybra? opraw?, kt?ra monta? by? praktyczny, a nie dekoracyjny."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: hermetic_context_variants_041
+      pattern: "Oprawa hermetyczna ma sens w zapleczu technicznym, gdzie oprawa znosi?a kurz i cz?st? eksploatacj?."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: hermetic_context_variants_042
+      pattern: "Do zapleczu technicznym warto wybra? opraw?, kt?ra oprawa znosi?a kurz i cz?st? eksploatacj?."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: hermetic_context_variants_043
+      pattern: "Oprawa hermetyczna ma sens w zapleczu technicznym, gdzie ?wiat?o by?o pewne mimo trudniejszych warunk?w."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: hermetic_context_variants_044
+      pattern: "Do zapleczu technicznym warto wybra? opraw?, kt?ra ?wiat?o by?o pewne mimo trudniejszych warunk?w."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: hermetic_context_variants_045
+      pattern: "Oprawa hermetyczna ma sens w zapleczu technicznym, gdzie obudowa by?a ?atwa do utrzymania w czysto?ci."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: hermetic_context_variants_046
+      pattern: "Do zapleczu technicznym warto wybra? opraw?, kt?ra obudowa by?a ?atwa do utrzymania w czysto?ci."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: hermetic_context_variants_047
+      pattern: "Oprawa hermetyczna ma sens w zapleczu technicznym, gdzie o?wietlenie dzia?a?o stabilnie podczas codziennej pracy."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: hermetic_context_variants_048
+      pattern: "Do zapleczu technicznym warto wybra? opraw?, kt?ra o?wietlenie dzia?a?o stabilnie podczas codziennej pracy."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: hermetic_context_variants_049
+      pattern: "Oprawa hermetyczna ma sens w zapleczu technicznym, gdzie monta? by? praktyczny, a nie dekoracyjny."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: hermetic_context_variants_050
+      pattern: "Do zapleczu technicznym warto wybra? opraw?, kt?ra monta? by? praktyczny, a nie dekoracyjny."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: hermetic_context_variants_051
+      pattern: "Oprawa hermetyczna ma sens w pomieszczeniu gospodarczym, gdzie oprawa znosi?a kurz i cz?st? eksploatacj?."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: hermetic_context_variants_052
+      pattern: "Do pomieszczeniu gospodarczym warto wybra? opraw?, kt?ra oprawa znosi?a kurz i cz?st? eksploatacj?."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: hermetic_context_variants_053
+      pattern: "Oprawa hermetyczna ma sens w pomieszczeniu gospodarczym, gdzie ?wiat?o by?o pewne mimo trudniejszych warunk?w."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: hermetic_context_variants_054
+      pattern: "Do pomieszczeniu gospodarczym warto wybra? opraw?, kt?ra ?wiat?o by?o pewne mimo trudniejszych warunk?w."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: hermetic_context_variants_055
+      pattern: "Oprawa hermetyczna ma sens w pomieszczeniu gospodarczym, gdzie obudowa by?a ?atwa do utrzymania w czysto?ci."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: hermetic_context_variants_056
+      pattern: "Do pomieszczeniu gospodarczym warto wybra? opraw?, kt?ra obudowa by?a ?atwa do utrzymania w czysto?ci."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: hermetic_context_variants_057
+      pattern: "Oprawa hermetyczna ma sens w pomieszczeniu gospodarczym, gdzie o?wietlenie dzia?a?o stabilnie podczas codziennej pracy."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: hermetic_context_variants_058
+      pattern: "Do pomieszczeniu gospodarczym warto wybra? opraw?, kt?ra o?wietlenie dzia?a?o stabilnie podczas codziennej pracy."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: hermetic_context_variants_059
+      pattern: "Oprawa hermetyczna ma sens w pomieszczeniu gospodarczym, gdzie monta? by? praktyczny, a nie dekoracyjny."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: hermetic_context_variants_060
+      pattern: "Do pomieszczeniu gospodarczym warto wybra? opraw?, kt?ra monta? by? praktyczny, a nie dekoracyjny."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: hermetic_context_variants_061
+      pattern: "Oprawa hermetyczna ma sens w ci?gu komunikacyjnym w obiekcie, gdzie oprawa znosi?a kurz i cz?st? eksploatacj?."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: hermetic_context_variants_062
+      pattern: "Do ci?gu komunikacyjnym w obiekcie warto wybra? opraw?, kt?ra oprawa znosi?a kurz i cz?st? eksploatacj?."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: hermetic_context_variants_063
+      pattern: "Oprawa hermetyczna ma sens w ci?gu komunikacyjnym w obiekcie, gdzie ?wiat?o by?o pewne mimo trudniejszych warunk?w."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: hermetic_context_variants_064
+      pattern: "Do ci?gu komunikacyjnym w obiekcie warto wybra? opraw?, kt?ra ?wiat?o by?o pewne mimo trudniejszych warunk?w."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: hermetic_context_variants_065
+      pattern: "Oprawa hermetyczna ma sens w ci?gu komunikacyjnym w obiekcie, gdzie obudowa by?a ?atwa do utrzymania w czysto?ci."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: hermetic_context_variants_066
+      pattern: "Do ci?gu komunikacyjnym w obiekcie warto wybra? opraw?, kt?ra obudowa by?a ?atwa do utrzymania w czysto?ci."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: hermetic_context_variants_067
+      pattern: "Oprawa hermetyczna ma sens w ci?gu komunikacyjnym w obiekcie, gdzie o?wietlenie dzia?a?o stabilnie podczas codziennej pracy."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: hermetic_context_variants_068
+      pattern: "Do ci?gu komunikacyjnym w obiekcie warto wybra? opraw?, kt?ra o?wietlenie dzia?a?o stabilnie podczas codziennej pracy."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: hermetic_context_variants_069
+      pattern: "Oprawa hermetyczna ma sens w ci?gu komunikacyjnym w obiekcie, gdzie monta? by? praktyczny, a nie dekoracyjny."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: hermetic_context_variants_070
+      pattern: "Do ci?gu komunikacyjnym w obiekcie warto wybra? opraw?, kt?ra monta? by? praktyczny, a nie dekoracyjny."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+  floodlight_context_variants:
+    - id: floodlight_context_variants_001
+      pattern: "Na?wietlacz warto zastosowa? przy podje?dzie, gdzie ?wiat?o ma obj?? konkretn? stref?."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: floodlight_context_variants_002
+      pattern: "Przy podje?dzie lepiej dobra? ?wiat?o tak, aby ?wiat?o ma obj?? konkretn? stref?."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: floodlight_context_variants_003
+      pattern: "Na?wietlacz warto zastosowa? przy podje?dzie, gdzie wa?na jest widoczno?? po zmroku."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: floodlight_context_variants_004
+      pattern: "Przy podje?dzie lepiej dobra? ?wiat?o tak, aby wa?na jest widoczno?? po zmroku."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: floodlight_context_variants_005
+      pattern: "Na?wietlacz warto zastosowa? przy podje?dzie, gdzie oprawa ma ?wieci? kierunkowo, bez przypadkowego rozpraszania."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: floodlight_context_variants_006
+      pattern: "Przy podje?dzie lepiej dobra? ?wiat?o tak, aby oprawa ma ?wieci? kierunkowo, bez przypadkowego rozpraszania."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: floodlight_context_variants_007
+      pattern: "Na?wietlacz warto zastosowa? przy podje?dzie, gdzie trzeba do?wietli? miejsce manewrowania."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: floodlight_context_variants_008
+      pattern: "Przy podje?dzie lepiej dobra? ?wiat?o tak, aby trzeba do?wietli? miejsce manewrowania."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: floodlight_context_variants_009
+      pattern: "Na?wietlacz warto zastosowa? przy podje?dzie, gdzie liczy si? odporno?? na warunki zewn?trzne."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: floodlight_context_variants_010
+      pattern: "Przy podje?dzie lepiej dobra? ?wiat?o tak, aby liczy si? odporno?? na warunki zewn?trzne."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: floodlight_context_variants_011
+      pattern: "Na?wietlacz warto zastosowa? przy elewacji, gdzie ?wiat?o ma obj?? konkretn? stref?."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: floodlight_context_variants_012
+      pattern: "Przy elewacji lepiej dobra? ?wiat?o tak, aby ?wiat?o ma obj?? konkretn? stref?."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: floodlight_context_variants_013
+      pattern: "Na?wietlacz warto zastosowa? przy elewacji, gdzie wa?na jest widoczno?? po zmroku."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: floodlight_context_variants_014
+      pattern: "Przy elewacji lepiej dobra? ?wiat?o tak, aby wa?na jest widoczno?? po zmroku."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: floodlight_context_variants_015
+      pattern: "Na?wietlacz warto zastosowa? przy elewacji, gdzie oprawa ma ?wieci? kierunkowo, bez przypadkowego rozpraszania."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: floodlight_context_variants_016
+      pattern: "Przy elewacji lepiej dobra? ?wiat?o tak, aby oprawa ma ?wieci? kierunkowo, bez przypadkowego rozpraszania."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: floodlight_context_variants_017
+      pattern: "Na?wietlacz warto zastosowa? przy elewacji, gdzie trzeba do?wietli? miejsce manewrowania."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: floodlight_context_variants_018
+      pattern: "Przy elewacji lepiej dobra? ?wiat?o tak, aby trzeba do?wietli? miejsce manewrowania."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: floodlight_context_variants_019
+      pattern: "Na?wietlacz warto zastosowa? przy elewacji, gdzie liczy si? odporno?? na warunki zewn?trzne."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: floodlight_context_variants_020
+      pattern: "Przy elewacji lepiej dobra? ?wiat?o tak, aby liczy si? odporno?? na warunki zewn?trzne."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: floodlight_context_variants_021
+      pattern: "Na?wietlacz warto zastosowa? przy bramie, gdzie ?wiat?o ma obj?? konkretn? stref?."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: floodlight_context_variants_022
+      pattern: "Przy bramie lepiej dobra? ?wiat?o tak, aby ?wiat?o ma obj?? konkretn? stref?."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: floodlight_context_variants_023
+      pattern: "Na?wietlacz warto zastosowa? przy bramie, gdzie wa?na jest widoczno?? po zmroku."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: floodlight_context_variants_024
+      pattern: "Przy bramie lepiej dobra? ?wiat?o tak, aby wa?na jest widoczno?? po zmroku."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: floodlight_context_variants_025
+      pattern: "Na?wietlacz warto zastosowa? przy bramie, gdzie oprawa ma ?wieci? kierunkowo, bez przypadkowego rozpraszania."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: floodlight_context_variants_026
+      pattern: "Przy bramie lepiej dobra? ?wiat?o tak, aby oprawa ma ?wieci? kierunkowo, bez przypadkowego rozpraszania."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: floodlight_context_variants_027
+      pattern: "Na?wietlacz warto zastosowa? przy bramie, gdzie trzeba do?wietli? miejsce manewrowania."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: floodlight_context_variants_028
+      pattern: "Przy bramie lepiej dobra? ?wiat?o tak, aby trzeba do?wietli? miejsce manewrowania."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: floodlight_context_variants_029
+      pattern: "Na?wietlacz warto zastosowa? przy bramie, gdzie liczy si? odporno?? na warunki zewn?trzne."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: floodlight_context_variants_030
+      pattern: "Przy bramie lepiej dobra? ?wiat?o tak, aby liczy si? odporno?? na warunki zewn?trzne."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: floodlight_context_variants_031
+      pattern: "Na?wietlacz warto zastosowa? przy placu, gdzie ?wiat?o ma obj?? konkretn? stref?."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: floodlight_context_variants_032
+      pattern: "Przy placu lepiej dobra? ?wiat?o tak, aby ?wiat?o ma obj?? konkretn? stref?."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: floodlight_context_variants_033
+      pattern: "Na?wietlacz warto zastosowa? przy placu, gdzie wa?na jest widoczno?? po zmroku."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: floodlight_context_variants_034
+      pattern: "Przy placu lepiej dobra? ?wiat?o tak, aby wa?na jest widoczno?? po zmroku."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: floodlight_context_variants_035
+      pattern: "Na?wietlacz warto zastosowa? przy placu, gdzie oprawa ma ?wieci? kierunkowo, bez przypadkowego rozpraszania."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: floodlight_context_variants_036
+      pattern: "Przy placu lepiej dobra? ?wiat?o tak, aby oprawa ma ?wieci? kierunkowo, bez przypadkowego rozpraszania."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: floodlight_context_variants_037
+      pattern: "Na?wietlacz warto zastosowa? przy placu, gdzie trzeba do?wietli? miejsce manewrowania."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: floodlight_context_variants_038
+      pattern: "Przy placu lepiej dobra? ?wiat?o tak, aby trzeba do?wietli? miejsce manewrowania."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: floodlight_context_variants_039
+      pattern: "Na?wietlacz warto zastosowa? przy placu, gdzie liczy si? odporno?? na warunki zewn?trzne."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: floodlight_context_variants_040
+      pattern: "Przy placu lepiej dobra? ?wiat?o tak, aby liczy si? odporno?? na warunki zewn?trzne."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: floodlight_context_variants_041
+      pattern: "Na?wietlacz warto zastosowa? przy wej?ciu do budynku, gdzie ?wiat?o ma obj?? konkretn? stref?."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: floodlight_context_variants_042
+      pattern: "Przy wej?ciu do budynku lepiej dobra? ?wiat?o tak, aby ?wiat?o ma obj?? konkretn? stref?."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: floodlight_context_variants_043
+      pattern: "Na?wietlacz warto zastosowa? przy wej?ciu do budynku, gdzie wa?na jest widoczno?? po zmroku."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: floodlight_context_variants_044
+      pattern: "Przy wej?ciu do budynku lepiej dobra? ?wiat?o tak, aby wa?na jest widoczno?? po zmroku."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: floodlight_context_variants_045
+      pattern: "Na?wietlacz warto zastosowa? przy wej?ciu do budynku, gdzie oprawa ma ?wieci? kierunkowo, bez przypadkowego rozpraszania."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: floodlight_context_variants_046
+      pattern: "Przy wej?ciu do budynku lepiej dobra? ?wiat?o tak, aby oprawa ma ?wieci? kierunkowo, bez przypadkowego rozpraszania."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: floodlight_context_variants_047
+      pattern: "Na?wietlacz warto zastosowa? przy wej?ciu do budynku, gdzie trzeba do?wietli? miejsce manewrowania."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: floodlight_context_variants_048
+      pattern: "Przy wej?ciu do budynku lepiej dobra? ?wiat?o tak, aby trzeba do?wietli? miejsce manewrowania."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: floodlight_context_variants_049
+      pattern: "Na?wietlacz warto zastosowa? przy wej?ciu do budynku, gdzie liczy si? odporno?? na warunki zewn?trzne."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: floodlight_context_variants_050
+      pattern: "Przy wej?ciu do budynku lepiej dobra? ?wiat?o tak, aby liczy si? odporno?? na warunki zewn?trzne."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: floodlight_context_variants_051
+      pattern: "Na?wietlacz warto zastosowa? przy strefie dostaw, gdzie ?wiat?o ma obj?? konkretn? stref?."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: floodlight_context_variants_052
+      pattern: "Przy strefie dostaw lepiej dobra? ?wiat?o tak, aby ?wiat?o ma obj?? konkretn? stref?."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: floodlight_context_variants_053
+      pattern: "Na?wietlacz warto zastosowa? przy strefie dostaw, gdzie wa?na jest widoczno?? po zmroku."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: floodlight_context_variants_054
+      pattern: "Przy strefie dostaw lepiej dobra? ?wiat?o tak, aby wa?na jest widoczno?? po zmroku."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: floodlight_context_variants_055
+      pattern: "Na?wietlacz warto zastosowa? przy strefie dostaw, gdzie oprawa ma ?wieci? kierunkowo, bez przypadkowego rozpraszania."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: floodlight_context_variants_056
+      pattern: "Przy strefie dostaw lepiej dobra? ?wiat?o tak, aby oprawa ma ?wieci? kierunkowo, bez przypadkowego rozpraszania."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: floodlight_context_variants_057
+      pattern: "Na?wietlacz warto zastosowa? przy strefie dostaw, gdzie trzeba do?wietli? miejsce manewrowania."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: floodlight_context_variants_058
+      pattern: "Przy strefie dostaw lepiej dobra? ?wiat?o tak, aby trzeba do?wietli? miejsce manewrowania."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: floodlight_context_variants_059
+      pattern: "Na?wietlacz warto zastosowa? przy strefie dostaw, gdzie liczy si? odporno?? na warunki zewn?trzne."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: floodlight_context_variants_060
+      pattern: "Przy strefie dostaw lepiej dobra? ?wiat?o tak, aby liczy si? odporno?? na warunki zewn?trzne."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: floodlight_context_variants_061
+      pattern: "Na?wietlacz warto zastosowa? przy parkingu, gdzie ?wiat?o ma obj?? konkretn? stref?."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: floodlight_context_variants_062
+      pattern: "Przy parkingu lepiej dobra? ?wiat?o tak, aby ?wiat?o ma obj?? konkretn? stref?."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: floodlight_context_variants_063
+      pattern: "Na?wietlacz warto zastosowa? przy parkingu, gdzie wa?na jest widoczno?? po zmroku."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: floodlight_context_variants_064
+      pattern: "Przy parkingu lepiej dobra? ?wiat?o tak, aby wa?na jest widoczno?? po zmroku."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: floodlight_context_variants_065
+      pattern: "Na?wietlacz warto zastosowa? przy parkingu, gdzie oprawa ma ?wieci? kierunkowo, bez przypadkowego rozpraszania."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: floodlight_context_variants_066
+      pattern: "Przy parkingu lepiej dobra? ?wiat?o tak, aby oprawa ma ?wieci? kierunkowo, bez przypadkowego rozpraszania."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: floodlight_context_variants_067
+      pattern: "Na?wietlacz warto zastosowa? przy parkingu, gdzie trzeba do?wietli? miejsce manewrowania."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: floodlight_context_variants_068
+      pattern: "Przy parkingu lepiej dobra? ?wiat?o tak, aby trzeba do?wietli? miejsce manewrowania."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: floodlight_context_variants_069
+      pattern: "Na?wietlacz warto zastosowa? przy parkingu, gdzie liczy si? odporno?? na warunki zewn?trzne."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: floodlight_context_variants_070
+      pattern: "Przy parkingu lepiej dobra? ?wiat?o tak, aby liczy si? odporno?? na warunki zewn?trzne."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+  garden_context_variants:
+    - id: garden_context_variants_001
+      pattern: "Lampa ogrodowa sprawdzi si? przy ?cie?ce, gdy ma poprawi? widoczno?? po zmroku."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: garden_context_variants_002
+      pattern: "Przy ?cie?ce ?wiat?o warto zaplanowa? tak, ?eby poprawi? widoczno?? po zmroku."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: garden_context_variants_003
+      pattern: "Lampa ogrodowa sprawdzi si? przy ?cie?ce, gdy ma podkre?li? aran?acj? ogrodu."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: garden_context_variants_004
+      pattern: "Przy ?cie?ce ?wiat?o warto zaplanowa? tak, ?eby podkre?li? aran?acj? ogrodu."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: garden_context_variants_005
+      pattern: "Lampa ogrodowa sprawdzi si? przy ?cie?ce, gdy ma prowadzi? ?wiat?o wzd?u? trasy doj?cia."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: garden_context_variants_006
+      pattern: "Przy ?cie?ce ?wiat?o warto zaplanowa? tak, ?eby prowadzi? ?wiat?o wzd?u? trasy doj?cia."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: garden_context_variants_007
+      pattern: "Lampa ogrodowa sprawdzi si? przy ?cie?ce, gdy ma po??czy? funkcj? praktyczn? z dekoracyjn?."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: garden_context_variants_008
+      pattern: "Przy ?cie?ce ?wiat?o warto zaplanowa? tak, ?eby po??czy? funkcj? praktyczn? z dekoracyjn?."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: garden_context_variants_009
+      pattern: "Lampa ogrodowa sprawdzi si? przy ?cie?ce, gdy ma zbudowa? spokojny klimat wok?? domu."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: garden_context_variants_010
+      pattern: "Przy ?cie?ce ?wiat?o warto zaplanowa? tak, ?eby zbudowa? spokojny klimat wok?? domu."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: garden_context_variants_011
+      pattern: "Lampa ogrodowa sprawdzi si? przy tarasie, gdy ma poprawi? widoczno?? po zmroku."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: garden_context_variants_012
+      pattern: "Przy tarasie ?wiat?o warto zaplanowa? tak, ?eby poprawi? widoczno?? po zmroku."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: garden_context_variants_013
+      pattern: "Lampa ogrodowa sprawdzi si? przy tarasie, gdy ma podkre?li? aran?acj? ogrodu."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: garden_context_variants_014
+      pattern: "Przy tarasie ?wiat?o warto zaplanowa? tak, ?eby podkre?li? aran?acj? ogrodu."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: garden_context_variants_015
+      pattern: "Lampa ogrodowa sprawdzi si? przy tarasie, gdy ma prowadzi? ?wiat?o wzd?u? trasy doj?cia."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: garden_context_variants_016
+      pattern: "Przy tarasie ?wiat?o warto zaplanowa? tak, ?eby prowadzi? ?wiat?o wzd?u? trasy doj?cia."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: garden_context_variants_017
+      pattern: "Lampa ogrodowa sprawdzi si? przy tarasie, gdy ma po??czy? funkcj? praktyczn? z dekoracyjn?."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: garden_context_variants_018
+      pattern: "Przy tarasie ?wiat?o warto zaplanowa? tak, ?eby po??czy? funkcj? praktyczn? z dekoracyjn?."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: garden_context_variants_019
+      pattern: "Lampa ogrodowa sprawdzi si? przy tarasie, gdy ma zbudowa? spokojny klimat wok?? domu."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: garden_context_variants_020
+      pattern: "Przy tarasie ?wiat?o warto zaplanowa? tak, ?eby zbudowa? spokojny klimat wok?? domu."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: garden_context_variants_021
+      pattern: "Lampa ogrodowa sprawdzi si? przy furtce, gdy ma poprawi? widoczno?? po zmroku."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: garden_context_variants_022
+      pattern: "Przy furtce ?wiat?o warto zaplanowa? tak, ?eby poprawi? widoczno?? po zmroku."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: garden_context_variants_023
+      pattern: "Lampa ogrodowa sprawdzi si? przy furtce, gdy ma podkre?li? aran?acj? ogrodu."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: garden_context_variants_024
+      pattern: "Przy furtce ?wiat?o warto zaplanowa? tak, ?eby podkre?li? aran?acj? ogrodu."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: garden_context_variants_025
+      pattern: "Lampa ogrodowa sprawdzi si? przy furtce, gdy ma prowadzi? ?wiat?o wzd?u? trasy doj?cia."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: garden_context_variants_026
+      pattern: "Przy furtce ?wiat?o warto zaplanowa? tak, ?eby prowadzi? ?wiat?o wzd?u? trasy doj?cia."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: garden_context_variants_027
+      pattern: "Lampa ogrodowa sprawdzi si? przy furtce, gdy ma po??czy? funkcj? praktyczn? z dekoracyjn?."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: garden_context_variants_028
+      pattern: "Przy furtce ?wiat?o warto zaplanowa? tak, ?eby po??czy? funkcj? praktyczn? z dekoracyjn?."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: garden_context_variants_029
+      pattern: "Lampa ogrodowa sprawdzi si? przy furtce, gdy ma zbudowa? spokojny klimat wok?? domu."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: garden_context_variants_030
+      pattern: "Przy furtce ?wiat?o warto zaplanowa? tak, ?eby zbudowa? spokojny klimat wok?? domu."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: garden_context_variants_031
+      pattern: "Lampa ogrodowa sprawdzi si? przy altanie, gdy ma poprawi? widoczno?? po zmroku."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: garden_context_variants_032
+      pattern: "Przy altanie ?wiat?o warto zaplanowa? tak, ?eby poprawi? widoczno?? po zmroku."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: garden_context_variants_033
+      pattern: "Lampa ogrodowa sprawdzi si? przy altanie, gdy ma podkre?li? aran?acj? ogrodu."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: garden_context_variants_034
+      pattern: "Przy altanie ?wiat?o warto zaplanowa? tak, ?eby podkre?li? aran?acj? ogrodu."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: garden_context_variants_035
+      pattern: "Lampa ogrodowa sprawdzi si? przy altanie, gdy ma prowadzi? ?wiat?o wzd?u? trasy doj?cia."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: garden_context_variants_036
+      pattern: "Przy altanie ?wiat?o warto zaplanowa? tak, ?eby prowadzi? ?wiat?o wzd?u? trasy doj?cia."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: garden_context_variants_037
+      pattern: "Lampa ogrodowa sprawdzi si? przy altanie, gdy ma po??czy? funkcj? praktyczn? z dekoracyjn?."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: garden_context_variants_038
+      pattern: "Przy altanie ?wiat?o warto zaplanowa? tak, ?eby po??czy? funkcj? praktyczn? z dekoracyjn?."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: garden_context_variants_039
+      pattern: "Lampa ogrodowa sprawdzi si? przy altanie, gdy ma zbudowa? spokojny klimat wok?? domu."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: garden_context_variants_040
+      pattern: "Przy altanie ?wiat?o warto zaplanowa? tak, ?eby zbudowa? spokojny klimat wok?? domu."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: garden_context_variants_041
+      pattern: "Lampa ogrodowa sprawdzi si? przy wej?ciu do domu, gdy ma poprawi? widoczno?? po zmroku."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: garden_context_variants_042
+      pattern: "Przy wej?ciu do domu ?wiat?o warto zaplanowa? tak, ?eby poprawi? widoczno?? po zmroku."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: garden_context_variants_043
+      pattern: "Lampa ogrodowa sprawdzi si? przy wej?ciu do domu, gdy ma podkre?li? aran?acj? ogrodu."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: garden_context_variants_044
+      pattern: "Przy wej?ciu do domu ?wiat?o warto zaplanowa? tak, ?eby podkre?li? aran?acj? ogrodu."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: garden_context_variants_045
+      pattern: "Lampa ogrodowa sprawdzi si? przy wej?ciu do domu, gdy ma prowadzi? ?wiat?o wzd?u? trasy doj?cia."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: garden_context_variants_046
+      pattern: "Przy wej?ciu do domu ?wiat?o warto zaplanowa? tak, ?eby prowadzi? ?wiat?o wzd?u? trasy doj?cia."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: garden_context_variants_047
+      pattern: "Lampa ogrodowa sprawdzi si? przy wej?ciu do domu, gdy ma po??czy? funkcj? praktyczn? z dekoracyjn?."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: garden_context_variants_048
+      pattern: "Przy wej?ciu do domu ?wiat?o warto zaplanowa? tak, ?eby po??czy? funkcj? praktyczn? z dekoracyjn?."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: garden_context_variants_049
+      pattern: "Lampa ogrodowa sprawdzi si? przy wej?ciu do domu, gdy ma zbudowa? spokojny klimat wok?? domu."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: garden_context_variants_050
+      pattern: "Przy wej?ciu do domu ?wiat?o warto zaplanowa? tak, ?eby zbudowa? spokojny klimat wok?? domu."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: garden_context_variants_051
+      pattern: "Lampa ogrodowa sprawdzi si? przy rabacie, gdy ma poprawi? widoczno?? po zmroku."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: garden_context_variants_052
+      pattern: "Przy rabacie ?wiat?o warto zaplanowa? tak, ?eby poprawi? widoczno?? po zmroku."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: garden_context_variants_053
+      pattern: "Lampa ogrodowa sprawdzi si? przy rabacie, gdy ma podkre?li? aran?acj? ogrodu."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: garden_context_variants_054
+      pattern: "Przy rabacie ?wiat?o warto zaplanowa? tak, ?eby podkre?li? aran?acj? ogrodu."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: garden_context_variants_055
+      pattern: "Lampa ogrodowa sprawdzi si? przy rabacie, gdy ma prowadzi? ?wiat?o wzd?u? trasy doj?cia."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: garden_context_variants_056
+      pattern: "Przy rabacie ?wiat?o warto zaplanowa? tak, ?eby prowadzi? ?wiat?o wzd?u? trasy doj?cia."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: garden_context_variants_057
+      pattern: "Lampa ogrodowa sprawdzi si? przy rabacie, gdy ma po??czy? funkcj? praktyczn? z dekoracyjn?."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: garden_context_variants_058
+      pattern: "Przy rabacie ?wiat?o warto zaplanowa? tak, ?eby po??czy? funkcj? praktyczn? z dekoracyjn?."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: garden_context_variants_059
+      pattern: "Lampa ogrodowa sprawdzi si? przy rabacie, gdy ma zbudowa? spokojny klimat wok?? domu."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: garden_context_variants_060
+      pattern: "Przy rabacie ?wiat?o warto zaplanowa? tak, ?eby zbudowa? spokojny klimat wok?? domu."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: garden_context_variants_061
+      pattern: "Lampa ogrodowa sprawdzi si? przy strefie wypoczynku, gdy ma poprawi? widoczno?? po zmroku."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: garden_context_variants_062
+      pattern: "Przy strefie wypoczynku ?wiat?o warto zaplanowa? tak, ?eby poprawi? widoczno?? po zmroku."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: garden_context_variants_063
+      pattern: "Lampa ogrodowa sprawdzi si? przy strefie wypoczynku, gdy ma podkre?li? aran?acj? ogrodu."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: garden_context_variants_064
+      pattern: "Przy strefie wypoczynku ?wiat?o warto zaplanowa? tak, ?eby podkre?li? aran?acj? ogrodu."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: garden_context_variants_065
+      pattern: "Lampa ogrodowa sprawdzi si? przy strefie wypoczynku, gdy ma prowadzi? ?wiat?o wzd?u? trasy doj?cia."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: garden_context_variants_066
+      pattern: "Przy strefie wypoczynku ?wiat?o warto zaplanowa? tak, ?eby prowadzi? ?wiat?o wzd?u? trasy doj?cia."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: garden_context_variants_067
+      pattern: "Lampa ogrodowa sprawdzi si? przy strefie wypoczynku, gdy ma po??czy? funkcj? praktyczn? z dekoracyjn?."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: garden_context_variants_068
+      pattern: "Przy strefie wypoczynku ?wiat?o warto zaplanowa? tak, ?eby po??czy? funkcj? praktyczn? z dekoracyjn?."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: garden_context_variants_069
+      pattern: "Lampa ogrodowa sprawdzi si? przy strefie wypoczynku, gdy ma zbudowa? spokojny klimat wok?? domu."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: garden_context_variants_070
+      pattern: "Przy strefie wypoczynku ?wiat?o warto zaplanowa? tak, ?eby zbudowa? spokojny klimat wok?? domu."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+  accessory_context_variants:
+    - id: accessory_context_variants_001
+      pattern: "Przy wymianie zu?ytego elementu najbezpieczniej por?wna? seri? i spos?b mocowania."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: accessory_context_variants_002
+      pattern: "W przypadku wymianie zu?ytego elementu warto najpierw por?wna? seri? i spos?b mocowania."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: accessory_context_variants_003
+      pattern: "Przy wymianie zu?ytego elementu najbezpieczniej sprawdzi? wymiary starej cz??ci."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: accessory_context_variants_004
+      pattern: "W przypadku wymianie zu?ytego elementu warto najpierw sprawdzi? wymiary starej cz??ci."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: accessory_context_variants_005
+      pattern: "Przy wymianie zu?ytego elementu najbezpieczniej unika? wyboru po samym wygl?dzie."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: accessory_context_variants_006
+      pattern: "W przypadku wymianie zu?ytego elementu warto najpierw unika? wyboru po samym wygl?dzie."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: accessory_context_variants_007
+      pattern: "Przy wymianie zu?ytego elementu najbezpieczniej potwierdzi? zgodno?? z oznaczeniem producenta."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: accessory_context_variants_008
+      pattern: "W przypadku wymianie zu?ytego elementu warto najpierw potwierdzi? zgodno?? z oznaczeniem producenta."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: accessory_context_variants_009
+      pattern: "Przy wymianie zu?ytego elementu najbezpieczniej dopasowa? kolor do widocznej cz??ci oprawy."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: accessory_context_variants_010
+      pattern: "W przypadku wymianie zu?ytego elementu warto najpierw dopasowa? kolor do widocznej cz??ci oprawy."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: accessory_context_variants_011
+      pattern: "Przy uzupe?nieniu brakuj?cej cz??ci najbezpieczniej por?wna? seri? i spos?b mocowania."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: accessory_context_variants_012
+      pattern: "W przypadku uzupe?nieniu brakuj?cej cz??ci warto najpierw por?wna? seri? i spos?b mocowania."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: accessory_context_variants_013
+      pattern: "Przy uzupe?nieniu brakuj?cej cz??ci najbezpieczniej sprawdzi? wymiary starej cz??ci."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: accessory_context_variants_014
+      pattern: "W przypadku uzupe?nieniu brakuj?cej cz??ci warto najpierw sprawdzi? wymiary starej cz??ci."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: accessory_context_variants_015
+      pattern: "Przy uzupe?nieniu brakuj?cej cz??ci najbezpieczniej unika? wyboru po samym wygl?dzie."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: accessory_context_variants_016
+      pattern: "W przypadku uzupe?nieniu brakuj?cej cz??ci warto najpierw unika? wyboru po samym wygl?dzie."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: accessory_context_variants_017
+      pattern: "Przy uzupe?nieniu brakuj?cej cz??ci najbezpieczniej potwierdzi? zgodno?? z oznaczeniem producenta."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: accessory_context_variants_018
+      pattern: "W przypadku uzupe?nieniu brakuj?cej cz??ci warto najpierw potwierdzi? zgodno?? z oznaczeniem producenta."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: accessory_context_variants_019
+      pattern: "Przy uzupe?nieniu brakuj?cej cz??ci najbezpieczniej dopasowa? kolor do widocznej cz??ci oprawy."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: accessory_context_variants_020
+      pattern: "W przypadku uzupe?nieniu brakuj?cej cz??ci warto najpierw dopasowa? kolor do widocznej cz??ci oprawy."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: accessory_context_variants_021
+      pattern: "Przy serwisie istniej?cej oprawy najbezpieczniej por?wna? seri? i spos?b mocowania."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: accessory_context_variants_022
+      pattern: "W przypadku serwisie istniej?cej oprawy warto najpierw por?wna? seri? i spos?b mocowania."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: accessory_context_variants_023
+      pattern: "Przy serwisie istniej?cej oprawy najbezpieczniej sprawdzi? wymiary starej cz??ci."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: accessory_context_variants_024
+      pattern: "W przypadku serwisie istniej?cej oprawy warto najpierw sprawdzi? wymiary starej cz??ci."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: accessory_context_variants_025
+      pattern: "Przy serwisie istniej?cej oprawy najbezpieczniej unika? wyboru po samym wygl?dzie."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: accessory_context_variants_026
+      pattern: "W przypadku serwisie istniej?cej oprawy warto najpierw unika? wyboru po samym wygl?dzie."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: accessory_context_variants_027
+      pattern: "Przy serwisie istniej?cej oprawy najbezpieczniej potwierdzi? zgodno?? z oznaczeniem producenta."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: accessory_context_variants_028
+      pattern: "W przypadku serwisie istniej?cej oprawy warto najpierw potwierdzi? zgodno?? z oznaczeniem producenta."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: accessory_context_variants_029
+      pattern: "Przy serwisie istniej?cej oprawy najbezpieczniej dopasowa? kolor do widocznej cz??ci oprawy."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: accessory_context_variants_030
+      pattern: "W przypadku serwisie istniej?cej oprawy warto najpierw dopasowa? kolor do widocznej cz??ci oprawy."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: accessory_context_variants_031
+      pattern: "Przy doborze elementu do tej samej serii najbezpieczniej por?wna? seri? i spos?b mocowania."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: accessory_context_variants_032
+      pattern: "W przypadku doborze elementu do tej samej serii warto najpierw por?wna? seri? i spos?b mocowania."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: accessory_context_variants_033
+      pattern: "Przy doborze elementu do tej samej serii najbezpieczniej sprawdzi? wymiary starej cz??ci."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: accessory_context_variants_034
+      pattern: "W przypadku doborze elementu do tej samej serii warto najpierw sprawdzi? wymiary starej cz??ci."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: accessory_context_variants_035
+      pattern: "Przy doborze elementu do tej samej serii najbezpieczniej unika? wyboru po samym wygl?dzie."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: accessory_context_variants_036
+      pattern: "W przypadku doborze elementu do tej samej serii warto najpierw unika? wyboru po samym wygl?dzie."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: accessory_context_variants_037
+      pattern: "Przy doborze elementu do tej samej serii najbezpieczniej potwierdzi? zgodno?? z oznaczeniem producenta."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: accessory_context_variants_038
+      pattern: "W przypadku doborze elementu do tej samej serii warto najpierw potwierdzi? zgodno?? z oznaczeniem producenta."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: accessory_context_variants_039
+      pattern: "Przy doborze elementu do tej samej serii najbezpieczniej dopasowa? kolor do widocznej cz??ci oprawy."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: accessory_context_variants_040
+      pattern: "W przypadku doborze elementu do tej samej serii warto najpierw dopasowa? kolor do widocznej cz??ci oprawy."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: accessory_context_variants_041
+      pattern: "Przy monta?u dodatkowego osprz?tu najbezpieczniej por?wna? seri? i spos?b mocowania."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: accessory_context_variants_042
+      pattern: "W przypadku monta?u dodatkowego osprz?tu warto najpierw por?wna? seri? i spos?b mocowania."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: accessory_context_variants_043
+      pattern: "Przy monta?u dodatkowego osprz?tu najbezpieczniej sprawdzi? wymiary starej cz??ci."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: accessory_context_variants_044
+      pattern: "W przypadku monta?u dodatkowego osprz?tu warto najpierw sprawdzi? wymiary starej cz??ci."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: accessory_context_variants_045
+      pattern: "Przy monta?u dodatkowego osprz?tu najbezpieczniej unika? wyboru po samym wygl?dzie."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: accessory_context_variants_046
+      pattern: "W przypadku monta?u dodatkowego osprz?tu warto najpierw unika? wyboru po samym wygl?dzie."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: accessory_context_variants_047
+      pattern: "Przy monta?u dodatkowego osprz?tu najbezpieczniej potwierdzi? zgodno?? z oznaczeniem producenta."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: accessory_context_variants_048
+      pattern: "W przypadku monta?u dodatkowego osprz?tu warto najpierw potwierdzi? zgodno?? z oznaczeniem producenta."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: accessory_context_variants_049
+      pattern: "Przy monta?u dodatkowego osprz?tu najbezpieczniej dopasowa? kolor do widocznej cz??ci oprawy."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: accessory_context_variants_050
+      pattern: "W przypadku monta?u dodatkowego osprz?tu warto najpierw dopasowa? kolor do widocznej cz??ci oprawy."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: accessory_context_variants_051
+      pattern: "Przy kompletowaniu instalacji najbezpieczniej por?wna? seri? i spos?b mocowania."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: accessory_context_variants_052
+      pattern: "W przypadku kompletowaniu instalacji warto najpierw por?wna? seri? i spos?b mocowania."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: accessory_context_variants_053
+      pattern: "Przy kompletowaniu instalacji najbezpieczniej sprawdzi? wymiary starej cz??ci."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: accessory_context_variants_054
+      pattern: "W przypadku kompletowaniu instalacji warto najpierw sprawdzi? wymiary starej cz??ci."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: accessory_context_variants_055
+      pattern: "Przy kompletowaniu instalacji najbezpieczniej unika? wyboru po samym wygl?dzie."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: accessory_context_variants_056
+      pattern: "W przypadku kompletowaniu instalacji warto najpierw unika? wyboru po samym wygl?dzie."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: accessory_context_variants_057
+      pattern: "Przy kompletowaniu instalacji najbezpieczniej potwierdzi? zgodno?? z oznaczeniem producenta."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: accessory_context_variants_058
+      pattern: "W przypadku kompletowaniu instalacji warto najpierw potwierdzi? zgodno?? z oznaczeniem producenta."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: accessory_context_variants_059
+      pattern: "Przy kompletowaniu instalacji najbezpieczniej dopasowa? kolor do widocznej cz??ci oprawy."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: accessory_context_variants_060
+      pattern: "W przypadku kompletowaniu instalacji warto najpierw dopasowa? kolor do widocznej cz??ci oprawy."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: accessory_context_variants_061
+      pattern: "Przy naprawie oprawy bez wymiany ca?o?ci najbezpieczniej por?wna? seri? i spos?b mocowania."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: accessory_context_variants_062
+      pattern: "W przypadku naprawie oprawy bez wymiany ca?o?ci warto najpierw por?wna? seri? i spos?b mocowania."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: accessory_context_variants_063
+      pattern: "Przy naprawie oprawy bez wymiany ca?o?ci najbezpieczniej sprawdzi? wymiary starej cz??ci."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: accessory_context_variants_064
+      pattern: "W przypadku naprawie oprawy bez wymiany ca?o?ci warto najpierw sprawdzi? wymiary starej cz??ci."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: accessory_context_variants_065
+      pattern: "Przy naprawie oprawy bez wymiany ca?o?ci najbezpieczniej unika? wyboru po samym wygl?dzie."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: accessory_context_variants_066
+      pattern: "W przypadku naprawie oprawy bez wymiany ca?o?ci warto najpierw unika? wyboru po samym wygl?dzie."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: accessory_context_variants_067
+      pattern: "Przy naprawie oprawy bez wymiany ca?o?ci najbezpieczniej potwierdzi? zgodno?? z oznaczeniem producenta."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: accessory_context_variants_068
+      pattern: "W przypadku naprawie oprawy bez wymiany ca?o?ci warto najpierw potwierdzi? zgodno?? z oznaczeniem producenta."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: accessory_context_variants_069
+      pattern: "Przy naprawie oprawy bez wymiany ca?o?ci najbezpieczniej dopasowa? kolor do widocznej cz??ci oprawy."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: accessory_context_variants_070
+      pattern: "W przypadku naprawie oprawy bez wymiany ca?o?ci warto najpierw dopasowa? kolor do widocznej cz??ci oprawy."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+  bridge_sentence_variants:
+    - id: bridge_sentence_variants_001
+      pattern: "Dzi?ki temu ?atwiej dobra? wariant do miejsca pracy."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: bridge_sentence_variants_002
+      pattern: "Dzi?ki temu nie trzeba opiera? wyboru wy??cznie na nazwie produktu."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: bridge_sentence_variants_003
+      pattern: "Dzi?ki temu parametry zaczynaj? mie? konkretny sens u?ytkowy."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: bridge_sentence_variants_004
+      pattern: "Dzi?ki temu mo?na unikn?? nietrafionego dopasowania."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: bridge_sentence_variants_005
+      pattern: "Dzi?ki temu opis nie musi brzmie? jak przepisana tabela."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: bridge_sentence_variants_006
+      pattern: "Dzi?ki temu cechy ??cz? si? w jeden praktyczny scenariusz."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: bridge_sentence_variants_007
+      pattern: "Dzi?ki temu u?ytkownik szybciej widzi, czy produkt pasuje do jego sytuacji."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: bridge_sentence_variants_008
+      pattern: "W praktyce ?atwiej dobra? wariant do miejsca pracy."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: bridge_sentence_variants_009
+      pattern: "W praktyce nie trzeba opiera? wyboru wy??cznie na nazwie produktu."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: bridge_sentence_variants_010
+      pattern: "W praktyce parametry zaczynaj? mie? konkretny sens u?ytkowy."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: bridge_sentence_variants_011
+      pattern: "W praktyce mo?na unikn?? nietrafionego dopasowania."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: bridge_sentence_variants_012
+      pattern: "W praktyce opis nie musi brzmie? jak przepisana tabela."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: bridge_sentence_variants_013
+      pattern: "W praktyce cechy ??cz? si? w jeden praktyczny scenariusz."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: bridge_sentence_variants_014
+      pattern: "W praktyce u?ytkownik szybciej widzi, czy produkt pasuje do jego sytuacji."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: bridge_sentence_variants_015
+      pattern: "Z tego powodu ?atwiej dobra? wariant do miejsca pracy."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: bridge_sentence_variants_016
+      pattern: "Z tego powodu nie trzeba opiera? wyboru wy??cznie na nazwie produktu."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: bridge_sentence_variants_017
+      pattern: "Z tego powodu parametry zaczynaj? mie? konkretny sens u?ytkowy."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: bridge_sentence_variants_018
+      pattern: "Z tego powodu mo?na unikn?? nietrafionego dopasowania."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: bridge_sentence_variants_019
+      pattern: "Z tego powodu opis nie musi brzmie? jak przepisana tabela."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: bridge_sentence_variants_020
+      pattern: "Z tego powodu cechy ??cz? si? w jeden praktyczny scenariusz."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: bridge_sentence_variants_021
+      pattern: "Z tego powodu u?ytkownik szybciej widzi, czy produkt pasuje do jego sytuacji."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: bridge_sentence_variants_022
+      pattern: "Przy takim zastosowaniu ?atwiej dobra? wariant do miejsca pracy."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: bridge_sentence_variants_023
+      pattern: "Przy takim zastosowaniu nie trzeba opiera? wyboru wy??cznie na nazwie produktu."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: bridge_sentence_variants_024
+      pattern: "Przy takim zastosowaniu parametry zaczynaj? mie? konkretny sens u?ytkowy."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: bridge_sentence_variants_025
+      pattern: "Przy takim zastosowaniu mo?na unikn?? nietrafionego dopasowania."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: bridge_sentence_variants_026
+      pattern: "Przy takim zastosowaniu opis nie musi brzmie? jak przepisana tabela."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: bridge_sentence_variants_027
+      pattern: "Przy takim zastosowaniu cechy ??cz? si? w jeden praktyczny scenariusz."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: bridge_sentence_variants_028
+      pattern: "Przy takim zastosowaniu u?ytkownik szybciej widzi, czy produkt pasuje do jego sytuacji."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: bridge_sentence_variants_029
+      pattern: "W codziennym u?yciu ?atwiej dobra? wariant do miejsca pracy."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: bridge_sentence_variants_030
+      pattern: "W codziennym u?yciu nie trzeba opiera? wyboru wy??cznie na nazwie produktu."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: bridge_sentence_variants_031
+      pattern: "W codziennym u?yciu parametry zaczynaj? mie? konkretny sens u?ytkowy."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: bridge_sentence_variants_032
+      pattern: "W codziennym u?yciu mo?na unikn?? nietrafionego dopasowania."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: bridge_sentence_variants_033
+      pattern: "W codziennym u?yciu opis nie musi brzmie? jak przepisana tabela."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: bridge_sentence_variants_034
+      pattern: "W codziennym u?yciu cechy ??cz? si? w jeden praktyczny scenariusz."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: bridge_sentence_variants_035
+      pattern: "W codziennym u?yciu u?ytkownik szybciej widzi, czy produkt pasuje do jego sytuacji."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: bridge_sentence_variants_036
+      pattern: "Przed zakupem ?atwiej dobra? wariant do miejsca pracy."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: bridge_sentence_variants_037
+      pattern: "Przed zakupem nie trzeba opiera? wyboru wy??cznie na nazwie produktu."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: bridge_sentence_variants_038
+      pattern: "Przed zakupem parametry zaczynaj? mie? konkretny sens u?ytkowy."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: bridge_sentence_variants_039
+      pattern: "Przed zakupem mo?na unikn?? nietrafionego dopasowania."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: bridge_sentence_variants_040
+      pattern: "Przed zakupem opis nie musi brzmie? jak przepisana tabela."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: bridge_sentence_variants_041
+      pattern: "Przed zakupem cechy ??cz? si? w jeden praktyczny scenariusz."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: bridge_sentence_variants_042
+      pattern: "Przed zakupem u?ytkownik szybciej widzi, czy produkt pasuje do jego sytuacji."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: bridge_sentence_variants_043
+      pattern: "Podczas monta?u ?atwiej dobra? wariant do miejsca pracy."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: bridge_sentence_variants_044
+      pattern: "Podczas monta?u nie trzeba opiera? wyboru wy??cznie na nazwie produktu."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: bridge_sentence_variants_045
+      pattern: "Podczas monta?u parametry zaczynaj? mie? konkretny sens u?ytkowy."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: bridge_sentence_variants_046
+      pattern: "Podczas monta?u mo?na unikn?? nietrafionego dopasowania."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: bridge_sentence_variants_047
+      pattern: "Podczas monta?u opis nie musi brzmie? jak przepisana tabela."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: bridge_sentence_variants_048
+      pattern: "Podczas monta?u cechy ??cz? si? w jeden praktyczny scenariusz."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: bridge_sentence_variants_049
+      pattern: "Podczas monta?u u?ytkownik szybciej widzi, czy produkt pasuje do jego sytuacji."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: bridge_sentence_variants_050
+      pattern: "W istniej?cej instalacji ?atwiej dobra? wariant do miejsca pracy."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: bridge_sentence_variants_051
+      pattern: "W istniej?cej instalacji nie trzeba opiera? wyboru wy??cznie na nazwie produktu."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: bridge_sentence_variants_052
+      pattern: "W istniej?cej instalacji parametry zaczynaj? mie? konkretny sens u?ytkowy."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: bridge_sentence_variants_053
+      pattern: "W istniej?cej instalacji mo?na unikn?? nietrafionego dopasowania."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: bridge_sentence_variants_054
+      pattern: "W istniej?cej instalacji opis nie musi brzmie? jak przepisana tabela."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: bridge_sentence_variants_055
+      pattern: "W istniej?cej instalacji cechy ??cz? si? w jeden praktyczny scenariusz."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: bridge_sentence_variants_056
+      pattern: "W istniej?cej instalacji u?ytkownik szybciej widzi, czy produkt pasuje do jego sytuacji."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+  awkward_sentence_rewrites:
+    - id: awkward_sentence_rewrites_001
+      pattern: "Zamiast ?b?dzie dobrym wyborem wtedy, gdy? u?yj konstrukcji: ?sprawdzi si? tam, gdzie ??."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: awkward_sentence_rewrites_002
+      pattern: "Zamiast ?b?dzie dobrym wyborem wtedy, gdy? u?yj konstrukcji: ?warto go rozwa?y? w miejscu, w kt?rym ??."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: awkward_sentence_rewrites_003
+      pattern: "Zamiast ?b?dzie dobrym wyborem wtedy, gdy? u?yj konstrukcji: ?najlepiej pasuje do sytuacji, w kt?rej ??."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: awkward_sentence_rewrites_004
+      pattern: "Zamiast ?b?dzie dobrym wyborem wtedy, gdy? u?yj konstrukcji: ?ma sens szczeg?lnie wtedy, gdy ??."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: awkward_sentence_rewrites_005
+      pattern: "Zamiast ?b?dzie dobrym wyborem wtedy, gdy? u?yj konstrukcji: ?najpierw warto okre?li?, gdzie b?dzie u?ywany ??."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: awkward_sentence_rewrites_006
+      pattern: "Zamiast ?b?dzie dobrym wyborem wtedy, gdy? u?yj konstrukcji: ?lepiej opisa? przez scenariusz u?ycia ??."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: awkward_sentence_rewrites_007
+      pattern: "Zamiast ?b?dzie dobrym wyborem wtedy, gdy? u?yj konstrukcji: ?warto po??czy? z miejscem monta?u ??."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: awkward_sentence_rewrites_008
+      pattern: "Zamiast ?produkt jest dobierany pod sytuacj?? u?yj konstrukcji: ?sprawdzi si? tam, gdzie ??."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: awkward_sentence_rewrites_009
+      pattern: "Zamiast ?produkt jest dobierany pod sytuacj?? u?yj konstrukcji: ?warto go rozwa?y? w miejscu, w kt?rym ??."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: awkward_sentence_rewrites_010
+      pattern: "Zamiast ?produkt jest dobierany pod sytuacj?? u?yj konstrukcji: ?najlepiej pasuje do sytuacji, w kt?rej ??."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: awkward_sentence_rewrites_011
+      pattern: "Zamiast ?produkt jest dobierany pod sytuacj?? u?yj konstrukcji: ?ma sens szczeg?lnie wtedy, gdy ??."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: awkward_sentence_rewrites_012
+      pattern: "Zamiast ?produkt jest dobierany pod sytuacj?? u?yj konstrukcji: ?najpierw warto okre?li?, gdzie b?dzie u?ywany ??."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: awkward_sentence_rewrites_013
+      pattern: "Zamiast ?produkt jest dobierany pod sytuacj?? u?yj konstrukcji: ?lepiej opisa? przez scenariusz u?ycia ??."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: awkward_sentence_rewrites_014
+      pattern: "Zamiast ?produkt jest dobierany pod sytuacj?? u?yj konstrukcji: ?warto po??czy? z miejscem monta?u ??."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: awkward_sentence_rewrites_015
+      pattern: "Zamiast ?parametry ?wietlne warto odnie??? u?yj konstrukcji: ?sprawdzi si? tam, gdzie ??."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: awkward_sentence_rewrites_016
+      pattern: "Zamiast ?parametry ?wietlne warto odnie??? u?yj konstrukcji: ?warto go rozwa?y? w miejscu, w kt?rym ??."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: awkward_sentence_rewrites_017
+      pattern: "Zamiast ?parametry ?wietlne warto odnie??? u?yj konstrukcji: ?najlepiej pasuje do sytuacji, w kt?rej ??."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: awkward_sentence_rewrites_018
+      pattern: "Zamiast ?parametry ?wietlne warto odnie??? u?yj konstrukcji: ?ma sens szczeg?lnie wtedy, gdy ??."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: awkward_sentence_rewrites_019
+      pattern: "Zamiast ?parametry ?wietlne warto odnie??? u?yj konstrukcji: ?najpierw warto okre?li?, gdzie b?dzie u?ywany ??."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: awkward_sentence_rewrites_020
+      pattern: "Zamiast ?parametry ?wietlne warto odnie??? u?yj konstrukcji: ?lepiej opisa? przez scenariusz u?ycia ??."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: awkward_sentence_rewrites_021
+      pattern: "Zamiast ?parametry ?wietlne warto odnie??? u?yj konstrukcji: ?warto po??czy? z miejscem monta?u ??."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: awkward_sentence_rewrites_022
+      pattern: "Zamiast ?klasa IP zapewnia? u?yj konstrukcji: ?sprawdzi si? tam, gdzie ??."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: awkward_sentence_rewrites_023
+      pattern: "Zamiast ?klasa IP zapewnia? u?yj konstrukcji: ?warto go rozwa?y? w miejscu, w kt?rym ??."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: awkward_sentence_rewrites_024
+      pattern: "Zamiast ?klasa IP zapewnia? u?yj konstrukcji: ?najlepiej pasuje do sytuacji, w kt?rej ??."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: awkward_sentence_rewrites_025
+      pattern: "Zamiast ?klasa IP zapewnia? u?yj konstrukcji: ?ma sens szczeg?lnie wtedy, gdy ??."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: awkward_sentence_rewrites_026
+      pattern: "Zamiast ?klasa IP zapewnia? u?yj konstrukcji: ?najpierw warto okre?li?, gdzie b?dzie u?ywany ??."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: awkward_sentence_rewrites_027
+      pattern: "Zamiast ?klasa IP zapewnia? u?yj konstrukcji: ?lepiej opisa? przez scenariusz u?ycia ??."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: awkward_sentence_rewrites_028
+      pattern: "Zamiast ?klasa IP zapewnia? u?yj konstrukcji: ?warto po??czy? z miejscem monta?u ??."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: awkward_sentence_rewrites_029
+      pattern: "Zamiast ?wymiary pomagaj?? u?yj konstrukcji: ?sprawdzi si? tam, gdzie ??."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: awkward_sentence_rewrites_030
+      pattern: "Zamiast ?wymiary pomagaj?? u?yj konstrukcji: ?warto go rozwa?y? w miejscu, w kt?rym ??."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: awkward_sentence_rewrites_031
+      pattern: "Zamiast ?wymiary pomagaj?? u?yj konstrukcji: ?najlepiej pasuje do sytuacji, w kt?rej ??."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: awkward_sentence_rewrites_032
+      pattern: "Zamiast ?wymiary pomagaj?? u?yj konstrukcji: ?ma sens szczeg?lnie wtedy, gdy ??."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: awkward_sentence_rewrites_033
+      pattern: "Zamiast ?wymiary pomagaj?? u?yj konstrukcji: ?najpierw warto okre?li?, gdzie b?dzie u?ywany ??."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: awkward_sentence_rewrites_034
+      pattern: "Zamiast ?wymiary pomagaj?? u?yj konstrukcji: ?lepiej opisa? przez scenariusz u?ycia ??."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: awkward_sentence_rewrites_035
+      pattern: "Zamiast ?wymiary pomagaj?? u?yj konstrukcji: ?warto po??czy? z miejscem monta?u ??."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: awkward_sentence_rewrites_036
+      pattern: "Zamiast ?kolor u?atwia dopasowanie? u?yj konstrukcji: ?sprawdzi si? tam, gdzie ??."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: awkward_sentence_rewrites_037
+      pattern: "Zamiast ?kolor u?atwia dopasowanie? u?yj konstrukcji: ?warto go rozwa?y? w miejscu, w kt?rym ??."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: awkward_sentence_rewrites_038
+      pattern: "Zamiast ?kolor u?atwia dopasowanie? u?yj konstrukcji: ?najlepiej pasuje do sytuacji, w kt?rej ??."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: awkward_sentence_rewrites_039
+      pattern: "Zamiast ?kolor u?atwia dopasowanie? u?yj konstrukcji: ?ma sens szczeg?lnie wtedy, gdy ??."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: awkward_sentence_rewrites_040
+      pattern: "Zamiast ?kolor u?atwia dopasowanie? u?yj konstrukcji: ?najpierw warto okre?li?, gdzie b?dzie u?ywany ??."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: awkward_sentence_rewrites_041
+      pattern: "Zamiast ?kolor u?atwia dopasowanie? u?yj konstrukcji: ?lepiej opisa? przez scenariusz u?ycia ??."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: awkward_sentence_rewrites_042
+      pattern: "Zamiast ?kolor u?atwia dopasowanie? u?yj konstrukcji: ?warto po??czy? z miejscem monta?u ??."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: awkward_sentence_rewrites_043
+      pattern: "Zamiast ?seria zaw??a dob?r? u?yj konstrukcji: ?sprawdzi si? tam, gdzie ??."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: awkward_sentence_rewrites_044
+      pattern: "Zamiast ?seria zaw??a dob?r? u?yj konstrukcji: ?warto go rozwa?y? w miejscu, w kt?rym ??."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: awkward_sentence_rewrites_045
+      pattern: "Zamiast ?seria zaw??a dob?r? u?yj konstrukcji: ?najlepiej pasuje do sytuacji, w kt?rej ??."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: awkward_sentence_rewrites_046
+      pattern: "Zamiast ?seria zaw??a dob?r? u?yj konstrukcji: ?ma sens szczeg?lnie wtedy, gdy ??."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: awkward_sentence_rewrites_047
+      pattern: "Zamiast ?seria zaw??a dob?r? u?yj konstrukcji: ?najpierw warto okre?li?, gdzie b?dzie u?ywany ??."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: awkward_sentence_rewrites_048
+      pattern: "Zamiast ?seria zaw??a dob?r? u?yj konstrukcji: ?lepiej opisa? przez scenariusz u?ycia ??."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+    - id: awkward_sentence_rewrites_049
+      pattern: "Zamiast ?seria zaw??a dob?r? u?yj konstrukcji: ?warto po??czy? z miejscem monta?u ??."
+      use_when: "dodatkowy wariant frazy z banku Woo"
+      source_signal: "parafraza na podstawie opisow Woo"
+
+awkward_replacements:
+  - avoid: "b?dzie dobrym wyborem wtedy, gdy"
+    use_instead:
+      - "sprawdzi si? tam, gdzie"
+      - "warto go rozwa?y? w miejscu, w kt?rym"
+      - "dobrze pasuje do sytuacji, w kt?rej"
+      - "ma sens szczeg?lnie tam, gdzie"
+      - "przydaje si? wtedy, gdy"
+  - avoid: "produkt jest dobierany pod sytuacj?"
+    use_instead:
+      - "produkt warto zestawi? z miejscem pracy"
+      - "wyb?r najlepiej oprze? na miejscu monta?u"
+      - "najpierw warto okre?li?, gdzie produkt b?dzie u?ywany"
+  - avoid: "parametry ?wietlne warto odnie??"
+    use_instead:
+      - "ilo?? ?wiat?a najlepiej zestawi?"
+      - "jasno?? warto dobra?"
+      - "efekt ?wiat?a powinien wynika?"
+  - avoid: "pomaga zaplanowa? monta?"
+    use_instead:
+      - "warto por?wna? z przygotowanym miejscem"
+      - "u?atwia sprawdzenie miejsca przed monta?em"
+      - "pozwala unikn?? kolizji przy monta?u"
+  - avoid: "u?atwia dob?r"
+    use_instead:
+      - "pozwala zaw?zi? wyb?r"
+      - "pomaga unikn?? pomy?ki"
+      - "jest praktyczne przy wyborze"
+
+mined_signals:
+  - signal: "zapewnia"
+    count: 4
+    short_examples:
+      - "Wyposażona w trzonek G9, zapewnia niezawodne źródło światła, które spełni Twoje oczekiwania. \\n Czym charakteryzuje się żarówka LED G9? \\nŻarówka LED G9 wyróżnia się trwałym plastikowym korpusem, który gwarantuje długotr"
+      - "Zapewnia ona znaczną funkcjonalność oraz elastyczność dostosowania do różnych wymagań dotyczących oświetlenia. \\n Dlaczego warto wybrać Plafon Pereti 18w? \\n"
+      - "Zapewnia ona znaczną funkcjonalność oraz elastyczność dostosowania do różnych wymagań dotyczących oświetlenia. \\n Dlaczego warto wybrać Plafon Pereti 18w? \\n"
+      - "5e 200 MHz? \\nKabel F/UTP ekranowany BiTLAN zapewnia niezawodną transmisję danych z prędkością do 1 Gb/s, dzięki czemu doskonale nadaje się do rozbudowy infrastruktury IT, w tym okablowania strukturalnego, sieci przemysł"
+  - signal: "doskonale"
+    count: 3
+    short_examples:
+      - "Doskonale sprawdzi się również na korytarzach i klatkach schodowych. \\n Jak działa automat schodowy 16A 24V AS-B24 F&F? \\nKluczową funkcją automatu schodowego jest możliwość zaprogramowania czasu, po którym oświetlenie z"
+      - "Jego kompaktowe rozmiary oraz nowoczesny wygląd sprawiają, że doskonale wpisuje się w każde wnętrze. \\n Dlaczego warto wybrać czujnik czadu tlenku węgla CTW-10? \\nCzujnik czadu tlenku węgla CTW-10 wyróżnia się funkcjonal"
+      - "5e 200 MHz? \\nKabel F/UTP ekranowany BiTLAN zapewnia niezawodną transmisję danych z prędkością do 1 Gb/s, dzięki czemu doskonale nadaje się do rozbudowy infrastruktury IT, w tym okablowania strukturalnego, sieci przemysł"
+  - signal: "pozwala na"
+    count: 2
+    short_examples:
+      - "Matowe wykończenie nadaje mu elegancki wygląd, idealny do różnych aranżacji oświetleniowych. \\n Dlaczego warto wybrać łącznik kątowy do szyny? \\n \\n - Łącznik kątowy do szyny pozwala na wygodne łączenie systemów szynoprz"
+      - "12 m. \\n Czym cechuje się czujnik ruchu MCR-09 PIR 180 stopni Zamel? \\nCzujnik ruchu MCR-09 PIR 180 stopni Zamel pozwala na indywidualne ustawienie głowicy w celu dopasowania pola detekcji."

@@ -57,6 +57,24 @@ def normalize_header(value: str) -> str:
     return re.sub(r"\s+", " ", value).strip()
 
 
+# Rdzenie nazw kolorow obudowy - do porownan niezaleznych od formy gramatycznej
+# (np. "szary"/"szara"/"szare" -> "szar"), uzywane przy wykrywaniu konfliktu koloru
+# miedzy tytulem a atrybutem.
+COLOR_STEMS = [
+    "bial", "czarn", "szar", "srebrn", "grafit", "zlot", "bezow", "brazow",
+    "chrom", "antracyt", "nikl", "satyn", "miedz", "zielon", "niebiesk", "czerwon",
+]
+
+
+def color_stem(value: str) -> str:
+    """Rdzen pierwszego rozpoznanego koloru obudowy w tekscie ("Szary" -> "szar")."""
+    normalized = normalize_header(value)
+    for stem in COLOR_STEMS:
+        if stem in normalized:
+            return stem
+    return ""
+
+
 def strip_accents(value: str) -> str:
     normalized = unicodedata.normalize("NFKD", value)
     without_combining = "".join(char for char in normalized if not unicodedata.combining(char))

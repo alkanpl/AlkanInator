@@ -46,7 +46,7 @@ FEATURE_NAME_MAP = {
     "Temperatura barwowa |K|": "Temperatura barwowa [K]",
     "Strumień świetlny |lm|": "Strumień świetlny [lm]",
     "IP": "Stopień ochrony [IP]",
-    "IK": "Stopień ochrony [IK]",
+    "IK": "Stopień odporności [IK]",
     "Kąt świecenia [°]": "Kąt świecenia [°]",
     "Kolor produktu": "Kolor",
     "Klasa ochronności PPE": "Klasa ochronności",

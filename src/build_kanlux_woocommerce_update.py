@@ -20,12 +20,15 @@ from export_to_baselinker_csv import (
     reclassify_max_bulb_power_feature,
     split_multi_color_feature,
 )
-from utils import compact_spaces, ensure_dir, normalize_header, slugify
+from optimize_titles import normalize_seo_title_terms, normalize_title_uniqueness_key
+from utils import color_stem, compact_spaces, ensure_dir, normalize_header, slugify
 
 
 DEFAULT_INPUT = "input/KanluxWoo.xlsx"
 DEFAULT_FEATURES = "output/kanlux_baselinker_attributes_update_2026-06-11.csv"
-DEFAULT_TITLES = "output/kanlux_baselinker_update_2026-06-11.csv"
+# Tytuly tez z atrybutowego CSV (ma kolumne name + wszystkie produkty, takze te spoza
+# referencji Baselinkera) - dzieki temu produkty "tylko Woo" dostaja tytul z pipeline.
+DEFAULT_TITLES = "output/kanlux_baselinker_attributes_update_2026-06-11.csv"
 DEFAULT_OUTPUT = "output/KanluxWoo_poprawione_atrybuty_2026-06-11.xlsx"
 DEFAULT_REPORTS = "reports/kanlux_woocommerce_update_2026-06-11"
 ATTRIBUTE_PREFIX = "Atrybut Produktu: "
@@ -50,10 +53,16 @@ def php_string(value: str) -> str:
     return f's:{len(value.encode("utf-8"))}:"{value}";'
 
 
+# Sluga taksonomii pa_ wyjatkowo skracamy dla wybranych atrybutow (na zyczenie sklepu).
+ATTRIBUTE_SLUG_OVERRIDES = {
+    "Maksymalna moc źródła światła": "max-moc-zrodla",
+}
+
+
 def serialize_product_attributes(feature_names: list[str]) -> str:
     items: list[str] = []
     for position, feature_name in enumerate(feature_names):
-        taxonomy = f"pa_{slugify(feature_name)}"
+        taxonomy = f"pa_{ATTRIBUTE_SLUG_OVERRIDES.get(feature_name, slugify(feature_name))}"
         items.append(
             php_string(taxonomy)
             + "a:6:{"
@@ -119,7 +128,7 @@ def title_with_verified_product_type(current_title: str, features: dict[str, str
         title = verified_title
     elif verified_title and title_has_feature_conflict(title, verified_title, features):
         title = verified_title
-    return hermetic_fluorescent_title(title, features)
+    return hermetic_fluorescent_title(normalize_seo_title_terms(title), features)
 
 
 def title_has_feature_conflict(title: str, verified_title: str, features: dict[str, str]) -> bool:
@@ -178,7 +187,13 @@ def mounting_from_title(title: str) -> str:
 
 
 def title_word_feature_missing(title: str, verified_title: str, features: dict[str, str], normalized_name: str) -> bool:
-    expected = normalized_title_words(feature_by_normalized_name(features, normalized_name))
+    feature_value = feature_by_normalized_name(features, normalized_name)
+    if normalized_name == "kolor":
+        # Kolor porownujemy po rdzeniu (szary/szara -> szar), niezaleznie od formy.
+        stem = color_stem(feature_value)
+        if stem:
+            return stem in normalize_header(verified_title) and stem not in normalize_header(title)
+    expected = normalized_title_words(feature_value)
     if not expected:
         return False
     current = normalize_header(title)
@@ -300,6 +315,46 @@ def add_missing_attribute_columns(
     return attribute_columns, missing
 
 
+def title_duplicate_key(title: str) -> str:
+    stripped = re.sub(r"\s*Kanlux\s+[\w/.\-]+\s*$", "", compact_spaces(title), flags=re.IGNORECASE).strip()
+    return normalize_title_uniqueness_key(stripped)
+
+
+def disambiguate_duplicate_titles(
+    worksheet: Any,
+    title_column: int,
+    sku_column: int,
+    title_updates: dict[str, str],
+) -> int:
+    """Gdy kilka wierszy ma identyczna nazwe (po odcieciu kodu), bierze rozrozniajaca
+    nazwe z pipeline'u (title_updates z CSV baselinkera). Stary tytul legacy gubil
+    wymiary/warianty/czujnik, ktore pipeline juz policzyl."""
+    titles: dict[int, str] = {}
+    skus: dict[int, str] = {}
+    rows_by_key: dict[str, list[int]] = {}
+    for row_number in range(2, worksheet.max_row + 1):
+        title = compact_spaces(str(worksheet.cell(row_number, title_column).value or ""))
+        if not title:
+            continue
+        titles[row_number] = title
+        skus[row_number] = normalize_sku(worksheet.cell(row_number, sku_column).value)
+        rows_by_key.setdefault(title_duplicate_key(title), []).append(row_number)
+    changed = 0
+    for group_key, row_numbers in rows_by_key.items():
+        if not group_key or len(row_numbers) < 2:
+            continue
+        for row_number in row_numbers:
+            candidate = normalize_seo_title_terms(compact_spaces(title_updates.get(skus[row_number], "")))
+            if not candidate or candidate == titles[row_number]:
+                continue
+            # Pipeline nie rozroznia tego produktu - zostawiamy duplikat do scalenia w sklepie.
+            if title_duplicate_key(candidate) == group_key:
+                continue
+            worksheet.cell(row_number, title_column).value = candidate
+            changed += 1
+    return changed
+
+
 def update_workbook(
     input_path: str | Path,
     features_path: str | Path,
@@ -360,6 +415,8 @@ def update_workbook(
             }
         )
 
+    duplicate_disambiguated = disambiguate_duplicate_titles(worksheet, title_column, sku_column, title_updates)
+
     output = Path(output_path)
     ensure_dir(output.parent)
     workbook.save(output)
@@ -371,6 +428,7 @@ def update_workbook(
         "unmatched_updates": len(feature_updates) - matched,
         "normalized_existing_rows": normalized_existing,
         "retitled_rows": retitled,
+        "duplicate_disambiguated": duplicate_disambiguated,
         "updated_rows": matched + normalized_existing,
         "original_columns": worksheet.max_column - len(added_columns),
         "output_columns": worksheet.max_column,

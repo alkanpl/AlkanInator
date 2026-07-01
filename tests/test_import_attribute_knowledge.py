@@ -87,7 +87,7 @@ class ImportAttributeKnowledgeTests(unittest.TestCase):
 
         self.assertEqual(voltage["canonical_name"], "Napięcie [V]")
         self.assertEqual(voltage["match_type"], "CATALOG_ALIAS")
-        self.assertEqual(ik["canonical_name"], "Stopień ochrony [IK]")
+        self.assertEqual(ik["canonical_name"], "Stopień odporności [IK]")
         self.assertEqual(ik["match_type"], "NEW_ATTRIBUTE")
 
 

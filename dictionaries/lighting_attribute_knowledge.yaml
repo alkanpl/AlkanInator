@@ -115,7 +115,7 @@ attribute_mappings:
   confidence: 0.99
   status: OK
 - source_name: Klasa odporności IK
-  canonical_name: Stopień ochrony [IK]
+  canonical_name: Stopień odporności [IK]
   match_type: NEW_ATTRIBUTE
   source: input/Poprawione atrybuty.xlsx
   confidence: 0.95
@@ -265,7 +265,7 @@ attribute_mappings:
   confidence: 0.99
   status: OK
 - source_name: stopień IK
-  canonical_name: Stopień ochrony [IK]
+  canonical_name: Stopień odporności [IK]
   match_type: NEW_ATTRIBUTE
   source: input/Poprawione atrybuty.xlsx
   confidence: 0.95
@@ -518,7 +518,7 @@ new_attributes:
   source: input/Poprawione atrybuty.xlsx
   confidence: 0.95
   status: OK
-- attribute: Stopień ochrony [IK]
+- attribute: Stopień odporności [IK]
   categories:
   - High Bay
   - Lampy uliczne
@@ -657,7 +657,7 @@ categories:
   - Strumień świetlny [lm]
   - Barwa światła
   - Stopień ochrony [IP]
-  - Stopień ochrony [IK]
+  - Stopień odporności [IK]
   required_description:
   - Producent
   - Moc [W]
@@ -666,7 +666,7 @@ categories:
   - Stopień ochrony [IP]
   - Typ produktu
   - Dane producenta
-  - Stopień ochrony [IK]
+  - Stopień odporności [IK]
   optional_description:
   - Czujnik ruchu
   - Seria
@@ -678,7 +678,7 @@ categories:
   - Kąt świecenia [°]
   - Trwałość [h]
   - Skuteczność świetlna [lm/W]
-  - Stopień ochrony [IK]
+  - Stopień odporności [IK]
   - Współpraca ze ściemniaczem
   - Współpraca z czujnikiem ruchu
   - Kolor
@@ -716,7 +716,7 @@ categories:
   - Barwa światła
   - Stopień ochrony [IP]
   - Długość
-  - Stopień ochrony [IK]
+  - Stopień odporności [IK]
   required_description:
   - Producent
   - Moc [W]
@@ -738,7 +738,7 @@ categories:
   - Kąt świecenia [°]
   - Trwałość [h]
   - Skuteczność świetlna [lm/W]
-  - Stopień ochrony [IK]
+  - Stopień odporności [IK]
   - Możliwość łączenia
   - Współpraca ze ściemniaczem
   - Współpraca z czujnikiem ruchu
@@ -781,7 +781,7 @@ categories:
   - Barwa światła
   - Stopień ochrony [IP]
   - Długość
-  - Stopień ochrony [IK]
+  - Stopień odporności [IK]
   required_description:
   - Producent
   - Moc [W]
@@ -805,7 +805,7 @@ categories:
   - Kąt świecenia [°]
   - Trwałość [h]
   - Skuteczność świetlna [lm/W]
-  - Stopień ochrony [IK]
+  - Stopień odporności [IK]
   - Współpraca ze ściemniaczem
   - Współpraca z czujnikiem ruchu
   ordered_attributes:
@@ -866,7 +866,7 @@ categories:
   - Kąt świecenia [°]
   - Trwałość [h]
   - Skuteczność świetlna [lm/W]
-  - Stopień ochrony [IK]
+  - Stopień odporności [IK]
   - Kolor
   ordered_attributes:
   - Producent
@@ -941,7 +941,7 @@ categories:
   - Seria
   - Kąt świecenia [°]
   - Skuteczność świetlna [lm/W]
-  - Stopień ochrony [IK]
+  - Stopień odporności [IK]
   - Typ produktu
   ordered_attributes:
   - Producent
@@ -1363,7 +1363,7 @@ categories:
   - Strumień świetlny [lm]
   - Barwa światła
   - Stopień ochrony [IP]
-  - Stopień ochrony [IK]
+  - Stopień odporności [IK]
   - Zasilanie
   required_description:
   - Producent
@@ -1598,7 +1598,7 @@ categories:
   - Producent
   - Kształt
   - Stopień ochrony [IP]
-  - Stopień ochrony [IK]
+  - Stopień odporności [IK]
   required_description:
   - Producent
   - Kolor
@@ -1607,7 +1607,7 @@ categories:
   - Kształt
   - Stopień ochrony [IP]
   - Dane producenta
-  - Stopień ochrony [IK]
+  - Stopień odporności [IK]
   optional_description:
   - Wymiary [mm]
   - Materiał

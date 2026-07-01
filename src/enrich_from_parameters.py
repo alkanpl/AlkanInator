@@ -16,6 +16,7 @@ from utils import compact_spaces, detect_column, ensure_dir, is_blank, load_yaml
 PARAMETER_ATTRIBUTE_COLUMNS = ATTRIBUTE_COLUMNS + [
     "barwa_zakres",
     "cri",
+    "klosz",
     "klasa_energetyczna",
     "laczenie_przelotowe",
     "liczba_gniazd",
@@ -79,6 +80,8 @@ def parameter_attribute_to_internal(attribute_name: str) -> str:
         "zrodlo swiatla": "zrodlo_swiatla",
         "zrodlo swiatla w komplecie": "zrodlo_w_komplecie",
         "zintegrowane zrodlo swiatla led": "zrodlo_w_komplecie",
+        "ilosc sztuk w opakowaniu jednostkowym": "ilosc_sztuk",
+        "typ klosza": "klosz",
     }
     if name in exact_rules:
         return exact_rules[name]
@@ -124,6 +127,9 @@ def normalize_parameter_value(value: str, attr: str, parameter_name: str) -> str
         match = re.search(r"\d+(?:[,.]\d+)?", value)
         if match and unit:
             return f"{match.group(0).replace(',', '.')}{unit}"
+    if attr == "ilosc_sztuk":
+        match = re.search(r"\d+", value)
+        return f"{match.group(0)} szt." if match else ""
     if attr == "lm_w":
         match = re.search(r"\d+(?:[,.]\d+)?", value)
         return f"{match.group(0).replace(',', '.')}lm/W" if match else ""
@@ -143,9 +149,11 @@ def normalize_parameter_value(value: str, attr: str, parameter_name: str) -> str
         lowered = normalize_header(value)
         if lowered in {"nie", "no", "0", "false"}:
             return "Nie"
-        if lowered in {"tak", "yes", "1", "true"}:
-            return "Tak"
-        return value
+        # Kazda forma wspolpracy (Tak, DALI, 1-10V, 0-10V...) to po prostu "Tak".
+        return "Tak"
+    if attr == "klosz":
+        # "pryzmatyczny,waskostrumieniowy" -> "pryzmatyczny, waskostrumieniowy".
+        return compact_spaces(re.sub(r"\s*,\s*", ", ", value))
     if attr == "zrodlo_swiatla":
         return value
     if attr == "zrodlo_w_komplecie":
@@ -216,23 +224,26 @@ def normalize_parameter_value(value: str, attr: str, parameter_name: str) -> str
     return normalize_attribute_value(value, attr)
 
 
+# Parametry, dla ktorych kolumny master/ekstrakcja maja pierwszenstwo nad Parametrami
+# producenta:
+#  - "material": Parametry podaja material klosza (np. szklo) zamiast materialu obudowy
+#    (np. drewno przy plafonach drewnianych);
+#  - "moc": Parametry podaja moc przelaczana/wielowartosciowa (np. "52 / 44", "11-19"),
+#    ktora nie jest poprawna wartoscia atrybutu "Moc [W]" (zakres idzie osobno do
+#    "Moc - zakres"); zostaje pojedyncza moc z master/tytulu.
+PARAMETER_OVERRIDE_EXCEPTIONS = {"material", "moc"}
+
+
 def should_parameter_override(attr: str, current_value: Any, parameter_value: str, source: str) -> bool:
+    """Parametry producenta sa zrodlem prawdy - wygrywaja z kolumnami master i ekstrakcja
+    z tytulu (poza PARAMETER_OVERRIDE_EXCEPTIONS). Reczne uzupelnienia uzytkownika sa
+    nakladane pozniej (build_kanlux_baselinker_update) i nadal wygrywaja z Parametrami."""
     current = compact_spaces(str(current_value))
     if is_blank(current) or not parameter_value:
         return False
-    if attr == "ip" and current == "IP12" and "/" in parameter_value:
-        return True
-    if attr == "strumien":
-        current_number = re.fullmatch(r"(\d{1,3})lm", current)
-        if current_number and "-" in parameter_value:
-            return True
-    if not source.startswith("title"):
+    if attr in PARAMETER_OVERRIDE_EXCEPTIONS:
         return False
-    if attr == "moc" and parameter_value.startswith("max "):
-        return True
-    if attr == "barwa" and "-" in parameter_value and re.search(r"[/-]", current):
-        return True
-    return False
+    return True
 
 
 def build_dimensions_from_parts(length: Any, width: Any) -> str:
