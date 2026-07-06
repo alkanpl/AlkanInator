@@ -3156,8 +3156,12 @@ def read_features_json(row: pd.Series) -> dict[str, str]:
 
 def normalize_feature_name(value: str) -> str:
     normalized = normalize_header(value)
+    for canonical in ATTRIBUTE_SOURCE_COLUMNS:
+        if normalized == normalize_header(canonical):
+            return canonical
     aliases = {
         "marka": "Producent",
+        "typ produktu": "Typ produktu",
         "rodzaj produktu": "Typ produktu",
         "moc": "Moc [W]",
         "napiecie v": "Napięcie [V]",
