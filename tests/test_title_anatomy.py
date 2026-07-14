@@ -8,7 +8,7 @@ import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-from optimize_titles import optimize_titles_for_dataframe  # noqa: E402
+from optimize_titles import enforce_flux_consistency, optimize_titles_for_dataframe  # noqa: E402
 from enrich_from_parameters import build_parameter_index, detect_parameter_columns, enrich_from_parameters  # noqa: E402
 from title_anatomy import build_title_from_anatomy, build_title_type_review, duplicate_titles_report  # noqa: E402
 
@@ -95,6 +95,35 @@ class TitleAnatomyTest(unittest.TestCase):
         self.assertIn("duplicate_final_title:2", result.loc[0, "warnings"])
         report = duplicate_titles_report(result)
         self.assertGreaterEqual(len(report), 2)
+
+    def test_flux_consistency_rewrites_stale_lumen_in_title(self) -> None:
+        # Stare "3080lm" w nazwie tuby vs parametr 3300lm -> tytul dostaje 3300lm.
+        title = "Świetlówka LED T8 GLASSv3 22W 1512mm 3080lm 6500K Kanlux"
+        self.assertEqual(
+            enforce_flux_consistency(title, "3300lm"),
+            "Świetlówka LED T8 GLASSv3 22W 1512mm 3300lm 6500K Kanlux",
+        )
+
+    def test_flux_consistency_leaves_matching_and_efficiency_untouched(self) -> None:
+        # Zgodna wartosc bez zmian; skutecznosc "lm/W" nie jest ruszana.
+        self.assertEqual(
+            enforce_flux_consistency("Panel 36W 3300lm 90lm/W", "3300lm"),
+            "Panel 36W 3300lm 90lm/W",
+        )
+
+    def test_flux_consistency_skips_ranges(self) -> None:
+        # Zakres strumienia zostawiamy w spokoju, zeby nie mieszac tokenow.
+        title = "HIGH BAY 8500lm 17000lm"
+        self.assertEqual(enforce_flux_consistency(title, "8500-17000lm"), title)
+
+    def test_optimize_titles_applies_flux_guard_on_legacy_passthrough(self) -> None:
+        config = {"title_template": "{old_title}", "sku_columns": ["Kod"], "max_title_length": 200}
+        df = pd.DataFrame(
+            [{"Nazwa": "Świetlówka T8 22W 1512mm 3080lm 6500K Kanlux", "attr_strumien": "3300lm", "Kod": "26059"}]
+        )
+        result = optimize_titles_for_dataframe(df, "Nazwa", config, {})
+        self.assertIn("3300lm", result.loc[0, "new_title"])
+        self.assertNotIn("3080lm", result.loc[0, "new_title"])
 
     def test_solar_keyword_override_skips_power(self) -> None:
         config = {

@@ -17,6 +17,8 @@ import sys
 import unittest
 from pathlib import Path
 
+import pandas as pd
+
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from extract_attributes import extract_attributes_from_text  # noqa: E402
@@ -105,6 +107,31 @@ class TestExtractionExplicit(unittest.TestCase):
     def test_no_false_power_from_plain_text(self) -> None:
         result = attrs("Pilot do oprawy HB PRO STRONG REMOTE")
         self.assertNotIn("moc", result)
+
+
+class TestStructuredColumnFluxPrecedence(unittest.TestCase):
+    """Strukturalna kolumna parametru "Strumien [lm]" jest zrodlem prawdy dla
+    strumienia i wygrywa z liczba zaszyta w nazwie/tytule (np. stare "3080lm" w
+    nazwie tuby vs poprawne 3300 w atrybucie). Proza/opis nadal nie nadpisuja."""
+
+    @staticmethod
+    def _enrich(config: dict) -> pd.DataFrame:
+        from extract_attributes import extract_attributes_for_dataframe
+
+        df = pd.DataFrame(
+            [{"Nazwa": "Świetlówka LED T8 GLASSv3 22W-CW 1512mm 3080lm 6500K", "Strumień [lm]": "3300"}]
+        )
+        return extract_attributes_for_dataframe(df, "Nazwa", config)
+
+    def test_structured_column_overrides_title_flux(self) -> None:
+        result = self._enrich({"input_attribute_columns": {"strumien": "Strumień [lm]"}})
+        self.assertEqual(result.at[0, "attr_strumien"], "3300lm")
+        self.assertIn("column:Strumień [lm]", result.at[0, "attribute_sources"])
+
+    def test_title_flux_kept_when_no_structured_column(self) -> None:
+        # Bez kolumny parametru zostaje wartosc z tytulu - nie wymyslamy strumienia.
+        result = self._enrich({})
+        self.assertEqual(result.at[0, "attr_strumien"], "3080lm")
 
 
 if __name__ == "__main__":

@@ -347,6 +347,14 @@ def validate_generated_description(html: str, keyword: str, min_chars_no_spaces:
         length = len(strip_html(answer).strip())
         if not 200 <= length <= 300:
             issues.append(f"odpowiedz FAQ ma {length} znakow (200-300)")
+    if 'type="application/ld+json"' not in html:
+        issues.append("brak FAQ schema JSON-LD")
+    else:
+        schema = extract_faq_schema(html)
+        if not schema:
+            issues.append("FAQ schema JSON-LD jest niepoprawne")
+        elif schema.get("@type") != "FAQPage" or not schema.get("mainEntity"):
+            issues.append("FAQ schema JSON-LD nie jest FAQPage")
     for phrase in FORBIDDEN_PHRASES:
         if phrase in html:
             issues.append(f"zakazana fraza: {phrase}")
@@ -1250,7 +1258,8 @@ def build_description_html(
     once_only = [ip_meaning(ip_value)] if ip_value else []
     html = dedupe_prose_sentences(html, keyword, once_only_phrases=once_only)
     html = ensure_minimum_length(html, keyword, attrs, family, seed, min_chars_no_spaces)
-    html = f"{html}\n\n<hr>\n\n{build_faq(kw_cap, attrs, family, seed)}"
+    faq_items = build_faq_items(kw_cap, attrs, family, seed)
+    html = f"{html}\n\n<hr>\n\n{render_faq_html(faq_items)}\n\n{render_faq_schema(faq_items)}"
     validate_description(html)
     assert_semantic_safety(html, attrs, family)
     return html
@@ -3042,6 +3051,12 @@ FAQ_FILLERS = [
 ]
 
 
+@dataclass(frozen=True)
+class FaqItem:
+    question: str
+    answer: str
+
+
 def fit_faq_answer(text: str, used_fillers: "set[str] | None" = None, low: int = 200, high: int = 300) -> str:
     text = compact_spaces(text)
     used = used_fillers if used_fillers is not None else set()
@@ -3060,25 +3075,65 @@ def fit_faq_answer(text: str, used_fillers: "set[str] | None" = None, low: int =
     return text
 
 
-def build_faq(kw_cap: str, attrs: dict[str, str], family: str, seed: int) -> str:
+def build_faq_items(kw_cap: str, attrs: dict[str, str], family: str, seed: int) -> list[FaqItem]:
     candidates = faq_candidates(kw_cap, attrs, family, seed)
     start = seed % len(candidates)
     ordered = candidates[start:] + candidates[:start]
-    chosen: list[tuple[str, str]] = []
+    chosen: list[FaqItem] = []
     seen_questions: set[str] = set()
     used_fillers: set[str] = set()
     for question, answer in ordered:
         if question in seen_questions:
             continue
         seen_questions.add(question)
-        chosen.append((question, fit_faq_answer(answer, used_fillers)))
+        chosen.append(FaqItem(question=question, answer=fit_faq_answer(answer, used_fillers)))
         if len(chosen) == 3:
             break
-    items = [
-        f"<p><strong>{index}. {escape(question)}</strong><br>\n{escape(answer)}</p>"
-        for index, (question, answer) in enumerate(chosen, start=1)
+    return chosen
+
+
+def render_faq_html(items: list[FaqItem]) -> str:
+    blocks = [
+        f"<p><strong>{index}. {escape(item.question)}</strong><br>\n{escape(item.answer)}</p>"
+        for index, item in enumerate(items, start=1)
     ]
-    return "\n\n".join(items)
+    return "\n\n".join(blocks)
+
+
+def render_faq_schema(items: list[FaqItem]) -> str:
+    schema = {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": item.question,
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": item.answer,
+                },
+            }
+            for item in items
+        ],
+    }
+    payload = json.dumps(schema, ensure_ascii=False, indent=2).replace("</", "<\\/")
+    return f'<script type="application/ld+json">\n{payload}\n</script>'
+
+
+def extract_faq_schema(html: str) -> dict[str, Any]:
+    match = re.search(
+        r'<script\b[^>]*type=["\']application/ld\+json["\'][^>]*>\s*(.*?)\s*</script>',
+        html,
+        flags=re.S | re.I,
+    )
+    if not match:
+        return {}
+    payload = match.group(1).replace("<\\/", "</")
+    try:
+        schema = json.loads(payload)
+    except (TypeError, ValueError):
+        return {}
+    return schema if isinstance(schema, dict) else {}
 
 
 def product_title(row: pd.Series, title_column: str = "") -> str:

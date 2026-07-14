@@ -1,9 +1,11 @@
 from __future__ import annotations
 
+import re
 import sys
 import tempfile
 import os
 import unittest
+from html import unescape
 from pathlib import Path
 
 import pandas as pd
@@ -17,6 +19,7 @@ from generate_product_descriptions import (  # noqa: E402
     build_codex_brief_for_sku,
     build_description_html,
     classify_family,
+    extract_faq_schema,
     prose_material,
     render_benefit_item,
     validate_codex_description,
@@ -64,6 +67,38 @@ class AlgorithmicDescriptionTest(unittest.TestCase):
         keyword = build_seo_keyword(collect_attributes(row), "Lampa ogrodowa kula STONO")
         self.assertEqual(validate_generated_description(html, keyword, DEFAULT_MIN_CHARS_NO_SPACES), [])
         self.assertNotIn("|", html.split("Specyfikacja")[0])  # brak surowego separatora w prozie
+
+    def test_full_description_adds_matching_faq_schema(self) -> None:
+        row = pd.Series({
+            "name": "Lampa ogrodowa kula STONO 200mm IP65 biała Kanlux 45930",
+            "sku": "45930/KAN",
+            "features": (
+                '{"Typ produktu": "Lampa ogrodowa", "Seria": "STONO", "Trzonek": "E27",'
+                ' "Stopień ochrony [IP]": "IP 65", "Kolor": "Biały", "Materiał": "ABS|PE",'
+                ' "Kształt": "Okrągły", "Źródło światła": "Niezintegrowane"}'
+            ),
+        })
+
+        html = build_description_html(row)
+        schema = extract_faq_schema(html)
+        visible_faq = [
+            (unescape(question), unescape(answer))
+            for question, answer in re.findall(
+                r"<p><strong>\d+\. (.*?)</strong><br>\n(.*?)</p>",
+                html.split("<hr>", 1)[1],
+                flags=re.S,
+            )
+        ]
+        schema_faq = [
+            (item["name"], item["acceptedAnswer"]["text"])
+            for item in schema["mainEntity"]
+        ]
+
+        self.assertIn('<script type="application/ld+json">', html)
+        self.assertEqual(schema["@context"], "https://schema.org")
+        self.assertEqual(schema["@type"], "FAQPage")
+        self.assertEqual(len(schema_faq), 3)
+        self.assertEqual(schema_faq, visible_faq)
 
     def test_algorithmic_style_validator_detects_parameter_list(self) -> None:
         html = """

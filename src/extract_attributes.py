@@ -1014,7 +1014,7 @@ def merge_attributes_from_columns(
 ) -> None:
     mappings = config.get("input_attribute_columns") or {}
     for attr, column in mappings.items():
-        if should_keep_existing_attribute(str(attr), attrs.get(str(attr), "")):
+        if should_keep_existing_attribute(str(attr), attrs.get(str(attr), ""), from_structured_column=True):
             continue
         if str(attr) == "kolor" and sources.get("kolor") == "title_explicit_color":
             continue
@@ -1035,10 +1035,18 @@ def merge_attributes_from_columns(
     apply_attribute_overrides(attrs, sources, confidence, row, config)
 
 
-def should_keep_existing_attribute(attr: str, value: str) -> bool:
+def should_keep_existing_attribute(attr: str, value: str, from_structured_column: bool = False) -> bool:
     if not value:
         return False
     if attr == "strumien":
+        # Strukturalna kolumna parametru ("Strumień [lm]") jest zrodlem prawdy dla
+        # POJEDYNCZEJ wartosci i wygrywa z liczba wyciagnieta z nazwy/tytulu (np.
+        # stare "3080lm" w nazwie tuby vs poprawne 3300 w atrybucie). Zakres z tytulu
+        # (np. "8500-17000lm" z wieloczlonowego "17000/12750/8500Lm" opraw CCT) jest
+        # bogatszy niz pojedyncza liczba w kolumnie, wiec go zostawiamy. Proza
+        # (free-text/opis) nigdy nie nadpisuje strumienia z tytulu.
+        if from_structured_column and "-" not in value:
+            return False
         return True
     if attr == "moc" and re.fullmatch(r"\d+(?:[,.]\d+)?-\d+(?:[,.]\d+)?W", value):
         return True

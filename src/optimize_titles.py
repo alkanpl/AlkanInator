@@ -62,8 +62,13 @@ def build_title_parts(
             "title_duplicate_disambiguation": "",
         }
         # Te same normalizacje SEO co dla legacy (np. Plafoniera -> Plafon).
-        seo_without_code = uppercase_first_letter(normalize_seo_title_terms(anatomy_result.title_without_code))
-        final_title = uppercase_first_letter(normalize_seo_title_terms(anatomy_result.title))
+        flux = values.get("strumien", "")
+        seo_without_code = enforce_flux_consistency(
+            uppercase_first_letter(normalize_seo_title_terms(anatomy_result.title_without_code)), flux
+        )
+        final_title = enforce_flux_consistency(
+            uppercase_first_letter(normalize_seo_title_terms(anatomy_result.title)), flux
+        )
         return seo_without_code, final_title, anatomy_result.warnings, metadata
 
     title = template
@@ -113,7 +118,42 @@ def build_title_parts(
     if title_source == "legacy_template":
         warnings.append("title_anatomy_missing_accepted_rule")
 
+    flux = values.get("strumien", "")
+    seo_title_without_code = enforce_flux_consistency(seo_title_without_code, flux)
+    title = enforce_flux_consistency(title, flux)
     return seo_title_without_code, title, warnings, metadata
+
+
+def enforce_flux_consistency(title: str, flux_value: str) -> str:
+    """Nazwa nie moze przeczyc atrybutowi strumienia.
+
+    Gdy strumien pochodzi z parametru/kolumny (attr_strumien), a w tytule zostal
+    zaszyty inny, pojedynczy token "NNNNlm" (np. stare "3080lm" przepisane z
+    surowej nazwy Kanlux, podczas gdy parametr to 3300lm) - podmienia liczbe na
+    wartosc atrybutu. Zakresy ("8500-17000lm") zostawia bez zmian, zeby nie mieszac
+    tokenow, i nie rusza skutecznosci "lm/W".
+    """
+    flux_value = compact_spaces(str(flux_value or ""))
+    if not flux_value or "-" in flux_value:
+        return title
+    target_match = re.fullmatch(r"(\d+(?:[,.]\d+)?)\s*lm", flux_value, flags=re.IGNORECASE)
+    if not target_match:
+        return title
+    target = target_match.group(1).replace(",", ".")
+
+    def replace(match: re.Match[str]) -> str:
+        if match.group(1).replace(",", ".") == target:
+            return match.group(0)
+        return f"{target}lm"
+
+    return compact_spaces(
+        re.sub(
+            r"(?<![\w.])(\d{2,6}(?:[,.]\d+)?)\s*lm\b(?!\s*/?\s*w)",
+            replace,
+            title,
+            flags=re.IGNORECASE,
+        )
+    )
 
 
 def normalize_seo_title_terms(title: str) -> str:

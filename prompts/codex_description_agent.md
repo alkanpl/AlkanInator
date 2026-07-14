@@ -74,6 +74,47 @@ HTML. Przeczytaj `prompts\examples\good_description_arot.html` przed pisaniem.
 Nie przenoś z niego do produktów Kanlux materiału, IP, temperatur, odporności,
 zastosowań ani innych parametrów.
 
+## FAQ schema
+
+Na końcu opisu dodaj widoczną sekcję FAQ oraz odpowiadający jej blok danych
+strukturalnych `FAQPage` w formacie JSON-LD.
+
+Zasady:
+
+- FAQ musi być widoczne w opisie dla użytkownika, np. jako 3 pytania i odpowiedzi
+  po treści głównej.
+- Ten sam zestaw pytań i odpowiedzi musi znaleźć się w schema. Nie dodawaj do
+  JSON-LD pytań, których nie ma w widocznej treści.
+- Użyj wyłącznie faktów z briefu oraz bezpiecznej wiedzy ogólnej o typie
+  produktu. Nie dopisuj niepotwierdzonych parametrów, miejsc zastosowania ani
+  obietnic producenta.
+- Odpowiedzi mają być konkretne i przydatne zakupowo: montaż, kompatybilność,
+  stopień ochrony IP, barwa światła, źródło światła, materiał albo zastosowanie,
+  zależnie od produktu.
+- JSON-LD dodaj jako osobny blok po widocznym FAQ:
+
+```html
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Pytanie widoczne w FAQ",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Odpowiedź widoczna w FAQ."
+      }
+    }
+  ]
+}
+</script>
+```
+
+Przed oddaniem opisu sprawdź, czy pytania i odpowiedzi w widocznym FAQ są
+identyczne znaczeniowo z polami `name` i `acceptedAnswer.text` w JSON-LD.
+
 ## Styl
 
 Pisz naturalnie po polsku, z pełnymi znakami diakrytycznymi. Wyobraź sobie, że
