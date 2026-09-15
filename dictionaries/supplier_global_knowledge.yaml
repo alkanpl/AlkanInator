@@ -3,18 +3,6 @@ description: >
   Global reusable supplier knowledge for AlkanInator. This file stores rules and
   decisions that should survive a single supplier batch, review file, or output.
 
-catalog_attribute_rules:
-  color:
-    customer_filter_attribute: Kolor
-    manufacturer_variant_attribute: Kolor producenta
-    rules:
-      - Kolor jest ogolna wartoscia do filtrowania przez klienta, np. Antracyt mapuje sie na Czarny.
-      - Kolor producenta zachowuje dokladna nazwe odcienia i wykonczenia podana przez producenta.
-      - Warianty kolorystyczne rozrozniaj i lacz wedlug atrybutu Kolor producenta, nie wedlug ogolnego atrybutu Kolor.
-      - Dwa produkty z tym samym ogolnym Kolorem, ale roznymi wartosciami Kolor producenta, sa roznymi wariantami i nie sa duplikatami kombinacji.
-      - Gdy Kolor producenta jest dostepny, to on jest wartoscia osi wariantu pokazywana klientowi; Kolor pozostaje filtrem pomocniczym.
-    source_note: Zasada katalogowa potwierdzona przez uzytkownika 2026-08-19.
-
 suppliers:
   kanlux:
     canonical_producer: Kanlux
@@ -25,9 +13,9 @@ suppliers:
       - KAN
       - KANL
     default_input:
-      workbook: archived_input_files/input_2026-08-05/Alkan_Kanlux_pelne_rodziny.xlsx
+      workbook: archived_input_files/Alkan_Kanlux_pelne_rodziny.xlsx
       sheet: 7. Wszystkie SKU (master)
-      parameters_workbook: archived_input_files/input_2026-08-05/Parametry.xlsx
+      parameters_workbook: archived_input_files/Parametry.xlsx
       category_config: configs/categories/kanlux-oswietlenie.yaml
       title_anatomy: configs/title_anatomy.yaml
     workflow_principles:
@@ -254,7 +242,7 @@ suppliers:
         - 'Ksztalt zgadujemy z wymiarow, gdy go brak: srednica -> Okragly, dlugosc == szerokosc -> Kwadrat, dlugosc != szerokosc -> Prostokatny.'
         - 'Seria TOLEO (DTL) to natynkowa oprawa punktowa "Oprawa sufitowa", nie lampa wiszaca.'
         - 'Wskaznik olsnienia [UGR] jest opcjonalny, nie wymagany - producent podaje go tylko dla czesci rodzin.'
-        - 'Reczne uzupelnienia atrybutow mieszkaja w archived_input_files/input_2026-08-05/kanlux_braki_wymaganych_uzupelnione.xlsx (format skoroszytu brakow); wygrywaja z danymi automatycznymi, wartosci "n/d" sa pomijane.'
+        - 'Reczne uzupelnienia atrybutow mieszkaja w archived_input_files/kanlux_braki_wymaganych_uzupelnione.xlsx (format skoroszytu brakow); wygrywaja z danymi automatycznymi, wartosci "n/d" sa pomijane.'
         - 'Kolumna "Typ" producenta bywa mylna (np. "plafoniera LED" dla opraw sufitowych AQILO/RITI, "Plafoniera" dla kanalowej MILO) - typ produktu kotwiczymy we frazie na poczatku nazwy wygenerowanej przez pipeline nazw.'
         - 'Gdy nazwa referencyjna (stare Woo) klosci sie z typem produktu (np. "Zasilacz BLINGO AIO" dla panelu), do importu idzie nazwa wygenerowana przez pipeline nazw.'
         - 'Nazwa panelu ma zgadzac sie ze sposobem montazu: BLINGO AIO/UAIO w wariancie SRM to panele natynkowe, mimo ze pipeline domyslnie nazywa panele "podtynkowy".'
@@ -348,60 +336,3 @@ suppliers:
       - Materiał
       - Pasuje do
       - Zastosowanie
-
-  hager:
-    canonical_producer: Hager
-    sku_suffixes:
-      - HAG
-    related_products:
-      workbook_columns:
-        up_sell: Up-Sells
-        cross_sell: Cross-Sells
-      identifier: full_catalog_sku_with_supplier_suffix
-      source_sku_suffix: /HAG
-      separator: "|"
-      empty_value: blank_cell
-      rules:
-        - Cele relacji zapisuj jako pelne SKU wraz z sufiksem dostawcy, na przyklad MBN106E/HAG albo 23617/KAN, a nie jako ID produktu WooCommerce.
-        - Wiele SKU lacz pionowa kreska bez spacji; nie zapisuj pustych elementow ani zduplikowanych SKU.
-        - Kolejnosc SKU w komorce odpowiada priorytetowi rekomendacji.
-        - Produkty bez rekomendowanej relacji maja pusta komorke.
-      up_sell_semantics: polecamy_rowniez
-      up_sell_rules:
-        - Dla aparatury modulowej pole Up-Sells sluzy do polecania kompatybilnych rozdzielnic, a nie drozszych zamiennikow aparatu.
-        - Nie traktuj innego pradu znamionowego, charakterystyki wyzwalania, ukladu biegunow ani typu ochrony jako automatycznego up-sellu.
-      cross_sell_semantics: kompatybilne_akcesoria_techniczne
-      cross_sell_rules:
-        - Dobieraj akcesoria potrzebne lub przydatne przy montazu danego aparatu, na przyklad zgodne szyny grzebieniowe, oslony koncowe, oslony przed dotykiem i akcesoria pomocnicze.
-        - Zgodnosc oceniaj wedlug rodziny aparatu, ukladu biegunow, pradu szyny, typu zaciskow i sposobu montazu; sama wspolna marka nie wystarcza.
-        - Nie dodawaj jako cross-sell wariantow rozniacych sie pradem znamionowym, charakterystyka wyzwalania lub liczba biegunow.
-        - Nie powielaj tego samego SKU w Up-Sells i Cross-Sells, jezeli nie ma uzasadnienia dla obu miejsc ekspozycji.
-      enclosure_recommendations:
-        manufacturer_policy: manufacturer_agnostic
-        recommended_count_per_din_product: 5
-        selection_priority: total_sales_desc_within_compatibility_tier
-        sales_source_column: Total Sales
-        compatibility_basis:
-          - Montaz aparatu na szynie DIN 35 mm.
-          - Pojemnosc rozdzielnicy wieksza od szerokosci aparatu wyrazonej w modulach.
-          - Prezentacja opcji natynkowej, podtynkowej z zapasem oraz natynkowej IP65.
-        exclusions:
-          - Akcesoria, szyny grzebieniowe i produkty niemontowane bezposrednio na szynie DIN nie otrzymuja automatycznej rekomendacji rozdzielnicy.
-          - Rozdzielnica jest propozycja zakupowa; jej ostateczny rozmiar zalezy od kompletnego projektu instalacji.
-      source_note: Format i znaczenie Up-Sells jako sekcji Polecamy rowniez potwierdzone przez uzytkownika 2026-08-18; rozdzielnice dobieramy niezaleznie od producenta.
-    variant_grouping:
-      mechanism: shared_product_tag
-      tag_column: Product Tags
-      tag_prefix: "Wariant - "
-      rules:
-        - Produkty nalezace do jednej grupy wariantowej musza miec identyczny tag w kolumnie Product Tags.
-        - Rozne grupy wariantowe musza miec rozne tagi.
-        - Produkty samodzielne, ktorych nie laczymy w warianty, nie otrzymuja tagu wariantowego.
-        - Wtyczka przełącza jedną oś naraz; przy zmianie tej osi wszystkie pozostałe cechy wariantowe muszą pozostać identyczne.
-        - Nie łącz dwóch produktów w jedną grupę, jeżeli różnią się na więcej niż jednej osi wariantu.
-        - W większej grupie odłącz produkt, który nie ma żadnego innego wariantu różniącego się dokładnie jedną osią; taki produkt byłby nieprzełączalny.
-        - Ramka 10116019/HAG z unikalną kombinacją 1x i Bez orientacji pozostaje samodzielna, natomiast 10126019/HAG może należeć do połączonej siatki krotności i orientacji, jeżeli ma przejścia jednoosiowe.
-        - Układ biegunów jest osią wariantu, a Liczba faz służy jako filtr kategorii i nie tworzy osobnego poziomu wariantu.
-        - Dla wariantow kolorystycznych osia wariantu jest Kolor producenta; ogolny Kolor sluzy tylko jako filtr i nie rozroznia wariantow.
-        - Ten sam ogolny Kolor przy roznych wartosciach Kolor producenta nie oznacza duplikatu; kazdy odcien producenta pozostaje osobnym wariantem w tej samej rodzinie produktu.
-      source_note: Decyzje projektowe potwierdzone przez uzytkownika 2026-08-13, 2026-08-19 i 2026-08-24; sklep laczy warianty na podstawie wspolnego tagu produktu, a przejście między produktami musi zmieniać dokładnie jedną oś.

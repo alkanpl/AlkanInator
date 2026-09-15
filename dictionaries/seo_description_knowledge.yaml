@@ -1,7 +1,7 @@
 version: 1
 description: >
   Global rules for writing unique Polish product descriptions optimized for SEO.
-  The rules were transcribed from archived_input_files/input_2026-08-05/Instrukcja SEO poprawiona.docx.
+  The rules were transcribed from archived_input_files/Instrukcja SEO poprawiona.docx.
 
 product_description:
   input:

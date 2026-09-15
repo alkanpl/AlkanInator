@@ -151,9 +151,9 @@ It can also be run as part of the main catalog workflow:
 
 ```powershell
 py src/run_pipeline_with_parameters.py `
-  --input archived_input_files/input_2026-08-05/Alkan_Kanlux_pelne_rodziny.xlsx `
+  --input archived_input_files/Alkan_Kanlux_pelne_rodziny.xlsx `
   --sheet "7. Wszystkie SKU (master)" `
-  --parameters archived_input_files/input_2026-08-05/Parametry.xlsx `
+  --parameters archived_input_files/Parametry.xlsx `
   --config configs/categories/kanlux-oswietlenie.yaml `
   --output output/alkan_kanlux_master_names_with_keywords.xlsx `
   --reports-dir reports/alkan_kanlux_master_names_with_keywords `

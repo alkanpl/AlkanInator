@@ -19,13 +19,13 @@ Najwazniejsza zasada: do `features` Baselinkera trafiaja tylko takie nazwy i war
 ## Glowne pliki
 
 - Input glowny Kanlux:
-  `archived_input_files/input_2026-08-05/Alkan_Kanlux_pelne_rodziny.xlsx`
+  `archived_input_files/Alkan_Kanlux_pelne_rodziny.xlsx`
 
 - Arkusz glowny:
   `7. Wszystkie SKU (master)`
 
 - Parametry Kanlux, jesli trzeba uzupelniac braki:
-  `archived_input_files/input_2026-08-05/Parametry.xlsx`
+  `archived_input_files/Parametry.xlsx`
 
 - Config Kanlux:
   `configs/categories/kanlux-oswietlenie.yaml`
@@ -46,7 +46,7 @@ Pipeline powinien opierac sie na tym, co juz istnieje w Woo.
 Jesli mamy swiezy eksport WooCommerce, najpierw warto odswiezyc slownik:
 
 ```powershell
-py src/analyze_woocommerce_export.py --input input/wszystko.csv --reports-dir reports/woocommerce_catalog --dictionary dictionaries/woocommerce_catalog_knowledge.yaml
+py src/analyze_woocommerce_export.py --input archived_input_files/wszystko.csv --reports-dir reports/woocommerce_catalog --dictionary dictionaries/woocommerce_catalog_knowledge.yaml
 ```
 
 Ten slownik daje:
@@ -78,7 +78,7 @@ Dla obecnego mastera bylo:
 Do samego przygotowania mozna uzyc:
 
 ```powershell
-py src/run_pipeline.py --input archived_input_files/input_2026-08-05/Alkan_Kanlux_pelne_rodziny.xlsx --sheet "7. Wszystkie SKU (master)" --config configs/categories/kanlux-oswietlenie.yaml --output output/kanlux_master_optimized.xlsx --reports-dir reports/kanlux_master
+py src/run_pipeline.py --input archived_input_files/Alkan_Kanlux_pelne_rodziny.xlsx --sheet "7. Wszystkie SKU (master)" --config configs/categories/kanlux-oswietlenie.yaml --output output/kanlux_master_optimized.xlsx --reports-dir reports/kanlux_master
 ```
 
 Ten krok robi:
@@ -96,7 +96,7 @@ Ten krok robi:
 Jezeli master Kanlux nie ma wszystkich parametrow albo nazwy wychodza slabo, trzeba wzbogacic dane z `Parametry.xlsx`.
 
 ```powershell
-py src/run_pipeline_with_parameters.py --input archived_input_files/input_2026-08-05/Alkan_Kanlux_pelne_rodziny.xlsx --sheet "7. Wszystkie SKU (master)" --parameters archived_input_files/input_2026-08-05/Parametry.xlsx --config configs/categories/kanlux-oswietlenie.yaml --output output/alkan_kanlux_master_with_parameters.xlsx --reports-dir reports/kanlux_with_parameters
+py src/run_pipeline_with_parameters.py --input archived_input_files/Alkan_Kanlux_pelne_rodziny.xlsx --sheet "7. Wszystkie SKU (master)" --parameters archived_input_files/Parametry.xlsx --config configs/categories/kanlux-oswietlenie.yaml --output output/alkan_kanlux_master_with_parameters.xlsx --reports-dir reports/kanlux_with_parameters
 ```
 
 Ten wariant:
@@ -220,7 +220,7 @@ Wazne dla atrybutow:
 Jesli jest osobny plik z linkami do zdjec, mozna go podac przy eksporcie:
 
 ```powershell
-py src/export_to_baselinker_csv.py --input output/alkan_kanlux_master_with_parameters.xlsx --output output/baselinker_import_alkan_kanlux.csv --links-file input/Linki.xlsx --image-key-column "Kod Kanlux" --main-image-column "Zdjecie glowne"
+py src/export_to_baselinker_csv.py --input output/alkan_kanlux_master_with_parameters.xlsx --output output/baselinker_import_alkan_kanlux.csv --links-file archived_input_files/Linki.xlsx --image-key-column "Kod Kanlux" --main-image-column "Zdjecie glowne"
 ```
 
 Wtedy skrypt probuje dopasowac zdjecie po kodzie produktu.
@@ -285,7 +285,7 @@ Minimum kontroli:
 Najczesciej robilbym tak:
 
 ```powershell
-py src/run_pipeline_with_parameters.py --input archived_input_files/input_2026-08-05/Alkan_Kanlux_pelne_rodziny.xlsx --sheet "7. Wszystkie SKU (master)" --parameters archived_input_files/input_2026-08-05/Parametry.xlsx --config configs/categories/kanlux-oswietlenie.yaml --output output/alkan_kanlux_master_with_parameters.xlsx --reports-dir reports/kanlux_with_parameters
+py src/run_pipeline_with_parameters.py --input archived_input_files/Alkan_Kanlux_pelne_rodziny.xlsx --sheet "7. Wszystkie SKU (master)" --parameters archived_input_files/Parametry.xlsx --config configs/categories/kanlux-oswietlenie.yaml --output output/alkan_kanlux_master_with_parameters.xlsx --reports-dir reports/kanlux_with_parameters
 ```
 
 Potem sprawdzenie raportow:

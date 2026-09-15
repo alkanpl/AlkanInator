@@ -10,8 +10,7 @@ Uruchamiaj TYLKO wtedy, gdy swiadomie akceptujesz nowe wyniki jako poprawne:
 
     py tests/generate_snapshots.py
 
-Wymaga obecnosci pliku wejsciowego
-``archived_input_files/input_2026-08-05/Alkan_Kanlux_pelne_rodziny.xlsx``.
+Wymaga obecnosci pliku wejsciowego ``archived_input_files/Alkan_Kanlux_pelne_rodziny.xlsx``.
 Same testy go nie wymagaja - czytaja gotowe fixtures z ``tests/fixtures/``.
 """
 
@@ -42,12 +41,7 @@ from utils import load_yaml  # noqa: E402
 from validate_output import classify_product_roles  # noqa: E402
 
 FIXTURES = Path(__file__).resolve().parent / "fixtures"
-INPUT = (
-    ROOT
-    / "archived_input_files"
-    / "input_2026-08-05"
-    / "Alkan_Kanlux_pelne_rodziny.xlsx"
-)
+INPUT = ROOT / "archived_input_files" / "Alkan_Kanlux_pelne_rodziny.xlsx"
 SHEET = "7. Wszystkie SKU (master)"
 SAMPLE_SIZE = 40
 
