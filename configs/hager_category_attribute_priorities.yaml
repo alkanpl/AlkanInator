@@ -1,0 +1,291 @@
+﻿version: 1
+supplier: Hager
+source_workbook: output/Aparatura-Modulowa-Hager_nazwy_atrybuty_v2.xlsx
+
+priorities:
+  P0:
+    label: Obowiązkowy
+    definition: Atrybut konieczny do identyfikacji produktu, nazwy lub podstawowego filtrowania.
+  P1:
+    label: Ważny
+    definition: Atrybut istotny przy porównaniu produktów i opisie technicznym.
+  P2:
+    label: Uzupełniający
+    definition: Atrybut pomocniczy, montażowy albo przydatny w rozszerzonym opisie.
+
+common_attributes:
+  - attribute: Producent
+    priority: P0
+    in_title: Tak
+    role: Nazwa / filtr
+    reason: Identyfikuje markę i rozdziela produkty różnych producentów.
+  - attribute: Symbol
+    priority: P0
+    in_title: Tak
+    role: Nazwa / wyszukiwanie
+    reason: Jednoznaczny kod producenta i podstawowy klucz wyszukiwania.
+  - attribute: Typ Produktu
+    priority: P0
+    in_title: Tak
+    role: Nazwa / kategoria
+    reason: Określa główny rodzaj aparatu i początek nazwy produktowej.
+  - attribute: Seria
+    priority: P1
+    in_title: Nie
+    role: Filtr / opis
+    reason: Ułatwia grupowanie rodzin i dobór kompatybilnych aparatów.
+
+categories:
+  - id: mcb
+    path: Aparatura modułowa > Wyłączniki nadprądowe
+    label: Wyłączniki nadprądowe MCB
+    taxonomy_status: ISTNIEJE
+    families: [Wyłącznik nadprądowy MCB]
+    attributes:
+      - {attribute: "Charakterystyka Wyzwalania", priority: P0, in_title: Tak, role: Nazwa / filtr, reason: Określa próg bezzwłocznego zadziałania B/C/D.}
+      - {attribute: "Prąd Znamionowy [A]", priority: P0, in_title: Tak, role: Nazwa / filtr, reason: Podstawowy parametr doboru zabezpieczenia.}
+      - {attribute: "Układ Biegunów", priority: P0, in_title: Tak, role: Nazwa / filtr, reason: Określa liczbę zabezpieczanych torów.}
+      - {attribute: "Znamionowa Zdolność Zwarciowa Icn [kA]", priority: P0, in_title: Tak, role: Nazwa / filtr, reason: Wymagana zdolność wyłączania zwarć.}
+      - {attribute: "Napięcie [V]", priority: P1, in_title: Nie, role: Filtr / opis, reason: Określa dopuszczalne napięcie pracy.}
+      - {attribute: "Liczba Modułów", priority: P1, in_title: Nie, role: Dobór rozdzielnicy, reason: Potrzebna do planowania miejsca w rozdzielnicy.}
+      - {attribute: "Graniczna Zdolność Zwarciowa Icu [kA]", priority: P1, in_title: Nie, role: Opis techniczny, reason: Parametr przemysłowej zdolności zwarciowej.}
+      - {attribute: "Klasa Ograniczenia Energii", priority: P1, in_title: Nie, role: Opis techniczny, reason: Informuje o ograniczeniu energii zwarcia.}
+      - {attribute: "Sposób Montażu", priority: P2, in_title: Nie, role: Montaż, reason: Potwierdza montaż na szynie DIN.}
+      - {attribute: "Typ Zacisków", priority: P2, in_title: Nie, role: Montaż, reason: Ułatwia dobór sposobu podłączenia.}
+      - {attribute: "Stopień Ochrony [IP]", priority: P2, in_title: Nie, role: Opis, reason: Informacja uzupełniająca o ochronie obudowy i zacisków.}
+      - {attribute: "Zakres Temperatury Pracy", priority: P2, in_title: Nie, role: Opis, reason: Graniczne warunki eksploatacji.}
+
+  - id: rccb
+    path: Aparatura modułowa > Wyłączniki różnicowoprądowe
+    label: Wyłączniki różnicowoprądowe RCCB
+    taxonomy_status: ISTNIEJE
+    families: [Wyłącznik różnicowoprądowy RCCB]
+    attributes:
+      - {attribute: "Prąd Znamionowy [A]", priority: P0, in_title: Tak, role: Nazwa / filtr, reason: Obciążalność prądowa wyłącznika.}
+      - {attribute: "Prąd Różnicowy IΔn [mA]", priority: P0, in_title: Tak, role: Nazwa / filtr, reason: Czułość ochrony różnicowoprądowej.}
+      - {attribute: "Typ Prądu Różnicowego", priority: P0, in_title: Tak, role: Nazwa / filtr, reason: Rozróżnia typ AC, A i odmiany odporne.}
+      - {attribute: "Układ Biegunów", priority: P0, in_title: Tak, role: Nazwa / filtr, reason: Określa układ 1P+N lub 3P+N.}
+      - {attribute: "Warunkowy Prąd Zwarciowy Inc [kA]", priority: P1, in_title: Tak, role: Nazwa / opis, reason: Zdolność współpracy z zabezpieczeniem zwarciowym.}
+      - {attribute: "Napięcie [V]", priority: P1, in_title: Nie, role: Filtr / opis, reason: Napięcie znamionowe obwodu.}
+      - {attribute: "Liczba Modułów", priority: P1, in_title: Nie, role: Dobór rozdzielnicy, reason: Wymagana szerokość montażowa.}
+      - {attribute: "Typ Zacisków", priority: P2, in_title: Nie, role: Montaż, reason: Rodzaj podłączenia przewodów i szyn.}
+      - {attribute: "Stopień Ochrony [IP]", priority: P2, in_title: Nie, role: Opis, reason: Informacja uzupełniająca o ochronie.}
+      - {attribute: "Zakres Temperatury Pracy", priority: P2, in_title: Nie, role: Opis, reason: Warunki eksploatacji.}
+
+  - id: rcbo
+    path: Aparatura modułowa > Wyłączniki różnicowo-nadprądowe
+    label: Wyłączniki różnicowo-nadprądowe RCBO
+    taxonomy_status: DO_UTWORZENIA
+    families: [Wyłącznik różnicowo-nadprądowy RCBO]
+    attributes:
+      - {attribute: "Charakterystyka Wyzwalania", priority: P0, in_title: Tak, role: Nazwa / filtr, reason: Charakterystyka członu nadprądowego.}
+      - {attribute: "Prąd Znamionowy [A]", priority: P0, in_title: Tak, role: Nazwa / filtr, reason: Prąd znamionowy członu nadprądowego.}
+      - {attribute: "Prąd Różnicowy IΔn [mA]", priority: P0, in_title: Tak, role: Nazwa / filtr, reason: Czułość członu różnicowoprądowego.}
+      - {attribute: "Typ Prądu Różnicowego", priority: P0, in_title: Tak, role: Nazwa / filtr, reason: Typ wykrywanego prądu różnicowego.}
+      - {attribute: "Układ Biegunów", priority: P0, in_title: Tak, role: Nazwa / filtr, reason: Układ torów chronionych.}
+      - {attribute: "Znamionowa Zdolność Zwarciowa Icn [kA]", priority: P0, in_title: Tak, role: Nazwa / filtr, reason: Zdolność wyłączania zwarć.}
+      - {attribute: "Napięcie [V]", priority: P1, in_title: Nie, role: Filtr / opis, reason: Napięcie znamionowe pracy.}
+      - {attribute: "Liczba Modułów", priority: P1, in_title: Nie, role: Dobór rozdzielnicy, reason: Szerokość aparatu w rozdzielnicy.}
+      - {attribute: "Dodatkowe Funkcje", priority: P1, in_title: Warunkowo, role: Nazwa / filtr, reason: Rozróżnia wykonania krótkozwłoczne lub o podwyższonej odporności.}
+      - {attribute: "Typ Zacisków", priority: P2, in_title: Nie, role: Montaż, reason: Rodzaj zacisków przyłączeniowych.}
+      - {attribute: "Stopień Ochrony [IP]", priority: P2, in_title: Nie, role: Opis, reason: Informacja uzupełniająca o ochronie.}
+      - {attribute: "Zakres Temperatury Pracy", priority: P2, in_title: Nie, role: Opis, reason: Warunki eksploatacji.}
+
+  - id: isolators
+    path: Aparatura modułowa > Rozłączniki izolacyjne
+    label: Rozłączniki izolacyjne
+    taxonomy_status: ISTNIEJE
+    families: [Rozłącznik izolacyjny modułowy, Rozłącznik izolacyjny obrotowy]
+    attributes:
+      - {attribute: "Prąd Znamionowy [A]", priority: P0, in_title: Tak, role: Nazwa / filtr, reason: Obciążalność prądowa rozłącznika.}
+      - {attribute: "Układ Biegunów", priority: P0, in_title: Tak, role: Nazwa / filtr, reason: Liczba rozłączanych torów.}
+      - {attribute: "Napięcie [V]", priority: P1, in_title: Tak, role: Nazwa / filtr, reason: Napięcie znamionowe pracy.}
+      - {attribute: "Liczba Modułów", priority: P1, in_title: Nie, role: Dobór rozdzielnicy, reason: Szerokość wykonania modułowego.}
+      - {attribute: "Kategoria Użytkowania", priority: P1, in_title: Nie, role: Filtr / opis, reason: Określa dopuszczalne zastosowanie łączeniowe.}
+      - {attribute: "Dodatkowe Funkcje", priority: P1, in_title: Warunkowo, role: Nazwa / opis, reason: Widoczna przerwa, wyzwalanie lub styk pomocniczy.}
+      - {attribute: "Rozmiar", priority: P1, in_title: Warunkowo, role: Dobór / filtr, reason: Ważny dla rozłączników obrotowych.}
+      - {attribute: "Sposób Montażu", priority: P2, in_title: Nie, role: Montaż, reason: Sposób mocowania aparatu.}
+      - {attribute: "Typ Zacisków", priority: P2, in_title: Nie, role: Montaż, reason: Sposób przyłączenia przewodów.}
+      - {attribute: "Stopień Ochrony [IP]", priority: P2, in_title: Nie, role: Opis, reason: Stopień ochrony aparatu.}
+      - {attribute: "Zakres Temperatury Pracy", priority: P2, in_title: Nie, role: Opis, reason: Warunki eksploatacji.}
+
+  - id: fuse_holders
+    path: Aparatura modułowa > Rozłączniki i podstawy bezpiecznikowe
+    label: Rozłączniki i podstawy bezpiecznikowe
+    taxonomy_status: DO_UTWORZENIA
+    families: [Rozłącznik bezpiecznikowy, Rozłącznik bezpiecznikowy modułowy, Podstawa bezpiecznikowa modułowa]
+    attributes:
+      - {attribute: "Rodzaj Wkładki", priority: P0, in_title: Tak, role: Nazwa / filtr, reason: Określa format wkładki D02, NH lub cylindrycznej.}
+      - {attribute: "Prąd Znamionowy [A]", priority: P0, in_title: Tak, role: Nazwa / filtr, reason: Maksymalny prąd aparatu.}
+      - {attribute: "Układ Biegunów", priority: P0, in_title: Tak, role: Nazwa / filtr, reason: Liczba torów bezpiecznikowych.}
+      - {attribute: "Rozmiar", priority: P0, in_title: Tak, role: Nazwa / filtr, reason: Fizyczny rozmiar wkładki bezpiecznikowej.}
+      - {attribute: "Napięcie [V]", priority: P1, in_title: Tak, role: Nazwa / opis, reason: Napięcie znamionowe podstawy lub rozłącznika.}
+      - {attribute: "Zdolność Zwarciowa Icc [kA]", priority: P1, in_title: Nie, role: Opis techniczny, reason: Zdolność zwarciowa zestawu z wkładką.}
+      - {attribute: "Liczba Modułów", priority: P1, in_title: Nie, role: Dobór rozdzielnicy, reason: Szerokość montażowa wykonania modułowego.}
+      - {attribute: "Sposób Montażu", priority: P2, in_title: Nie, role: Montaż, reason: Szyna DIN, płyta albo szyny zbiorcze.}
+      - {attribute: "Typ Zacisków", priority: P2, in_title: Nie, role: Montaż, reason: Rodzaj zacisków lub śruby przyłączeniowej.}
+
+  - id: contactors
+    path: Aparatura modułowa > Styczniki
+    label: Styczniki modułowe
+    taxonomy_status: ISTNIEJE
+    families: [Stycznik modułowy]
+    attributes:
+      - {attribute: "Prąd Znamionowy [A]", priority: P0, in_title: Tak, role: Nazwa / filtr, reason: Obciążalność styków głównych.}
+      - {attribute: "Napięcie Cewki [V]", priority: P0, in_title: Tak, role: Nazwa / filtr, reason: Napięcie sterowania cewki.}
+      - {attribute: "Konfiguracja Styków", priority: P0, in_title: Tak, role: Nazwa / filtr, reason: Liczba i rodzaj styków NO/NC.}
+      - {attribute: "Kategoria Użytkowania", priority: P1, in_title: Tak, role: Nazwa / filtr, reason: Typ obciążenia AC-7a lub AC-7b.}
+      - {attribute: "Liczba Modułów", priority: P1, in_title: Nie, role: Dobór rozdzielnicy, reason: Szerokość stycznika.}
+      - {attribute: "Napięcie [V]", priority: P1, in_title: Nie, role: Opis, reason: Napięcie obwodu sterowania.}
+      - {attribute: "Typ Zacisków", priority: P2, in_title: Nie, role: Montaż, reason: Sposób przyłączenia.}
+      - {attribute: "Zakres Temperatury Pracy", priority: P2, in_title: Nie, role: Opis, reason: Warunki pracy.}
+
+  - id: bistable_relays
+    path: Aparatura modułowa > Przekaźniki bistabilne
+    label: Przekaźniki bistabilne
+    taxonomy_status: ISTNIEJE
+    families: [Przekaźnik bistabilny modułowy]
+    attributes:
+      - {attribute: "Prąd Znamionowy [A]", priority: P0, in_title: Tak, role: Nazwa / filtr, reason: Obciążalność styków.}
+      - {attribute: "Napięcie Cewki [V]", priority: P0, in_title: Tak, role: Nazwa / filtr, reason: Napięcie sterowania przekaźnika.}
+      - {attribute: "Konfiguracja Styków", priority: P0, in_title: Tak, role: Nazwa / filtr, reason: Układ styków NO/NC.}
+      - {attribute: "Napięcie [V]", priority: P1, in_title: Tak, role: Nazwa / opis, reason: Pokazuje wariant cewki AC i DC.}
+      - {attribute: "Liczba Modułów", priority: P1, in_title: Nie, role: Dobór rozdzielnicy, reason: Szerokość przekaźnika.}
+      - {attribute: "Typ Zacisków", priority: P2, in_title: Nie, role: Montaż, reason: Rodzaj zacisków.}
+
+  - id: installation_relays
+    path: Aparatura modułowa > Przekaźniki elektromagnetyczne
+    label: Przekaźniki instalacyjne
+    taxonomy_status: ISTNIEJE
+    families: [Przekaźnik instalacyjny modułowy]
+    attributes:
+      - {attribute: "Prąd Znamionowy [A]", priority: P0, in_title: Tak, role: Nazwa / filtr, reason: Obciążalność styków.}
+      - {attribute: "Napięcie Cewki [V]", priority: P0, in_title: Tak, role: Nazwa / filtr, reason: Napięcie sterowania.}
+      - {attribute: "Konfiguracja Styków", priority: P0, in_title: Tak, role: Nazwa / filtr, reason: Układ styków NO/NC.}
+      - {attribute: "Liczba Modułów", priority: P1, in_title: Nie, role: Dobór rozdzielnicy, reason: Szerokość aparatu.}
+      - {attribute: "Napięcie [V]", priority: P1, in_title: Nie, role: Opis, reason: Napięcie obwodu sterowania.}
+      - {attribute: "Typ Zacisków", priority: P2, in_title: Nie, role: Montaż, reason: Rodzaj zacisków.}
+
+  - id: changeover_switches
+    path: Aparatura modułowa > Przełączniki Sieć-Agregat
+    label: Przełączniki instalacyjne i zasilania I-0-II
+    taxonomy_status: ISTNIEJE
+    families: [Przełącznik instalacyjny modułowy, Przełącznik zasilania modułowy]
+    attributes:
+      - {attribute: "Prąd Znamionowy [A]", priority: P0, in_title: Tak, role: Nazwa / filtr, reason: Obciążalność przełącznika.}
+      - {attribute: "Układ Biegunów", priority: P0, in_title: Tak, role: Nazwa / filtr, reason: Liczba przełączanych torów.}
+      - {attribute: "Napięcie [V]", priority: P0, in_title: Tak, role: Nazwa / filtr, reason: Napięcie znamionowe obwodu.}
+      - {attribute: "Zastosowanie", priority: P1, in_title: Warunkowo, role: Nazwa / opis, reason: Punkt wspólny i sposób przełączania źródeł.}
+      - {attribute: "Liczba Modułów", priority: P1, in_title: Nie, role: Dobór rozdzielnicy, reason: Szerokość przełącznika.}
+      - {attribute: "Typ Zacisków", priority: P2, in_title: Nie, role: Montaż, reason: Sposób przyłączenia.}
+
+  - id: spd
+    path: Aparatura modułowa > Ochronniki przepięciowe
+    label: Ograniczniki przepięć SPD
+    taxonomy_status: ISTNIEJE
+    families: [Ogranicznik przepięć SPD]
+    attributes:
+      - {attribute: "Typ SPD", priority: P0, in_title: Tak, role: Nazwa / filtr, reason: Klasa ochrony T1, T2 lub T1+T2.}
+      - {attribute: "Układ Biegunów", priority: P0, in_title: Tak, role: Nazwa / filtr, reason: Układ torów ochronnych.}
+      - {attribute: "Typ Sieci", priority: P0, in_title: Tak, role: Nazwa / filtr, reason: Zgodność z TN-C, TN-S lub TT.}
+      - {attribute: "Prąd Udarowy Iimp [kA, łącznie]", priority: P0, in_title: Warunkowo, role: Nazwa / filtr, reason: Kluczowy parametr ograniczników T1.}
+      - {attribute: "Znamionowy Prąd Wyładowczy In [kA]", priority: P0, in_title: Warunkowo, role: Nazwa / filtr, reason: Kluczowy parametr ograniczników T2.}
+      - {attribute: "Poziom Ochrony Up [kV]", priority: P0, in_title: Tak, role: Nazwa / filtr, reason: Maksymalny poziom napięcia na chronionym obwodzie.}
+      - {attribute: "Maksymalne Napięcie Ciągłej Pracy Uc [V]", priority: P1, in_title: Tak, role: Nazwa / filtr, reason: Dopuszczalne napięcie ciągłej pracy.}
+      - {attribute: "Technologia SPD", priority: P1, in_title: Nie, role: Filtr / opis, reason: MOV, iskiernik lub wykonanie kombinowane.}
+      - {attribute: "Liczba Modułów", priority: P1, in_title: Nie, role: Dobór rozdzielnicy, reason: Szerokość ogranicznika.}
+      - {attribute: "Styk Sygnalizacyjny", priority: P1, in_title: Nie, role: Filtr / opis, reason: Możliwość zdalnej sygnalizacji stanu.}
+      - {attribute: "Napięcie [V]", priority: P2, in_title: Nie, role: Opis, reason: Napięcie instalacji.}
+      - {attribute: "Stopień Ochrony [IP]", priority: P2, in_title: Nie, role: Opis, reason: Stopień ochrony aparatu.}
+      - {attribute: "Zakres Temperatury Pracy", priority: P2, in_title: Nie, role: Opis, reason: Warunki środowiskowe.}
+
+  - id: busbars
+    path: Aparatura modułowa > Szyny łączeniowe
+    label: Szyny grzebieniowe
+    taxonomy_status: ISTNIEJE
+    families: [Szyna grzebieniowa]
+    attributes:
+      - {attribute: "Układ Biegunów", priority: P0, in_title: Tak, role: Nazwa / filtr, reason: Liczba faz lub torów szyny.}
+      - {attribute: "Przekrój Szyny [mm²]", priority: P0, in_title: Tak, role: Nazwa / filtr, reason: Przekrój przewodzący szyny.}
+      - {attribute: "Prąd Znamionowy [A]", priority: P0, in_title: Tak, role: Nazwa / filtr, reason: Obciążalność szyny.}
+      - {attribute: "Liczba Modułów", priority: P0, in_title: Tak, role: Nazwa / filtr, reason: Długość użytkowa wyrażona liczbą modułów.}
+      - {attribute: "Kompatybilność", priority: P1, in_title: Nie, role: Dobór / opis, reason: Wskazuje zgodne konfiguracje MCB, RCCB, RCBO i SPD.}
+      - {attribute: "Długość", priority: P1, in_title: Nie, role: Filtr / opis, reason: Fizyczna długość szyny.}
+      - {attribute: "Typ Szyny", priority: P1, in_title: Tak, role: Nazwa / filtr, reason: Rozróżnia wykonanie kołkowe i widełkowe.}
+      - {attribute: "Napięcie [V]", priority: P2, in_title: Nie, role: Opis, reason: Napięcie znamionowe szyny.}
+      - {attribute: "Typ Zacisków", priority: P2, in_title: Nie, role: Montaż, reason: Rodzaj zakończenia szyny.}
+
+  - id: busbar_accessories
+    path: Aparatura modułowa > Akcesoria do szyn łączeniowych
+    label: Akcesoria do szyn grzebieniowych
+    taxonomy_status: DO_UTWORZENIA
+    families: [Akcesoria do szyn grzebieniowych]
+    attributes:
+      - {attribute: "Rodzaj Akcesoria", priority: P0, in_title: Tak, role: Nazwa / filtr, reason: Rozróżnia osłony końcowe i ochronne.}
+      - {attribute: "Kompatybilność", priority: P0, in_title: Tak, role: Nazwa / dobór, reason: Określa pasujące szyny i układ biegunów.}
+      - {attribute: "Znamionowy Przekrój Poprzeczny", priority: P1, in_title: Warunkowo, role: Nazwa / dobór, reason: Przekrój szyny, do której pasuje akcesorium.}
+      - {attribute: "Liczba Modułów", priority: P1, in_title: Warunkowo, role: Nazwa / dobór, reason: Szerokość lub długość osłony.}
+
+  - id: indicators
+    path: Aparatura modułowa > Lampki sygnalizacyjne
+    label: Lampki sygnalizacyjne
+    taxonomy_status: ISTNIEJE
+    families: [Lampka sygnalizacyjna modułowa]
+    attributes:
+      - {attribute: "Barwa Lampek", priority: P0, in_title: Tak, role: Nazwa / filtr, reason: Najważniejsze rozróżnienie funkcjonalne lampki.}
+      - {attribute: "Napięcie [V]", priority: P0, in_title: Tak, role: Nazwa / filtr, reason: Napięcie zasilania lampki.}
+      - {attribute: "Ilość Lampek", priority: P1, in_title: Warunkowo, role: Nazwa / filtr, reason: Rozróżnia lampki pojedyncze i potrójne.}
+      - {attribute: "Liczba Modułów", priority: P1, in_title: Nie, role: Dobór rozdzielnicy, reason: Szerokość aparatu.}
+      - {attribute: "Typ Zacisków", priority: P2, in_title: Nie, role: Montaż, reason: Sposób podłączenia.}
+
+  - id: control_buttons
+    path: Aparatura modułowa > Przyciski sterownicze
+    label: Przyciski sterownicze
+    taxonomy_status: DO_UTWORZENIA
+    families: [Przycisk sterowniczy modułowy]
+    attributes:
+      - {attribute: "Konfiguracja Styków", priority: P0, in_title: Tak, role: Nazwa / filtr, reason: Układ styków NO i NC.}
+      - {attribute: "Prąd Znamionowy [A]", priority: P0, in_title: Tak, role: Nazwa / filtr, reason: Obciążalność styków przycisku.}
+      - {attribute: "Barwa Lampek", priority: P1, in_title: Warunkowo, role: Nazwa / filtr, reason: Kolor podświetlenia, jeśli występuje.}
+      - {attribute: "Napięcie [V]", priority: P1, in_title: Tak, role: Nazwa / opis, reason: Napięcie obwodu sterowania lub lampki.}
+      - {attribute: "Liczba Modułów", priority: P1, in_title: Nie, role: Dobór rozdzielnicy, reason: Szerokość aparatu.}
+      - {attribute: "Typ Zacisków", priority: P2, in_title: Nie, role: Montaż, reason: Sposób podłączenia.}
+
+  - id: acoustic_signaling
+    path: Aparatura modułowa > Sygnalizacja akustyczna
+    label: Dzwonki modułowe
+    taxonomy_status: DO_UTWORZENIA
+    families: [Dzwonek modułowy]
+    attributes:
+      - {attribute: "Napięcie [V]", priority: P0, in_title: Tak, role: Nazwa / filtr, reason: Napięcie zasilania dzwonka.}
+      - {attribute: "Głośność [dB]", priority: P0, in_title: Tak, role: Nazwa / filtr, reason: Poziom sygnału akustycznego.}
+      - {attribute: "Prąd Znamionowy [A]", priority: P1, in_title: Tak, role: Nazwa / opis, reason: Pobór prądu urządzenia.}
+      - {attribute: "Liczba Modułów", priority: P1, in_title: Nie, role: Dobór rozdzielnicy, reason: Szerokość aparatu.}
+      - {attribute: "Typ Zacisków", priority: P2, in_title: Nie, role: Montaż, reason: Sposób podłączenia.}
+
+  - id: din_sockets
+    path: Aparatura modułowa > Gniazda modułowe
+    label: Gniazda modułowe na szynę DIN
+    taxonomy_status: DO_UTWORZENIA
+    families: [Gniazdo modułowe na szynę DIN]
+    attributes:
+      - {attribute: "Prąd Znamionowy [A]", priority: P0, in_title: Tak, role: Nazwa / filtr, reason: Dopuszczalny prąd obciążenia gniazda.}
+      - {attribute: "Napięcie [V]", priority: P0, in_title: Tak, role: Nazwa / filtr, reason: Napięcie znamionowe gniazda.}
+      - {attribute: "Uziemienie", priority: P0, in_title: Tak, role: Nazwa / filtr, reason: Informacja o styku ochronnym.}
+      - {attribute: "Liczba Modułów", priority: P1, in_title: Nie, role: Dobór rozdzielnicy, reason: Szerokość gniazda.}
+      - {attribute: "Sposób Montażu", priority: P1, in_title: Nie, role: Montaż, reason: Montaż na szynie DIN.}
+      - {attribute: "Typ Zacisków", priority: P2, in_title: Nie, role: Montaż, reason: Rodzaj zacisków przyłączeniowych.}
+
+  - id: apparatus_accessories
+    path: Aparatura modułowa > Akcesoria do aparatury modułowej
+    label: Akcesoria do aparatury modułowej
+    taxonomy_status: DO_UTWORZENIA
+    families: [Styk pomocniczy, Wyzwalacz wzrostowy]
+    attributes:
+      - {attribute: "Rodzaj Akcesoria", priority: P0, in_title: Tak, role: Nazwa / filtr, reason: Określa funkcję akcesorium.}
+      - {attribute: "Kompatybilność", priority: P0, in_title: Tak, role: Nazwa / dobór, reason: Wskazuje aparaty, z którymi akcesorium współpracuje.}
+      - {attribute: "Napięcie [V]", priority: P1, in_title: Warunkowo, role: Nazwa / filtr, reason: Napięcie pracy wyzwalacza lub styku.}
+      - {attribute: "Konfiguracja Styków", priority: P1, in_title: Warunkowo, role: Nazwa / filtr, reason: Układ styków akcesorium, jeśli występuje.}
+      - {attribute: "Prąd Znamionowy [A]", priority: P1, in_title: Warunkowo, role: Nazwa / opis, reason: Obciążalność styku pomocniczego.}
+      - {attribute: "Liczba Modułów", priority: P1, in_title: Nie, role: Dobór rozdzielnicy, reason: Szerokość akcesorium.}
+      - {attribute: "Typ Zacisków", priority: P2, in_title: Nie, role: Montaż, reason: Sposób podłączenia.}

@@ -1,0 +1,40 @@
+version: 1
+supplier: Hager
+comparison:
+  original_woocommerce_export: input/Aparatura-Modulowa-Hager.xlsx
+  enriched_workbook: output/Aparatura-Modulowa-Hager_nazwy_atrybuty_v2.xlsx
+
+# Slug jest docelowym slugiem globalnego atrybutu WooCommerce bez prefiksu "pa_".
+# Taxonomia WooCommerce powstaje jako "pa_<slug>".
+attributes:
+  - {attribute: "Układ Biegunów", slug: "uklad-biegunow", recommendation: "UTWORZYĆ GLOBALNY", reason: "Kluczowy filtr dla aparatów wielobiegunowych i element nazw produktów."}
+  - {attribute: "Znamionowa Zdolność Zwarciowa Icn [kA]", slug: "icn-ka", recommendation: "UTWORZYĆ GLOBALNY", reason: "Podstawowy parametr doboru wyłączników nadprądowych."}
+  - {attribute: "Graniczna Zdolność Zwarciowa Icu [kA]", slug: "icu-ka", recommendation: "UTWORZYĆ GLOBALNY", reason: "Porównywalny parametr techniczny aparatów przemysłowych."}
+  - {attribute: "Warunkowy Prąd Zwarciowy Inc [kA]", slug: "inc-ka", recommendation: "UTWORZYĆ GLOBALNY", reason: "Parametr techniczny zabezpieczeń różnicowoprądowych."}
+  - {attribute: "Klasa Ograniczenia Energii", slug: "klasa-ograniczenia", recommendation: "UTWORZYĆ GLOBALNY", reason: "Wartości tworzą krótki i kontrolowany słownik."}
+  - {attribute: "Prąd Różnicowy IΔn [mA]", slug: "prad-roznicowy-idn", recommendation: "UTWORZYĆ GLOBALNY", reason: "Najważniejszy filtr czułości zabezpieczeń różnicowoprądowych."}
+  - {attribute: "Typ Prądu Różnicowego", slug: "typ-pradu-roznicowego", recommendation: "UTWORZYĆ GLOBALNY", reason: "Rozróżnia typ AC, A i odmiany specjalne."}
+  - {attribute: "Napięcie Cewki [V]", slug: "napiecie-cewki", recommendation: "UTWORZYĆ GLOBALNY", reason: "Parametr doboru styczników i aparatów sterujących."}
+  - {attribute: "Konfiguracja Styków", slug: "konfiguracja-stykow", recommendation: "UTWORZYĆ GLOBALNY", reason: "Powtarzalny filtr dla styczników, przekaźników i łączników."}
+  - {attribute: "Kategoria Użytkowania", slug: "kategoria-uzytkowania", recommendation: "UTWORZYĆ GLOBALNY", reason: "Znormalizowane oznaczenia kategorii pracy, np. AC-7a."}
+  - {attribute: "Typ SPD", slug: "typ-spd", recommendation: "UTWORZYĆ GLOBALNY", reason: "Podstawowy podział ograniczników przepięć T1/T2/T3."}
+  - {attribute: "Technologia SPD", slug: "technologia-spd", recommendation: "UTWORZYĆ GLOBALNY", reason: "Powtarzalny parametr budowy i zastosowania ogranicznika."}
+  - {attribute: "Prąd Udarowy Iimp [kA, łącznie]", slug: "iimp-ka", recommendation: "UTWORZYĆ GLOBALNY", reason: "Kluczowy parametr ograniczników typu T1."}
+  - {attribute: "Znamionowy Prąd Wyładowczy In [kA]", slug: "in-ka", recommendation: "UTWORZYĆ GLOBALNY", reason: "Kluczowy parametr ograniczników typu T2."}
+  - {attribute: "Poziom Ochrony Up [kV]", slug: "up-kv", recommendation: "UTWORZYĆ GLOBALNY", reason: "Porównywalny parametr skuteczności ochrony SPD."}
+  - {attribute: "Maksymalne Napięcie Ciągłej Pracy Uc [V]", slug: "uc-v", recommendation: "UTWORZYĆ GLOBALNY", reason: "Standardowy parametr doboru SPD do sieci."}
+  - {attribute: "Typ Sieci", slug: "typ-sieci", recommendation: "UTWORZYĆ GLOBALNY", reason: "Ułatwia dobór SPD do układu TN-S, TT i innych."}
+  - {attribute: "Styk Sygnalizacyjny", slug: "styk-sygnalizacyjny", recommendation: "UTWORZYĆ GLOBALNY", reason: "Krótka wartość tak/nie przydatna w filtrowaniu SPD."}
+  - {attribute: "Zdolność Zwarciowa Icc [kA]", slug: "icc-ka", recommendation: "UTWORZYĆ GLOBALNY", reason: "Parametr techniczny podstaw bezpiecznikowych i zabezpieczeń."}
+  - {attribute: "Rodzaj Wkładki", slug: "rodzaj-wkladki", recommendation: "UTWORZYĆ GLOBALNY", reason: "Kontrolowany słownik formatów wkładek bezpiecznikowych."}
+  - {attribute: "Typ Szyny", slug: "typ-szyny", recommendation: "UTWORZYĆ GLOBALNY", reason: "Podstawowy filtr dla szyn łączeniowych."}
+  - {attribute: "Przekrój Szyny [mm²]", slug: "przekroj-szyny-mm2", recommendation: "UTWORZYĆ GLOBALNY", reason: "Porównywalny parametr obciążalności szyn."}
+  - {attribute: "Kompatybilność", slug: "kompatybilnosc", recommendation: "ZNORMALIZOWAĆ PRZED GLOBALNYM", reason: "Obecne wartości są opisowe i nie tworzą jeszcze kontrolowanego słownika terminów."}
+
+control_columns:
+  - Źródło
+  - Strona katalogu
+  - Adres źródła
+  - Pewność
+  - Status
+  - Uwagi

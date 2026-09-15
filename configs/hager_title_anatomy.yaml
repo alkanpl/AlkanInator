@@ -1,0 +1,434 @@
+version: 1
+supplier: Hager
+source_workbook: output/Aparatura-Modulowa-Hager_nazwy_atrybuty_v2.xlsx
+
+global_rules:
+  prefix: Główne słowo kluczowe lub dokładny typ produktu
+  suffix: Producent + Symbol
+  manufacturer: Hager
+  notes:
+    - Główne słowo kluczowe zawsze rozpoczyna tytuł.
+    - Frazy dodatkowe są synonimami dla wyszukiwarki, kategorii i opisu; nie należy umieszczać ich wszystkich w jednym tytule.
+    - Atrybut warunkowy wchodzi tylko wtedy, gdy odróżnia wariant i ma potwierdzoną wartość.
+    - Jednostkę zapisujemy jeden raz, bez spacji przy A, mA, kA, V, kV i dB; wyjątek stanowią złożone wartości katalogowe.
+    - Producent i symbol zawsze zamykają tytuł w formacie „Hager {symbol}”.
+
+rules:
+  - rule_id: mcb
+    category_id: mcb
+    product_type: Wyłącznik nadprądowy MCB
+    primary_keyword: Wyłącznik nadprądowy
+    secondary_keywords: [wyłącznik nadprądowy MCB, bezpiecznik automatyczny, wyłącznik instalacyjny]
+    ordered_parts:
+      - Słowo kluczowe
+      - Charakterystyka wyzwalania + Prąd znamionowy [A]
+      - Układ biegunów
+      - Znamionowa zwarciowa zdolność wyłączania Icn [kA]
+      - Producent
+      - Symbol
+    conditional_parts: [Dodatkowe funkcje, np. QuickConnect]
+    template: "Wyłącznik nadprądowy {charakterystyka}{prąd_A} {układ_biegunów} {Icn_kA}kA [funkcja] Hager {symbol}"
+    example: Wyłącznik nadprądowy B16 1P 6kA Hager MBN116E
+    notes: Charakterystykę i prąd łączymy bez spacji, np. B16. Nie dodajemy napięcia ani liczby modułów.
+    status: GOTOWE
+
+  - rule_id: rccb
+    category_id: rccb
+    product_type: Wyłącznik różnicowoprądowy RCCB
+    primary_keyword: Wyłącznik różnicowoprądowy RCCB
+    secondary_keywords: [wyłącznik różnicowoprądowy, różnicówka, RCCB]
+    ordered_parts:
+      - Słowo kluczowe
+      - Prąd znamionowy [A]
+      - Znamionowy prąd różnicowy IΔn [mA]
+      - Typ prądu różnicowego
+      - Układ biegunów
+      - Dodatkowe funkcje
+      - Znamionowy warunkowy prąd zwarciowy [kA]
+      - Producent
+      - Symbol
+    conditional_parts: [Dodatkowe funkcje, np. QuickConnect lub krótkozwłoczny]
+    template: "Wyłącznik różnicowoprądowy RCCB {prąd_A}A {IΔn_mA}mA typ {typ_RCD} {układ_biegunów} [funkcja] {Inc_kA}kA Hager {symbol}"
+    example: Wyłącznik różnicowoprądowy RCCB 25A 30mA typ AC 1P+N 6kA Hager CDC225J
+    notes: Nie dodajemy charakterystyki B/C, ponieważ RCCB nie ma członu nadprądowego.
+    status: GOTOWE
+
+  - rule_id: rcbo
+    category_id: rcbo
+    product_type: Wyłącznik różnicowo-nadprądowy RCBO
+    primary_keyword: Wyłącznik różnicowo-nadprądowy RCBO
+    secondary_keywords: [wyłącznik różnicowo-nadprądowy, RCBO, różnicówka z zabezpieczeniem nadprądowym]
+    ordered_parts:
+      - Słowo kluczowe
+      - Charakterystyka wyzwalania + Prąd znamionowy [A]
+      - Znamionowy prąd różnicowy IΔn [mA]
+      - Typ prądu różnicowego
+      - Układ biegunów
+      - Znamionowa zwarciowa zdolność wyłączania Icn [kA]
+      - Dodatkowe funkcje
+      - Producent
+      - Symbol
+    conditional_parts: [Dodatkowe funkcje, np. krótkozwłoczny lub QuickConnect]
+    template: "Wyłącznik różnicowo-nadprądowy RCBO {charakterystyka}{prąd_A} {IΔn_mA}mA typ {typ_RCD} {układ_biegunów} {Icn_kA}kA [funkcja] Hager {symbol}"
+    example: Wyłącznik różnicowo-nadprądowy RCBO B16 30mA typ A 1P+N 6kA Hager ADA916D
+    notes: RCBO zachowuje zarówno parametry nadprądowe, jak i różnicowoprądowe.
+    status: GOTOWE
+
+  - rule_id: isolator_modular
+    category_id: isolators
+    product_type: Rozłącznik izolacyjny modułowy
+    primary_keyword: Rozłącznik izolacyjny modułowy
+    secondary_keywords: [rozłącznik izolacyjny, rozłącznik modułowy, wyłącznik główny]
+    ordered_parts:
+      - Słowo kluczowe
+      - Układ biegunów
+      - Prąd znamionowy [A]
+      - Napięcie [V]
+      - Dodatkowe funkcje
+      - Producent
+      - Symbol
+    conditional_parts: [Dodatkowe funkcje, np. styk pomocniczy]
+    template: "Rozłącznik izolacyjny modułowy {układ_biegunów} {prąd_A}A {napięcie} [funkcja] Hager {symbol}"
+    example: Rozłącznik izolacyjny modułowy 1P 16A 230V AC Hager SBN116
+    notes: Liczby modułów i kategorii użytkowania nie umieszczamy w standardowym tytule.
+    status: GOTOWE
+
+  - rule_id: isolator_rotary
+    category_id: isolators
+    product_type: Rozłącznik izolacyjny obrotowy
+    primary_keyword: Rozłącznik izolacyjny obrotowy
+    secondary_keywords: [rozłącznik obrotowy, rozłącznik izolacyjny, rozłącznik główny]
+    ordered_parts:
+      - Słowo kluczowe
+      - Układ biegunów
+      - Prąd znamionowy [A]
+      - Dodatkowe funkcje
+      - Rozmiar
+      - Producent
+      - Symbol
+    conditional_parts: ["Napięcie [V]", "Dodatkowe funkcje, np. widoczna przerwa lub wyzwalanie"]
+    template: "Rozłącznik izolacyjny obrotowy {układ_biegunów} {prąd_A}A [funkcja] rozmiar {rozmiar} [napięcie] Hager {symbol}"
+    example: Rozłącznik izolacyjny obrotowy 3P 160A z widoczną przerwą rozmiar 4 Hager HAE316
+    notes: Rozmiar jest ważniejszy od liczby modułów, która nie dotyczy wykonania obrotowego.
+    status: GOTOWE
+
+  - rule_id: fuse_switch_d02
+    category_id: fuse_holders
+    product_type: Rozłącznik bezpiecznikowy modułowy
+    primary_keyword: Rozłącznik bezpiecznikowy modułowy
+    secondary_keywords: [rozłącznik bezpiecznikowy, rozłącznik D02, podstawa bezpiecznikowa D02]
+    ordered_parts:
+      - Słowo kluczowe
+      - Rodzaj wkładki
+      - Układ biegunów
+      - Prąd znamionowy [A]
+      - Napięcie [V]
+      - Producent
+      - Symbol
+    conditional_parts: [Rozmiar, jeżeli nie wynika z rodzaju wkładki]
+    template: "Rozłącznik bezpiecznikowy modułowy {rodzaj_wkładki} {układ_biegunów} {prąd_A}A {napięcie} Hager {symbol}"
+    example: Rozłącznik bezpiecznikowy modułowy D02 1P 63A 400V AC Hager L71M
+    notes: Nie powtarzamy rozmiaru, gdy jest już zapisany jako D02.
+    status: GOTOWE
+
+  - rule_id: fuse_switch_nh
+    category_id: fuse_holders
+    product_type: Rozłącznik bezpiecznikowy
+    primary_keyword: Rozłącznik bezpiecznikowy
+    secondary_keywords: [rozłącznik bezpiecznikowy NH, rozłącznik NH, aparat bezpiecznikowy]
+    ordered_parts:
+      - Słowo kluczowe
+      - Rodzaj wkładki / rozmiar NH
+      - Układ biegunów
+      - Prąd znamionowy [A]
+      - Napięcie [V]
+      - Sposób montażu
+      - Producent
+      - Symbol
+    conditional_parts: [Sposób montażu]
+    template: "Rozłącznik bezpiecznikowy {rodzaj_wkładki} {układ_biegunów} {prąd_A}A {napięcie} [montaż] Hager {symbol}"
+    example: Rozłącznik bezpiecznikowy NH00 3P 160A 690V AC na płytę lub szynę DIN Hager LT052
+    notes: Dla NH symbol wielkości, np. NH00, jest kluczowym elementem doboru.
+    status: GOTOWE
+
+  - rule_id: fuse_base
+    category_id: fuse_holders
+    product_type: Podstawa bezpiecznikowa modułowa
+    primary_keyword: Podstawa bezpiecznikowa modułowa
+    secondary_keywords: [podstawa bezpiecznikowa, gniazdo bezpiecznikowe, podstawa wkładki cylindrycznej]
+    ordered_parts:
+      - Słowo kluczowe
+      - Układ biegunów
+      - Rozmiar wkładki
+      - Prąd znamionowy [A]
+      - Napięcie [V]
+      - Producent
+      - Symbol
+    conditional_parts: [Rodzaj wkładki, jeżeli nie wynika z rozmiaru]
+    template: "Podstawa bezpiecznikowa modułowa {układ_biegunów} {rozmiar_wkładki} {prąd_A}A {napięcie} Hager {symbol}"
+    example: Podstawa bezpiecznikowa modułowa 3P 10x38 mm 32A 690V AC Hager LSN503
+    notes: Rozmiar wkładki zapisujemy przed prądem, ponieważ determinuje kompatybilność.
+    status: GOTOWE
+
+  - rule_id: contactor
+    category_id: contactors
+    product_type: Stycznik modułowy
+    primary_keyword: Stycznik modułowy
+    secondary_keywords: [stycznik modułowy, stycznik instalacyjny, stycznik na szynę DIN]
+    ordered_parts:
+      - Słowo kluczowe
+      - Prąd znamionowy [A]
+      - Napięcie cewki [V]
+      - Konfiguracja styków
+      - Kategoria użytkowania
+      - Dodatkowe funkcje
+      - Producent
+      - Symbol
+    conditional_parts: [Dodatkowe funkcje, np. sterowanie ręczne]
+    template: "Stycznik modułowy {prąd_A}A {napięcie_cewki} {konfiguracja_styków} {kategoria_użytkowania} [funkcja] Hager {symbol}"
+    example: Stycznik modułowy 25A 230V AC 2NO AC-7a/b Hager ESC225
+    notes: Napięcie w tytule oznacza napięcie cewki; napięcie toru głównego zostaje w parametrach.
+    status: GOTOWE
+
+  - rule_id: relay_bistable
+    category_id: bistable_relays
+    product_type: Przekaźnik bistabilny modułowy
+    primary_keyword: Przekaźnik bistabilny modułowy
+    secondary_keywords: [przekaźnik bistabilny, przekaźnik impulsowy, przekaźnik modułowy]
+    ordered_parts:
+      - Słowo kluczowe
+      - Prąd znamionowy [A]
+      - Konfiguracja styków
+      - Napięcie cewki / napięcie sterowania
+      - Producent
+      - Symbol
+    conditional_parts: [Drugie napięcie AC/DC, jeżeli produkt obsługuje oba]
+    template: "Przekaźnik bistabilny modułowy {prąd_A}A {konfiguracja_styków} {napięcie_sterowania} Hager {symbol}"
+    example: Przekaźnik bistabilny modułowy 16A 2NO 230V AC / 110V DC Hager EPN520
+    notes: Nie powtarzamy osobno napięcia cewki i napięcia, jeżeli opisują ten sam obwód sterowania.
+    status: GOTOWE
+
+  - rule_id: relay_installation
+    category_id: installation_relays
+    product_type: Przekaźnik instalacyjny modułowy
+    primary_keyword: Przekaźnik instalacyjny modułowy
+    secondary_keywords: [przekaźnik instalacyjny, przekaźnik elektromagnetyczny, przekaźnik modułowy]
+    ordered_parts:
+      - Słowo kluczowe
+      - Prąd znamionowy [A]
+      - Konfiguracja styków
+      - Napięcie cewki [V]
+      - Producent
+      - Symbol
+    conditional_parts: []
+    template: "Przekaźnik instalacyjny modułowy {prąd_A}A {konfiguracja_styków} {napięcie_cewki} Hager {symbol}"
+    example: Przekaźnik instalacyjny modułowy 16A 2NO 230V AC Hager ERC216
+    notes: Typ „instalacyjny” odróżnia ten produkt od przekaźnika bistabilnego w połączonej kategorii.
+    status: GOTOWE
+
+  - rule_id: changeover_supply
+    category_id: changeover_switches
+    product_type: Przełącznik zasilania modułowy
+    primary_keyword: Przełącznik zasilania modułowy I-0-II
+    secondary_keywords: [przełącznik sieć-agregat, przełącznik źródła zasilania, przełącznik I-0-II]
+    ordered_parts:
+      - Słowo kluczowe + I-0-II
+      - Układ biegunów
+      - Prąd znamionowy [A]
+      - Napięcie [V]
+      - Zastosowanie
+      - Producent
+      - Symbol
+    conditional_parts: [Zastosowanie, np. sieć-agregat lub punkt wspólny]
+    template: "Przełącznik zasilania modułowy I-0-II {układ_biegunów} {prąd_A}A {napięcie} [zastosowanie] Hager {symbol}"
+    example: Przełącznik zasilania modułowy I-0-II 3P+N 63A 400V AC Hager SF463
+    notes: Frazy „sieć-agregat” używamy tylko wtedy, gdy zastosowanie jest potwierdzone.
+    status: GOTOWE
+
+  - rule_id: changeover_installation
+    category_id: changeover_switches
+    product_type: Przełącznik instalacyjny modułowy
+    primary_keyword: Przełącznik instalacyjny modułowy I-0-II
+    secondary_keywords: [przełącznik instalacyjny, przełącznik modułowy I-0-II, przełącznik 1-0-2]
+    ordered_parts:
+      - Słowo kluczowe + I-0-II
+      - Układ biegunów
+      - Prąd znamionowy [A]
+      - Napięcie [V]
+      - Zastosowanie / położenie punktu wspólnego
+      - Producent
+      - Symbol
+    conditional_parts: [Zastosowanie / punkt wspólny]
+    template: "Przełącznik instalacyjny modułowy I-0-II {układ_biegunów} {prąd_A}A {napięcie} [zastosowanie] Hager {symbol}"
+    example: Przełącznik instalacyjny modułowy I-0-II 2P 40A 230V AC punkt wspólny od góry Hager SFT240
+    notes: Zapis I-0-II jest spójny z położeniami aparatu i trafia bezpośrednio po typie.
+    status: GOTOWE
+
+  - rule_id: spd
+    category_id: spd
+    product_type: Ogranicznik przepięć SPD
+    primary_keyword: Ogranicznik przepięć SPD
+    secondary_keywords: [ogranicznik przepięć, ochronnik przepięciowy, SPD]
+    ordered_parts:
+      - Słowo kluczowe
+      - Typ SPD
+      - Układ biegunów
+      - Typ sieci
+      - Prąd udarowy Iimp [kA] lub znamionowy prąd wyładowczy In [kA]
+      - Poziom ochrony Up [kV]
+      - Maksymalne napięcie ciągłej pracy Uc [V]
+      - Producent
+      - Symbol
+    conditional_parts: [Iimp dla T1, In dla T2, oba dla T1+T2, Uc jeżeli potwierdzone]
+    template: "Ogranicznik przepięć SPD {typ_SPD} {układ_biegunów} {typ_sieci} [Iimp {Iimp_kA}kA] [In {In_kA}kA] Up≤{Up_kV}kV [Uc {Uc_V}V] Hager {symbol}"
+    example: Ogranicznik przepięć SPD T1+T2 4P TN-S/TT Iimp 50kA In 50kA Up≤1,2kV Hager SPA931
+    notes: Dobór Iimp/In zależy od typu SPD; nie wstawiamy pustych oznaczeń.
+    status: GOTOWE
+
+  - rule_id: busbar
+    category_id: busbars
+    product_type: Szyna grzebieniowa
+    primary_keyword: Szyna grzebieniowa
+    secondary_keywords: [szyna grzebieniowa, szyna łączeniowa, szyna fazowa]
+    ordered_parts:
+      - Słowo kluczowe
+      - Typ szyny
+      - Układ biegunów
+      - Przekrój poprzeczny [mm²]
+      - Prąd znamionowy [A]
+      - Liczba modułów
+      - Producent
+      - Symbol
+    conditional_parts: [Kompatybilność, tylko gdy odróżnia wariant i tytuł nie staje się zbyt długi]
+    template: "Szyna grzebieniowa {typ_szyny} {układ_biegunów} {przekrój_mm2}mm² {prąd_A}A {liczba_modułów} modułów Hager {symbol}"
+    example: Szyna grzebieniowa widełkowa 3P 10mm² 63A 12 modułów Hager KDN363A
+    notes: W audycie docelowy atrybut przekroju może korzystać z istniejącego globalnego „Przekroju poprzecznego”.
+    status: GOTOWE
+
+  - rule_id: busbar_accessory
+    category_id: busbar_accessories
+    product_type: Akcesoria do szyn grzebieniowych
+    primary_keyword: Rodzaj akcesoria do szyn grzebieniowych
+    secondary_keywords: [akcesoria do szyn grzebieniowych, osłona szyny grzebieniowej, osłona końcowa szyny]
+    ordered_parts:
+      - Rodzaj akcesoria jako słowo kluczowe
+      - Kompatybilność / do szyn grzebieniowych
+      - Układ biegunów
+      - Przekrój poprzeczny [mm²]
+      - Liczba modułów
+      - Producent
+      - Symbol
+    conditional_parts: [Układ biegunów, przekrój i liczba modułów, jeżeli dotyczą kompatybilności]
+    template: "{rodzaj_akcesoria} do szyn grzebieniowych [układ_biegunów] [przekrój_mm2] [liczba_modułów] Hager {symbol}"
+    example: Osłony końcowe do szyn grzebieniowych 3P 10mm² / 2P 16mm² Hager KZN023
+    notes: Tytuł zaczyna się od konkretnego rodzaju akcesoria, a nie od ogólnego słowa „Akcesoria”.
+    status: GOTOWE
+
+  - rule_id: indicator
+    category_id: indicators
+    product_type: Lampka sygnalizacyjna modułowa
+    primary_keyword: Lampka sygnalizacyjna LED
+    secondary_keywords: [lampka sygnalizacyjna, lampka modułowa, kontrolka LED]
+    ordered_parts:
+      - Słowo kluczowe + LED
+      - Ilość lampek
+      - Barwa lampek
+      - Napięcie [V]
+      - Producent
+      - Symbol
+    conditional_parts: [Ilość lampek, gdy większa niż 1]
+    template: "Lampka sygnalizacyjna LED [ilość] {barwa} {napięcie} Hager {symbol}"
+    example: Lampka sygnalizacyjna LED 3 x czerwona 230V AC Hager SVN127
+    notes: Dla jednej lampki pomijamy ilość; barwę zapisujemy w formie zgodnej gramatycznie z „lampka”.
+    status: GOTOWE
+
+  - rule_id: control_button
+    category_id: control_buttons
+    product_type: Przycisk sterowniczy modułowy
+    primary_keyword: Przycisk sterowniczy modułowy
+    secondary_keywords: [przycisk sterowniczy, przycisk modułowy, przycisk na szynę DIN]
+    ordered_parts:
+      - Słowo kluczowe
+      - Konfiguracja styków
+      - Podświetlenie LED / barwa
+      - Prąd znamionowy [A]
+      - Napięcie [V]
+      - Producent
+      - Symbol
+    conditional_parts: [LED i barwa, jeżeli przycisk jest podświetlany]
+    template: "Przycisk sterowniczy modułowy {konfiguracja_styków} [LED {barwa}] {prąd_A}A {napięcie} Hager {symbol}"
+    example: Przycisk sterowniczy modułowy 1NO+1NC LED czerwona 16A 230V AC Hager SVN452
+    notes: Podświetlenie trafia przed wartości elektryczne, ponieważ odróżnia wariant użytkowy.
+    status: GOTOWE
+
+  - rule_id: bell
+    category_id: acoustic_signaling
+    product_type: Dzwonek modułowy
+    primary_keyword: Dzwonek modułowy
+    secondary_keywords: [dzwonek modułowy, sygnalizator akustyczny, dzwonek na szynę DIN]
+    ordered_parts:
+      - Słowo kluczowe
+      - Napięcie [V]
+      - Prąd znamionowy [A]
+      - Głośność [dB]
+      - Producent
+      - Symbol
+    conditional_parts: []
+    template: "Dzwonek modułowy {napięcie} {prąd_A}A {głośność_dB}dB Hager {symbol}"
+    example: Dzwonek modułowy 230V AC 0,03A 85dB Hager SU213
+    notes: Głośność umieszczamy po parametrach zasilania.
+    status: GOTOWE
+
+  - rule_id: din_socket
+    category_id: din_sockets
+    product_type: Gniazdo modułowe na szynę DIN
+    primary_keyword: Gniazdo modułowe na szynę DIN
+    secondary_keywords: [gniazdo na szynę DIN, gniazdo modułowe, gniazdo do rozdzielnicy]
+    ordered_parts:
+      - Słowo kluczowe
+      - Uziemienie
+      - Napięcie [V]
+      - Prąd znamionowy [A]
+      - Producent
+      - Symbol
+    conditional_parts: [Uziemienie, jeżeli występuje]
+    template: "Gniazdo modułowe na szynę DIN [z uziemieniem] {napięcie} {prąd_A}A Hager {symbol}"
+    example: Gniazdo modułowe na szynę DIN z uziemieniem 230V 10/16A Hager SN216
+    notes: Informacja o uziemieniu trafia przed napięciem i prądem.
+    status: GOTOWE
+
+  - rule_id: auxiliary_contact
+    category_id: apparatus_accessories
+    product_type: Styk pomocniczy
+    primary_keyword: Styk pomocniczy
+    secondary_keywords: [styk pomocniczy, kontakt pomocniczy, akcesoria do aparatury modułowej]
+    ordered_parts:
+      - Słowo kluczowe
+      - Konfiguracja styków
+      - Prąd znamionowy [A]
+      - Napięcie [V]
+      - Kompatybilność
+      - Producent
+      - Symbol
+    conditional_parts: []
+    template: "Styk pomocniczy {konfiguracja_styków} {prąd_A}A {napięcie} do {kompatybilność} Hager {symbol}"
+    example: Styk pomocniczy 1NO+1NC 6A 250V AC do SBN i styczników Hager ESC080
+    notes: Kompatybilność jest obowiązkowa w tytule akcesorium.
+    status: GOTOWE
+
+  - rule_id: shunt_trip
+    category_id: apparatus_accessories
+    product_type: Wyzwalacz wzrostowy
+    primary_keyword: Wyzwalacz wzrostowy
+    secondary_keywords: [wyzwalacz wzrostowy, cewka wybijakowa, akcesoria do wyłączników]
+    ordered_parts:
+      - Słowo kluczowe
+      - Napięcie [V]
+      - Kompatybilność
+      - Producent
+      - Symbol
+    conditional_parts: []
+    template: "Wyzwalacz wzrostowy {napięcie} do {kompatybilność} Hager {symbol}"
+    example: Wyzwalacz wzrostowy 200-240V AC do x160-P630 Hager HXA004H
+    notes: „Cewka wybijakowa” pozostaje synonimem wyszukiwawczym; tytuł używa poprawnej nazwy technicznej.
+    status: GOTOWE

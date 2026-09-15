@@ -1,0 +1,100 @@
+version: 1
+updated_at: "2026-08-24"
+purpose: "Trwala zasada przygotowywania plikow aktualizacyjnych WooCommerce w projekcie AlkanInator."
+
+workflow:
+  export_plugin: "WP All Export"
+  import_plugin: "WP All Import"
+  do_not_use_for_updates: "Wbudowany importer CSV produktow WooCommerce"
+  canonical_template: "input/Hager-Berker-Gniazdka.xlsx"
+  file_format: "XLSX"
+
+canonical_structure:
+  worksheet_name: "Worksheet"
+  header_row: 1
+  source_rows_in_reference: 1920
+  source_columns_in_reference: 153
+  identity_columns:
+    - "id"
+    - "SKU"
+  attribute_value_pattern: "Atrybut Produktu: <nazwa atrybutu>"
+  attribute_declarations_column: "Product Attributes"
+  tags_column: "Product Tags"
+  up_sells_column: "Up-Sells"
+  cross_sells_column: "Cross-Sells"
+
+rules:
+  - "Zawsze zaczynaj od pelnej kopii pliku wyeksportowanego przez WP All Export."
+  - "Zachowaj wszystkie produkty, arkusz, naglowki, kolejnosc kolumn i wartosci nieobjete zadaniem."
+  - "Modyfikuj tylko jawnie wskazane kolumny; nie tworz minimalnego CSV dla importera WooCommerce."
+  - "Wartosci atrybutow zapisuj w kolumnach Atrybut Produktu: <nazwa>."
+  - "Jesli atrybut jest nowy dla produktu, dodaj jego globalna deklaracje pa_* do serializowanej tablicy PHP w Product Attributes."
+  - "Nowy globalny atrybut ma is_visible=1, is_variation=0 i is_taxonomy=1, o ile zadanie nie stanowi inaczej."
+  - "Dopisuj nowe tagi do Product Tags bez usuwania tagow istniejacych, z wyjatkiem tagu 'pusty opis fb', ktory zawsze usuwaj z przyszlych plikow wynikowych."
+  - "Nie zmieniaj Up-Sells ani Cross-Sells, jezeli nie sa zakresem zadania."
+  - "Produkty przeznaczone tylko do wyprzedazy i oznaczone jako stare duplikaty pozostaw bez tagow wariantowych i nowych atrybutow."
+  - "Kolor Producenta jest szczegolowa osia wariantu; Kolor jest ogolnym filtrem klienta (np. antracyt -> czarny)."
+  - "Gdy kilka wykonczen ma ten sam ogolny Kolor, rozrozniaj i lacz warianty po Kolorze Producenta, nie po ogolnym Kolorze."
+  - "Produkty tej samej rodziny funkcjonalnej moga byc laczone takze po bezpiecznych osiach technicznych, jezeli kazdy wariant ma kompletna i unikalna kombinacje wartosci."
+  - "Wtyczka wariantowa zmienia jedna os naraz: wszystkie pozostale osie musza miec identyczne wartosci w produkcie zrodlowym i docelowym."
+  - "Nie lacz grupy zlozonej z dwoch produktow, jezeli produkty roznia sie na wiecej niz jednej osi wariantu."
+  - "W wiekszej grupie odrzuc produkt bez zadnego sasiada rozniacego sie dokladnie jedna osia; taki produkt bylby nieprzelaczalny."
+  - "Walidacja pliku wynikowego musi wykrywac uszkodzone polskie znaki (mojibake) i zachowywac tekst w UTF-8."
+
+hager_berker_variant_import:
+  output_example: "output/Hager-Berker-Gniazdka_WOO_ALL_IMPORT_ATRYBUTY_I_TAGI.xlsx"
+  edited_existing_columns:
+    - "Atrybut Produktu: Kolor"
+    - "Atrybut Produktu: Kolor Producenta"
+    - "Atrybut Produktu: Materiał"
+    - "Atrybut Produktu: Krotność"
+    - "Atrybut Produktu: Kategoria Kabli Sieciowych"
+    - "Atrybut Produktu: Ekranowany"
+    - "Atrybut Produktu: Uziemienie"
+    - "Atrybut Produktu: Typ Zacisków"
+    - "Atrybut Produktu: Napięcie [V]"
+    - "Atrybut Produktu: Prąd Znamionowy [A]"
+    - "Atrybut Produktu: Liczba Biegunów"
+    - "Atrybut Produktu: Przesłony Torów Prądowych"
+    - "Product Attributes"
+    - "Product Tags"
+  added_attribute_columns:
+    - "Atrybut Produktu: Orientacja"
+  global_attribute_slugs:
+    kolor: "pa_kolor"
+    kolor_producenta: "pa_kolor-producenta"
+    material: "pa_material"
+    krotnosc: "pa_krotnosc"
+    kategoria_kabli_sieciowych: "pa_kategoria-kabli-sieciowych"
+    ekranowany: "pa_ekranowany"
+    uziemienie: "pa_uziemienie"
+    typ_zaciskow: "pa_typ-zaciskow"
+    napiecie_v: "pa_napiecie-v"
+    prad_znamionowy_a: "pa_prad-znamionowy-a"
+    liczba_biegunow: "pa_liczba-biegunow"
+    przeslony_torow_pradowych: "pa_przeslony-torow-pradowych"
+    orientacja: "pa_orientacja"
+
+hager_berker_cross_up_sell:
+  generator: "src/build_hager_berker_catalog_cross_upsell.py"
+  source_example: "output/Hager-Berker-Gniazdka_WOO_ALL_IMPORT_OSIE_POPRAWIONE.xlsx"
+  catalog_source: "input/21PL001_Katalog_Osprzet_Hager_2021.pdf"
+  output_example: "output/Hager-Berker-Gniazdka_WOO_ALL_IMPORT_CROSS_UP_SELL_KATALOG.xlsx"
+  report_example: "reports/hager_berker_cross_up_sell_katalog/cross_up_sell_katalog_report.xlsx"
+  separator: "|"
+  limits:
+    cross_sells_per_product: 4
+    up_sells_per_product: 3
+  rules:
+    - "Przy zadaniu cross-sell/up-sell wyczysc obie dotychczasowe kolumny i wygeneruj relacje od nowa w nowej kopii pelnego eksportu."
+    - "Kompatybilnosc Hager/Berker potwierdzaj w katalogu PDF z input; jawne sekcje Wspolpracuje z maja pierwszenstwo przed regulami heurystycznymi."
+    - "Przy skroconych kodach katalogowych uwzgledniaj wskazany numer strony docelowej, aby nie laczyc akcesoriow z innej serii o wspolnym prefiksie kodu."
+    - "Cross-sell oznacza element uzupelniajacy: zgodna ramka, klawisz, plytka, mechanizm lub potwierdzone akcesorium."
+    - "Dla elementow wzorniczych wymagaj zgodnej serii i Koloru Producenta; dla mechanizmu wymagaj jednoznacznej zgodnosci funkcji."
+    - "Up-sell musi zachowac funkcje, glowna rodzine wzornicza, kolor i krotnosc oraz poprawiac co najmniej jedna ceche."
+    - "Dopuszczalne ulepszenia to m.in. podswietlenie, wyzszy IP, przeslony, wyzsza kategoria sieciowa, ekranowanie lub wieksze mozliwosci."
+    - "Dla gniazd zasilajacych rozszerzony up-sell jest dozwolony tylko w tej samej normie gniazda; wersja docelowa moze dodawac IP44, przeslony lub podswietlenie, ale nie moze tracic pokrywy, pola opisowego, samozaciskow ani sygnalizacji kontrolnej."
+    - "Dla RJ45 dopuszczaj up-sell do wyzszej kategorii i/lub wersji ekranowanej przy zachowaniu liczby portow i rodzaju zlacza; nie lacz RJ11, VGA, USB ani gniazd zasilajacych jako zamiennikow RJ45."
+    - "Nie lacz produktu z samym soba, starym duplikatem, nieistniejacym SKU ani produktem z tej samej grupy wariantowej."
+    - "Cross-Sells i Up-Sells jednego produktu musza byc rozlaczne; up-sell jest kierunkowy."
+    - "Waliduj zachowanie wszystkich komorek poza zakresem zadania i brak uszkodzonych polskich znakow."

@@ -42,13 +42,13 @@ python src/run_pipeline.py --input input/products.csv --catalog-knowledge ""
 Dla pliku z wieloma arkuszami XLSX wskaz arkusz:
 
 ```bash
-py src/run_pipeline.py --input input/Alkan_Kanlux_pelne_rodziny.xlsx --sheet "7. Wszystkie SKU (master)" --config configs/categories/kanlux-oswietlenie.yaml --output output/kanlux_master_optimized.xlsx --reports-dir reports/kanlux_master
+py src/run_pipeline.py --input archived_input_files/input_2026-08-05/Alkan_Kanlux_pelne_rodziny.xlsx --sheet "7. Wszystkie SKU (master)" --config configs/categories/kanlux-oswietlenie.yaml --output output/kanlux_master_optimized.xlsx --reports-dir reports/kanlux_master
 ```
 
 Uzupelnianie brakujacych atrybutow z pliku parametrow Kanlux:
 
 ```powershell
-py src/enrich_from_parameters.py --input input/Alkan_Kanlux_pelne_rodziny.xlsx --sheet "7. Wszystkie SKU (master)" --parameters input/Parametry.xlsx --config configs/categories/kanlux-oswietlenie.yaml --output output/alkan_kanlux_master_with_parameters.xlsx --reports-dir reports/parameter_enrichment
+py src/enrich_from_parameters.py --input archived_input_files/input_2026-08-05/Alkan_Kanlux_pelne_rodziny.xlsx --sheet "7. Wszystkie SKU (master)" --parameters archived_input_files/input_2026-08-05/Parametry.xlsx --config configs/categories/kanlux-oswietlenie.yaml --output output/alkan_kanlux_master_with_parameters.xlsx --reports-dir reports/parameter_enrichment
 ```
 
 Budowanie slownika typow, producentow i kategorii z pelnego eksportu produktow:
@@ -62,6 +62,28 @@ Pelna analiza eksportu produktow WooCommerce CSV:
 ```powershell
 py src/analyze_woocommerce_export.py --input input/wszystko.csv --reports-dir reports/woocommerce_catalog --dictionary dictionaries/woocommerce_catalog_knowledge.yaml
 ```
+
+### Import i eksport WooCommerce w Alkan
+
+W tym projekcie masowe aktualizacje istniejacych produktow WooCommerce sa wykonywane przez wtyczki **WP All Export** i **WP All Import**, a nie przez wbudowany importer CSV WooCommerce.
+
+- Plik `input/Hager-Berker-Gniazdka.xlsx` jest wzorcem struktury eksportu i ponownego importu.
+- Plik wynikowy powinien pozostac pelnym XLSX: ten sam arkusz, wszystkie produkty, te same naglowki i ta sama kolejnosc kolumn.
+- Nalezy zmieniac tylko pola objete zadaniem. Nie wolno redukowac pliku do `SKU`, tagow i slotow atrybutow w formacie wbudowanego importera WooCommerce.
+- Wartosci atrybutow sa w kolumnach `Atrybut Produktu: <nazwa>`.
+- Deklaracje atrybutow produktu sa zapisane jako serializowana tablica PHP w kolumnie `Product Attributes`. Dodanie nowego atrybutu wymaga uzupelnienia zarowno kolumny wartosci, jak i tej deklaracji.
+- Tagi sa aktualizowane w `Product Tags`; `Up-Sells` i `Cross-Sells` pozostaja bez zmian, jezeli zadanie ich nie dotyczy.
+- Nowa kolumne atrybutu mozna dodac do pelnego eksportu bez usuwania lub przebudowywania kolumn zrodlowych.
+
+Cross-sell i up-sell Hager/Berker generowane od nowa w pełnej kopii eksportu WP All Import, z potwierdzeniem kompatybilności w katalogu PDF z `input/`:
+
+```powershell
+py -X utf8 src/build_hager_berker_catalog_cross_upsell.py
+```
+
+Skrypt indeksuje kody i sekcje `Współpracuje z` w katalogu, modyfikuje wyłącznie kolumny `Cross-Sells` i `Up-Sells`, zapisuje osobny plik do importu oraz raport audytowy z kodami i stronami katalogowymi dla każdego powiązania. Relacje wariantowe, stare duplikaty i nieistniejące SKU są pomijane; sprawdzane jest też kodowanie polskich znaków.
+
+Szczegolowa regula i kanoniczny wzorzec sa zapisane w `dictionaries/woo_all_export_import_workflow.yaml`.
 
 Ten slownik zasila kolejne uruchomienia pipeline'u: rozszerza liste znanych producentow, kolorow, serii, typow produktow, wartosci IP, kategorii i rekomendowanych filtrow bez recznego kopiowania tych danych do configow kategorii.
 
@@ -107,7 +129,7 @@ Skrypt wykrywa typ produktu z kolumn `attr_typ`, `Typ produktu`, `Typ` albo `Rod
 Anatomia tytulow produktowych:
 
 ```powershell
-py src/run_pipeline_with_parameters.py --input input/Alkan_Kanlux_pelne_rodziny.xlsx --sheet "7. Wszystkie SKU (master)" --parameters input/Parametry.xlsx --config configs/categories/kanlux-oswietlenie.yaml --output output/alkan_kanlux_master_names.xlsx --reports-dir reports/alkan_kanlux_master_names --title-anatomy configs/title_anatomy.yaml
+py src/run_pipeline_with_parameters.py --input archived_input_files/input_2026-08-05/Alkan_Kanlux_pelne_rodziny.xlsx --sheet "7. Wszystkie SKU (master)" --parameters archived_input_files/input_2026-08-05/Parametry.xlsx --config configs/categories/kanlux-oswietlenie.yaml --output output/alkan_kanlux_master_names.xlsx --reports-dir reports/alkan_kanlux_master_names --title-anatomy configs/title_anatomy.yaml
 ```
 
 Globalny config `configs/title_anatomy.yaml` buduje tytul wedlug schematu `primary_keyword` albo typ produktu jako fallback, potem atrybuty per typ produktu, producent i kod producenta. Jezeli dla typu nie ma zaakceptowanej reguly anatomii, pipeline wraca do starego template'u YAML i dodaje warning `title_anatomy_missing_accepted_rule`. Raporty trafiaja do `reports/<run>/title_anatomy/title_anatomy_review.xlsx` - jeden plik z trzema arkuszami: `Przeglad typow`, `Duplikaty` i `Ostrzezenia`. Kazdy arkusz ma dwie kolumny do recznego przegladu: `proponowana zmiana` (aktualny wynik programu) i `oczekiwany wynik` (pusta kolumna do wpisania docelowej wartosci).
@@ -147,7 +169,7 @@ generowania tytulow: utrwalaja aktualne zachowanie na realnych danych, wiec
 kazda niezamierzona regresja w regexach lub regulach od razu wywala test.
 
 Po swiadomej zmianie regul ekstrakcji, configow tytulow lub slownikow
-zregeneruj snapshoty (wymaga `input/Alkan_Kanlux_pelne_rodziny.xlsx`):
+zregeneruj snapshoty (wymaga `archived_input_files/input_2026-08-05/Alkan_Kanlux_pelne_rodziny.xlsx`):
 
 ```powershell
 py tests/generate_snapshots.py

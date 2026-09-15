@@ -376,7 +376,7 @@ Zrobione:
 
 W toku:
 
-- [x] Test na probce 10 produktow z realnego pliku `input/Alkan_Kanlux_pelne_rodziny.xlsx`.
+- [x] Test na probce 10 produktow z realnego pliku `archived_input_files/input_2026-08-05/Alkan_Kanlux_pelne_rodziny.xlsx`.
 
 Najblizszy krok:
 

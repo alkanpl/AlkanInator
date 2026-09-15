@@ -1,0 +1,150 @@
+version: 1
+date: "2026-08-07"
+supplier: Hager
+
+# Końcowe decyzje wdrożeniowe po audycie powieleń i decyzjach użytkownika.
+attribute_actions:
+  - source_attributes: ["Układ Biegunów"]
+    action: "DODAJ GLOBALNY"
+    target_name: "Układ biegunów"
+    target_slug: "uklad-biegunow"
+    priority: 1
+  - source_attributes: ["Znamionowa Zdolność Zwarciowa Icn [kA]"]
+    action: "DODAJ GLOBALNY"
+    target_name: "Znamionowa zwarciowa zdolność wyłączania Icn [kA]"
+    target_slug: "icn-ka"
+    priority: 1
+  - source_attributes: ["Graniczna Zdolność Zwarciowa Icu [kA]"]
+    action: "DODAJ GLOBALNY"
+    target_name: "Graniczna zwarciowa zdolność wyłączania Icu [kA]"
+    target_slug: "icu-ka"
+    priority: 2
+  - source_attributes: ["Warunkowy Prąd Zwarciowy Inc [kA]", "Zdolność Zwarciowa Icc [kA]"]
+    action: "DODAJ GLOBALNY + SCAL"
+    target_name: "Znamionowy warunkowy prąd zwarciowy [kA]"
+    target_slug: "warunkowy-prad-zwarciowy-ka"
+    priority: 1
+  - source_attributes: ["Klasa Ograniczenia Energii"]
+    action: "DODAJ GLOBALNY"
+    target_name: "Klasa ograniczenia energii"
+    target_slug: "klasa-ograniczenia"
+    priority: 2
+  - source_attributes: ["Prąd Różnicowy IΔn [mA]"]
+    action: "DODAJ GLOBALNY"
+    target_name: "Znamionowy prąd różnicowy IΔn [mA]"
+    target_slug: "prad-roznicowy-idn"
+    priority: 1
+  - source_attributes: ["Kategoria Użytkowania"]
+    action: "DODAJ GLOBALNY"
+    target_name: "Kategoria użytkowania"
+    target_slug: "kategoria-uzytkowania"
+    priority: 2
+  - source_attributes: ["Typ SPD"]
+    action: "DODAJ GLOBALNY"
+    target_name: "Typ ogranicznika przepięć (SPD)"
+    target_slug: "typ-spd"
+    priority: 1
+  - source_attributes: ["Technologia SPD"]
+    action: "DODAJ GLOBALNY"
+    target_name: "Technologia ogranicznika przepięć"
+    target_slug: "technologia-spd"
+    priority: 2
+  - source_attributes: ["Prąd Udarowy Iimp [kA, łącznie]"]
+    action: "DODAJ GLOBALNY"
+    target_name: "Łączny prąd udarowy Iimp [kA]"
+    target_slug: "iimp-ka"
+    priority: 2
+  - source_attributes: ["Znamionowy Prąd Wyładowczy In [kA]"]
+    action: "DODAJ GLOBALNY"
+    target_name: "Znamionowy prąd wyładowczy In [kA]"
+    target_slug: "in-ka"
+    priority: 2
+  - source_attributes: ["Poziom Ochrony Up [kV]"]
+    action: "DODAJ GLOBALNY"
+    target_name: "Napięciowy poziom ochrony Up [kV]"
+    target_slug: "up-kv"
+    priority: 2
+  - source_attributes: ["Maksymalne Napięcie Ciągłej Pracy Uc [V]"]
+    action: "DODAJ GLOBALNY"
+    target_name: "Ciągłe napięcie robocze Uc [V]"
+    target_slug: "uc-v"
+    priority: 1
+  - source_attributes: ["Typ Sieci"]
+    action: "DODAJ GLOBALNY"
+    target_name: "Rodzaj sieci"
+    target_slug: "rodzaj-sieci"
+    priority: 2
+  - source_attributes: ["Styk Sygnalizacyjny"]
+    action: "DODAJ GLOBALNY"
+    target_name: "Styk zdalnej sygnalizacji"
+    target_slug: "zdalna-sygnalizacja"
+    priority: 3
+  - source_attributes: ["Rodzaj Wkładki"]
+    action: "DODAJ GLOBALNY"
+    target_name: "Rozmiar wkładki bezpiecznikowej"
+    target_slug: "rozmiar-wkladki"
+    priority: 1
+  - source_attributes: ["Typ Szyny"]
+    action: "DODAJ GLOBALNY"
+    target_name: "Rodzaj szyny łączeniowej"
+    target_slug: "rodzaj-szyny-laczeniowej"
+    priority: 2
+  - source_attributes: ["Konfiguracja Styków"]
+    action: "ZMIEŃ NAZWĘ ISTNIEJĄCEGO"
+    existing_name: "Ilość Styków Zwiernych/rozwiernych"
+    existing_slug: "pa_ilosc-stykow-zwiernych-rozwiernych"
+    target_name: "Konfiguracja styków (NO/NC)"
+    target_slug: "ilosc-stykow-zwiernych-rozwiernych"
+    priority: 1
+  - source_attributes: ["Przekrój Szyny [mm²]"]
+    action: "ZMIEŃ NAZWĘ ISTNIEJĄCEGO"
+    existing_name: "Znamionowy Przekrój Poprzeczny"
+    existing_slug: "pa_znamionowy-przekroj-poprzeczny"
+    target_name: "Przekrój poprzeczny [mm²]"
+    target_slug: "znamionowy-przekroj-poprzeczny"
+    priority: 2
+
+reuse_without_new_attribute:
+  - source_attributes: ["Układ Biegunów"]
+    action: "UZUPEŁNIJ ISTNIEJĄCY"
+    existing_name: "Liczba Faz"
+    target_name: "Liczba Faz"
+    display_values: "1, 3"
+    note: "Prowadzić równolegle z Układem biegunów. Wartości Liczby Faz: wyłącznie 1 lub 3."
+  - source_attributes: ["Typ Prądu Różnicowego"]
+    action: "UŻYJ ISTNIEJĄCEGO"
+    existing_name: "Typ Wyłącznika"
+    target_name: "Typ Wyłącznika"
+    note: "Zostawić obecną nazwę. Dla Hager stosować wartości AC, A i A-HI; rodzinę aparatu przechowywać w Typie produktu."
+  - source_attributes: ["Napięcie Cewki [V]"]
+    action: "UŻYJ ISTNIEJĄCEGO"
+    existing_name: "Napięcie [V]"
+    target_name: "Napięcie [V]"
+    note: "Nie tworzyć osobnego atrybutu. Dla EPN510/EPN520 zachować pełne 230 V AC / 110 V DC."
+  - source_attributes: ["Kompatybilność"]
+    action: "UŻYJ LOKALNEGO"
+    existing_name: "Kompatybilny z"
+    target_name: "Kompatybilny z"
+    note: "Nie tworzyć globalnego filtra; krótkie wartości zostawić lokalnie, zdania przenieść do opisu."
+
+category_actions:
+  - action: "ZMIEŃ NAZWĘ"
+    existing_path: "Aparatura modułowa > Rozłączniki izolacyjne"
+    target_path: "Aparatura modułowa > Rozłączniki i aparatura bezpiecznikowa"
+    priority: 1
+    note: "Wspólna kategoria dla rozłączników izolacyjnych, rozłączników bezpiecznikowych i podstaw bezpiecznikowych."
+  - action: "ZMIEŃ NAZWĘ"
+    existing_path: "Aparatura modułowa > Przekaźniki bistabilne"
+    target_path: "Aparatura modułowa > Przekaźniki modułowe"
+    priority: 2
+    note: "Do tej kategorii przenieść również przekaźniki instalacyjne/elektromagnetyczne."
+  - action: "ZMIEŃ NAZWĘ"
+    existing_path: "Aparatura modułowa > Lampki sygnalizacyjne"
+    target_path: "Aparatura modułowa > Sterowanie i sygnalizacja"
+    priority: 2
+    note: "Wspólna kategoria dla lampek, przycisków sterowniczych i sygnalizacji akustycznej."
+  - action: "DODAJ"
+    existing_path: ""
+    target_path: "Aparatura modułowa > Akcesoria do aparatury modułowej"
+    priority: 2
+    note: "Dla styku pomocniczego i wyzwalacza wzrostowego."

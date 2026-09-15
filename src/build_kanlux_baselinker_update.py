@@ -32,15 +32,15 @@ from optimize_titles import normalize_seo_title_terms, normalize_title_uniquenes
 from utils import color_stem, compact_spaces, ensure_dir, load_yaml, normalize_header, read_products
 
 
-DEFAULT_REFERENCE = "input/Kanlux (4).xlsx"
-DEFAULT_WOO = "input/KanluxWoo.xlsx"
+DEFAULT_REFERENCE = "archived_input_files/input_2026-08-05/Kanlux (4).xlsx"
+DEFAULT_WOO = "archived_input_files/input_2026-08-05/KanluxWoo.xlsx"
 DEFAULT_ENRICHED = "output/alkan_kanlux_2026-06-11_enriched.xlsx"
 DEFAULT_ACCEPTED = "output/alkan_kanlux_titles_no_duplicates_categories_descriptions.xlsx"
 DEFAULT_CONTROL = "output/kanlux_baselinker_update_2026-06-11_control.xlsx"
 DEFAULT_CSV = "output/kanlux_baselinker_update_2026-06-11.csv"
 DEFAULT_ATTRIBUTE_CSV = "output/kanlux_baselinker_attributes_update_2026-06-11.csv"
 DEFAULT_MISSING_XLSX = "output/kanlux_braki_wymaganych_2026-06-11.xlsx"
-DEFAULT_MANUAL_FILLS = "input/kanlux_braki_wymaganych_uzupelnione.xlsx"
+DEFAULT_MANUAL_FILLS = "archived_input_files/input_2026-08-05/kanlux_braki_wymaganych_uzupelnione.xlsx"
 DEFAULT_REPORTS = "reports/kanlux_baselinker_update_2026-06-11"
 WOO_ATTRIBUTE_PREFIX = "Atrybut Produktu: "
 ATTRIBUTE_UPDATE_COLUMNS = ["product_id", "sku", "name", "features"]

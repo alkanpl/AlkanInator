@@ -19,13 +19,13 @@ Najwazniejsza zasada: do `features` Baselinkera trafiaja tylko takie nazwy i war
 ## Glowne pliki
 
 - Input glowny Kanlux:
-  `input/Alkan_Kanlux_pelne_rodziny.xlsx`
+  `archived_input_files/input_2026-08-05/Alkan_Kanlux_pelne_rodziny.xlsx`
 
 - Arkusz glowny:
   `7. Wszystkie SKU (master)`
 
 - Parametry Kanlux, jesli trzeba uzupelniac braki:
-  `input/Parametry.xlsx`
+  `archived_input_files/input_2026-08-05/Parametry.xlsx`
 
 - Config Kanlux:
   `configs/categories/kanlux-oswietlenie.yaml`
@@ -78,7 +78,7 @@ Dla obecnego mastera bylo:
 Do samego przygotowania mozna uzyc:
 
 ```powershell
-py src/run_pipeline.py --input input/Alkan_Kanlux_pelne_rodziny.xlsx --sheet "7. Wszystkie SKU (master)" --config configs/categories/kanlux-oswietlenie.yaml --output output/kanlux_master_optimized.xlsx --reports-dir reports/kanlux_master
+py src/run_pipeline.py --input archived_input_files/input_2026-08-05/Alkan_Kanlux_pelne_rodziny.xlsx --sheet "7. Wszystkie SKU (master)" --config configs/categories/kanlux-oswietlenie.yaml --output output/kanlux_master_optimized.xlsx --reports-dir reports/kanlux_master
 ```
 
 Ten krok robi:
@@ -96,7 +96,7 @@ Ten krok robi:
 Jezeli master Kanlux nie ma wszystkich parametrow albo nazwy wychodza slabo, trzeba wzbogacic dane z `Parametry.xlsx`.
 
 ```powershell
-py src/run_pipeline_with_parameters.py --input input/Alkan_Kanlux_pelne_rodziny.xlsx --sheet "7. Wszystkie SKU (master)" --parameters input/Parametry.xlsx --config configs/categories/kanlux-oswietlenie.yaml --output output/alkan_kanlux_master_with_parameters.xlsx --reports-dir reports/kanlux_with_parameters
+py src/run_pipeline_with_parameters.py --input archived_input_files/input_2026-08-05/Alkan_Kanlux_pelne_rodziny.xlsx --sheet "7. Wszystkie SKU (master)" --parameters archived_input_files/input_2026-08-05/Parametry.xlsx --config configs/categories/kanlux-oswietlenie.yaml --output output/alkan_kanlux_master_with_parameters.xlsx --reports-dir reports/kanlux_with_parameters
 ```
 
 Ten wariant:
@@ -285,7 +285,7 @@ Minimum kontroli:
 Najczesciej robilbym tak:
 
 ```powershell
-py src/run_pipeline_with_parameters.py --input input/Alkan_Kanlux_pelne_rodziny.xlsx --sheet "7. Wszystkie SKU (master)" --parameters input/Parametry.xlsx --config configs/categories/kanlux-oswietlenie.yaml --output output/alkan_kanlux_master_with_parameters.xlsx --reports-dir reports/kanlux_with_parameters
+py src/run_pipeline_with_parameters.py --input archived_input_files/input_2026-08-05/Alkan_Kanlux_pelne_rodziny.xlsx --sheet "7. Wszystkie SKU (master)" --parameters archived_input_files/input_2026-08-05/Parametry.xlsx --config configs/categories/kanlux-oswietlenie.yaml --output output/alkan_kanlux_master_with_parameters.xlsx --reports-dir reports/kanlux_with_parameters
 ```
 
 Potem sprawdzenie raportow:

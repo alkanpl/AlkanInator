@@ -1,0 +1,73 @@
+# Reguly sposobu montazu dla osprzetu Hager/Berker.
+#
+# Zrodlo: karty produktowe hager.com sprawdzone 2026-09-08. Lokalny eksport BMEcat
+# nie zawiera parametru montazu dla tych grup (surowe ETIM ma tam '-'), a strona
+# producenta owszem - dlatego regula jest wyprowadzona z reprezentantow kazdej
+# kombinacji typ produktu x seria i udokumentowana kodami, na ktorych ja sprawdzono.
+#
+# UWAGA: pole 'Sposob montazu' w eksporcie BMEcat bywa bledne (lacznikom Lumina
+# przypisuje 'Natynkowy', a hager.com podaje 'Montaz podtynkowy'). Dlatego mocowanie
+# pazurkami rozporowymi ma pierwszenstwo przed tym polem.
+
+podtynkowy:
+  # Typ produktu (pierwsze slowo tytulu sklepu) -> zawsze montaz podtynkowy.
+  - typ: Gniazdo
+    pomijane_serie: [one.platform, W.1]
+    sprawdzone: [41098982, 41098989, 41108913, 47157003, 41666086, 47232045]
+    uwaga: >-
+      Wszystkie sprawdzone gniazda serii B.X, K.1/K.5, Q.X, R.1/R.3 maja
+      'Montaz podtynkowy' oraz mocowanie srubowe i pazurkami. Seria W.1 jest
+      wyjatkiem - to osprzet hermetyczny IP55, hager.com podaje dla WNC100B
+      'Montaz powierzchniowy'.
+  - typ: Regulator
+    pomijane_serie: []
+    sprawdzone: [20441404, 20447103, 20446084, WLN5046WG]
+    uwaga: >-
+      Regulatory temperatury we wszystkich sprawdzonych seriach maja
+      'Montaz podtynkowy'.
+
+# Elementy nakladane na mechanizm - sklep nie wypelnia dla nich sposobu montazu,
+# tak samo jak dla ramek, klawiszy i plytek czolowych.
+pomijane_frazy_tytulu:
+  - nasadka
+  - element centralny
+  - element czolowy
+  - klosz
+  - pierscien
+  - pokretlo
+  - zestaw uszczelek
+  - zarowka
+  - wkladka patentowa
+  - kolnierz
+sprawdzone_pomijane: [11241404, 16401404, WDA4527G]
+uwaga_pomijane: >-
+  11241404 (element centralny) - 'Element centralny mocowany zatrzaskowo';
+  16401404 (nasadka) i WDA4527G (klosz) - 'Montaz zaciskowy'. Zadne z nich nie
+  jest mocowane w puszce.
+
+# Grupy, dla ktorych Hager nie publikuje sposobu montazu w ogole - zostaja puste
+# ze statusem DO_SPRAWDZENIA, zeby nie wpisywac wartosci bez pokrycia.
+brak_danych_u_producenta:
+  typy: [Przycisk, Zaluzjowy, Glosnik]
+  sprawdzone: [85141182, 85141173, 85141124, 85741182, 85741173, 28821404]
+  uwaga: >-
+    Karty tych produktow nie maja ani 'Sposobu montazu', ani 'Rodzaju montazu'.
+    Glosniki i mechanizmy one.platform maja jedynie 'Bez lapek rozporowych'
+    (455401, 4586: 'Sruba mocujaca poprzez plytke nosna'), co nie przesadza
+    o podtynku - stad status do weryfikacji, a nie wpis.
+
+# Zrodla, ktore moga NADPISAC wartosc juz wpisana w arkuszu sklepu. Wszystkie
+# nadpisania trafiaja do arkusza 'Nadpisane' w pliku wynikowym razem z wartoscia
+# pierwotna, wiec zmiana jest odwracalna.
+nadpisuj_arkusz:
+  - zrodlo: nazwa producenta
+    opis: >-
+      Nazwa produktu w BMEcat zawiera wprost 'natynkow' albo 'podtynkow'.
+      Dotyczy m.in. adapterow lumina soul/intense (WL5410-WL5833), ktore
+      Hager nazywa 'Adapter natynkowy', a arkusz mial dla nich 'Podtynkowy'.
+  - zrodlo: ETIM mocowanie pazurkami
+    opis: >-
+      Pazurki rozporowe montuje sie w puszce. Sprawdzone na hager.com dla
+      WDE303501 ('Montaz podtynkowy', 'Do mocowania srubowego i za pomoca
+      pazurkow rozporowych w puszkach 60 i 70'), gdzie i arkusz, i pole
+      'Sposob montazu' z BMEcat podawaly bledne 'Natynkowy'.

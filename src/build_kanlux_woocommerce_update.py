@@ -24,7 +24,7 @@ from optimize_titles import normalize_seo_title_terms, normalize_title_uniquenes
 from utils import color_stem, compact_spaces, ensure_dir, normalize_header, slugify
 
 
-DEFAULT_INPUT = "input/KanluxWoo.xlsx"
+DEFAULT_INPUT = "archived_input_files/input_2026-08-05/KanluxWoo.xlsx"
 DEFAULT_FEATURES = "output/kanlux_baselinker_attributes_update_2026-06-11.csv"
 # Tytuly tez z atrybutowego CSV (ma kolumne name + wszystkie produkty, takze te spoza
 # referencji Baselinkera) - dzieki temu produkty "tylko Woo" dostaja tytul z pipeline.

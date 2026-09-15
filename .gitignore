@@ -10,6 +10,16 @@ reports/*
 cache/*
 !cache/.gitkeep
 
+# Local workspaces, previews and archived source files
+.codex_tmp/
+.tmp/
+tmp/
+archived_input_files/
+
+# Local backup copies created during one-off migrations
+*.bak
+*.bak_*
+
 # Local secrets / API credentials
 google-ads.yaml
 .env

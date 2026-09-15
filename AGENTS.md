@@ -63,7 +63,7 @@ generowania tytulow - utrwalaja aktualne zachowanie na realnych danych Kanlux,
 zeby kazda niezamierzona regresja w regexach/regulach byla od razu widoczna.
 
 Po **SWIADOMEJ** zmianie regul ekstrakcji, configow tytulow lub slownikow
-nalezy zregenerowac snapshoty (wymaga `input/Alkan_Kanlux_pelne_rodziny.xlsx`):
+nalezy zregenerowac snapshoty (wymaga `archived_input_files/input_2026-08-05/Alkan_Kanlux_pelne_rodziny.xlsx`):
 
     py tests/generate_snapshots.py
 
@@ -78,3 +78,67 @@ plikow XLSX.
 - Konsola Windows uzywa cp1250 - nie polegaj na `print()` z polskimi znakami w
   skryptach diagnostycznych; zapisuj do pliku w utf-8.
 - Status planu wdrozenia: `PLAN_ROBOCZY.md`.
+
+## Zapamietane decyzje uzytkownika
+
+- Przy pracy nad samodzielnymi plikami XLSX w tym repozytorium uzytkownik
+  zezwolil na kontrolowany fallback do `openpyxl`, gdy wymagany runtime arkuszy
+  nie jest dostepny. Nadal obowiazuje zakaz nadpisywania plikow wejsciowych.
+- Dla produktow Hager/Berker pole `Atrybut Produktu: Seria` ma odzwierciedlac
+  dokladna grupe przypisana do konkretnego SKU w katalogu. Kategorie moga byc
+  szersze i laczyc serie zgodnie z aktualna lista w
+  `input/BerkerHagerKategorie.xlsx`; jeden produkt moze nalezec do wielu
+  kategorii. Przyklad: seria `R.1|R.3` pozostaje bez `R.8`, ale kategoria to
+  `Berker R.1/R.3/R.8`.
+- Dla Hager/Berker `B.1` nie jest seria i nie wolno jej zapisywac w atrybucie,
+  tytule, opisie ani tagach. Samo slowo katalogowe `Glas` nie oznacza
+  automatycznie serii `Glasserie`; `Glasserie` zachowuje sie tylko przy
+  jednoznacznym przypisaniu konkretnego SKU w katalogu.
+- Skroty w tytulach Hager/Berker nie zmieniaja wartosci atrybutu `Seria`:
+  komplet `Lumina soul|Lumina intense|Lumina passion` zapisuje sie w tytule
+  jako `Lumina`, komplet `B. Kwadrat|B.3|B.7` jako `B.X`, komplet
+  `Q.1|Q.3|Q.7` jako `Q.X`, a komplet `R.1|R.3|R.8` jako `R.X`. Jezeli obok
+  kompletnej grupy wystepuja inne serie, pozostaja jawnie widoczne w tytule.
+- Standard tytulu Hager/Berker: nazwa/typ produktu i kolor na poczatku, potem
+  marka i seria, a kod produktu na koncu. Kazdy tytul dotyczacy serii Lumina ma
+  zawierac marke `Hager`; aliasy katalogowe w nawiasach, np. `(Berker 10107600)`,
+  pozostaja zachowane.
+- Dla Hager/Berker sposob montazu ustala `dictionaries/hager_berker_mounting_rules.yaml`
+  wraz z `src/build_hager_berker_mounting_ip.py`. Pole `Sposob montazu` z eksportu
+  BMEcat bywa bledne (lacznikom Lumina przypisuje `Natynkowy`, a hager.com podaje
+  `Montaz podtynkowy`), dlatego mocowanie pazurkami rozporowymi ma pierwszenstwo
+  przed tym polem. Dla ramek, klawiszy, plytek czolowych i innych elementow
+  nakladanych sklep nie wypelnia sposobu montazu.
+
+## Synchronizacja instrukcji Codex <-> Claude
+
+Ten projekt prowadza rownolegle Codex i Claude. Oba maja miec te sama wiedze
+robocza. Skille Codexa z `C:\Users\Handlowiec\.codex\skills` sa lustrzanie
+kopiowane do `.claude/skills/` w tym repo, a wspolne reguly zyja w `AGENTS.md`
+i `CLAUDE.md` naraz.
+
+Na poczatku kazdego nowego czatu uruchom:
+
+    py scripts\check_agent_sync.py
+
+Skrypt porownuje w OBIE strony: skille Codexa z kopia w `.claude/skills/`,
+naglowki sekcji `AGENTS.md` i `CLAUDE.md`, oraz
+`prompts/alkan_product_description_skill.md` ze skillem
+`alkan-product-description`.
+
+Co zrobic z wynikiem:
+
+- `TYLKO U CLAUDE` - Claude dodal albo zmienil skill. Przeczytaj plik i skopiuj
+  go do `C:\Users\Handlowiec\.codex\skills\<nazwa>\`.
+- `TYLKO U CODEXA` - twoja wersja jest nowsza niz kopia. Zaktualizuj
+  `.claude/skills/<nazwa>/`.
+- `ROZNI SIE` - porownaj obie wersje i scal swiadomie, nie nadpisuj w ciemno.
+- `TYLKO W CLAUDE.md` - dopisz brakujaca regule do `AGENTS.md` (i odwrotnie).
+
+Zawsze powiedz uzytkownikowi, co sie zmienilo, zanim ruszysz z wlasciwym
+zadaniem.
+
+Kiedy sam dodajesz lub zmieniasz skill albo regule: po zapisaniu w
+`C:\Users\Handlowiec\.codex\skills\` skopiuj go do `.claude/skills/<nazwa>/`, a
+reguly ogolne dopisz do OBU plikow - `AGENTS.md` i `CLAUDE.md`. Dzieki temu
+Claude zobaczy zmiane juz w swoim nastepnym czacie.

@@ -1,0 +1,163 @@
+# Rozstrzygniecia stopnia ochrony IP dla osprzetu Hager/Berker.
+#
+# Zrodlo: karty produktowe hager.com sprawdzone 2026-09-08, jeden reprezentant na
+# rodzine produktow (kolory sa wariantami tego samego wyrobu i nie zmieniaja IP).
+#
+# Zasada uzgodniona z uzytkownikiem: wpisujemy NAJWYZSZA klase, jaka produkt
+# osiaga wlasnymi srodkami - czyli wartosc ze specyfikacji Hagera, podniesiona
+# tylko wtedy, gdy wyzsza klasa wynika z wlasnej pokrywy wyrobu ('IP55 z
+# zamknieta pokrywa'). Klasa osiagalna dopiero po dokupieniu osobnego akcesorium
+# (kolnierz WL7023, zestaw uszczelek) NIE podnosi wartosci - produkt sam w sobie
+# jej nie ma.
+#
+# Dopasowanie: najpierw 'sku_prefiks', potem para 'typ' + 'seria'.
+
+reguly:
+  # --- rodziny, gdzie Hager potwierdza IP44, a arkusz mial IP 20 ---
+  - dopasowanie: {typ: Klawisz, seria: "K.1|K.5"}
+    wartosc: "IP 44"
+    sprawdzone: "14057006"
+    uwaga: "specyfikacja Hagera: IP44 (w polaczeniu z zestawem uszczelniajacym)"
+  - dopasowanie: {typ: Klawisz, seria: "R.1|R.3|R.8"}
+    wartosc: "IP 44"
+    sprawdzone: "16202025"
+  - dopasowanie: {typ: Element, seria: "K.1|K.5"}
+    wartosc: "IP 44"
+    sprawdzone: "11677003"
+  - dopasowanie: {typ: Element, seria: "R.1|R.3|R.8"}
+    wartosc: "IP 44"
+    sprawdzone: "11982045"
+  - dopasowanie: {typ: Zaslepka, seria: "K.1|K.5"}
+    wartosc: "IP 44"
+    sprawdzone: "10457003"
+  - dopasowanie: {typ: Zaslepka, seria: "Q.1|Q.3|Q.7"}
+    wartosc: "IP 44"
+    sprawdzone: "10096086"
+  - dopasowanie: {typ: Zaslepka, seria: "R.1|R.3|R.8"}
+    wartosc: "IP 44"
+    sprawdzone: "10092089"
+  - dopasowanie: {typ: Plytka, seria: "K.1|K.5"}
+    wartosc: "IP 44"
+    sprawdzone: "1077710300"
+    uwaga: "dotyczy plytek czolowych z pokretlem; plytki do gniazd patrz nizej"
+  - dopasowanie: {typ: Plytka, seria: "Q.1|Q.3|Q.7"}
+    wartosc: "IP 44"
+    sprawdzone: "3965436084"
+
+  # --- rodziny, gdzie Hager podaje IP20, a arkusz mial zawyzone IP 44 ---
+  - dopasowanie: {sku_prefiks: "3965777"}
+    wartosc: "IP 20"
+    sprawdzone: "3965777109"
+    uwaga: "K.1 plytka czolowa do gniazd z pokrywa - Hager podaje IP20"
+  - dopasowanie: {sku_prefiks: "3965898"}
+    wartosc: "IP 20"
+    sprawdzone: "3965898992"
+    uwaga: "mimo 'IP44' w tytule sklepu specyfikacja Hagera podaje IP20"
+  - dopasowanie: {sku_prefiks: "WWS7311"}
+    wartosc: "IP 20"
+    sprawdzone: "WWS7311PW"
+
+  # --- Lumina: rodzina niejednorodna, kazda seria sprawdzona osobno ---
+  - dopasowanie: {sku_prefiks: "WL101"}
+    wartosc: "IP 20"
+    sprawdzone: "WL1010"
+    uwaga: "gniazda bez uziemienia"
+  - dopasowanie: {sku_prefiks: "WL102"}
+    wartosc: "IP 21"
+    sprawdzone: "WL1020"
+    uwaga: "gniazda z uziemieniem - Hager podaje IP21, nie IP20"
+  - dopasowanie: {sku_prefiks: "WL112"}
+    wartosc: "IP 20"
+    sprawdzone: "WL1120"
+    uwaga: >-
+      IP44 dopiero z kolnierzem uszczelniajacym WL7023, sprzedawanym osobno -
+      wiec sam produkt ma IP20.
+  - dopasowanie: {sku_prefiks: "WL134"}
+    wartosc: "IP 20"
+    sprawdzone: "WL1340"
+    uwaga: "jak wyzej - IP44 tylko z kolnierzem WL7023"
+
+  # --- grupy, w ktorych racje mial arkusz sklepu, a mylil sie eksport ETIM ---
+  # Wpisane jako reguly (a nie tylko notatka), zeby nie wracaly jako konflikty.
+  - dopasowanie: {sku_prefiks: "WL104"}
+    wartosc: "IP 20"
+    sprawdzone: "WL1043 / WL1063"
+    uwaga: "gniazda z przeslonami stykow - ETIM podaje IP21, hager.com IP20"
+  - dopasowanie: {sku_prefiks: "WL105"}
+    wartosc: "IP 20"
+    sprawdzone: "WL1050"
+  - dopasowanie: {sku_prefiks: "WL106"}
+    wartosc: "IP 20"
+    sprawdzone: "WL1063"
+  - dopasowanie: {sku_prefiks: "WL061"}
+    wartosc: "IP 20"
+    sprawdzone: "WL0610"
+    uwaga: "specyfikacja nie podaje IP; IP44 dopiero z osobnym zestawem uszczelek"
+  - dopasowanie: {typ: Klawisz, seria: "Q.1|Q.3|Q.7"}
+    wartosc: "IP 20"
+    sprawdzone: "16206089"
+    uwaga: "ETIM podaje IP44, hager.com IP20"
+  - dopasowanie: {typ: Klawisz, seria: "W.1"}
+    wartosc: "IP 55"
+    sprawdzone: "WNT954B"
+    uwaga: "IP55 z zamknieta pokrywa - pokrywa jest czescia wyrobu"
+  - dopasowanie: {typ: Ramka, seria: "W.1"}
+    wartosc: "IP 55"
+    sprawdzone: "WNA401B"
+    uwaga: "specyfikacja podaje IP20, ale zestaw z zamknieta pokrywa daje IP55"
+
+  # --- blad ETIM poza lista konfliktow ---
+  # Regulatory temperatury dostaly w eksporcie BMEcat IP30. Arkusz sklepu mial te
+  # sama wartosc, wiec rozbieznosc nigdzie sie nie ujawnila. hager.com podaje IP20.
+  # 'wymus: true' - stosuj takze wtedy, gdy arkusz i ETIM sa zgodne.
+  - dopasowanie: {typ: Regulator}
+    wartosc: "IP 20"
+    wymus: true
+    sprawdzone: "20341404, 20347109, WLN5034WG"
+    uwaga: >-
+      hager.com podaje IP20 dla wszystkich sprawdzonych regulatorow; dla
+      20446084 karta nie podaje IP w ogole. IP30 z BMEcat jest bledne.
+
+  # --- bledy ETIM znalezione przy weryfikacji 42 grup (79% pozycji z IP z ETIM) ---
+  # W obu przypadkach ETIM podaje IP44, a specyfikacja Hagera IP20; IP44 wymaga
+  # osobno kupowanego zestawu uszczelniajacego, wiec zgodnie z przyjeta zasada
+  # nie podnosi wartosci.
+  - dopasowanie: {sku_prefiks: "WLW13"}
+    wartosc: "IP 20"
+    wymus: true
+    sprawdzone: "WLW1332WG"
+    uwaga: "klawisze R.X z soczewka - ETIM podaje IP44, hager.com IP20"
+  - dopasowanie: {sku_prefiks: "WLW10"}
+    wartosc: "IP 20"
+    wymus: true
+    sprawdzone: "WLW1332WG (ta sama rodzina klawiszy R.X)"
+  - dopasowanie: {sku_prefiks: "10098989"}
+    wartosc: "IP 20"
+    wymus: true
+    sprawdzone: "10098989"
+    uwaga: "zaslepka B.Kwadrat bez pazurkow - ETIM podaje IP44, hager.com IP20"
+
+# Historia weryfikacji - te grupy potwierdzily wartosc z arkusza; sa juz ujete
+# w 'reguly' powyzej, zostaja tu jako slad, na czym to sprawdzono.
+potwierdzony_arkusz:
+  - {opis: "Klawisze i ramki W.1", wartosc: "IP 55", sprawdzone: "WNT954B, WNA401B",
+     uwaga: "ETIM podaje IP20; hager.com: IP55 z zamknieta pokrywa"}
+  - {opis: "Klawisze Q.x", wartosc: "IP 20", sprawdzone: "16206089",
+     uwaga: "ETIM podaje IP44, hager.com IP20 - tu ETIM sie myli"}
+  - {opis: "Laczniki kontrolne Lumina WL061x", wartosc: "IP 20", sprawdzone: "WL0610",
+     uwaga: "specyfikacja nie podaje IP; IP44 tylko z zestawem uszczelek"}
+  - {opis: "Gniazda Lumina WL104x/WL105x/WL106x", wartosc: "IP 20",
+     sprawdzone: "WL1050, WL1063"}
+
+# Nierozstrzygniete - karty niedostepne pod przewidywalnym adresem.
+# Zostaja z wartoscia z arkusza i statusem do weryfikacji.
+# Weryfikacja 2026-09-08: sprawdzono 42 grupy typ x seria x wartosc, obejmujace
+# 733 z 924 pozycji, ktorych IP pochodzi wylacznie z ETIM (79%). Rozbieznosci
+# znaleziono w 2 grupach (5 produktow), obie ujete w regulach powyzej. We
+# wszystkich pozostalych wartosc IP20 z ETIM zgadzala sie ze specyfikacja Hagera
+# albo Hager nie podawal IP w ogole (dotyczy zwlaszcza ramek).
+
+niesprawdzone:
+  - {opis: "Ramki R.1 dab/beton", sku: "10112359, 10112374, 10122359, 10122374, 10132359, 10142359, 10152359",
+     uwaga: "brak w BMEcat i brak karty; IP44 pochodzilo z katalogu PDF, malo wiarygodne dla ramek dekoracyjnych"}
+  - {opis: "Gniazda Lumina WL116x, WL1143, WL115x", uwaga: "slug karty nie do odgadniecia"}

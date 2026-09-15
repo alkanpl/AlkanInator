@@ -16,7 +16,7 @@ import yaml
 from utils import compact_spaces, ensure_dir, normalize_header
 
 
-DEFAULT_INPUT = "input/Poprawione atrybuty.xlsx"
+DEFAULT_INPUT = "archived_input_files/input_2026-08-05/Poprawione atrybuty.xlsx"
 DEFAULT_CATALOG_KNOWLEDGE = "dictionaries/woocommerce_catalog_knowledge.yaml"
 DEFAULT_OUTPUT = "dictionaries/lighting_attribute_knowledge.yaml"
 DEFAULT_REPORTS_DIR = "reports/attribute_knowledge_import"
