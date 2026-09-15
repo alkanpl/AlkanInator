@@ -103,6 +103,26 @@ py src/export_to_baselinker_csv.py --input input/alkan_kanlux_master_names_from_
 
 Skrypt tworzy CSV z kolumnami zgodnymi z przykladem Baselinkera: `product_id;name;sku;ean;manufacturer_name;category;description;features;images_urls`. Nazwa produktu bierze sie domyslnie z `new_title`, kategoria z `proponowana_kategoria_1`, a parametry techniczne trafiaja do JSON w kolumnie `features`.
 
+Bezposredni eksport i synchronizacja przez API BaseLinkera:
+
+```powershell
+$env:BASELINKER_TOKEN = "token ustawiony tylko w tej sesji PowerShell"
+py src/baselinker_api_cli.py inventories
+py src/baselinker_api_cli.py export --inventory-id 12345 --output output/baselinker_backup.csv
+py src/baselinker_api_cli.py sync --inventory-id 12345 --input output/baselinker_import.csv
+py src/baselinker_api_cli.py sync --inventory-id 12345 --input output/baselinker_import.csv --apply
+```
+
+Polecenie `sync` bez `--apply` zawsze wykonuje dry-run. Przed kazdym zapisem powstaja
+`backup_before.json`, `catalog_metadata_before.json`, raport `audit.csv` ze zmianami
+stara/nowa wartosc oraz `summary.json`
+w `reports/baselinker_api_sync/<data_godzina>/`. Domyslnie cechy sa scalane, puste pola
+nie czyszcza danych w BaseLinkerze, a blad jednego rekordu blokuje cala paczke. Rozszerzenia
+takie jak tworzenie brakujacych kategorii/producentow, czesciowa wysylka i zmiana SKU/EAN
+wymagaja jawnych flag widocznych w `py src/baselinker_api_cli.py sync --help`.
+Tryb `--match-by auto` dopasowuje najpierw po SKU, potem po EAN, a `product_id` traktuje
+jako fallback, poniewaz w historycznych plikach projektu ta kolumna moze zawierac ID WooCommerce.
+
 Propozycje kategorii na podstawie nazwy, typu produktu i wiedzy katalogowej:
 
 ```powershell

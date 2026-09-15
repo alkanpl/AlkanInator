@@ -24,3 +24,5 @@ archived_input_files/
 google-ads.yaml
 .env
 .env.*
+*.token
+baselinker-token.txt
