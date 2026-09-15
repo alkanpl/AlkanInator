@@ -370,7 +370,7 @@ def main() -> None:
         help="Wymusza kolumne kategorii. Domyslnie: proponowana_kategoria_1, Kategoria, category.",
     )
     parser.add_argument("--include-empty-features", action="store_true", help="Zapisuje puste parametry w JSON features.")
-    parser.add_argument("--links-file", default="", help="XLSX/CSV z linkami do zdjec, np. input/Linki.xlsx.")
+    parser.add_argument("--links-file", default="", help="XLSX/CSV z linkami do zdjec, np. archived_input_files/Linki.xlsx.")
     parser.add_argument("--links-sheet", default=None, help="Arkusz w pliku linkow. Domyslnie pierwszy arkusz.")
     parser.add_argument("--image-key-column", default="Kod Kanlux", help="Kolumna kodu produktu w pliku linkow.")
     parser.add_argument("--main-image-column", default="Zdjecie glowne", help="Kolumna glownego zdjecia w pliku linkow.")

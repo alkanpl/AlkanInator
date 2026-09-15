@@ -122,8 +122,8 @@ SHAPE_INFLECTIONS = {
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Buduje nazwy i import Baselinker dla listy Kobi.")
-    parser.add_argument("--input", default="input/Kobi_27_05_2026.xlsx", help="Plik XLSX z lista produktow.")
-    parser.add_argument("--xml", default="input/ceneo_kobi.xml", help="XML Ceneo/Kobi z atrybutami.")
+    parser.add_argument("--input", default="archived_input_files/Kobi_27_05_2026.xlsx", help="Plik XLSX z lista produktow.")
+    parser.add_argument("--xml", default="archived_input_files/ceneo_kobi.xml", help="XML Ceneo/Kobi z atrybutami.")
     parser.add_argument("--sheet", default=None, help="Arkusz XLSX. Domyslnie pierwszy.")
     parser.add_argument(
         "--output-xlsx",

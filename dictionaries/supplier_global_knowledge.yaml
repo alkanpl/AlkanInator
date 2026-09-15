@@ -13,9 +13,9 @@ suppliers:
       - KAN
       - KANL
     default_input:
-      workbook: input/Alkan_Kanlux_pelne_rodziny.xlsx
+      workbook: archived_input_files/Alkan_Kanlux_pelne_rodziny.xlsx
       sheet: 7. Wszystkie SKU (master)
-      parameters_workbook: input/Parametry.xlsx
+      parameters_workbook: archived_input_files/Parametry.xlsx
       category_config: configs/categories/kanlux-oswietlenie.yaml
       title_anatomy: configs/title_anatomy.yaml
     workflow_principles:
@@ -242,7 +242,7 @@ suppliers:
         - 'Ksztalt zgadujemy z wymiarow, gdy go brak: srednica -> Okragly, dlugosc == szerokosc -> Kwadrat, dlugosc != szerokosc -> Prostokatny.'
         - 'Seria TOLEO (DTL) to natynkowa oprawa punktowa "Oprawa sufitowa", nie lampa wiszaca.'
         - 'Wskaznik olsnienia [UGR] jest opcjonalny, nie wymagany - producent podaje go tylko dla czesci rodzin.'
-        - 'Reczne uzupelnienia atrybutow mieszkaja w input/kanlux_braki_wymaganych_uzupelnione.xlsx (format skoroszytu brakow); wygrywaja z danymi automatycznymi, wartosci "n/d" sa pomijane.'
+        - 'Reczne uzupelnienia atrybutow mieszkaja w archived_input_files/kanlux_braki_wymaganych_uzupelnione.xlsx (format skoroszytu brakow); wygrywaja z danymi automatycznymi, wartosci "n/d" sa pomijane.'
         - 'Kolumna "Typ" producenta bywa mylna (np. "plafoniera LED" dla opraw sufitowych AQILO/RITI, "Plafoniera" dla kanalowej MILO) - typ produktu kotwiczymy we frazie na poczatku nazwy wygenerowanej przez pipeline nazw.'
         - 'Gdy nazwa referencyjna (stare Woo) klosci sie z typem produktu (np. "Zasilacz BLINGO AIO" dla panelu), do importu idzie nazwa wygenerowana przez pipeline nazw.'
         - 'Nazwa panelu ma zgadzac sie ze sposobem montazu: BLINGO AIO/UAIO w wariancie SRM to panele natynkowe, mimo ze pipeline domyslnie nazywa panele "podtynkowy".'

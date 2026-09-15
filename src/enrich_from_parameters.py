@@ -655,7 +655,7 @@ def write_reports(
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Dopasowuje plik parametrow Kanlux do produktow i uzupelnia brakujace atrybuty.")
-    parser.add_argument("--input", required=True, help="Plik produktow, np. input/Alkan_Kanlux_pelne_rodziny.xlsx")
+    parser.add_argument("--input", required=True, help="Plik produktow, np. archived_input_files/Alkan_Kanlux_pelne_rodziny.xlsx")
     parser.add_argument("--sheet", help="Arkusz produktow, np. 7. Wszystkie SKU (master)")
     parser.add_argument("--parameters", required=True, help="Plik Parametry.xlsx")
     parser.add_argument("--parameters-sheet", default=0)

@@ -36,7 +36,7 @@ Lancuch poprawek atrybutow Kanlux (Woo + Baselinker):
 `run_pipeline_with_parameters.py` (enriched) -> `build_kanlux_baselinker_update.py`
 (CSV importu, raporty brakow/audytu, skoroszyt brakow) ->
 `build_kanlux_woocommerce_update.py` (plik Woo). Reczne uzupelnienia atrybutow
-czyta z `input/kanlux_braki_wymaganych_uzupelnione.xlsx` (wygrywaja z automatem,
+czyta z `archived_input_files/kanlux_braki_wymaganych_uzupelnione.xlsx` (wygrywaja z automatem,
 "n/d" pomijane). Decyzje sklepu o wartosciach atrybutow sa skodyfikowane w
 `dictionaries/supplier_global_knowledge.yaml` -> `value_conventions`.
 
@@ -72,7 +72,7 @@ generowania tytulow - utrwalaja aktualne zachowanie na realnych danych Kanlux,
 zeby kazda niezamierzona regresja w regexach/regulach byla od razu widoczna.
 
 Po **SWIADOMEJ** zmianie regul ekstrakcji, configow tytulow lub slownikow
-nalezy zregenerowac snapshoty (wymaga `input/Alkan_Kanlux_pelne_rodziny.xlsx`):
+nalezy zregenerowac snapshoty (wymaga `archived_input_files/Alkan_Kanlux_pelne_rodziny.xlsx`):
 
     py tests/generate_snapshots.py
 

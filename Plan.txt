@@ -99,7 +99,7 @@ Codex nie powinien:
 
 ```txt
 product-seo-tools/
-├── input/
+├── archived_input_files/
 │   └── products.xlsx
 │
 ├── output/
@@ -712,7 +712,7 @@ Przygotować wygodne komendy i instrukcje dla Codexa.
 Codex powinien móc wykonać np.:
 
 ```txt
-Przeanalizuj plik input/products.xlsx i przygotuj config dla kategorii oprawy sufitowe.
+Przeanalizuj plik archived_input_files/products.xlsx i przygotuj config dla kategorii oprawy sufitowe.
 ```
 
 Albo:
@@ -736,19 +736,19 @@ Docelowo narzędzie powinno działać z terminala.
 Przykłady:
 
 ```bash
-python src/analyze_products.py --input input/products.xlsx
+python src/analyze_products.py --input archived_input_files/products.xlsx
 ```
 
 ```bash
-python src/extract_attributes.py --input input/products.xlsx --config configs/categories/oprawy-sufitowe.yaml
+python src/extract_attributes.py --input archived_input_files/products.xlsx --config configs/categories/oprawy-sufitowe.yaml
 ```
 
 ```bash
-python src/optimize_titles.py --input input/products.xlsx --config configs/categories/oprawy-sufitowe.yaml --output output/products_optimized.xlsx
+python src/optimize_titles.py --input archived_input_files/products.xlsx --config configs/categories/oprawy-sufitowe.yaml --output output/products_optimized.xlsx
 ```
 
 ```bash
-python src/recommend_filters.py --input input/products.xlsx --category "Oprawy sufitowe"
+python src/recommend_filters.py --input archived_input_files/products.xlsx --category "Oprawy sufitowe"
 ```
 
 ```bash
@@ -766,7 +766,7 @@ python src/research_web.py --input reports/missing_attributes.csv --limit 100
 ## Krok 1: Wrzucasz plik
 
 ```txt
-input/products.xlsx
+archived_input_files/products.xlsx
 ```
 
 ---
@@ -774,7 +774,7 @@ input/products.xlsx
 ## Krok 2: Program analizuje dane
 
 ```bash
-python src/analyze_products.py --input input/products.xlsx
+python src/analyze_products.py --input archived_input_files/products.xlsx
 ```
 
 Wynik:
@@ -807,7 +807,7 @@ configs/categories/oprawy-sufitowe.yaml
 ## Krok 4: Program wyciąga atrybuty
 
 ```bash
-python src/extract_attributes.py --input input/products.xlsx --config configs/categories/oprawy-sufitowe.yaml
+python src/extract_attributes.py --input archived_input_files/products.xlsx --config configs/categories/oprawy-sufitowe.yaml
 ```
 
 ---
@@ -815,7 +815,7 @@ python src/extract_attributes.py --input input/products.xlsx --config configs/ca
 ## Krok 5: Program generuje nowe tytuły
 
 ```bash
-python src/optimize_titles.py --input input/products.xlsx --config configs/categories/oprawy-sufitowe.yaml
+python src/optimize_titles.py --input archived_input_files/products.xlsx --config configs/categories/oprawy-sufitowe.yaml
 ```
 
 ---
@@ -1053,7 +1053,7 @@ Masz projekt product-seo-tools.
 
 Twoje zadanie:
 1. Przeanalizuj raport reports/quality_report.html.
-2. Sprawdź próbkę produktów z input/sample_products.csv.
+2. Sprawdź próbkę produktów z archived_input_files/sample_products.csv.
 3. Przygotuj config kategorii w configs/categories/oprawy-sufitowe.yaml.
 4. Nie zmieniaj logiki programu, jeśli nie jest to konieczne.
 5. Tytuły mają być generowane według szablonu, nie ręcznie.
@@ -1156,7 +1156,7 @@ Najpierw optymalizujemy tytuły i atrybuty, potem dopiero filtry.
 Pierwsza działająca wersja powinna umożliwiać komendę:
 
 ```bash
-python src/run_pipeline.py --input input/products.xlsx --category "Oprawy sufitowe"
+python src/run_pipeline.py --input archived_input_files/products.xlsx --category "Oprawy sufitowe"
 ```
 
 I generować:

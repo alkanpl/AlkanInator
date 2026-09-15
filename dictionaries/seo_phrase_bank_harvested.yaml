@@ -1,5 +1,5 @@
 # Bank naturalnych fraz wyselekcjonowanych z eksportu WooCommerce (ludzkie opisy).
-# Zrodlo: input/wc-product-export-25-6-2026 (cp1250). Frazy oczyszczone, bez marek i specyfikacji.
+# Zrodlo: archived_input_files/wc-product-export-25-6-2026 (cp1250). Frazy oczyszczone, bez marek i specyfikacji.
 # Uzycie: losowy dobor (seed z SKU) do wzbogacania prozy - NIE kopiowac kilku pod rzad.
 # Kategorie odpowiadaja sekcjom/rolom w generatorze opisow.
 

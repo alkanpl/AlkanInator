@@ -32,7 +32,7 @@ Legenda statusow:
 
 ## 1. Przygotowanie struktury projektu
 
-- [x] Utworzyc katalog `input/`.
+- [x] Utworzyc katalog `archived_input_files/`.
 - [x] Utworzyc katalog `output/`.
 - [x] Utworzyc katalog `configs/`.
 - [x] Utworzyc katalog `configs/categories/`.
@@ -70,7 +70,7 @@ Zakres:
 - [x] Raport zmian.
 - [x] Eksport XLSX.
 - [x] Eksport CSV.
-- [x] Komenda pipeline: `py src/run_pipeline.py --input input/products.xlsx --category "Oprawy sufitowe"`.
+- [x] Komenda pipeline: `py src/run_pipeline.py --input archived_input_files/products.xlsx --category "Oprawy sufitowe"`.
 
 Pliki docelowe MVP:
 
@@ -353,7 +353,7 @@ Zrobione:
 - [x] Utworzono `PLAN_ROBOCZY.md`.
 - [x] Utworzono strukture projektu.
 - [x] Wdrozono MVP bez internetu.
-- [x] Uruchomiono pipeline na `input/sample_products.csv`.
+- [x] Uruchomiono pipeline na `archived_input_files/sample_products.csv`.
 - [x] Wygenerowano pliki w `output/` i `reports/`.
 - [x] Dodano raport `suspicious_category_fit.csv` dla produktow podejrzanych w kategorii.
 - [x] EAN `5905339372628` jest oznaczany jako `DO_SPRAWDZENIA`.
@@ -376,7 +376,7 @@ Zrobione:
 
 W toku:
 
-- [x] Test na probce 10 produktow z realnego pliku `input/Alkan_Kanlux_pelne_rodziny.xlsx`.
+- [x] Test na probce 10 produktow z realnego pliku `archived_input_files/Alkan_Kanlux_pelne_rodziny.xlsx`.
 
 Najblizszy krok:
 

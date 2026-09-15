@@ -63,7 +63,7 @@ generowania tytulow - utrwalaja aktualne zachowanie na realnych danych Kanlux,
 zeby kazda niezamierzona regresja w regexach/regulach byla od razu widoczna.
 
 Po **SWIADOMEJ** zmianie regul ekstrakcji, configow tytulow lub slownikow
-nalezy zregenerowac snapshoty (wymaga `input/Alkan_Kanlux_pelne_rodziny.xlsx`):
+nalezy zregenerowac snapshoty (wymaga `archived_input_files/Alkan_Kanlux_pelne_rodziny.xlsx`):
 
     py tests/generate_snapshots.py
 

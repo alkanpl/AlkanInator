@@ -23,44 +23,44 @@ pip install -r requirements.txt
 ## Uzycie
 
 ```bash
-python src/run_pipeline.py --input input/products.xlsx --category "Oprawy sufitowe"
+python src/run_pipeline.py --input archived_input_files/products.xlsx --category "Oprawy sufitowe"
 ```
 
 Mozesz tez wskazac config i katalogi wyjsciowe:
 
 ```bash
-python src/run_pipeline.py --input input/products.csv --config configs/categories/oprawy-sufitowe.yaml --output output/products_optimized.xlsx --reports-dir reports
+python src/run_pipeline.py --input archived_input_files/products.csv --config configs/categories/oprawy-sufitowe.yaml --output output/products_optimized.xlsx --reports-dir reports
 ```
 
 Domyslnie pipeline dolacza wiedze z `dictionaries/woocommerce_catalog_knowledge.yaml`, jesli ten plik istnieje. Mozesz wskazac inny slownik albo wylaczyc te warstwe pusta wartoscia:
 
 ```bash
-python src/run_pipeline.py --input input/products.csv --catalog-knowledge dictionaries/woocommerce_catalog_knowledge.yaml
-python src/run_pipeline.py --input input/products.csv --catalog-knowledge ""
+python src/run_pipeline.py --input archived_input_files/products.csv --catalog-knowledge dictionaries/woocommerce_catalog_knowledge.yaml
+python src/run_pipeline.py --input archived_input_files/products.csv --catalog-knowledge ""
 ```
 
 Dla pliku z wieloma arkuszami XLSX wskaz arkusz:
 
 ```bash
-py src/run_pipeline.py --input input/Alkan_Kanlux_pelne_rodziny.xlsx --sheet "7. Wszystkie SKU (master)" --config configs/categories/kanlux-oswietlenie.yaml --output output/kanlux_master_optimized.xlsx --reports-dir reports/kanlux_master
+py src/run_pipeline.py --input archived_input_files/Alkan_Kanlux_pelne_rodziny.xlsx --sheet "7. Wszystkie SKU (master)" --config configs/categories/kanlux-oswietlenie.yaml --output output/kanlux_master_optimized.xlsx --reports-dir reports/kanlux_master
 ```
 
 Uzupelnianie brakujacych atrybutow z pliku parametrow Kanlux:
 
 ```powershell
-py src/enrich_from_parameters.py --input input/Alkan_Kanlux_pelne_rodziny.xlsx --sheet "7. Wszystkie SKU (master)" --parameters input/Parametry.xlsx --config configs/categories/kanlux-oswietlenie.yaml --output output/alkan_kanlux_master_with_parameters.xlsx --reports-dir reports/parameter_enrichment
+py src/enrich_from_parameters.py --input archived_input_files/Alkan_Kanlux_pelne_rodziny.xlsx --sheet "7. Wszystkie SKU (master)" --parameters archived_input_files/Parametry.xlsx --config configs/categories/kanlux-oswietlenie.yaml --output output/alkan_kanlux_master_with_parameters.xlsx --reports-dir reports/parameter_enrichment
 ```
 
 Budowanie slownika typow, producentow i kategorii z pelnego eksportu produktow:
 
 ```powershell
-py src/learn_product_taxonomy.py --input input/Produkty-Export-2026-April-30-0723.xlsx --output dictionaries/learned_product_taxonomy.yaml --reports-dir reports/product_taxonomy
+py src/learn_product_taxonomy.py --input archived_input_files/Produkty-Export-2026-April-30-0723.xlsx --output dictionaries/learned_product_taxonomy.yaml --reports-dir reports/product_taxonomy
 ```
 
 Pelna analiza eksportu produktow WooCommerce CSV:
 
 ```powershell
-py src/analyze_woocommerce_export.py --input input/wszystko.csv --reports-dir reports/woocommerce_catalog --dictionary dictionaries/woocommerce_catalog_knowledge.yaml
+py src/analyze_woocommerce_export.py --input archived_input_files/wszystko.csv --reports-dir reports/woocommerce_catalog --dictionary dictionaries/woocommerce_catalog_knowledge.yaml
 ```
 
 Ten slownik zasila kolejne uruchomienia pipeline'u: rozszerza liste znanych producentow, kolorow, serii, typow produktow, wartosci IP, kategorii i rekomendowanych filtrow bez recznego kopiowania tych danych do configow kategorii.
@@ -68,7 +68,7 @@ Ten slownik zasila kolejne uruchomienia pipeline'u: rozszerza liste znanych prod
 Przygotowanie eksportu CSV z Baselinkera pod pipeline AlkanInatora:
 
 ```powershell
-py src/prepare_baselinker_input.py --input input/przykładowycsv.csv --output output/baselinker_prepared.csv --default-category "Gniazdka i Łączniki"
+py src/prepare_baselinker_input.py --input archived_input_files/przykładowycsv.csv --output output/baselinker_prepared.csv --default-category "Gniazdka i Łączniki"
 ```
 
 Skrypt rozbija kolumne `features` na normalne kolumny, mapuje najwazniejsze parametry na format uzywany przez pipeline i zapisuje raport w `reports/baselinker_prepare`.
@@ -76,7 +76,7 @@ Skrypt rozbija kolumne `features` na normalne kolumny, mapuje najwazniejsze para
 Eksport wyniku AlkanInatora do CSV importowego Baselinkera:
 
 ```powershell
-py src/export_to_baselinker_csv.py --input input/alkan_kanlux_master_names_from_parameters_v10_zolte_export.xlsx --output output/baselinker_import_alkan_kanlux_v10_zolte.csv
+py src/export_to_baselinker_csv.py --input archived_input_files/alkan_kanlux_master_names_from_parameters_v10_zolte_export.xlsx --output output/baselinker_import_alkan_kanlux_v10_zolte.csv
 ```
 
 Skrypt tworzy CSV z kolumnami zgodnymi z przykladem Baselinkera: `product_id;name;sku;ean;manufacturer_name;category;description;features;images_urls`. Nazwa produktu bierze sie domyslnie z `new_title`, kategoria z `proponowana_kategoria_1`, a parametry techniczne trafiaja do JSON w kolumnie `features`.
@@ -99,7 +99,7 @@ py src/analyze_keywords.py --input output/products_optimized.xlsx --output outpu
 Ten sam etap mozna wlaczyc w glownym workflow:
 
 ```powershell
-py src/run_pipeline.py --input input/products.xlsx --category "Oprawy sufitowe" --output output/products_optimized.xlsx --reports-dir reports/products --analyze-keywords --google-ads-config google-ads.yaml
+py src/run_pipeline.py --input archived_input_files/products.xlsx --category "Oprawy sufitowe" --output output/products_optimized.xlsx --reports-dir reports/products --analyze-keywords --google-ads-config google-ads.yaml
 ```
 
 Skrypt wykrywa typ produktu z kolumn `attr_typ`, `Typ produktu`, `Typ` albo `Rodzaj produktu`, pobiera propozycje slow kluczowych, sprawdza historyczne `avg_monthly_searches` i dopisuje `primary_keyword`, `secondary_keyword`, metryki oraz `keyword_candidates_json`. Konfiguracja Google Ads jest czytana z `--google-ads-config`, `GOOGLE_ADS_CONFIGURATION_FILE_PATH`, `~/google-ads.yaml` albo lokalnego `google-ads.yaml`; `--customer-id` mozna pominac, jesli YAML ma pole `customer_id`. Do testow bez API mozna uzyc `--offline-keywords` z CSV zawierajacym `keyword`, `avg_monthly_searches` i opcjonalnie `product_type`.
@@ -107,7 +107,7 @@ Skrypt wykrywa typ produktu z kolumn `attr_typ`, `Typ produktu`, `Typ` albo `Rod
 Anatomia tytulow produktowych:
 
 ```powershell
-py src/run_pipeline_with_parameters.py --input input/Alkan_Kanlux_pelne_rodziny.xlsx --sheet "7. Wszystkie SKU (master)" --parameters input/Parametry.xlsx --config configs/categories/kanlux-oswietlenie.yaml --output output/alkan_kanlux_master_names.xlsx --reports-dir reports/alkan_kanlux_master_names --title-anatomy configs/title_anatomy.yaml
+py src/run_pipeline_with_parameters.py --input archived_input_files/Alkan_Kanlux_pelne_rodziny.xlsx --sheet "7. Wszystkie SKU (master)" --parameters archived_input_files/Parametry.xlsx --config configs/categories/kanlux-oswietlenie.yaml --output output/alkan_kanlux_master_names.xlsx --reports-dir reports/alkan_kanlux_master_names --title-anatomy configs/title_anatomy.yaml
 ```
 
 Globalny config `configs/title_anatomy.yaml` buduje tytul wedlug schematu `primary_keyword` albo typ produktu jako fallback, potem atrybuty per typ produktu, producent i kod producenta. Jezeli dla typu nie ma zaakceptowanej reguly anatomii, pipeline wraca do starego template'u YAML i dodaje warning `title_anatomy_missing_accepted_rule`. Raporty trafiaja do `reports/<run>/title_anatomy/title_anatomy_review.xlsx` - jeden plik z trzema arkuszami: `Przeglad typow`, `Duplikaty` i `Ostrzezenia`. Kazdy arkusz ma dwie kolumny do recznego przegladu: `proponowana zmiana` (aktualny wynik programu) i `oczekiwany wynik` (pusta kolumna do wpisania docelowej wartosci).
@@ -147,7 +147,7 @@ generowania tytulow: utrwalaja aktualne zachowanie na realnych danych, wiec
 kazda niezamierzona regresja w regexach lub regulach od razu wywala test.
 
 Po swiadomej zmianie regul ekstrakcji, configow tytulow lub slownikow
-zregeneruj snapshoty (wymaga `input/Alkan_Kanlux_pelne_rodziny.xlsx`):
+zregeneruj snapshoty (wymaga `archived_input_files/Alkan_Kanlux_pelne_rodziny.xlsx`):
 
 ```powershell
 py tests/generate_snapshots.py
