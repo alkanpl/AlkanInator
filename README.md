@@ -113,6 +113,10 @@ py src/baselinker_api_cli.py sync --inventory-id 12345 --input output/baselinker
 py src/baselinker_api_cli.py sync --inventory-id 12345 --input output/baselinker_import.csv --apply
 ```
 
+Token jest pobierany kolejno ze zmiennej `BASELINKER_TOKEN`, argumentu
+`--token-file` albo z lokalnego, ignorowanego przez Git pliku
+`src/baselinker_api/config.json` zawierającego pole `token`.
+
 Polecenie `sync` bez `--apply` zawsze wykonuje dry-run. Przed kazdym zapisem powstaja
 `backup_before.json`, `catalog_metadata_before.json`, raport `audit.csv` ze zmianami
 stara/nowa wartosc oraz `summary.json`

@@ -4,6 +4,7 @@ import csv
 import json
 import sys
 import tempfile
+from argparse import Namespace
 from pathlib import Path
 from unittest import TestCase
 
@@ -15,6 +16,22 @@ from baselinker_api.export import ExportOptions, export_inventory_csv
 from baselinker_api.images import build_images_payload, external_image_value
 from baselinker_api.input_data import load_product_records
 from baselinker_api.sync import SyncOptions, build_category_maps, sync_inventory
+from baselinker_api_cli import _token, _token_from_file
+
+
+class BaseLinkerTokenTests(TestCase):
+    def test_reads_plain_token_file(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            path = Path(temp_dir) / "token.txt"
+            path.write_text("sekretny-token\n", encoding="utf-8")
+            self.assertEqual(_token_from_file(path), "sekretny-token")
+
+    def test_reads_token_from_json_config(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            path = Path(temp_dir) / "config.json"
+            path.write_text(json.dumps({"token": "token-z-json"}), encoding="utf-8")
+            args = Namespace(token_file=str(path), token_env="NIEISTNIEJACA_ZMIENNA_TESTOWA")
+            self.assertEqual(_token(args), "token-z-json")
 
 
 class FakeClient:

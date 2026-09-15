@@ -26,3 +26,4 @@ google-ads.yaml
 .env.*
 *.token
 baselinker-token.txt
+/src/baselinker_api/config.json

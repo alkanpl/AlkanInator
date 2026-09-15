@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import os
 import sys
 from pathlib import Path
@@ -11,17 +12,36 @@ from baselinker_api.sync import DEFAULT_FIELDS, SyncOptions, sync_inventory
 
 
 ALLOWED_FIELDS = DEFAULT_FIELDS | {"identifiers"}
+DEFAULT_CONFIG_PATH = Path(__file__).resolve().parent / "baselinker_api" / "config.json"
+
+
+def _token_from_file(path: Path) -> str:
+    raw = path.read_text(encoding="utf-8-sig").strip()
+    if not raw:
+        return ""
+    if raw.startswith("{"):
+        try:
+            payload = json.loads(raw)
+        except json.JSONDecodeError as exc:
+            raise ValueError(f"Niepoprawny JSON w pliku tokenu {path}: {exc.msg}") from exc
+        if not isinstance(payload, dict):
+            raise ValueError(f"Plik konfiguracyjny {path} musi zawierać obiekt JSON.")
+        return str(payload.get("token", "")).strip()
+    return raw
 
 
 def _token(args: argparse.Namespace) -> str:
     if args.token_file:
         token_path = Path(args.token_file)
-        token = token_path.read_text(encoding="utf-8-sig").strip()
+        token = _token_from_file(token_path)
     else:
         token = os.environ.get(args.token_env, "").strip()
+        if not token and DEFAULT_CONFIG_PATH.is_file():
+            token = _token_from_file(DEFAULT_CONFIG_PATH)
     if not token:
         raise ValueError(
-            f"Brak tokenu. Ustaw zmienną środowiskową {args.token_env} albo użyj --token-file poza repozytorium."
+            f"Brak tokenu. Ustaw zmienną środowiskową {args.token_env}, użyj --token-file "
+            f"albo zapisz ignorowany config w {DEFAULT_CONFIG_PATH}."
         )
     return token
 
@@ -35,7 +55,11 @@ def _positive_int(value: str) -> int:
 
 def _add_connection_args(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--token-env", default="BASELINKER_TOKEN", help="Nazwa zmiennej środowiskowej z tokenem.")
-    parser.add_argument("--token-file", default="", help="Plik zawierający wyłącznie token; trzymaj go poza repo.")
+    parser.add_argument(
+        "--token-file",
+        default="",
+        help="Plik zawierający token albo JSON z polem token; trzymaj go poza repo lub w ignorowanej lokalizacji.",
+    )
     parser.add_argument("--timeout", type=float, default=60.0)
 
 
