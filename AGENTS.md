@@ -81,6 +81,67 @@ plikow XLSX.
 
 ## Zapamietane decyzje uzytkownika
 
+- Dopasowanie produktu po SKU w `find_product_row_by_sku` idzie od
+  najdokladniejszego: pelny kod -> kod bez sufiksu dostawcy (`/KON`, `/KAN`) ->
+  stare luzne dopasowanie po czlonie przed pierwszym ukosnikiem. Niejednoznacznosc
+  na dowolnym poziomie **przerywa z bledem**, zamiast wybierac pierwszy wiersz.
+  **Powod:** stare dopasowanie obcinalo kod na pierwszym ukosniku i dla Kontakt
+  Simon mylilo warianty - `TW6.01/142/KON` i `TW6.01/X/142/KON` dawaly ten sam
+  klucz `TW6.01`, wiec brief wariantu `/X/` dostawal dane wariantu bazowego
+  razem z cudzym EAN-em. Walidator tego NIE wykrywa, bo opis jest spojny ze
+  swoim (blednym) briefem. Przy nowym dostawcy warto porownac SKU z briefow
+  z plikiem wejsciowym.
+- Frazy do generatora zbiera `scripts/harvest_description_phrases.py` z
+  poprawionych opisow (`--html-dir` albo `--input` z kolumna opisu). Wynik idzie
+  do `dictionaries/seo_phrase_bank_by_family.yaml` dopiero przez `--merge-into`;
+  bez tej flagi skrypt tylko raportuje do `reports/`.
+- Bank rodzinowy jest czytany PRZED bankiem globalnym
+  (`seo_phrase_bank_harvested.yaml`). Rozdzial jest celowy: bank globalny nie
+  wie, do jakiego produktu trafi fraza, wiec `is_safe_flavor` wycina z niego
+  slowa `gniazd`, `laczni`, `puszk`, `czujnik`, `podtynkow`, `zacisk`. Bank
+  rodzinowy zna rodzine, wiec wolno mu niesc slownictwo branzowe.
+- Do banku trafia tylko PROZA z akapitow `<p>`, bez pierwszego. Naglowki,
+  punkty list i FAQ sa pomijane: punkty `<li>` to pary cecha-korzysc prawdziwe
+  dla jednego produktu, czyli warstwa argumentacyjna, ktorej bank z zasady nie
+  skaluje. Odrzucane sa tez zdania z liczba, kodem produktu, marka, kolorem,
+  zwrotem do klienta i zdania zalezne od kontekstu.
+- Sekcja `by_domain` w banku powstaje przy zbieraniu, ale **nie jest czytana
+  automatycznie**. Zdanie potrafi opisywac funkcje swojego produktu, nie
+  nazywajac go ("Pojedynczy przedmiot wsuniety do jednego otworu nie otwiera
+  toru pradowego" dotyczy przeslon gniazda), a na innej rodzinie bylby to
+  falszywy opis. Frazy przenosi sie z `by_domain` do `by_family` recznie.
+- Rodzine produktu w generatorze opisow ustala
+  `dictionaries/product_family_taxonomy.yaml` (52 rodziny w domenach
+  `oswietlenie`, `osprzet`, `automatyka`, `trasy_kablowe`, `aparatura`,
+  `kable`, `narzedzia`). **Kazdy nowy typ produktu dostaje wlasna rodzine** -
+  nie wolno rozszerzac `ogolny` ani zostawiac produktow w fallbacku.
+  Fallback `nieznana` jest neutralny i raportowany; `ogolny` zostal usuniety z
+  `LIGHT_FAMILIES`, bo wczesniej kazdy nierozpoznany produkt byl opisywany jak
+  oprawa oswietleniowa.
+- Przy wejsciu nowego dostawcy albo typu produktu uruchom
+  `py scripts/report_family_classification.py --input <plik> --report <raport>`
+  i **zglos uzytkownikowi**, ile sztuk wpadlo w `nieznana` i jakie to typy.
+- Dopasowanie rodziny jest dwuprzebiegowe: najpierw nazwa i pola typu
+  (`primary_fields`), dopiero potem sciezka kategorii sklepu
+  (`context_fields`). Powod: kategoria Woo "Gniazdka i Laczniki > ..." brzmi
+  tak samo dla calej serii, wiec w jednym worku wrzucalaby ramki i klawisze do
+  rodziny gniazd. Czesci nakladane (`zaslepka`, `pokrywa_gniazda`, `klawisz`,
+  `plytka_czolowa`, `ramka`) rozpoznaje `starts_with`, czyli rzeczownik glowny:
+  "Zaslepka ramki" to zaslepka, a nie ramka.
+- Opisy produktowe (ścieżka `codex_brief` -> opis HTML -> review) konczy blok
+  FAQ: po akapicie podsumowujacym idzie `<hr>`, naglowek
+  `<h3>Najczęściej zadawane pytania</h3>`, dokladnie 3 pary pytanie/odpowiedz
+  (kazda odpowiedz 200-300 znakow) i schema `FAQPage` w JSON-LD powtarzajaca
+  widoczna tresc. Pytania numerowane sa tylko w czesci widocznej. Regula stoi w
+  `dictionaries/seo_description_knowledge.yaml` (`product_description.faq`),
+  jest egzekwowana przez `validate_faq_section` w
+  `src/generate_product_descriptions.py` i pokryta testem
+  `tests/test_generate_product_descriptions.py`.
+- Kolumna `Fraza kluczowa` musi byc w pliku wejsciowym briefu. Bez niej
+  `find_seo_keyword` zwraca pusty string, a walidator **pomija wszystkie testy
+  frazy kluczowej** - opis przechodzi walidacje mimo zlych naglowkow. Fraza ma
+  byc doslownym prefiksem nazwy produktu (np. `Gniazdo wtyczkowe`), a nie
+  mnogim `Typ produktu + Seria`, ktore generuje `build_seo_keyword`.
 - Przy pracy nad samodzielnymi plikami XLSX w tym repozytorium uzytkownik
   zezwolil na kontrolowany fallback do `openpyxl`, gdy wymagany runtime arkuszy
   nie jest dostepny. Nadal obowiazuje zakaz nadpisywania plikow wejsciowych.

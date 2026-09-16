@@ -19,6 +19,7 @@ DEFAULT_DESCRIPTION_COLUMN = "description_html"
 DEFAULT_MIN_CHARS_NO_SPACES = 1500
 DEFAULT_CODEX_BRIEF_OUTPUT = "reports/descriptions/description_codex_brief.xlsx"
 DEFAULT_SEO_KNOWLEDGE_PATH = "dictionaries/seo_description_knowledge.yaml"
+DEFAULT_FAMILY_TAXONOMY_PATH = "dictionaries/product_family_taxonomy.yaml"
 CODEX_BRIEF_SHEETS = [
     "Produkt",
     "Product facts",
@@ -495,7 +496,14 @@ def build_codex_brief_for_sku(
 ) -> dict[str, Any]:
     row = find_product_row_by_sku(df, sku)
     normalizer = baselinker.build_feature_value_normalizer(catalog_knowledge or {})
-    raw_features = baselinker.build_features(row, False, feature_value_normalizer=normalizer)
+    # Kanoniczne eksporty AlkanInatora przechowują atrybuty jako JSON w
+    # kolumnie `features`. Zachowaj je jako główne źródło briefu, a wartości
+    # z klasycznych kolumn/`Parametr: ...` użyj do uzupełnienia braków.
+    canonical_features = read_features_json(row)
+    raw_features = dict(canonical_features)
+    derived_features = baselinker.build_features(row, False, feature_value_normalizer=normalizer)
+    for label, value in derived_features.items():
+        raw_features.setdefault(label, value)
     product_name = product_title(row, title_column)
     context = {
         "sku": sku_for_row(row),
@@ -503,7 +511,18 @@ def build_codex_brief_for_sku(
         "name": product_name,
     }
     review_rows: list[dict[str, str]] = []
-    product_features = baselinker.filter_features_for_catalog(raw_features, normalizer, review_rows, context)
+    if canonical_features:
+        # `features` w kanonicznym CSV jest już zatwierdzonym zestawem pól
+        # wysyłanym do BaseLinkera. Nie odrzucaj go ponownie tylko dlatego, że
+        # bieżący słownik Woo nie zna jeszcze wartości nowego dostawcy.
+        product_features = {
+            label: value
+            for label, value in canonical_features.items()
+            if label not in {"EAN (GTIN)", "Kod producenta", "Dane producenta"}
+        }
+        baselinker.drop_fixture_power_for_products_without_light_source(product_features)
+    else:
+        product_features = baselinker.filter_features_for_catalog(raw_features, normalizer, review_rows, context)
     apply_power_range_for_description(row, product_features)
     product_facts = build_product_facts(row, product_features)
     compatibility_facts = build_compatibility_facts(row, raw_features)
@@ -539,25 +558,66 @@ def build_codex_brief_for_sku(
 
 
 def find_product_row_by_sku(df: pd.DataFrame, sku: str) -> pd.Series:
-    requested = normalize_sku_for_match(sku)
-    for _, row in df.iterrows():
-        candidates = [
+    """Szuka wiersza produktu po SKU, od dopasowania najdokladniejszego.
+
+    Kolejnosc jest istotna. Kody czesci dostawcow zawieraja ukosniki w SRODKU
+    (Kontakt Simon: TW6.01/X/142/KON), wiec luzne dopasowanie po czlonie przed
+    pierwszym ukosnikiem myli warianty: TW6.01/142 i TW6.01/X/142 daja ten sam
+    klucz "TW6.01". Dlatego najpierw porownujemy pelny kod, potem kod bez
+    sufiksu dostawcy, a dopiero na koncu stare, luzne dopasowanie.
+    """
+    def candidates(row: pd.Series) -> list[str]:
+        return [
             row.get("sku", ""),
             row.get("SKU", ""),
             row.get("Kod", ""),
             row.get("Kod producenta", ""),
             row.get("Kod Producenta", ""),
         ]
-        if any(normalize_sku_for_match(value) == requested for value in candidates if not is_blank(value)):
-            return row
+
+    for normalizer in (normalize_sku_exact, normalize_sku_without_supplier_suffix, normalize_sku_for_match):
+        requested = normalizer(sku)
+        if not requested:
+            continue
+        matches = [
+            row for _, row in df.iterrows()
+            if any(normalizer(value) == requested for value in candidates(row) if not is_blank(value))
+        ]
+        if len(matches) == 1:
+            return matches[0]
+        if len(matches) > 1:
+            # Niejednoznacznosc na tym poziomie oznacza, ze luzniejszy poziom
+            # tym bardziej jej nie rozstrzygnie - lepiej zglosic niz zgadnac.
+            found = ", ".join(sorted({sku_for_row(row) for row in matches}))
+            raise SystemExit(f"SKU '{sku}' pasuje do wielu produktow: {found}")
     raise SystemExit(f"Nie znaleziono produktu dla SKU/Kod: {sku}")
 
 
-def normalize_sku_for_match(value: Any) -> str:
+def normalize_sku_exact(value: Any) -> str:
+    """Pelny kod produktu, bez obcinania czegokolwiek."""
     text = compact_spaces(str(value or ""))
     if re.fullmatch(r"\d+\.0", text):
         text = text[:-2]
-    return text.split("/", 1)[0].strip().upper()
+    return text.strip().upper()
+
+
+def normalize_sku_without_supplier_suffix(value: Any) -> str:
+    """Kod bez koncowego sufiksu dostawcy (np. /KON, /KAN), ale z reszta kodu."""
+    text = normalize_sku_exact(value)
+    head, _, tail = text.rpartition("/")
+    if head and tail.isalpha() and len(tail) <= 4:
+        return head
+    return text
+
+
+def normalize_sku_for_match(value: Any) -> str:
+    """Luzne dopasowanie: tylko czlon przed pierwszym ukosnikiem.
+
+    UWAGA: dla kodow z ukosnikami w srodku (Kontakt Simon) to dopasowanie jest
+    niejednoznaczne. Uzywane wylacznie jako ostatni krok w
+    `find_product_row_by_sku`, gdy dokladniejsze poziomy nic nie znalazly.
+    """
+    return normalize_sku_exact(value).split("/", 1)[0].strip()
 
 
 def sku_for_row(row: pd.Series) -> str:
@@ -686,7 +746,10 @@ def build_codex_description_prompt(
         "- Po części wprowadzającej dodaj sekcję <h3>Najważniejsze cechy</h3> z korzyściami wynikającymi z faktów.",
         "- Dodaj <h3>Specyfikacja techniczna</h3>; nazwy parametrów w liście wyróżnij tagiem <strong>.",
         "- Bezpośrednio po liście specyfikacji dodaj końcowy akapit <p>. Ma podsumować potwierdzone zalety tego wariantu i naturalnie zachęcić do zakupu albo wskazać praktyczny powód wyboru.",
-        "- Końcowy akapit jest obowiązkowy i musi być ostatnim widocznym elementem opisu. Nie kończ opisu na </ul> specyfikacji.",
+        "- Końcowy akapit jest obowiązkowy i zamyka treść opisu. Nie kończ opisu na </ul> specyfikacji.",
+        "- Po końcowym akapicie dodaj blok FAQ oddzielony <hr>: nagłówek <h3>Najczęściej zadawane pytania</h3>, dokładnie 3 pary pytanie/odpowiedź i schema FAQPage w JSON-LD.",
+        "- Każda odpowiedź FAQ ma 200-300 znaków. Pytania numeruj w treści widocznej (1., 2., 3.); w JSON-LD numeracji nie powtarzaj, a treść ma być identyczna z widoczną.",
+        "- Pytania FAQ dobieraj do konkretnego produktu: realne wątpliwości przed zakupem albo montażem. Nie powielaj tego samego zestawu pytań między produktami.",
         "- Sekcję o zastosowaniu dodaj tylko wtedy, gdy można ją napisać rzetelnie na podstawie typu produktu i faktów.",
         "- Pisz językiem używanym przez człowieka kupującego produkt: najpierw zastosowanie, potem cechy i wynikające z nich korzyści, na końcu parametry.",
         "- Każdą ważną cechę rozwiń według modelu: cecha -> zaleta -> praktyczna korzyść dla użytkownika.",
@@ -734,7 +797,8 @@ def build_codex_description_prompt(
         "- sekcja <h3>Najważniejsze cechy</h3> i lista <ul><li> z konkretnymi korzyściami",
         "- sekcja <h3>Specyfikacja techniczna</h3> tylko z PRODUCT_FACTS; etykiety parametrów w <strong>",
         "- po liście specyfikacji obowiązkowy końcowy <p> z podsumowaniem i naturalną zachętą do zakupu",
-        "- elementy listy zalet zaczynaj od myślnika po tagu, np. <li>- <strong>Cecha</strong> - korzyść.</li>",
+        "- elementy listy zalet zapisuj jako <li><strong>Cecha</strong> - korzyść.</li>, bez myślnika po tagu <li>",
+        "- na końcu blok FAQ: <hr>, <h3>Najczęściej zadawane pytania</h3>, 3 pary <p><strong>N. pytanie</strong><br>odpowiedź</p> i <script type=\"application/ld+json\"> z FAQPage",
         "",
         "Walidacja gotowego review przed oddaniem:",
         "Najpierw złóż review helperem, który istnieje w repo:",
@@ -822,7 +886,10 @@ def validate_codex_description(
             "check": "missing_polish_diacritics",
             "details": f"Opis zawiera polskie słowo zapisane bez znaków diakrytycznych: {ascii_polish_marker}",
         })
-    paragraph_count = len(re.findall(r"<p\b", description_html, flags=re.IGNORECASE))
+    # FAQ jest oddzielone znacznikiem <hr>; trzy akapity pytań nie powinny
+    # zawyżać liczby akapitów głównego opisu ani unieważniać jego zakończenia.
+    main_description_html = description_html.partition("<hr>")[0]
+    paragraph_count = len(re.findall(r"<p\b", main_description_html, flags=re.IGNORECASE))
     if paragraph_count < 3 or paragraph_count > 5:
         checks.append({
             "status": "WARNING",
@@ -832,7 +899,7 @@ def validate_codex_description(
     if not re.search(r"<h2\b", description_html, flags=re.IGNORECASE):
         checks.append({"status": "WARNING", "check": "html_h2", "details": "Opis nie zawiera sekcji <h2>."})
     validate_seo_opening(checks, description_html, product_name)
-    validate_seo_headings(checks, description_html, product_facts)
+    validate_seo_headings(checks, description_html, product_facts, seo_keyword)
     if seo_keyword:
         validate_seo_keyword_placement(checks, description_html, seo_keyword, seo_rules)
     if not re.search(r"<h3\b[^>]*>\s*Specyfikacja techniczna\s*</h3>", description_html, flags=re.IGNORECASE):
@@ -852,7 +919,8 @@ def validate_codex_description(
                 "check": "html_specification_labels",
                 "details": "Etykiety parametrów w specyfikacji powinny być wyróżnione tagiem <strong>.",
             })
-        validate_closing_summary(checks, description_html)
+        validate_closing_summary(checks, main_description_html)
+    validate_faq_section(checks, description_html)
     meta_phrase = find_meta_description_phrase(text)
     if meta_phrase:
         checks.append({
@@ -889,6 +957,74 @@ def validate_codex_description(
     if not any(check["status"] in {"ERROR", "WARNING"} for check in checks):
         checks.append({"status": "OK", "check": "rejected_facts", "details": "Nie wykryto użycia odrzuconych faktów."})
     return checks
+
+
+def validate_faq_section(checks: list[dict[str, str]], description_html: str) -> None:
+    """Sprawdza blok FAQ wedlug tych samych regul, co tryb `generate`.
+
+    Kontrakt: po <hr> stoi naglowek FAQ, trzy pary pytanie/odpowiedz,
+    odpowiedzi maja 200-300 znakow, a schema FAQPage powtarza doslownie
+    widoczna tresc.
+    """
+    if "<hr>" not in description_html:
+        checks.append({
+            "status": "WARNING",
+            "check": "faq_section_present",
+            "details": "Brak sekcji FAQ oddzielonej znacznikiem <hr>.",
+        })
+        return
+
+    faq_html = description_html.partition("<hr>")[2]
+    questions = re.findall(r"<p\b[^>]*>\s*<strong\b[^>]*>(.*?)</strong>\s*<br>", faq_html, flags=re.IGNORECASE | re.DOTALL)
+    answers = [strip_html(value).strip() for value in re.findall(r"<br>\s*(.*?)</p>", faq_html, flags=re.DOTALL)]
+
+    if len(answers) != 3:
+        checks.append({
+            "status": "WARNING",
+            "check": "faq_question_count",
+            "details": f"Sekcja FAQ ma {len(answers)} odpowiedzi; wymagane 3.",
+        })
+    for index, answer in enumerate(answers, 1):
+        if not 200 <= len(answer) <= 300:
+            checks.append({
+                "status": "WARNING",
+                "check": "faq_answer_length",
+                "details": f"Odpowiedz FAQ nr {index} ma {len(answer)} znakow; wymagane 200-300.",
+            })
+
+    if 'type="application/ld+json"' not in description_html:
+        checks.append({
+            "status": "WARNING",
+            "check": "faq_schema_present",
+            "details": "Brak schema FAQPage w formacie JSON-LD.",
+        })
+        return
+
+    schema = extract_faq_schema(description_html)
+    if not schema or schema.get("@type") != "FAQPage" or not schema.get("mainEntity"):
+        checks.append({
+            "status": "WARNING",
+            "check": "faq_schema_valid",
+            "details": "Schema JSON-LD jest niepoprawne albo nie jest typu FAQPage.",
+        })
+        return
+
+    schema_pairs = [
+        (compact_spaces(str(entry.get("name", ""))),
+         compact_spaces(str(entry.get("acceptedAnswer", {}).get("text", ""))))
+        for entry in schema.get("mainEntity", [])
+    ]
+    # Widoczne pytania sa numerowane ("1. ..."), schema numeracji nie powtarza.
+    visible_pairs = [
+        (compact_spaces(re.sub(r"^\d+[.)]\s*", "", strip_html(question))), compact_spaces(answer))
+        for question, answer in zip(questions, answers)
+    ]
+    if schema_pairs != visible_pairs:
+        checks.append({
+            "status": "WARNING",
+            "check": "faq_schema_matches_text",
+            "details": "Tresc schema FAQPage nie jest identyczna z widoczna sekcja FAQ.",
+        })
 
 
 def codex_minimum_chars(product_facts: list[dict[str, str]]) -> int:
@@ -928,10 +1064,15 @@ def validate_seo_opening(checks: list[dict[str, str]], description_html: str, pr
             })
 
 
+# Typy-worki z katalogu: nie niosa informacji o produkcie.
+NON_DESCRIPTIVE_PRODUCT_TYPES = {"inne", "pozostale", "rozne", "akcesoria"}
+
+
 def validate_seo_headings(
     checks: list[dict[str, str]],
     description_html: str,
     product_facts: list[dict[str, str]],
+    seo_keyword: str = "",
 ) -> None:
     headings = [
         compact_spaces(strip_html(value))
@@ -950,7 +1091,28 @@ def validate_seo_headings(
         (compact_spaces(str(row.get("value", ""))) for row in product_facts if row.get("fact") == "Typ produktu"),
         "",
     )
-    if product_type and not any(normalize_header(product_type) in normalize_header(heading) for heading in headings):
+    # Wartosci workowe nie opisuja produktu, wiec wymaganie ich w naglowku
+    # dawaloby zdania w rodzaju "Do czego sluza inne?".
+    if normalize_header(product_type) in NON_DESCRIPTIVE_PRODUCT_TYPES:
+        product_type = ""
+    # Gdy naglowek ma juz fraze kluczowa, niesie nazwe produktu i nie trzeba
+    # dodatkowo wciskac mnogiej nazwy kategorii. Wymaganie obu naraz wymusza
+    # niepoprawne zdania ("daje sterowniki Wi-Fi", "wsrod gniazdka
+    # multimedialnego") - fraza jest lepszym i konkretniejszym sygnalem.
+    if seo_keyword and any(
+        normalize_header(seo_keyword) in normalize_header(heading) for heading in headings
+    ):
+        product_type = ""
+    # Typy wielowyrazowe to zwykle nazwy kategorii ("Sterowniki i automatyka").
+    # Wymaganie calej nazwy w naglowku byloby nienaturalne, wiec wystarczy
+    # pierwszy czlon, ktory niesie rzeczownik produktu.
+    accepted = {normalize_header(product_type)}
+    first_token = normalize_header(product_type).split(" ")[0]
+    if first_token:
+        accepted.add(first_token)
+    if product_type and not any(
+        any(form in normalize_header(heading) for form in accepted) for heading in headings
+    ):
         checks.append({
             "status": "WARNING",
             "check": "seo_h2_product_type",
@@ -1062,7 +1224,10 @@ def has_encoding_damage(description_html: str) -> bool:
     text = strip_html(description_html)
     if "?" not in text:
         return False
-    return bool(re.search(r"[A-Za-zĄĆĘŁŃÓŚŹŻąćęłńóśźż]\?|\?[A-Za-zĄĆĘŁŃÓŚŹŻąćęłńóśźż]", text))
+    letter = r"A-Za-zĄĆĘŁŃÓŚŹŻąćęłńóśźż"
+    # Znak zapytania na końcu prawdziwego pytania jest poprawny. Uszkodzone
+    # kodowanie rozpoznajemy wewnątrz wyrazu albo przed dalszym małym wyrazem.
+    return bool(re.search(rf"[{letter}]\?[{letter}]|[{letter}]\?\s+[a-ząćęłńóśźż]", text))
 
 
 def find_meta_description_phrase(text: str) -> str:
@@ -1299,10 +1464,21 @@ def has_feature(attrs: dict[str, str], key: str) -> bool:
     return normalize_header(attrs.get(key, "")) not in {"", "nie", "brak", "n/d", "nd", "0"}
 
 
-LIGHT_FAMILIES = {"high_bay", "panel", "hermetyczna", "plafon", "naswietlacz", "oprawa", "ogrodowa", "ogolny"}
+# Zachowane dla zgodnosci wstecznej ze starymi rodzinami oswietleniowymi.
+# Zrodlem prawdy jest pole `is_light` w dictionaries/product_family_taxonomy.yaml.
+# `ogolny` zostal STAD USUNIETY: fallback nie moze byc traktowany jak oprawa.
+LIGHT_FAMILIES = {"high_bay", "panel", "hermetyczna", "plafon", "naswietlacz", "oprawa", "ogrodowa"}
 
 
 def is_light_product(family: str) -> bool:
+    """Czy o produkcie wolno pisac jezykiem oswietleniowym.
+
+    Decyduje taksonomia; zbior LIGHT_FAMILIES jest tylko zapasem, gdyby plik
+    taksonomii byl niedostepny. Rodzina nierozpoznana NIGDY nie jest swiatlem.
+    """
+    entry = family_entry(family)
+    if entry:
+        return bool(entry.get("is_light", False))
     return family in LIGHT_FAMILIES
 
 
@@ -1312,6 +1488,10 @@ def is_channel_luminaire(attrs: dict[str, str]) -> bool:
 
 
 def subject_for(family: str) -> str:
+    """Podmiot zdania: "To gniazdo", "Ten lacznik", "Ta oprawa"..."""
+    entry = family_entry(family)
+    if entry.get("subject"):
+        return str(entry["subject"])
     return {
         "ramka": "Ta ramka",
         "zasilacz": "Ten zasilacz",
@@ -1548,10 +1728,11 @@ FAMILY_INTRO_ROLE = {
         "Dobrze dopasowane akcesorium pozwala utrzymać instalację w pełnej sprawności bez wymiany całej oprawy.",
         "To część, przy której najważniejsza jest zgodność z konkretną oprawą lub serią.",
     ],
+    # NEUTRALNY fallback - bez odniesien do swiatla, oprawy i strumienia.
     "ogolny": [
-        "Dobrze dobrane oświetlenie poprawia komfort i wygląd przestrzeni, w której pracuje.",
-        "Właściwa oprawa łączy użyteczne światło z dopasowaniem do miejsca montażu.",
-        "Liczy się nie tylko sam strumień światła, ale też dopasowanie oprawy do funkcji pomieszczenia.",
+        "Dobrze dobrany osprzęt to taki, który odpowiada funkcji i warunkom miejsca montażu.",
+        "O przydatności takiego elementu decyduje zgodność z instalacją, w której ma pracować.",
+        "Przy kompletowaniu instalacji liczy się dopasowanie do pozostałych elementów stanowiska.",
     ],
 }
 
@@ -1573,7 +1754,10 @@ FAMILY_DEFINITION = {
     "ramka": ["to element montażowy do paneli LED", "to obramowanie ułatwiające montaż panelu na suficie", "to ramka do natynkowego osadzenia panelu"],
     "zasilacz": ["to element zasilający do opraw i paneli LED", "to zasilacz do instalacji oświetleniowej LED", "to podzespół do kompletacji oświetlenia LED"],
     "akcesorium": ["to element uzupełniający instalację oświetleniową", "to część do opraw i systemów oświetleniowych", "to akcesorium do montażu lub serwisu oświetlenia"],
-    "ogolny": ["to oprawa oświetleniowa", "to element instalacji oświetleniowej", "to produkt z zakresu oświetlenia"],
+    # NEUTRALNY fallback. Spadaja tu wszystkie rodziny bez wlasnych pul fraz,
+    # wiec nie moze zawierac slownictwa oswietleniowego ani zadnego innego
+    # przypisania branzowego. Jezyk oswietleniowy nalezy do rodzin z is_light.
+    "ogolny": ["to element instalacji elektrycznej", "to osprzęt instalacyjny", "to produkt do instalacji elektrycznej"],
 }
 
 
@@ -1747,7 +1931,7 @@ def concrete_benefit_sentence(attrs: dict[str, str], family: str, seed: int) -> 
     return pick_variant(cands, seed)
 
 
-INDOOR_LIGHT_FAMILIES = {"high_bay", "panel", "hermetyczna", "plafon", "oprawa", "ogolny"}
+INDOOR_LIGHT_FAMILIES = {"high_bay", "panel", "hermetyczna", "plafon", "oprawa"}
 
 
 def _int_or_none(value: str) -> "int | None":
@@ -1948,7 +2132,7 @@ FAMILY_FLAVOR_CATS = {
     "panel": ["zastosowanie_wnetrza", "design_estetyka", "jakosc_trwalosc"],
     "plafon": ["zastosowanie_wnetrza", "design_estetyka", "jakosc_trwalosc"],
     "oprawa": ["design_estetyka", "zastosowanie_wnetrza", "jakosc_trwalosc"],
-    "ogolny": ["design_estetyka", "jakosc_trwalosc", "zastosowanie_wnetrza"],
+    "ogolny": ["funkcje_korzysci", "jakosc_trwalosc", "montaz_uzytkowanie"],
     "high_bay": ["jakosc_trwalosc", "zastosowanie_wnetrza", "design_estetyka"],
     "hermetyczna": ["jakosc_trwalosc", "zastosowanie_wnetrza", "design_estetyka"],
     "naswietlacz": ["zastosowanie_zewnetrze", "jakosc_trwalosc", "design_estetyka"],
@@ -1961,20 +2145,84 @@ FAMILY_FLAVOR_CATS = {
 _NONLIGHT_BAN = re.compile(r"(świat[łl]|oświetl|barw|jasnoś|doświetl|reflektor|lamp|żarów|świec)", re.I)
 
 
+_FAMILY_BANK_CACHE: "dict[str, Any] | None" = None
+FAMILY_BANK_PATH = Path(__file__).resolve().parents[1] / "dictionaries" / "seo_phrase_bank_by_family.yaml"
+
+
+def load_family_phrase_bank() -> dict[str, Any]:
+    """Bank fraz z zakresem rodziny i domeny produktowej.
+
+    W odroznieniu od banku globalnego te frazy maja przypisana rodzine, wiec
+    wolno im niesc slownictwo branzowe ("podtynkowo", "szybkozlacza") - nie
+    trafia one na produkt z innej polki. Bank globalny musi to wycinac, bo nie
+    wie, do czego fraza trafi.
+    """
+    global _FAMILY_BANK_CACHE
+    if _FAMILY_BANK_CACHE is not None:
+        return _FAMILY_BANK_CACHE
+    data: dict[str, Any] = {}
+    try:
+        import yaml
+        data = yaml.safe_load(FAMILY_BANK_PATH.read_text(encoding="utf-8")) or {}
+    except Exception:
+        data = {}
+    _FAMILY_BANK_CACHE = data
+    return data
+
+
+def family_bank_pool(family: str, preferred_cats: list[str]) -> list[str]:
+    """Frazy dla rodziny: najpierw jej wlasne, potem szersza pula domeny.
+
+    Bierzemy WSZYSTKIE kategorie danej rodziny, nie tylko `preferred_cats`.
+    Zawezenie kategorii w FAMILY_FLAVOR_CATS chroni bank GLOBALNY, ktory nie
+    wie, do jakiego produktu trafi fraza. Tutaj fraza jest juz przypisana do
+    rodziny, wiec kategorie takie jak `montaz_uzytkowanie` sa bezpieczne -
+    a to w nich siedzi wiekszosc zebranego materialu.
+    `preferred_cats` ustala tylko KOLEJNOSC.
+    """
+    bank = load_family_phrase_bank()
+    pool: list[str] = []
+    # CELOWO tylko `by_family`. Sekcja `by_domain` powstaje przy zbieraniu fraz,
+    # ale NIE jest czytana automatycznie: zdanie potrafi opisywac funkcje swojego
+    # produktu, nie nazywajac go. "Pojedynczy przedmiot wsuniety do jednego
+    # otworu nie otwiera toru pradowego" dotyczy przeslon gniazda, a filtr nie
+    # ma jak tego wykryc - na ramce albo klawiszu bylby to falszywy opis.
+    # Frazy z `by_domain` przenosi sie do `by_family` recznie, po przegladzie.
+    buckets = (bank.get("by_family") or {}).get(family) or {}
+    ordered = [c for c in preferred_cats if c in buckets]
+    ordered += [c for c in buckets if c not in ordered]
+    for cat in ordered:
+        for sentence in buckets.get(cat, []) or []:
+            if sentence not in pool:
+                pool.append(sentence)
+    return pool
+
+
 def bank_flavor_sentences(family: str, seed: int, n: int = 2) -> list[str]:
     bank = load_harvested_bank()
     cats = FAMILY_FLAVOR_CATS.get(family, ["funkcje_korzysci", "design_estetyka", "jakosc_trwalosc"])
     light = is_light_product(family)
-    pool: list[str] = []
+
+    # Frazy przypisane do rodziny sa konkretniejsze niz ogolnikowy bank globalny,
+    # wiec ida PRZED nim. Rotacja dziala osobno w kazdej puli - inaczej pula
+    # globalna (setki zdan) zawsze przeslonilaby kilkanascie fraz rodziny.
+    scoped = family_bank_pool(family, cats)
+    generic: list[str] = []
     for cat in cats:
         for sentence in bank.get(cat, []):
             if not light and _NONLIGHT_BAN.search(sentence):
                 continue
-            pool.append(sentence)
-    if not pool:
+            generic.append(sentence)
+
+    def rotate(items: list[str]) -> list[str]:
+        if not items:
+            return []
+        start = (seed * 13) % len(items)
+        return items[start:] + items[:start]
+
+    ordered = rotate(scoped) + rotate(generic)
+    if not ordered:
         return []
-    start = (seed * 13) % len(pool)
-    ordered = pool[start:] + pool[:start]
     out: list[str] = []
     out_words: list[set[str]] = []
     for sentence in ordered:
@@ -2841,7 +3089,7 @@ CLOSING_BUILDERS = {  # closing_data (konkret+CTA) wazony 2x, zeby czesciej konc
     "ramka": [closing_data, closing_frame],
     "zasilacz": [closing_data, closing_power_supply],
     "akcesorium": [closing_data, closing_accessory],
-    "ogolny": [closing_data, closing_light_value],
+    "ogolny": [closing_data],
 }
 
 
@@ -3288,40 +3536,109 @@ def strip_unit(value: str, unit: str) -> str:
     return compact_spaces(value)
 
 
+_FAMILY_TAXONOMY_CACHE: dict[str, Any] = {}
+
+
+def load_family_taxonomy() -> dict[str, Any]:
+    """Wczytuje taksonomie rodzin produktowych; wynik jest cache'owany."""
+    if not _FAMILY_TAXONOMY_CACHE:
+        path = Path(DEFAULT_FAMILY_TAXONOMY_PATH)
+        _FAMILY_TAXONOMY_CACHE["data"] = baselinker.load_yaml(path) if path.exists() else {}
+    return _FAMILY_TAXONOMY_CACHE.get("data") or {}
+
+
+def family_entry(family: str) -> dict[str, Any]:
+    for entry in load_family_taxonomy().get("families", []):
+        if entry.get("name") == family:
+            return entry
+    return {}
+
+
+def family_match_text(title: str, attrs: dict[str, str]) -> tuple[str, str, str]:
+    """Zwraca (tekst mocny, tekst slaby, tekst pol typu).
+
+    Mocny = nazwa produktu + pola typu. Slaby = sciezka kategorii sklepu, ktora
+    dla calej serii brzmi tak samo ("Gniazdka Kontakt Simon") i samodzielnie
+    wrzucilaby ramki oraz klawisze do rodziny gniazd.
+
+    Tekst pol typu jest potrzebny osobno dla regul z `require_type_match` -
+    patrz `collision_notes` w taksonomii.
+    """
+    matching = load_family_taxonomy().get("matching", {})
+    primary_fields = matching.get("primary_fields", [])
+    context_fields = matching.get("context_fields", [])
+    type_values = [attrs.get(field, "") for field in primary_fields if field != "__working_title"]
+    primary = normalize_header(" ".join([title, *(attrs.get(f, "") for f in primary_fields)]))
+    context = normalize_header(" ".join(attrs.get(f, "") for f in context_fields))
+    return primary, context, normalize_header(" ".join(type_values))
+
+
+def family_rule_matches(
+    rule: dict[str, Any],
+    haystack: str,
+    full_text: str,
+    type_text: str,
+    title_text: str = "",
+) -> bool:
+    """Czy regula rodziny pasuje do produktu.
+
+    Wyzwalacze (`starts_with`, `any`) dzialaja na zasadzie OR; ograniczenia
+    (`all`, `none`) musza byc spelnione dodatkowo.
+
+    `starts_with` patrzy wylacznie na POCZATEK nazwy produktu i sluzy czesciom
+    nakladanym. Rozstrzyga o rzeczowniku glownym: "Zaslepka ramki" to zaslepka,
+    a nie ramka; "Lacznik swiecznikowy z podswietleniem klawisza" to lacznik,
+    a nie klawisz.
+    """
+    match = rule.get("match") or {}
+    if not match:
+        return False
+    target = type_text if match.get("require_type_match") else haystack
+
+    triggers: list[bool] = []
+    tokens_start = match.get("starts_with", [])
+    if tokens_start:
+        triggers.append(any(title_text.startswith(normalize_header(token)) for token in tokens_start))
+    tokens_any = match.get("any", [])
+    if tokens_any:
+        triggers.append(any(normalize_header(token) in target for token in tokens_any))
+    if not triggers or not any(triggers):
+        return False
+
+    tokens_all = match.get("all", [])
+    if tokens_all and not all(normalize_header(token) in target for token in tokens_all):
+        return False
+    # Blokady kolizji sprawdzamy zawsze na calym dostepnym tekscie.
+    tokens_none = match.get("none", [])
+    if tokens_none and any(normalize_header(token) in full_text for token in tokens_none):
+        return False
+    return True
+
+
 def classify_family(title: str, attrs: dict[str, str]) -> str:
-    text = normalize_header(" ".join([title, attrs.get("Typ produktu", ""), attrs.get("Seria", "")]))
-    # Samodzielny czujnik to akcesorium; "z czujnikiem ruchu" w nazwie oprawy - nie.
-    if text.startswith("czujnik"):
-        return "akcesorium"
-    if any(token in text for token in ["klosz", "zapinka", "wspornik", "siatka", "konektor", "pilot", "uchwyt", "soczewka", "klips", "linka", "lacznik", "łącznik"]):
-        return "akcesorium"
-    # Oswietlenie zewnetrzne/ogrodowe - lampy ogrodowe, kule, slupki, kinkiety i oprawy elewacyjne.
-    if any(token in text for token in ["ogrodow", "elewacyjn", "slupek", "słupek", "kinkiet", "kula"]):
-        return "ogrodowa"
-    if "ramka" in text or "adtr" in text:
-        return "ramka"
-    if "zasilacz" in text or "driver" in text:
-        return "zasilacz"
-    if "high bay" in text or "hb ufo" in text:
-        return "high_bay"
-    if "naswietlacz" in text or "naświetlacz" in title.lower():
-        return "naswietlacz"
-    if "plafon" in text:
-        return "plafon"
-    if "panel" in text or "blingo" in text or "barev" in text:
-        return "panel"
-    if "hermetycz" in text or "dicht" in text or "mah" in text or "tp strong" in text:
-        return "hermetyczna"
-    if (
-        "oprawa sufitowa" in text
-        or "oprawa punktowa" in text
-        or "oprawa kanalowa" in text
-        or "oprawa kanałowa" in title.lower()
-        or "lampa wiszaca" in text
-        or "lampa wisząca" in title.lower()
-    ):
-        return "oprawa"
-    return "ogolny"
+    """Przypisuje rodzine produktowa wedlug dictionaries/product_family_taxonomy.yaml.
+
+    Rodziny sa sprawdzane w kolejnosci z pliku, od najbardziej szczegolowych.
+    Brak dopasowania daje rodzine `unknown_family`, ktora jest NEUTRALNA - nigdy
+    nie wolno jej traktowac jak oswietlenia. Produkty, ktore tam trafiaja, sa
+    sygnalem, ze brakuje nowej klasy w taksonomii.
+    """
+    taxonomy = load_family_taxonomy()
+    families = taxonomy.get("families", [])
+    if not families:
+        return "ogolny"
+    primary, context, type_text = family_match_text(title, attrs)
+    full_text = f"{primary} {context}".strip()
+    title_text = normalize_header(title)
+    # Przebieg 1: tylko nazwa i typ produktu.
+    for entry in families:
+        if family_rule_matches(entry, primary, full_text, type_text, title_text):
+            return str(entry.get("name", ""))
+    # Przebieg 2: dopiero teraz sciezka kategorii jako slaba podpowiedz.
+    for entry in families:
+        if family_rule_matches(entry, full_text, full_text, type_text, title_text):
+            return str(entry.get("name", ""))
+    return str(taxonomy.get("defaults", {}).get("unknown_family", "nieznana"))
 
 
 def stable_seed(value: str) -> int:
@@ -3571,12 +3888,16 @@ def mount_genitive(value: str) -> str:
 
 
 def render_benefit_item(item: str) -> str:
-    """Punkt listy: 'cecha - korzysc' -> pogrubiona cecha; inaczej zwykly punkt z myslnikiem."""
+    """Punkt listy: 'cecha - korzysc' -> pogrubiona cecha, potem korzysc.
+
+    Bez wiodacego myslnika po <li>: znacznik listy sam rysuje punktor, wiec
+    myslnik dawal podwojny punktor ("* - Cecha").
+    """
     item = compact_spaces(item)
     if " - " in item:
         lead, rest = item.split(" - ", 1)
-        return f"  <li>- <strong>{escape(lead)}</strong> - {escape(rest)}</li>"
-    return f"  <li>- {escape(item)}</li>"
+        return f"  <li><strong>{escape(lead)}</strong> - {escape(rest)}</li>"
+    return f"  <li>{escape(item)}</li>"
 
 
 GARDEN_PLACES = "ścieżek, tarasów, ogrodów, wejść, rabat i stref wypoczynkowych"

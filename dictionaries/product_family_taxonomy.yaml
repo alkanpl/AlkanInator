@@ -1,0 +1,480 @@
+version: 1
+description: >
+  Taksonomia rodzin produktowych dla generatora opisow. Rodzina decyduje o tym,
+  czym produkt JEST: jakiego podmiotu uzywa opis ("To gniazdo", "Ten lacznik"),
+  czy wolno o nim mowic jezykiem oswietleniowym i z ktorej rodziny fraz czerpac.
+
+  Zasada nadrzedna: kazdy nowy typ produktu dostaje wlasna rodzine. Nie wolno
+  rozszerzac znaczenia rodziny `ogolny` ani liczyc na to, ze fallback "jakos to
+  opisze" - fallback ma byc neutralny i zglaszany do przegladu.
+
+  Kolejnosc wpisow w `families` ma znaczenie: dopasowanie idzie od gory, wiec
+  rodziny bardziej szczegolowe (gniazdo_antenowe) stoja przed ogolniejszymi
+  (gniazdo_zasilajace).
+
+defaults:
+  # Rodzina nadawana, gdy nic nie pasuje. Celowo neutralna i raportowana.
+  unknown_family: nieznana
+  # Rodzina, z ktorej czerpia frazy wszystkie rodziny bez wlasnych pul.
+  neutral_phrase_family: osprzet_ogolny
+
+matching:
+  # Sygnal MOCNY: nazwa produktu i pola typu. Dopasowanie idzie najpierw tylko tutaj.
+  primary_fields:
+    - __working_title
+    - Typ produktu
+    - Podtyp produktu
+  # Sygnal SLABY: sciezka kategorii sklepu. Uzywany dopiero w drugim przebiegu,
+  # gdy nic nie pasuje po nazwie i typie.
+  #
+  # POWOD: kategoria Woo "Gniazdka i Laczniki > Gniazdka Kontakt Simon > Simon 55"
+  # zawiera slowo "Gniazdka" dla KAZDEGO produktu serii - takze dla ramek,
+  # klawiszy i zaslepek. Wrzucona do wspolnego worka zaglusza nazwe produktu
+  # i wszystko laduje w rodzinie gniazd.
+  context_fields:
+    - Kategoria produktu
+    - Podkategoria produktu
+    - Grupa produktowa
+  note: >
+    `any` - wystarczy jeden token. `all` - wszystkie musza wystapic.
+    `none` - zaden nie moze wystapic (blokada kolizji nazw); sprawdzane zawsze
+    na polach mocnych i slabych lacznie.
+
+# Kolizje nazw, ktore juz raz wywolaly blad - trzymac jako komentarz ostrzegawczy:
+# "lacznik" w oswietleniu = zlaczka do profili LED, a w osprzecie = lacznik
+# scienny. Rozstrzyga obecnosc tokenow oswietleniowych w `none`.
+collision_notes:
+  lacznik: >
+    W oswietleniu "lacznik" oznacza zlaczke profilu/tasmy LED, w osprzecie -
+    lacznik scienny. Rodzina lacznik_instalacyjny wyklucza tokeny profilowe.
+  zasilacz: >
+    Token "zasilacz" w nazwie produktu bywa wymaganiem ("Wymagany zasilacz 14V"),
+    a nie typem produktu. Rodzina zasilacz wymaga tokenu w polu typu, nie w tytule.
+
+families:
+
+  # ---------------------------------------------------------------- oswietlenie
+  - name: high_bay
+    domain: oswietlenie
+    subject: "Ta oprawa"
+    is_light: true
+    match:
+      any: ["high bay", "hb ufo", "hb pro"]
+
+  - name: naswietlacz
+    domain: oswietlenie
+    subject: "Ten naswietlacz"
+    is_light: true
+    outdoor: true
+    match:
+      any: ["naswietlacz", "halogen naswietlacz"]
+
+  - name: ogrodowa
+    domain: oswietlenie
+    subject: "Ta lampa"
+    is_light: true
+    outdoor: true
+    match:
+      any: ["ogrodow", "elewacyjn", "slupek", "kinkiet", "kula"]
+
+  - name: panel
+    domain: oswietlenie
+    subject: "Ten panel"
+    is_light: true
+    match:
+      any: ["panel", "blingo", "barev"]
+
+  - name: plafon
+    domain: oswietlenie
+    subject: "Ten plafon"
+    is_light: true
+    match:
+      any: ["plafon"]
+
+  - name: hermetyczna
+    domain: oswietlenie
+    subject: "Ta oprawa"
+    is_light: true
+    match:
+      any: ["hermetycz", "dicht", "tp strong"]
+
+  - name: szynoprzewod
+    domain: oswietlenie
+    subject: "Ten szynoprzewod"
+    is_light: true
+    match:
+      any: ["szynoprzewod", "szyna oswietleniowa", "reflektor szynowy"]
+
+  - name: tasma_led
+    domain: oswietlenie
+    subject: "Ta tasma"
+    is_light: true
+    match:
+      any: ["tasma led", "pasek led", "tasmy i paski led"]
+
+  - name: zarowka
+    domain: oswietlenie
+    subject: "Ta zarowka"
+    is_light: true
+    match:
+      any: ["zarowka", "swietlowka", "zarowki led", "wklad led"]
+
+  - name: ozdoba_swiateczna
+    domain: oswietlenie
+    subject: "Ta dekoracja"
+    is_light: true
+    match:
+      any: ["ozdoby swiateczne", "lampki choinkowe", "kurtyna swietlna"]
+
+  - name: sygnalizator_led
+    domain: oswietlenie
+    subject: "Ta oprawa"
+    is_light: true
+    match:
+      any: ["sygnalizatory i oprawy led", "oprawa oswietleniowa led"]
+
+  - name: oprawa
+    domain: oswietlenie
+    subject: "Ta oprawa"
+    is_light: true
+    match:
+      any: ["oprawa sufitowa", "oprawa punktowa", "oprawa kanalowa",
+            "lampa wiszaca", "oprawa schodowa", "downlight", "oprawa"]
+
+  - name: zasilacz
+    domain: oswietlenie
+    subject: "Ten zasilacz"
+    is_light: false
+    match:
+      any: ["zasilacz", "driver led"]
+      # patrz collision_notes.zasilacz
+      require_type_match: true
+
+  - name: akcesorium_oswietleniowe
+    domain: oswietlenie
+    subject: "To akcesorium"
+    is_light: false
+    match:
+      # Czesci DO oprawy. Musza byc sprawdzane przed rodzinami osprzetowymi
+      # i trasami kablowymi, bo dziela z nimi rzeczowniki: "lacznik" (zlaczka
+      # profilu LED), "wspornik", "linka", "uchwyt". Pliki Kanluxa czesto nie
+      # maja pol kategorii, wiec rozstrzyga sama nazwa produktu.
+      any: ["klosz", "zapinka", "siatka ochronna", "konektor", "pilot",
+            "soczewka", "klips", "profil led", "linka do podwieszania",
+            "wspornik montazowy", "wspornik oprawy", "uchwyt oprawy",
+            "uchwyt", "lacznik do", "ramie montazowe"]
+      none: ["uchwyt kablowy", "koryto", "peszel", "kanal kablowy",
+             "gniazdo", "przycisk", "klawisz"]
+
+  # ------------------------------------------- osprzet uzupelniajacy / nakladki
+  - name: zaslepka
+    domain: osprzet
+    subject: "Ta zaslepka"
+    is_light: false
+    match:
+      # "Zaslepka ramki" to zaslepka - dlatego rzeczownik glowny, nie `any`.
+      starts_with: ["zaslepka", "zaslepki"]
+
+  - name: pokrywa_gniazda
+    domain: osprzet
+    subject: "Ta pokrywa"
+    is_light: false
+    match:
+      starts_with: ["pokrywa", "pokrywy"]
+
+  - name: klawisz
+    domain: osprzet
+    subject: "Ten klawisz"
+    is_light: false
+    match:
+      # Nie `any`: "Lacznik swiecznikowy z podswietleniem klawisza" to lacznik,
+      # a "Sciemniacz klawiszowy" to sciemniacz.
+      starts_with: ["klawisz", "klawisze"]
+
+  - name: plytka_czolowa
+    domain: osprzet
+    subject: "Ta plytka"
+    is_light: false
+    match:
+      starts_with: ["plytka", "element centralny", "nasadka", "wkladka", "plakietka"]
+
+  - name: ramka
+    domain: osprzet
+    subject: "Ta ramka"
+    is_light: false
+    match:
+      starts_with: ["ramka", "ramki"]
+      any: ["adtr"]
+
+  - name: przylacze_kabla
+    domain: osprzet
+    subject: "To przylacze"
+    is_light: false
+    match:
+      any: ["przylacze kabla", "wyprowadzenie przewodu"]
+
+  # ------------------------------------------------------------------- gniazda
+  - name: gniazdo_antenowe
+    domain: osprzet
+    subject: "To gniazdo"
+    is_light: false
+    match:
+      any: ["gniazdo antenowe", "antenow", "r-tv-sat", "rtv-sat", "sat-sat",
+            "gniazdo tv", "tv-data", "typu f"]
+
+  - name: gniazdo_komputerowe
+    domain: osprzet
+    subject: "To gniazdo"
+    is_light: false
+    match:
+      any: ["gniazdo komputerowe", "komputerow", "rj45", "keystone",
+            "swiatlowodow"]
+      # UWAGA: "Gniazdo DATA z kluczem uprawniajacym" to gniazdo zasilajace
+      # 16 A dla sprzetu IT, nie gniazdo teleinformatyczne - celowo bez tokenu.
+      none: ["gniazdo wtyczkowe"]
+
+  - name: gniazdo_telefoniczne
+    domain: osprzet
+    subject: "To gniazdo"
+    is_light: false
+    match:
+      any: ["gniazdo telefoniczne", "telefonicz", "rj12", "rj11"]
+
+  - name: gniazdo_multimedialne
+    domain: osprzet
+    subject: "To gniazdo"
+    is_light: false
+    match:
+      any: ["hdmi", "glosnikow", "gniazdo glosnikowe", "cinch", "vga",
+            "jack", "usb-hdmi"]
+
+  - name: ladowarka_usb
+    domain: osprzet
+    subject: "Ta ladowarka"
+    is_light: false
+    match:
+      any: ["ladowarka", "ladowarki usb", "gniazdo usb"]
+      none: ["gniazdo wtyczkowe"]
+
+  - name: gniazdo_ekwipotencjalne
+    domain: osprzet
+    subject: "To gniazdo"
+    is_light: false
+    match:
+      any: ["ekwipotencjaln"]
+
+  - name: gniazdo_zasilajace
+    domain: osprzet
+    subject: "To gniazdo"
+    is_light: false
+    match:
+      any: ["gniazdo wtyczkowe", "gniazdo schuko", "schuko", "gniazdo zasilajace",
+            "gniazda zasilajace", "gniazdo podwojne", "gniazdo pojedyncze",
+            "gniazdo hermetyczne", "gniazdo"]
+
+  # ----------------------------------------------------------------- laczniki
+  - name: lacznik_zaluzjowy
+    domain: osprzet
+    subject: "Ten lacznik"
+    is_light: false
+    match:
+      starts_with: ["lacznik zaluzjowy", "lacznik roletowy"]
+      any: ["lacznik zaluzjowy", "lacznik roletowy"]
+      none: ["profil", "tasma led", "pasek led"]
+
+  - name: lacznik_specjalny
+    domain: osprzet
+    subject: "Ten lacznik"
+    is_light: false
+    match:
+      any: ["lacznik na klucz", "lacznik przekaznikowy", "lacznik obrotowy",
+            "lacznik czasowy", "lacznik hotelowy"]
+
+  - name: lacznik_instalacyjny
+    domain: osprzet
+    subject: "Ten lacznik"
+    is_light: false
+    match:
+      any: ["lacznik jednobiegunowy", "lacznik schodowy", "lacznik krzyzowy",
+            "lacznik swiecznikowy", "lacznik podwojny", "lacznik potrojny",
+            "lacznik dwubiegunowy", "lacznik trzybiegunowy", "lacznik zwierny",
+            "lacznik dzwonek", "lacznik swiatlo", "laczniki", "lacznik"]
+      none: ["profil", "tasma led", "pasek led", "szynoprzewod", "peszel",
+             "koryto", "kanal kablowy", "lacznik katowy"]
+
+  # ---------------------------------------------------------------- przyciski
+  - name: przycisk_zaluzjowy
+    domain: osprzet
+    subject: "Ten przycisk"
+    is_light: false
+    match:
+      any: ["przycisk zaluzjowy", "przycisk roletowy"]
+
+  - name: przycisk_instalacyjny
+    domain: osprzet
+    subject: "Ten przycisk"
+    is_light: false
+    match:
+      any: ["przycisk zwierny", "przycisk dzwonek", "przycisk swiatlo",
+            "przycisk pojedynczy", "przycisk podwojny", "przycisk potrojny",
+            "przycisk poczworny", "przyciski", "przycisk"]
+
+  # -------------------------------------------------------------------- puszki
+  - name: puszka_podlogowa
+    domain: osprzet
+    subject: "Ta puszka"
+    is_light: false
+    match:
+      any: ["puszka podlogowa", "puszki podlogowe", "kaseta do wylewki"]
+
+  - name: puszka_natynkowa
+    domain: osprzet
+    subject: "Ta puszka"
+    is_light: false
+    match:
+      any: ["puszka natynkowa", "puszki natynkowe"]
+
+  - name: puszka_podtynkowa
+    domain: osprzet
+    subject: "Ta puszka"
+    is_light: false
+    match:
+      any: ["puszka podtynkowa", "puszki podtynkowe", "puszka instalacyjna",
+            "puszka"]
+
+  - name: zlaczka
+    domain: osprzet
+    subject: "Ta zlaczka"
+    is_light: false
+    match:
+      any: ["zlaczka", "zlaczki wago", "wago", "kostka elektryczna"]
+
+  # ------------------------------------------------- sterowanie i automatyka
+  - name: sciemniacz
+    domain: automatyka
+    subject: "Ten sciemniacz"
+    is_light: false
+    match:
+      any: ["sciemniacz", "sciemniacze", "dimmer"]
+
+  - name: czujnik
+    domain: automatyka
+    subject: "Ten czujnik"
+    is_light: false
+    match:
+      any: ["czujnik ruchu", "czujnik zmierzchowy", "czujnik obecnosci",
+            "czujnik gazu", "czujnik", "czujniki"]
+
+  - name: regulator_temperatury
+    domain: automatyka
+    subject: "Ten regulator"
+    is_light: false
+    match:
+      any: ["regulator temperatury", "termostat"]
+
+  - name: sterownik_inteligentny
+    domain: automatyka
+    subject: "Ten sterownik"
+    is_light: false
+    match:
+      any: ["sterownik", "sterowniki", "kontroler", "nadajnik bateryjny",
+            "modul wi-fi", "smart home", "sterowanie i automatyka"]
+
+  # ----------------------------------------------- systemy prowadzenia kabli
+  - name: peszel
+    domain: trasy_kablowe
+    subject: "Ta rura"
+    is_light: false
+    match:
+      any: ["peszel", "peszle", "rura samogasnaca", "rura karbowana",
+            "rura odporna na uv", "rura oslonowa"]
+
+  - name: koryto_kablowe
+    domain: trasy_kablowe
+    subject: "To koryto"
+    is_light: false
+    match:
+      any: ["koryto", "listwa instalacyjna", "kanal kablowy",
+            "zakonczenie kanalu", "naroznik wewnetrzny", "naroznik zewnetrzny",
+            "kolanko", "trojnik kanalu"]
+
+  - name: drabinka_kablowa
+    domain: trasy_kablowe
+    subject: "Ta drabinka"
+    is_light: false
+    match:
+      any: ["drabinka", "ceownik", "wspornik", "wysiegnik", "korytko siatkowe"]
+
+  - name: mocowanie
+    domain: trasy_kablowe
+    subject: "To mocowanie"
+    is_light: false
+    match:
+      any: ["uchwyt kablowy", "opaska kablowa", "kotwa", "pret gwintowany",
+            "tuleja", "sruba", "kolek rozporowy"]
+
+  # --------------------------------------------------- aparatura i rozdzielnice
+  - name: wylacznik_nadpradowy
+    domain: aparatura
+    subject: "Ten wylacznik"
+    is_light: false
+    match:
+      any: ["wylacznik nadpradowy", "wylacznik roznicowopradowy", "rozlacznik",
+            "bezpiecznik", "ogranicznik przepiec"]
+
+  - name: aparat_modulowy
+    domain: aparatura
+    subject: "Ten aparat"
+    is_light: false
+    match:
+      any: ["aparatura modulowa", "stycznik", "przekaznik modulowy",
+            "wylacznik zmierzchowy", "programator modulowy", "licznik energii"]
+
+  - name: rozdzielnica
+    domain: aparatura
+    subject: "Ta rozdzielnica"
+    is_light: false
+    match:
+      any: ["rozdzielnica", "rozdzielnice elektryczne", "obudowa rozdzielnicy"]
+
+  # ----------------------------------------------------- kable, narzedzia, reszta
+  - name: kabel
+    domain: kable
+    subject: "Ten przewod"
+    is_light: false
+    match:
+      any: ["kabel", "przewod instalacyjny", "kable i przewody", "linka",
+            "przewod ydyp", "przewod olflex"]
+
+  - name: przedluzacz
+    domain: kable
+    subject: "Ten przedluzacz"
+    is_light: false
+    match:
+      any: ["przedluzacz", "listwa zasilajaca", "rozgaleziacz"]
+
+  - name: narzedzie
+    domain: narzedzia
+    subject: "To narzedzie"
+    is_light: false
+    match:
+      any: ["narzedzia dla elektryka", "sciagacz izolacji", "zaciskarka",
+            "miernik", "probnik napiecia", "wkretak"]
+
+  # ------------------------------------------------------------------ fallbacki
+  - name: osprzet_ogolny
+    domain: osprzet
+    subject: "Ten produkt"
+    is_light: false
+    neutral: true
+    match:
+      any: ["gniazdka i laczniki", "osprzet elektroinstalacyjny",
+            "gniazda i wlaczniki"]
+
+  - name: nieznana
+    domain: nieznana
+    subject: "Ten produkt"
+    is_light: false
+    neutral: true
+    report: true
+    match: {}

@@ -1,0 +1,690 @@
+by_family:
+  czujnik:
+    ogolne:
+    - 'Czujnik ruchu przejmuje rolę osoby naciskającej klawisz: sam zamyka i otwiera obwód.'
+    - Czujnik ruchu z przekaźnikiem wykrywa obecność w swoim polu pracy i steruje obwodem automatycznie,
+      dzięki czemu nie wymaga każdorazowego naciskania klawisza.
+    montaz_uzytkowanie:
+    - Przewody podłącza się do zacisków śrubowych, a moduł mocuje pazurkami albo wkrętami w puszce podtynkowej.
+    - Zaciski śrubowe i montaż na pazurki lub wkręty odpowiadają standardowej instalacji podtynkowej.
+    - Przed zakupem kluczowe jest sprawdzenie obecności przewodu neutralnego w puszce.
+  gniazdo_zasilajace:
+    montaz_uzytkowanie:
+    - Mechanizm montuje się podtynkowo, używając pazurków albo wkrętów, a szybkozłącza umożliwiają zamocowanie
+      przewodów bez dokręcania zacisków śrubowych.
+    - Przewody wpina się w szybkozłącza, a moduł unieruchamia pazurkami rozporowymi lub wkrętami.
+    - Mechanizm wykorzystuje szybkozłącza, więc przewody można osadzić bez dokręcania śrub zaciskowych.
+    - Przy montażu trzeba zachować kompletność elementów wymaganych do utrzymania deklarowanego stopnia
+      ochrony.
+    - Moduł jest przeznaczony do montażu podtynkowego i mocowany na pazurki lub wkręty.
+    - Oznaczenie frontu, przesłony oraz szybkozłącza tworzą wyraźnie wyspecjalizowane stanowisko.
+    - Szybkozłącza skracają etap mocowania przewodów w porównaniu z zaciskami wymagającymi dokręcania.
+    - Mocowanie odbywa się wkrętem, natomiast żyły przewodów są zaciskane śrubowo.
+    - Przewody zasilające podłącza się do zacisków śrubowych.
+    - Płytki mechanizm i szybkozłącza są jego najważniejszymi zaletami montażowymi.
+    ogolne:
+    - Gniazdo wtyczkowe tej wersji ma ruchome przesłony, które odsuwają się dopiero przy równoczesnym
+      nacisku obu bolców wtyczki.
+    - Pojedynczy przedmiot wsunięty do jednego otworu nie otwiera toru prądowego.
+    - Klapka osłania front, gdy gniazdo nie jest używane, a przesłony stanowią dodatkową barierę w otworach
+      prądowych.
+    - Gniazdo wtyczkowe z przesłonami ma ruchome zabezpieczenia torów prądowych, które odsuwają się dopiero
+      przy równoczesnym nacisku obu bolców wtyczki.
+    - Ramkę dobiera się osobno do liczby stanowisk.
+    - Do gotowego stanowiska trzeba jeszcze dobrać odpowiednią ramkę.
+    - Przesłony torów prądowych stanowią dodatkowy element konstrukcji.
+    - Brak klapki uchylnej pozostawia klasyczny otwarty front.
+    - Front stanowi plakietka centralna bez nadruku.
+    - Podwójna konstrukcja ogranicza liczbę osobnych punktów na ścianie, a przesłony osłaniają oba tory
+      prądowe.
+    - Oznacza to, że do kompletnej konfiguracji wymagającej wyższego poziomu ochrony trzeba uwzględnić
+      brakujący element uszczelniający.
+    - Klapka jest wykonana w tym samym kolorze co pokrywa, dzięki czemu front pozostaje jednolity wizualnie.
+    - Uziemienie realizowane jest przez bolec, a otwory prądowe mają przesłony.
+    - Gniazdo wtyczkowe w tej wersji łączy dwie jednostki z klapką uchylną i dołączoną uszczelką.
+    - Oba tory mają również przesłony otworów prądowych.
+    - Gniazdo wtyczkowe jest przeznaczone do miejsc, w których potrzebne są dwa standardowe punkty z uziemieniem,
+      ale bez osłony klapkowej.
+    - Dwie jednostki zajmują jeden wspólny moduł, a przesłony torów prądowych stanowią dodatkowy element
+      frontu.
+    funkcje_korzysci:
+    - Gniazdo wtyczkowe pozwala zasilać tradycyjny odbiornik i jednocześnie korzystać z ładowarki USB
+      wbudowanej w ten sam front.
+  klawisz:
+    montaz_uzytkowanie:
+    - Element jest wahadłowy i mocuje się zaciskowo, przez wciśnięcie na prowadnice.
+    - Przed zakupem warto więc odczytać oznaczenie znajdujące się na module zamontowanym w ścianie.
+    - Element mocuje się zaciskowo, przez wciśnięcie na prowadnice.
+    - Przed zakupem najważniejsze jest sprawdzenie oznaczenia zamontowanego mechanizmu.
+    - Symbol zgodnego modułu jest najważniejszą informacją montażową podaną w nazwie produktu.
+    - Symbol pozostaje widoczny na froncie po montażu.
+    - Kompaktowy format i montaż zaciskowy sprawiają, że jest to typowy element frontowy, a nie osobny
+      mechanizm elektryczny.
+    design_estetyka:
+    - Powierzchnia jest gładka, bez nadruku i bez okienka na kontrolkę świetlną, więc pasuje do mechanizmów
+      bez podświetlenia.
+    - Zgodność należy potwierdzić po symbolu mechanizmu, a nie wyłącznie po wyglądzie istniejącego klawisza.
+    - Brak piktogramu oznacza neutralny wygląd obu widocznych części.
+    - Powierzchnia nie ma nadruku, a konstrukcja nie zawiera okienka kontrolki świetlnej.
+    - Powierzchnia jest matowa i naturalnie zabezpieczona.
+    funkcje_korzysci:
+    - Wymiana dotyczy wyłącznie części widocznej i obsługowej, więc mechanizm elektryczny pozostaje na
+      swoim miejscu.
+    - Brak nadruku jest przydatny tam, gdzie funkcja jest oczywista z położenia stanowiska albo nie wymaga
+      oznaczenia.
+    - Brak piktogramu pozostawia neutralny front, dlatego element można zastosować tam, gdzie opis funkcji
+      na klawiszu nie jest potrzebny.
+    - W tym modelu funkcję rozpoznaje się po nadruku, a zgodność po symbolu mechanizmu.
+    - Brak symbolu sprawia, że front nie narzuca określonej funkcji.
+    - Dwa pola obsługowe odpowiadają konstrukcji przewidzianej dla tych mechanizmów.
+    ogolne:
+    - Przed zakupem najważniejsze jest potwierdzenie symbolu mechanizmu, z którym klawisz ma być połączony.
+    - Przed zamówieniem warto sprawdzić symbol mechanizmu, ponieważ to on decyduje o dopasowaniu.
+    - Przed zakupem wystarczy potwierdzić symbol modułu, aby uniknąć doboru podobnego wizualnie, ale innego
+      elementu.
+    - Symbol żaluzji ogranicza ryzyko pomylenia stanowiska z innym łącznikiem umieszczonym w tej samej
+      przestrzeni.
+    - Piktogram żaluzji pozostaje widoczny na froncie, dlatego stanowisko jest łatwe do rozpoznania nawet
+      bez dodatkowych opisów.
+    - Oznacza to zgodność odpowiednio z przyciskiem podwójnym zwiernym oraz łącznikami świecznikowymi
+      wskazanymi przez producenta.
+    - Dwa pola frontowe odpowiadają dwóm oddzielnym dźwigniom.
+    - Pierwszy z tych mechanizmów jest łącznikiem schodowym podwójnym, drugi krzyżowym podwójnym.
+    - Klawisz nie ma nadruku ani okienka kontrolki świetlnej, dlatego wizualnie pozostaje neutralny.
+    jakosc_trwalosc:
+    - Wykonano go z bezhalogenowego tworzywa PC o matowej powierzchni.
+    - Wykonano go z bezhalogenowego PC o naturalnie zabezpieczonej, matowej powierzchni.
+  lacznik_instalacyjny:
+    ogolne:
+    - Łącznik schodowy pracuje w układzie bistabilnym, więc każde naciśnięcie klawisza zmienia stan obwodu
+      niezależnie od położenia drugiego mechanizmu.
+    - Łącznik jednobiegunowy pracuje bistabilnie, więc po zmianie położenia klawisz pozostaje w nowym
+      stanie do kolejnego przełączenia.
+    - Łącznik jednobiegunowy pozostaje w wybranej pozycji po przełączeniu, a dodatkowe podświetlenie pomaga
+      odnaleźć punkt w słabszym świetle.
+    - Każdy tor pracuje bistabilnie, więc nie wymaga przytrzymywania klawisza.
+    - Podświetlenie jest opcjonalne i nie znajduje się w zestawie.
+    - Piktogram schodów nie rozstrzyga tego pytania, a przy dwóch polach potrafi dodatkowo mylić.
+    - Gładki front bywa więc czytelniejszy niż powtórzony dwukrotnie ten sam symbol.
+    - Każdy tor wymaga własnego mechanizmu po drugiej stronie obwodu, dokładnie jak w wersji pojedynczej.
+    - Łącznik krzyżowy jest przeznaczony do rozbudowanego układu, w którym ten sam obwód ma być przełączany
+      z więcej niż dwóch miejsc.
+    - Mechanizm pracuje bistabilnie i zmienia stan po każdym użyciu klawisza.
+    - 'Łącznik krzyżowy nigdy nie pracuje sam: jego miejsce jest zawsze pomiędzy dwoma mechanizmami schodowymi.'
+    - Dołożenie tego mechanizmu rozszerza istniejący układ o następny punkt przełączania.
+    - Praca jest bistabilna, więc każde naciśnięcie zmienia stan obwodu niezależnie od pozostałych mechanizmów.
+    - Przy trzech punktach potrzebne są dwa mechanizmy schodowe na końcach i jeden krzyżowy w środku;
+      każdy następny punkt to kolejna sztuka tego modelu.
+    - Dwie dźwignie rozdzielają oba tory, a każdy z nich pracuje bistabilnie.
+    - Zamiast dwóch osobnych puszek i dwóch ramek wystarczy jedno stanowisko.
+    - Każdy z dwóch torów musi być wpięty między własną parę mechanizmów schodowych.
+    - 'Przed zamówieniem policz cały układ: każdy tor potrzebuje własnej pary mechanizmów schodowych na
+      końcach.'
+    montaz_uzytkowanie:
+    - Dwa takie moduły połączone przewodami sterowniczymi dają pełną obsługę jednego punktu świetlnego
+      z dwóch stron pomieszczenia.
+    - Przewody wprowadza się do szybkozłączy, bez dokręcania śrub zaciskowych.
+    - Mechanizm można mocować pazurkami lub wkrętami.
+    - Szybkozłącza pozwalają podłączyć przewody bez dokręcania śrub.
+    - Bistabilny mechanizm, szybkozłącza i możliwość rozbudowy o podświetlenie tworzą klasyczną konfigurację
+      do instalacji podtynkowej.
+    - Trzy dźwignie, szybkozłącza i niewielka głębokość wbudowania tworzą zwarte stanowisko podtynkowe.
+    - Dwie dźwignie, szybkozłącza i możliwość uzupełnienia o podświetlenie tworzą praktyczny moduł świecznikowy.
+    - Przewody wprowadza się do szybkozłączy, a moduł unieruchamia pazurkami rozporowymi albo wkrętami.
+    - Przewody podłącza się przez szybkozłącza, a mechanizm mocuje na pazurki lub wkręty.
+    - Podwójna konstrukcja ogranicza liczbę osobnych mechanizmów na ścianie, a szybkozłącza upraszczają
+      podłączenie przewodów.
+    - Przewody wprowadza się do szybkozłączy, a moduł mocuje pazurkami albo wkrętami.
+    - Dla osoby korzystającej z instalacji wszystkie punkty w takim obwodzie działają identycznie, więc
+      wyróżnianie jednego z nich symbolem nie wnosi informacji.
+    - Przewody podłącza się przez szybkozłącza, a mocowanie odbywa się na pazurki lub wkręty.
+    - Podwójna konstrukcja ogranicza liczbę osobnych mechanizmów, a szybkozłącza ułatwiają podłączenie
+      przewodów.
+    - Dźwignie są kołyskowe i działają bistabilnie, a przewody mocuje się w szybkozłączach.
+    funkcje_korzysci:
+    - Klawisz działa kołyskowo, a podświetlenie jest opcjonalne i nie wchodzi w skład zestawu.
+    - Front nie ma piktogramu, dlatego nie przypisuje mechanizmu wizualnie do jednej funkcji.
+    - Trzy dźwignie rozdzielają obsługę poszczególnych obwodów i pozwalają sterować nimi niezależnie.
+    - Pozwala więc niezależnie przełączać dwa tory z jednego stanowiska ściennego.
+    - Łącznik świecznikowy pozwala łatwo rozpoznać oba pola sterujące dzięki oddzielnemu podświetleniu.
+    - Układ bistabilny działa dokładnie tak samo jak w wersji opisanej symbolem.
+    - Do zbudowania pełnego sterowania z dwóch miejsc nadal potrzebne są dwa mechanizmy schodowe.
+    - Pamiętaj o zamówieniu drugiego mechanizmu schodowego, bez którego układ sterowania z dwóch miejsc
+      nie zadziała.
+    - Łącznik schodowy w wersji podwójnej pozwala sterować dwoma niezależnymi obwodami schodowymi bez
+      montowania dwóch osobnych mechanizmów.
+    - Dwie dźwignie rozdzielają funkcje obu torów, a każdy z nich pracuje w układzie przewidzianym do
+      sterowania z więcej niż jednego miejsca.
+    - Jednocześnie zachowuje typowe działanie bistabilne układu schodowego.
+    - Symbol schodów pozwala rozpoznać funkcję bez dodatkowej etykiety.
+    - Symbol na froncie ułatwia rozpoznanie funkcji.
+    - Łącznik krzyżowy w wersji podwójnej pozwala dodać dodatkowy punkt sterowania dla dwóch oddzielnych
+      torów bez stosowania dwóch osobnych mechanizmów.
+    zastosowanie_wnetrza:
+    - Do korytarza, klatki schodowej albo sypialni potrzebne są dwa takie mechanizmy — dopiero para tworzy
+      działający obwód.
+    - Sprawdza się też w pomieszczeniach reprezentacyjnych, gdzie osprzęt ma być jak najmniej zauważalny.
+    design_estetyka:
+    - Brak piktogramów pozostawia neutralny wygląd obu powierzchni.
+    - Łącznik schodowy w tym wykonaniu przydaje się tam, gdzie kilka mechanizmów stoi obok siebie i wspólny,
+      jednolity front wygląda spokojniej niż zestaw różnych piktogramów.
+    swiatlo_barwa:
+    - Dwa wymienialne LED-y i dwa bistabilne tory wyróżniają ten model na tle standardowej wersji bez
+      światła.
+    - Łącznik schodowy obsługujący dwa obwody trafia zwykle w miejsca, gdzie i tak trzeba pamiętać, który
+      klawisz odpowiada za które światło.
+    - Łącznik schodowy jest łatwiejszy do odnalezienia przy słabszym oświetleniu dzięki wbudowanej diodzie
+      LED.
+    - Łącznik krzyżowy w wersji podwójnej ma sens wszędzie tam, gdzie dwa obwody prowadzone są równolegle
+      tą samą trasą, na przykład oświetlenie główne i kinkiety w długim korytarzu.
+  przycisk_zaluzjowy:
+    montaz_uzytkowanie:
+    - Szybkozłącza skracają przygotowanie przewodów w porównaniu z zaciskami wymagającymi dokręcania śrub.
+    - Przed montażem wystarczy zweryfikować schemat napędu i dostępne miejsce w puszce.
+    - Mocowanie odbywa się na pazurki lub wkręty, a przewody trafiają do szybkozłączy.
+    - Dwie dźwignie, szybkozłącza i czytelny symbol żaluzji tworzą kompaktowe stanowisko podtynkowe.
+    ogolne:
+    - 'Najważniejszą różnicą względem łącznika bistabilnego jest sposób pracy: po puszczeniu klawisza
+      mechanizm wraca do pozycji spoczynkowej.'
+    funkcje_korzysci:
+    - Symbol żaluzji pozwala od razu rozpoznać przeznaczenie stanowiska.
+    - Model jest przeznaczony do sterowania roletami.
+  ramka:
+    montaz_uzytkowanie:
+    - Producent przewidział oba kierunki montażu, więc ten sam element pasuje do stanowiska ułożonego
+      poziomo i pionowo.
+    - Tworzywo PC jest bezhalogenowe, co ma znaczenie w budynkach, gdzie stawia się wymagania wobec materiałów
+      instalacyjnych.
+    - Zatrzaskowy sposób mocowania upraszcza osadzenie elementu na kompatybilnym osprzęcie.
+    - Możliwość montażu w obu kierunkach i zatrzaskowe mocowanie dają swobodę przy wykańczaniu jednego
+      stanowiska.
+    - Ramka jest mocowana na zatrzask i wykonana z bezhalogenowego PC.
+    - Duża szerokość ramki obejmuje cały układ, a możliwość montażu pionowego i poziomego pozwala dopasować
+      orientację do miejsca instalacji.
+    - Kierunek montażu może być poziomy albo pionowy.
+    ogolne:
+    - 'Przy planowaniu zakupów warto policzyć stanowiska, a nie same mechanizmy: dwa moduły obok siebie
+      potrzebują jednej takiej ramki, a nie dwóch pojedynczych.'
+    - W jednym elemencie mieszczą się dwa sąsiadujące moduły.
+    - przy malowaniu ściany lub zmianie konfiguracji osprzętu.
+    - Jedna ramka obejmuje cały układ, zachowuje niewielką głębokość i może zostać ustawiona w pionie
+      albo poziomie.
+  sciemniacz:
+    ogolne:
+    - Świetlówki kompaktowe i liniowe, transformatory rdzeniowe oraz urządzenia z silnikiem elektrycznym
+      są wykluczone.
+    - Można go wpiąć w układ schodowy, a także połączyć z czujnikiem ruchu lub przyciskiem radiowym.
+    - Moduł może pracować w układzie schodowym, a dodatkowo współpracować z czujnikiem ruchu lub przyciskiem
+      radiowym.
+    - Ściemniacz obrotowy wykorzystuje mechaniczne pokrętło jako element sterujący, więc poziom regulacji
+      zmienia się przez jego obrót.
+    swiatlo_barwa:
+    - Moduł zapamiętuje ostatnio ustawiony poziom jasności, więc po ponownym załączeniu światło wraca
+      do tej samej wartości.
+    - Funkcja pamięci sprawia, że po ponownym włączeniu oświetlenie wraca do ostatniego ustawionego poziomu.
+    - Funkcja pamięci przywraca zapisany poziom jasności, a sterowanie można prowadzić przyciskiem, aplikacją
+      lub zgodnym przyciskiem radiowym.
+    funkcje_korzysci:
+    - Połączenie z aplikacją działa przez zwykły router, bezpośrednio przez Wi-Fi albo zdalnie przez internet.
+    - Nie jest przeznaczony do świetlówek, silników ani transformatorów wskazanych jako nieobsługiwane.
+    montaz_uzytkowanie:
+    - Przed montażem trzeba potwierdzić, że zastosowane źródła światła są rzeczywiście ściemnialne i zgodne
+      z zakresem obciążenia.
+    - Przewody zasilające podłącza się do zacisków śrubowych.
+  gniazdo_antenowe:
+    ogolne:
+    - Połączenia wykonuje się za pomocą wtyków, zgodnie z konstrukcją tego modułu.
+    - Konstrukcja końcowa ma sens tam, gdzie właśnie w tym miejscu ma znaleźć się docelowy punkt przyłączenia,
+      bez potrzeby prowadzenia sygnału dalej przez ten sam mechanizm.
+    - Gniazdo antenowe w tym wykonaniu ma dwa przyłącza zamiast jednego, dzięki czemu oba są dostępne
+      w obrębie tego samego modułu.
+    - Podwójna konstrukcja ogranicza liczbę stanowisk na ścianie i pozostawia front bez dodatkowych oznaczeń.
+    - Gniazdo antenowe ma jedno wyjście typu F i wykonanie końcowe.
+    - Gniazdo antenowe łączy trzy wyjścia i jest określone jako końcowe oraz zakończeniowe.
+    - Wszystkie trzy oznaczenia znajdują się na froncie.
+    montaz_uzytkowanie:
+    - Przy instalacji warto więc uwzględnić nie tylko sam mechanizm, ale także miejsce na przewody zakończone
+      odpowiednimi wtykami.
+    - W tym modelu producent zastosował zaciski śrubowe, dlatego przewód jest unieruchamiany mechanicznie
+      w złączu podczas montażu.
+    - Jeśli potrzebujesz właśnie takiej funkcji bez dodatkowych portów i z podłączeniem na zaciski śrubowe,
+      ten model odpowiada takiej konfiguracji.
+    - Przy dwóch przewodach warto wcześniej zaplanować ich ułożenie w puszce, aby nie tworzyć zbędnych
+      naprężeń za mechanizmem.
+    - 'Oba tory korzystają z różnych sposobów zakończenia: część antenowa z wtyku, a część sieciowa z
+      zacisku przebijającego izolację.'
+    - Gniazdo antenowe w wersji przelotowej jest przeznaczone do pracy w punkcie pośrednim instalacji,
+      a nie wyłącznie jako jej zakończenie.
+    - 'Zastosowano dwa typy połączeń: wtyk oraz zaciski śrubowe.'
+    - Przy montażu przelotowym szczególnie ważne jest zostawienie miejsca na przewody wchodzące i wychodzące
+      z puszki.
+    - Producent wskazuje zastosowanie tylko w instalacjach indywidualnych, co jest kluczową informacją
+      przy wyborze miejsca tego modelu w systemie.
+    - Pokrywa jest częścią konstrukcji, a mechanizm można mocować na pazurki lub wkręty.
+    funkcje_korzysci:
+    - Jeden podtynkowy moduł pozwala zachować oba przyłącza obok siebie i ograniczyć liczbę osobnych elementów
+      na ścianie.
+    - Czytelne oznaczenia frontu pomagają później korzystać z właściwego przyłącza bez zgadywania funkcji.
+    - Front nie ma piktogramu, dlatego poszczególne funkcje rozpoznaje się po kształcie złączy.
+    - Trzy oznaczone złącza w jednym module ograniczają liczbę elementów na ścianie i zachowują czytelny
+      podział funkcji.
+    - Wyraźne oznaczenia frontu oraz podane parametry tłumienia pozwalają jednoznacznie rozpoznać funkcję
+      i charakter tego modelu.
+  gniazdo_komputerowe:
+    montaz_uzytkowanie:
+    - Beznarzędziowy zacisk przebijający izolację pozwala wykonać połączenie bez klasycznego zacisku śrubowego,
+      co upraszcza pracę przy zakończeniu przewodu.
+    - Zamiast budować dwa osobne stanowiska, można wyprowadzić oba przewody w jednym punkcie instalacyjnym.
+    - Beznarzędziowe zaciski przebijające izolację przyspieszają zakończenie żył bez używania zacisków
+      śrubowych.
+    - Montaż może odbywać się na pazurki lub wkręty.
+    - Zacisk przebijający izolację służy do zakończenia przewodu, a osobny uchwyt kablowy odciążający
+      pomaga ograniczyć przenoszenie naprężeń na miejsce połączenia.
+    - Kodowanie kolorem pomaga przy zakończeniu przewodów, a oba porty mają prosty kierunek wyjścia.
+    ogolne:
+    - Ekranowane wykonanie i przesłona są integralnymi cechami tego wariantu.
+    - Pojedyncza konstrukcja ma sens tam, gdzie potrzebne jest jedno stałe przyłącze sieciowe i nie ma
+      potrzeby zajmowania frontu dodatkowym gniazdem.
+    - Przesłona przeciwkurzowa osłania złącze, gdy nie jest używane.
+    - Zamiast dwóch osobnych modułów otrzymujesz dwa porty obok siebie, a kodowanie kolorem pomaga przy
+      organizacji zakończeń.
+    - Konstrukcja została przygotowana jako podwójna i ekranowana.
+    - W porównaniu z płytką wersją nieekranowaną trzeba więc przewidzieć więcej miejsca za frontem.
+    - Podwójny układ ogranicza liczbę modułów, a przesłony przeciwkurzowe chronią oba porty w czasie,
+      gdy pozostają nieużywane.
+  ladowarka_usb:
+    montaz_uzytkowanie:
+    - Dwa porty pozwalają pozostawić jeden stały punkt dla dwóch przewodów USB.
+    - Ładowarka USB daje wybór między USB-C i USB-A, dlatego obsługuje przewody zakończone dwoma popularnymi
+      typami wtyków.
+    ogolne:
+    - Ładowarka USB łączy nowsze złącze USB-C z nadal powszechnie używanym USB-A.
+  pokrywa_gniazda:
+    funkcje_korzysci:
+    - Sama pełni funkcję frontu i osłony, a nie aktywnego złącza.
+    design_estetyka:
+    - Brak piktogramu sprawia, że wygląd pokrywy nie narzuca konkretnej funkcji obu miejsc.
+    - Pokrywa gniazda służy do wykończenia zgodnego mechanizmu pojedynczego z uziemieniem.
+    montaz_uzytkowanie:
+    - Podwójna konfiguracja ogranicza liczbę elementów na ścianie, a brak nadruków pozostawia swobodę
+      w funkcji zamontowanych modułów.
+    jakosc_trwalosc:
+    - Wykonano ją z bezhalogenowego tworzywa PC o naturalnie zabezpieczonej powierzchni.
+    ogolne:
+    - Najważniejsze jest sprawdzenie symbolu mechanizmu, ponieważ ta część została wskazana właśnie do
+      tych dwóch modeli.
+  przycisk_instalacyjny:
+    funkcje_korzysci:
+    - 'Przycisk dzwonek działa tylko podczas naciskania: po zwolnieniu klawisz wraca do pozycji spoczynkowej.'
+    - 'Mechanizm pracuje monostabilnie: klawisz działa podczas naciskania i wraca po zwolnieniu.'
+    - Brak piktogramu pozwala zastosować go bez narzuconego oznaczenia funkcji na froncie.
+    - Trzy klawisze i płytka głębokość wbudowania pozwalają ograniczyć liczbę osobnych stanowisk bez dodawania
+      oznaczeń na froncie.
+    - 'Sam mechanizm działa chwilowo: po naciśnięciu zwiera styk, a po zwolnieniu wraca do pozycji spoczynkowej.'
+    - Sterownik przyciskowy ma jedno wyjście, dlatego sprawdza się w punkcie, gdzie jeden obwód ma być
+      sterowany lokalnie i zdalnie.
+    - Wbudowane podświetlenie ułatwia lokalną obsługę.
+    - Sterownik przyciskowy ma dwa wyjścia, więc może obsługiwać dwa tory z jednego stanowiska.
+    - Transmisja jest szyfrowana i dwukierunkowa, a sterowanie mechaniczne pozostaje dostępne na miejscu.
+    - Wbudowane podświetlenie ułatwia obsługę stanowiska.
+    - Sterownik przyciskowy pozwala sterować osłoną lokalnie z klawisza i zdalnie przez aplikację.
+    - Symbol żaluzji na froncie od razu informuje, do jakiej funkcji przypisano stanowisko.
+    - Każdy z dwóch torów korzysta z własnego styku zwiernego, co pozwala oddzielić obie funkcje w jednym
+      stanowisku.
+    - Przycisk poczwórny pozwala sterować czterema chwilowymi funkcjami z jednego punktu, mimo że front
+      ma dwie dźwignie.
+    - Front nie ma piktogramów, dlatego nie narzuca graficznego opisu poszczególnych funkcji.
+    ogolne:
+    - Na froncie znajduje się piktogram dzwonka, więc przeznaczenie przycisku pozostaje zrozumiałe dla
+      użytkownika także po dłuższym czasie.
+    - Producent przewiduje podświetlenie jako opcję, ale nie dołącza go w standardzie.
+    - 'Mechanizm pozostaje monostabilny: sygnał jest podawany w czasie naciskania, a po zwolnieniu klawisz
+      wraca do pozycji wyjściowej.'
+    - Wbudowana dioda ma charakter orientujący, czyli służy do wskazania położenia przycisku.
+    - Wbudowany, wymienialny LED odróżnia ten wariant od wersji bez fabrycznego podświetlenia.
+    - Podświetlenie jest opcjonalne i nie znajduje się w podstawowym zestawie.
+    - Podświetlenie jest opcjonalne, ale nie znajduje się w zestawie podstawowym.
+    - Klawisz pracuje monostabilnie, więc wraca po zwolnieniu.
+    - Każdy z dwóch klawiszy pracuje monostabilnie, czyli po zwolnieniu wraca do pozycji spoczynkowej.
+    - Brak piktogramów pozostawia oba pola bez przypisanych oznaczeń.
+    - Podświetlenie jest możliwe jako opcja, ale nie wchodzi w skład podstawowego produktu.
+    - Podświetlenie można zastosować opcjonalnie, ale nie jest ono dołączone.
+    - Przycisk dzwonek po naciśnięciu zwiera styk, a po zwolnieniu wraca do pozycji spoczynkowej.
+    - Symbol dzwonka oraz okienko kontrolki świetlnej są częścią widocznego frontu.
+    - Podświetlenie jest fabrycznie wbudowane i można wymienić jego LED.
+    - Przycisk pojedynczy zwiera jeden styk tylko w czasie naciskania klawisza.
+    - Podświetlenie można dodać opcjonalnie, ale nie znajduje się ono w zestawie.
+    - Podświetlenie jest opcjonalne i niedołączone.
+    - Podświetlenie jest opcjonalne i nie znajduje się w zestawie.
+    - Podświetlenie jest opcjonalne i nie znajduje się w zestawie, ale front ma okienko kontrolki świetlnej.
+    montaz_uzytkowanie:
+    - Szybkozłącza ułatwiają podłączenie przewodów bez zacisków śrubowych.
+    - Brak nadruku pozostawia neutralny front, dlatego funkcję stanowiska można określić wyłącznie przez
+      jego zastosowanie w instalacji.
+    - Szybkozłącza i niewielka głębokość wbudowania są praktyczne przy montażu, a opcjonalne podświetlenie
+      pozostawia możliwość rozbudowy stanowiska.
+    - Szybkozłącza służą do mocowania przewodów bez dokręcania śrub.
+    - Dwa klawisze, szybkozłącza i neutralny front tworzą kompaktowy punkt sterowania w jednej puszce.
+    - Przewody podłącza się do szybkozłączy, a front nie ma żadnego piktogramu.
+    - Moduł wymaga instalacji z przewodem neutralnym.
+    - Moduł jest przeznaczony do instalacji z przewodem neutralnym.
+    - Dwa wyjścia, pomiar energii i lokalne przyciski łączą kilka funkcji w jednym module, który wymaga
+      przewodu neutralnego.
+    - Szybkozłącza pozwalają osadzić przewody bez dokręcania śrub zaciskowych.
+    swiatlo_barwa:
+    - Przycisk zwierny w tej wersji ma symbol „światło”, dlatego użytkownik rozpoznaje funkcję jeszcze
+      przed naciśnięciem.
+    - Przycisk „światło” od razu informuje użytkownika, do czego przypisano stanowisko, dzięki symbolowi
+      umieszczonemu na klawiszu.
+    energo_eko:
+    - Wbudowany pomiar energii dodaje informację o pracy obciążenia bez stosowania osobnego modułu pomiarowego.
+    - Podwójny układ oszczędza miejsce, a brak symboli pozostawia swobodę przypisania funkcji obu klawiszom.
+    design_estetyka:
+    - Brak piktogramu sprawia, że wygląd klawisza nie wskazuje konkretnego zastosowania.
+    - Obie powierzchnie są pozbawione piktogramów, dlatego wygląd modułu nie narzuca sposobu wykorzystania
+      poszczególnych torów.
+  zaslepka:
+    ogolne:
+    - Zaślepka otworu jest przeznaczona do przesłonięcia niewykorzystanego miejsca w pokrywach telekomunikacyjnych.
+    - Zaślepka ramki przydaje się wtedy, gdy w wielopolowej konfiguracji jedno miejsce nie jest jeszcze
+      zajęte przez gniazdo, łącznik ani inny moduł.
+    - Neutralny moduł zamyka wolne pole, a w przyszłości może zostać zastąpiony innym elementem, jeśli
+      konfiguracja stanowiska ulegnie zmianie.
+    - Zaślepka ramki zakrywa miejsce, w którym nie jest montowany aktywny mechanizm.
+    design_estetyka:
+    - Element zamyka wolną przestrzeń i tworzy gotową powierzchnię frontową.
+    funkcje_korzysci:
+    - Brak nadruku sprawia, że nie sugeruje żadnej funkcji.
+    jakosc_trwalosc:
+    - Wykonano ją z bezhalogenowego tworzywa PC o matowej powierzchni.
+    - Front wykonano z bezhalogenowego tworzywa PC o matowej powierzchni.
+    montaz_uzytkowanie:
+    - Gotowy moduł z ramką montażową pozwala zamknąć takie miejsce bez dodawania niepotrzebnego mechanizmu.
+  przylacze_kabla:
+    funkcje_korzysci:
+    - Przyłącze kabla pozwala zakończyć estetycznie miejsce, w którym przewód ma wychodzić przez moduł
+      osprzętu zamiast przez zwykły otwór w ścianie.
+    - Produkt nie ma oznaczenia funkcji, dzięki czemu nie narzuca rodzaju prowadzonego kabla.
+    jakosc_trwalosc:
+    - Wykonano go z bezhalogenowego tworzywa PC o matowej powierzchni.
+    montaz_uzytkowanie:
+    - Neutralny front bez oznaczeń pozwala zastosować element przy różnych typach kabli, o ile sposób
+      prowadzenia instalacji jest zgodny z projektem.
+  puszka_natynkowa:
+    montaz_uzytkowanie:
+    - Puszka natynkowa jest przeznaczona do sytuacji, w których osprzęt ma być zamontowany bezpośrednio
+      na powierzchni ściany.
+    - Tego typu obudowa pozwala przenieść głębokość montażową na powierzchnię ściany, co jest przydatne
+      wszędzie tam, gdzie instalacja ma pozostać natynkowa.
+    - Puszka natynkowa w wersji narożnej została zaprojektowana jako podwójna, dlatego jej główną zaletą
+      jest połączenie dwóch stanowisk w jednym miejscu przy krawędzi ścian.
+    - Narożna forma odróżnia ten model od standardowej puszki natynkowej montowanej na płaskiej powierzchni.
+    - Jedna podwójna obudowa pozwala wykorzystać miejsce, w którym zwykła puszka na płaskiej ścianie nie
+      byłaby tak naturalnym rozwiązaniem.
+    - Puszka natynkowa pozwala zamontować osprzęt bez wykonywania wnęki pod klasyczną puszkę podtynkową.
+    - Konkretne wymiary i składana konstrukcja pozwalają od razu ocenić, czy element zmieści się w planowanym
+      miejscu montażu.
+    jakosc_trwalosc:
+    - Materiał obudowy to tworzywo PC bez halogenów.
+    ogolne:
+    - Element rozszerzający jest dodatkiem do konstrukcji składanej, gdy jedno stanowisko przestaje wystarczać.
+    - Zamiast wymieniać całą obudowę na inną, system można powiększyć o kolejny segment zgodny z tą konstrukcją.
+    funkcje_korzysci:
+    - Najważniejszą cechą tego modelu jest funkcja rozszerzenia obudowy natynkowej.
+  gniazdo_telefoniczne:
+    montaz_uzytkowanie:
+    - Zacisk przebijający izolację pozwala zakończyć żyły przewodu bez wykonywania połączenia śrubowego.
+    - Jeżeli liczy się mała głębokość mechanizmu i zakończenie przewodu na zacisku przebijającym izolację,
+      ten model odpowiada właśnie takiej konfiguracji.
+    design_estetyka:
+    - Matowe wykończenie ogranicza połysk powierzchni.
+  lacznik_zaluzjowy:
+    funkcje_korzysci:
+    - Łącznik roletowy ma klawisz kołyskowy i trójpozycyjną konstrukcję, dlatego sterowanie odbywa się
+      jednym elementem frontowym.
+    - Piktogram żaluzji pomaga rozpoznać funkcję bez dodatkowej etykiety.
+    - Mechanizm ma sterowanie mechaniczne i nie jest wyposażony w podświetlenie.
+    - Łącznik żaluzjowy łączy podwójną konstrukcję z trzema pozycjami sterowania.
+    montaz_uzytkowanie:
+    - Model nie ma podświetlenia i jest przeznaczony do montażu podtynkowego.
+    - Przewody mocuje się w szybkozłączach, co eliminuje potrzebę dokręcania zacisków śrubowych.
+    - Przewody trafiają do szybkozłączy, a mocowanie odbywa się na pazurki lub wkręty.
+    - Dwa symbole i szybkozłącza ułatwiają rozpoznanie funkcji oraz wykonanie montażu podtynkowego.
+    ogolne:
+    - Łącznik żaluzjowy udostępnia dwie pozycje sterujące i środkową pozycję neutralną.
+    - Model pracuje mechanicznie i nie ma podświetlenia.
+  gniazdo_multimedialne:
+    montaz_uzytkowanie:
+    - Gniazdo głośnikowe jest wykonaniem jednokrotnym i służy do zakończenia przewodu głośnikowego w podtynkowym
+      punkcie ściennym.
+    - Zacisk kleszczowy wymaga zagniatania przewodu podczas montażu.
+    zastosowanie_wnetrza:
+    - Pole opisowe można wykorzystać do identyfikacji toru lub pomieszczenia.
+  sygnalizator_led:
+    montaz_uzytkowanie:
+    - Przewody podłącza się do zacisków śrubowych, a mechanizm mocuje na pazurki lub wkręty.
+by_domain:
+  automatyka:
+    montaz_uzytkowanie:
+    - Przewody podłącza się do zacisków śrubowych, a moduł mocuje pazurkami albo wkrętami w puszce podtynkowej.
+    - Zaciski śrubowe i montaż na pazurki lub wkręty odpowiadają standardowej instalacji podtynkowej.
+    - Przed zakupem kluczowe jest sprawdzenie obecności przewodu neutralnego w puszce.
+    - Przewody zasilające podłącza się do zacisków śrubowych.
+    funkcje_korzysci:
+    - Połączenie z aplikacją działa przez zwykły router, bezpośrednio przez Wi-Fi albo zdalnie przez internet.
+  osprzet:
+    montaz_uzytkowanie:
+    - Szybkozłącza skracają przygotowanie przewodów w porównaniu z zaciskami wymagającymi dokręcania śrub.
+    - Mechanizm montuje się podtynkowo, używając pazurków albo wkrętów, a szybkozłącza umożliwiają zamocowanie
+      przewodów bez dokręcania zacisków śrubowych.
+    - Przewody wpina się w szybkozłącza, a moduł unieruchamia pazurkami rozporowymi lub wkrętami.
+    - Element jest wahadłowy i mocuje się zaciskowo, przez wciśnięcie na prowadnice.
+    - Producent przewidział oba kierunki montażu, więc ten sam element pasuje do stanowiska ułożonego
+      poziomo i pionowo.
+    - Tworzywo PC jest bezhalogenowe, co ma znaczenie w budynkach, gdzie stawia się wymagania wobec materiałów
+      instalacyjnych.
+    - Przewody wprowadza się do szybkozłączy, bez dokręcania śrub zaciskowych.
+    - Przed montażem wystarczy zweryfikować schemat napędu i dostępne miejsce w puszce.
+    - Mechanizm wykorzystuje szybkozłącza, więc przewody można osadzić bez dokręcania śrub zaciskowych.
+    - Przy montażu trzeba zachować kompletność elementów wymaganych do utrzymania deklarowanego stopnia
+      ochrony.
+    - Przed zakupem warto więc odczytać oznaczenie znajdujące się na module zamontowanym w ścianie.
+    - Element mocuje się zaciskowo, przez wciśnięcie na prowadnice.
+    - Mechanizm można mocować pazurkami lub wkrętami.
+    - Beznarzędziowy zacisk przebijający izolację pozwala wykonać połączenie bez klasycznego zacisku śrubowego,
+      co upraszcza pracę przy zakończeniu przewodu.
+    - Zamiast budować dwa osobne stanowiska, można wyprowadzić oba przewody w jednym punkcie instalacyjnym.
+    - Beznarzędziowe zaciski przebijające izolację przyspieszają zakończenie żył bez używania zacisków
+      śrubowych.
+    - Przy instalacji warto więc uwzględnić nie tylko sam mechanizm, ale także miejsce na przewody zakończone
+      odpowiednimi wtykami.
+    - W tym modelu producent zastosował zaciski śrubowe, dlatego przewód jest unieruchamiany mechanicznie
+      w złączu podczas montażu.
+    - Jeśli potrzebujesz właśnie takiej funkcji bez dodatkowych portów i z podłączeniem na zaciski śrubowe,
+      ten model odpowiada takiej konfiguracji.
+    - Przy dwóch przewodach warto wcześniej zaplanować ich ułożenie w puszce, aby nie tworzyć zbędnych
+      naprężeń za mechanizmem.
+    - 'Oba tory korzystają z różnych sposobów zakończenia: część antenowa z wtyku, a część sieciowa z
+      zacisku przebijającego izolację.'
+    - 'Zastosowano dwa typy połączeń: wtyk oraz zaciski śrubowe.'
+    - Dwa porty pozwalają pozostawić jeden stały punkt dla dwóch przewodów USB.
+    - Szybkozłącza ułatwiają podłączenie przewodów bez zacisków śrubowych.
+    - Podwójna konfiguracja ogranicza liczbę elementów na ścianie, a brak nadruków pozostawia swobodę
+      w funkcji zamontowanych modułów.
+    - Przed zakupem najważniejsze jest sprawdzenie oznaczenia zamontowanego mechanizmu.
+    - Symbol zgodnego modułu jest najważniejszą informacją montażową podaną w nazwie produktu.
+    - Symbol pozostaje widoczny na froncie po montażu.
+    - Szybkozłącza służą do mocowania przewodów bez dokręcania śrub.
+    - Przewody podłącza się do szybkozłączy, a front nie ma żadnego piktogramu.
+    - Neutralny front bez oznaczeń pozwala zastosować element przy różnych typach kabli, o ile sposób
+      prowadzenia instalacji jest zgodny z projektem.
+    - Tego typu obudowa pozwala przenieść głębokość montażową na powierzchnię ściany, co jest przydatne
+      wszędzie tam, gdzie instalacja ma pozostać natynkowa.
+    - Konkretne wymiary i składana konstrukcja pozwalają od razu ocenić, czy element zmieści się w planowanym
+      miejscu montażu.
+    - Zacisk przebijający izolację pozwala zakończyć żyły przewodu bez wykonywania połączenia śrubowego.
+    - Jeżeli liczy się mała głębokość mechanizmu i zakończenie przewodu na zacisku przebijającym izolację,
+      ten model odpowiada właśnie takiej konfiguracji.
+    - Przewody mocuje się w szybkozłączach, co eliminuje potrzebę dokręcania zacisków śrubowych.
+    - Montaż może odbywać się na pazurki lub wkręty.
+    - Zacisk przebijający izolację służy do zakończenia przewodu, a osobny uchwyt kablowy odciążający
+      pomaga ograniczyć przenoszenie naprężeń na miejsce połączenia.
+    - Kodowanie kolorem pomaga przy zakończeniu przewodów, a oba porty mają prosty kierunek wyjścia.
+    - Producent wskazuje zastosowanie tylko w instalacjach indywidualnych, co jest kluczową informacją
+      przy wyborze miejsca tego modelu w systemie.
+    - Moduł wymaga instalacji z przewodem neutralnym.
+    - Moduł jest przeznaczony do instalacji z przewodem neutralnym.
+    - Moduł jest przeznaczony do montażu podtynkowego i mocowany na pazurki lub wkręty.
+    - Oznaczenie frontu, przesłony oraz szybkozłącza tworzą wyraźnie wyspecjalizowane stanowisko.
+    - Zacisk kleszczowy wymaga zagniatania przewodu podczas montażu.
+    - Szybkozłącza skracają etap mocowania przewodów w porównaniu z zaciskami wymagającymi dokręcania.
+    - Mocowanie odbywa się wkrętem, natomiast żyły przewodów są zaciskane śrubowo.
+    - Przewody zasilające podłącza się do zacisków śrubowych.
+    - Płytki mechanizm i szybkozłącza są jego najważniejszymi zaletami montażowymi.
+    - Kompaktowy format i montaż zaciskowy sprawiają, że jest to typowy element frontowy, a nie osobny
+      mechanizm elektryczny.
+    - Szybkozłącza pozwalają osadzić przewody bez dokręcania śrub zaciskowych.
+    - Zatrzaskowy sposób mocowania upraszcza osadzenie elementu na kompatybilnym osprzęcie.
+    - Możliwość montażu w obu kierunkach i zatrzaskowe mocowanie dają swobodę przy wykańczaniu jednego
+      stanowiska.
+    - Kierunek montażu może być poziomy albo pionowy.
+    - Szybkozłącza pozwalają podłączyć przewody bez dokręcania śrub.
+    - Trzy dźwignie, szybkozłącza i niewielka głębokość wbudowania tworzą zwarte stanowisko podtynkowe.
+    - Przewody wprowadza się do szybkozłączy, a moduł unieruchamia pazurkami rozporowymi albo wkrętami.
+    - Przewody podłącza się przez szybkozłącza, a mechanizm mocuje na pazurki lub wkręty.
+    - Podwójna konstrukcja ogranicza liczbę osobnych mechanizmów na ścianie, a szybkozłącza upraszczają
+      podłączenie przewodów.
+    - Przewody wprowadza się do szybkozłączy, a moduł mocuje pazurkami albo wkrętami.
+    - Dla osoby korzystającej z instalacji wszystkie punkty w takim obwodzie działają identycznie, więc
+      wyróżnianie jednego z nich symbolem nie wnosi informacji.
+    - Przewody podłącza się przez szybkozłącza, a mocowanie odbywa się na pazurki lub wkręty.
+    - Podwójna konstrukcja ogranicza liczbę osobnych mechanizmów, a szybkozłącza ułatwiają podłączenie
+      przewodów.
+    - Dźwignie są kołyskowe i działają bistabilnie, a przewody mocuje się w szybkozłączach.
+    - Mocowanie odbywa się na pazurki lub wkręty, a przewody trafiają do szybkozłączy.
+    - Dwie dźwignie, szybkozłącza i czytelny symbol żaluzji tworzą kompaktowe stanowisko podtynkowe.
+    - Przewody trafiają do szybkozłączy, a mocowanie odbywa się na pazurki lub wkręty.
+    - Dwa symbole i szybkozłącza ułatwiają rozpoznanie funkcji oraz wykonanie montażu podtynkowego.
+    ogolne:
+    - Pojedynczy przedmiot wsunięty do jednego otworu nie otwiera toru prądowego.
+    - W jednym elemencie mieszczą się dwa sąsiadujące moduły.
+    - przy malowaniu ściany lub zmianie konfiguracji osprzętu.
+    - Ekranowane wykonanie i przesłona są integralnymi cechami tego wariantu.
+    - Połączenia wykonuje się za pomocą wtyków, zgodnie z konstrukcją tego modułu.
+    - Konstrukcja końcowa ma sens tam, gdzie właśnie w tym miejscu ma znaleźć się docelowy punkt przyłączenia,
+      bez potrzeby prowadzenia sygnału dalej przez ten sam mechanizm.
+    - Podwójna konstrukcja ogranicza liczbę stanowisk na ścianie i pozostawia front bez dodatkowych oznaczeń.
+    - Przed zamówieniem warto sprawdzić symbol mechanizmu, ponieważ to on decyduje o dopasowaniu.
+    - Przed zakupem wystarczy potwierdzić symbol modułu, aby uniknąć doboru podobnego wizualnie, ale innego
+      elementu.
+    - Piktogram żaluzji pozostaje widoczny na froncie, dlatego stanowisko jest łatwe do rozpoznania nawet
+      bez dodatkowych opisów.
+    - Brak piktogramów pozostawia oba pola bez przypisanych oznaczeń.
+    - Neutralny moduł zamyka wolne pole, a w przyszłości może zostać zastąpiony innym elementem, jeśli
+      konfiguracja stanowiska ulegnie zmianie.
+    - Element rozszerzający jest dodatkiem do konstrukcji składanej, gdy jedno stanowisko przestaje wystarczać.
+    - Zamiast wymieniać całą obudowę na inną, system można powiększyć o kolejny segment zgodny z tą konstrukcją.
+    - Przesłona przeciwkurzowa osłania złącze, gdy nie jest używane.
+    - Zamiast dwóch osobnych modułów otrzymujesz dwa porty obok siebie, a kodowanie kolorem pomaga przy
+      organizacji zakończeń.
+    - Konstrukcja została przygotowana jako podwójna i ekranowana.
+    - W porównaniu z płytką wersją nieekranowaną trzeba więc przewidzieć więcej miejsca za frontem.
+    - Podwójny układ ogranicza liczbę modułów, a przesłony przeciwkurzowe chronią oba porty w czasie,
+      gdy pozostają nieużywane.
+    - Wszystkie trzy oznaczenia znajdują się na froncie.
+    - Przesłony torów prądowych stanowią dodatkowy element konstrukcji.
+    - Brak klapki uchylnej pozostawia klasyczny otwarty front.
+    - Front stanowi plakietka centralna bez nadruku.
+    - Podwójna konstrukcja ogranicza liczbę osobnych punktów na ścianie, a przesłony osłaniają oba tory
+      prądowe.
+    - Oznacza to, że do kompletnej konfiguracji wymagającej wyższego poziomu ochrony trzeba uwzględnić
+      brakujący element uszczelniający.
+    - Uziemienie realizowane jest przez bolec, a otwory prądowe mają przesłony.
+    - Najważniejsze jest sprawdzenie symbolu mechanizmu, ponieważ ta część została wskazana właśnie do
+      tych dwóch modeli.
+    - Oba tory mają również przesłony otworów prądowych.
+    - Dwie jednostki zajmują jeden wspólny moduł, a przesłony torów prądowych stanowią dodatkowy element
+      frontu.
+    - Dwa pola frontowe odpowiadają dwóm oddzielnym dźwigniom.
+    - Piktogram schodów nie rozstrzyga tego pytania, a przy dwóch polach potrafi dodatkowo mylić.
+    - Gładki front bywa więc czytelniejszy niż powtórzony dwukrotnie ten sam symbol.
+    - Każdy tor wymaga własnego mechanizmu po drugiej stronie obwodu, dokładnie jak w wersji pojedynczej.
+    - Dołożenie tego mechanizmu rozszerza istniejący układ o następny punkt przełączania.
+    - Praca jest bistabilna, więc każde naciśnięcie zmienia stan obwodu niezależnie od pozostałych mechanizmów.
+    - Przy trzech punktach potrzebne są dwa mechanizmy schodowe na końcach i jeden krzyżowy w środku;
+      każdy następny punkt to kolejna sztuka tego modelu.
+    - Dwie dźwignie rozdzielają oba tory, a każdy z nich pracuje bistabilnie.
+    - Zamiast dwóch osobnych puszek i dwóch ramek wystarczy jedno stanowisko.
+    - Każdy z dwóch torów musi być wpięty między własną parę mechanizmów schodowych.
+    - 'Przed zamówieniem policz cały układ: każdy tor potrzebuje własnej pary mechanizmów schodowych na
+      końcach.'
+    funkcje_korzysci:
+    - Jeden podtynkowy moduł pozwala zachować oba przyłącza obok siebie i ograniczyć liczbę osobnych elementów
+      na ścianie.
+    - Czytelne oznaczenia frontu pomagają później korzystać z właściwego przyłącza bez zgadywania funkcji.
+    - Sama pełni funkcję frontu i osłony, a nie aktywnego złącza.
+    - Brak nadruku jest przydatny tam, gdzie funkcja jest oczywista z położenia stanowiska albo nie wymaga
+      oznaczenia.
+    - W tym modelu funkcję rozpoznaje się po nadruku, a zgodność po symbolu mechanizmu.
+    - Brak piktogramu pozwala zastosować go bez narzuconego oznaczenia funkcji na froncie.
+    - Przyłącze kabla pozwala zakończyć estetycznie miejsce, w którym przewód ma wychodzić przez moduł
+      osprzętu zamiast przez zwykły otwór w ścianie.
+    - Produkt nie ma oznaczenia funkcji, dzięki czemu nie narzuca rodzaju prowadzonego kabla.
+    - Brak nadruku sprawia, że nie sugeruje żadnej funkcji.
+    - Najważniejszą cechą tego modelu jest funkcja rozszerzenia obudowy natynkowej.
+    - Piktogram żaluzji pomaga rozpoznać funkcję bez dodatkowej etykiety.
+    - Front nie ma piktogramu, dlatego poszczególne funkcje rozpoznaje się po kształcie złączy.
+    - Trzy oznaczone złącza w jednym module ograniczają liczbę elementów na ścianie i zachowują czytelny
+      podział funkcji.
+    - Wyraźne oznaczenia frontu oraz podane parametry tłumienia pozwalają jednoznacznie rozpoznać funkcję
+      i charakter tego modelu.
+    - 'Sam mechanizm działa chwilowo: po naciśnięciu zwiera styk, a po zwolnieniu wraca do pozycji spoczynkowej.'
+    - Transmisja jest szyfrowana i dwukierunkowa, a sterowanie mechaniczne pozostaje dostępne na miejscu.
+    - Symbol żaluzji na froncie od razu informuje, do jakiej funkcji przypisano stanowisko.
+    - Brak symbolu sprawia, że front nie narzuca określonej funkcji.
+    - Dwa pola obsługowe odpowiadają konstrukcji przewidzianej dla tych mechanizmów.
+    - Każdy z dwóch torów korzysta z własnego styku zwiernego, co pozwala oddzielić obie funkcje w jednym
+      stanowisku.
+    - Front nie ma piktogramów, dlatego nie narzuca graficznego opisu poszczególnych funkcji.
+    - Front nie ma piktogramu, dlatego nie przypisuje mechanizmu wizualnie do jednej funkcji.
+    - Trzy dźwignie rozdzielają obsługę poszczególnych obwodów i pozwalają sterować nimi niezależnie.
+    - Pozwala więc niezależnie przełączać dwa tory z jednego stanowiska ściennego.
+    - Układ bistabilny działa dokładnie tak samo jak w wersji opisanej symbolem.
+    - Do zbudowania pełnego sterowania z dwóch miejsc nadal potrzebne są dwa mechanizmy schodowe.
+    - Pamiętaj o zamówieniu drugiego mechanizmu schodowego, bez którego układ sterowania z dwóch miejsc
+      nie zadziała.
+    - Dwie dźwignie rozdzielają funkcje obu torów, a każdy z nich pracuje w układzie przewidzianym do
+      sterowania z więcej niż jednego miejsca.
+    - Jednocześnie zachowuje typowe działanie bistabilne układu schodowego.
+    - Symbol schodów pozwala rozpoznać funkcję bez dodatkowej etykiety.
+    - Symbol na froncie ułatwia rozpoznanie funkcji.
+    - Symbol żaluzji pozwala od razu rozpoznać przeznaczenie stanowiska.
+    - Model jest przeznaczony do sterowania roletami.
+    jakosc_trwalosc:
+    - Wykonano go z bezhalogenowego tworzywa PC o matowej powierzchni.
+    - Wykonano ją z bezhalogenowego tworzywa PC o matowej powierzchni.
+    - Materiał obudowy to tworzywo PC bez halogenów.
+    - Wykonano ją z bezhalogenowego tworzywa PC o naturalnie zabezpieczonej powierzchni.
+    - Wykonano go z bezhalogenowego PC o naturalnie zabezpieczonej, matowej powierzchni.
+    - Front wykonano z bezhalogenowego tworzywa PC o matowej powierzchni.
+    design_estetyka:
+    - Brak piktogramu oznacza neutralny wygląd obu widocznych części.
+    - Element zamyka wolną przestrzeń i tworzy gotową powierzchnię frontową.
+    - Matowe wykończenie ogranicza połysk powierzchni.
+    - Powierzchnia jest matowa i naturalnie zabezpieczona.
+    - Obie powierzchnie są pozbawione piktogramów, dlatego wygląd modułu nie narzuca sposobu wykorzystania
+      poszczególnych torów.
+    - Brak piktogramów pozostawia neutralny wygląd obu powierzchni.
+    energo_eko:
+    - Wbudowany pomiar energii dodaje informację o pracy obciążenia bez stosowania osobnego modułu pomiarowego.
+    zastosowanie_wnetrza:
+    - Pole opisowe można wykorzystać do identyfikacji toru lub pomieszczenia.
+    - Sprawdza się też w pomieszczeniach reprezentacyjnych, gdzie osprzęt ma być jak najmniej zauważalny.
+  oswietlenie:
+    montaz_uzytkowanie:
+    - Przewody podłącza się do zacisków śrubowych, a mechanizm mocuje na pazurki lub wkręty.
+version: 1
+metadata:
+  last_merged_at: '2026-09-16'
+  note: Frazy maja zakres rodziny i domeny produktowej. Nie wolno ich splaszczac do wspolnej puli - slownictwo
+    osprzetu wyciekloby na oprawy.

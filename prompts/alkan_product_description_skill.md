@@ -96,10 +96,21 @@ build a shared template, or postpone validation until the end.
 - Add `<h3>Specyfikacja techniczna</h3>` using only `Product facts`.
 - Format specification rows as
   `<li><strong>Parameter:</strong> value</li>`.
+- Format benefit rows as `<li><strong>Feature</strong> - benefit.</li>`. No dash
+  after the `<li>` tag: the list marker already draws a bullet, so a dash there
+  renders a double bullet.
 - Immediately after the specification list, add a separate final `<p>` that
   summarizes the strongest confirmed reason to choose the product and gives a
   natural purchase encouragement. Never end the description on the
   specification `</ul>`.
+- After that closing paragraph, add the FAQ block, separated by `<hr>`:
+  an `<h3>Najczęściej zadawane pytania</h3>` heading, exactly 3 question and
+  answer pairs, then a JSON-LD `FAQPage` schema.
+- Each FAQ answer has 200-300 characters. Number the visible questions
+  (`1.`, `2.`, `3.`); the schema omits that numbering and otherwise repeats the
+  visible text verbatim.
+- Write FAQ questions for the specific product: real doubts before buying or
+  installing it. Never reuse one question set across a batch.
 - Add an application section only when supportable.
 - Keep paragraphs short: normally 3-4 sentences maximum.
 - Close with a factual summary or purchase-oriented recommendation without

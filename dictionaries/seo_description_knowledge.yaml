@@ -60,6 +60,27 @@ product_description:
         - Summarize why the confirmed product features make this variant worth choosing.
         - End with a natural purchase encouragement or practical recommendation.
         - Use only confirmed facts and avoid empty promises or unsupported guarantees.
+      note: >
+        The closing paragraph ends the description body. Only the FAQ block may
+        follow it, separated by <hr>.
+    faq:
+      required: true
+      separator: "<hr>"
+      heading: "Najczęściej zadawane pytania"
+      question_count: 3
+      answer_chars: [200, 300]
+      visible_question_numbering: true
+      schema:
+        required: true
+        format: JSON-LD
+        type: FAQPage
+        rule: >
+          The FAQPage schema repeats the visible questions and answers verbatim.
+          Visible questions carry a "1. " prefix that the schema name omits.
+      content:
+        - Answer real doubts a buyer or installer would have before ordering.
+        - Use only confirmed facts; never invent parameters to fill an answer.
+        - Vary the questions per product; do not reuse one set across a batch.
 
   writing_model:
     sequence:

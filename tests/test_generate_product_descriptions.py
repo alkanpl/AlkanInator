@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import re
 import sys
 import tempfile
@@ -11,14 +12,22 @@ from pathlib import Path
 import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 
 from generate_product_descriptions import (  # noqa: E402
     CODEX_BRIEF_SHEETS,
+    FAMILY_DEFINITION,
+    FAMILY_INTRO_ROLE,
     H2_QUESTION_BUILDERS,
     algorithmic_style_issues,
     build_codex_brief_for_sku,
     build_description_html,
     classify_family,
+    is_light_product,
+    family_bank_pool,
+    load_family_phrase_bank,
+    load_family_taxonomy,
+    subject_for,
     extract_faq_schema,
     prose_material,
     render_benefit_item,
@@ -29,6 +38,13 @@ from generate_product_descriptions import (  # noqa: E402
     write_codex_brief_report,
 )
 from codex_description_agent import discover_latest_brief_batch  # noqa: E402
+from generate_product_descriptions import find_product_row_by_sku  # noqa: E402
+from harvest_description_phrases import (  # noqa: E402
+    body_sentences,
+    portable_across_family,
+    rejection_reason,
+    sentence_category,
+)
 
 
 class AlgorithmicDescriptionTest(unittest.TestCase):
@@ -46,7 +62,7 @@ class AlgorithmicDescriptionTest(unittest.TestCase):
     def test_benefit_item_bolds_feature_before_dash(self) -> None:
         self.assertEqual(
             render_benefit_item("Trzonek E27 - daje swobodę doboru żarówki."),
-            "  <li>- <strong>Trzonek E27</strong> - daje swobodę doboru żarówki.</li>",
+            "  <li><strong>Trzonek E27</strong> - daje swobodę doboru żarówki.</li>",
         )
 
     def test_prose_material_replaces_pipe(self) -> None:
@@ -105,9 +121,9 @@ class AlgorithmicDescriptionTest(unittest.TestCase):
         <p>Plafon LED TEST to produkt do korytarza.</p>
         <h3>Najważniejsze cechy</h3>
         <ul>
-          <li>- <strong>Moc 12 W</strong> - pozwala dobrać oprawę do pomieszczenia.</li>
-          <li>- <strong>Trzonek E27</strong> - ułatwia dobór żarówki.</li>
-          <li>- <strong>Stopień ochrony IP54</strong> - oznacza ochronę przed pyłem.</li>
+          <li><strong>Moc 12 W</strong> - pozwala dobrać oprawę do pomieszczenia.</li>
+          <li><strong>Trzonek E27</strong> - ułatwia dobór żarówki.</li>
+          <li><strong>Stopień ochrony IP54</strong> - oznacza ochronę przed pyłem.</li>
         </ul>
         <h3>Specyfikacja techniczna</h3>
         """
@@ -202,6 +218,35 @@ class CodexDescriptionBriefTest(unittest.TestCase):
         self.assertIn(("Moc [W]", "240"), rejected_facts)
         self.assertIn(("Pasuje do", "do FL AGOR HI GRID"), compatibility_facts)
 
+    def test_codex_brief_reads_canonical_features_json(self) -> None:
+        df = pd.DataFrame(
+            [
+                {
+                    "sku": "DZP1.01/42/KON",
+                    "ean": "5902787916145",
+                    "name": "Przycisk roletowy pojedynczy kaszmirowy Simon 54 DZP1.01/42",
+                    "features": json.dumps(
+                        {
+                            "Typ produktu": "Przyciski",
+                            "Seria": "Simon 54",
+                            "Kolor": "Kaszmir",
+                            "Prąd znamionowy [A]": "10",
+                            "Napięcie [V]": "250",
+                        },
+                        ensure_ascii=False,
+                    ),
+                }
+            ]
+        )
+
+        brief = build_codex_brief_for_sku(df, "DZP1.01/42/KON")
+        product_facts = {(row["fact"], row["value"]) for row in brief["product_facts"]}
+
+        self.assertIn(("Typ produktu", "Przyciski"), product_facts)
+        self.assertIn(("Seria", "Simon 54"), product_facts)
+        self.assertIn(("Kolor", "Kaszmir"), product_facts)
+        self.assertIn(("Prąd znamionowy [A]", "10"), product_facts)
+
     def test_validator_detects_rejected_power_claim_for_accessory(self) -> None:
         rejected_facts = [
             {
@@ -225,7 +270,7 @@ class CodexDescriptionBriefTest(unittest.TestCase):
             """
             <p>Siatka ochronna pomaga zabezpieczy? element o?wietleniowy.</p>
             <h2>Dlaczego warto wybra? produkt?</h2>
-            <ul><li>- metalowa konstrukcja</li></ul>
+            <ul><li>metalowa konstrukcja</li></ul>
             <h3>Specyfikacja techniczna</h3>
             <ul><li>Materiał: Metal</li></ul>
             """,
@@ -514,7 +559,7 @@ class CodexDescriptionBriefTest(unittest.TestCase):
             "compatibility_facts": [{"fact": "Pasuje do", "value": "do FL AGOR HI GRID", "source": "compatibility_source"}],
             "rejected_facts": [],
             "prompt": "test",
-            "generated_description": "<p>Opis zabezpiecza? produkt.</p><ul><li>- zly punkt</li></ul>",
+            "generated_description": "<p>Opis zabezpiecza? produkt.</p><ul><li>zly punkt</li></ul>",
             "validation": [],
         }
 
@@ -558,6 +603,17 @@ class CodexDescriptionBriefTest(unittest.TestCase):
                     "potwierdzona kompatybilność z oprawą FL AGOR HI GRID i dodatkowa fizyczna "
                     "osłona. Wybierz ten model do wskazanej serii opraw.</p>"
                 ),
+                "<hr>",
+                "<h3>Najczęściej zadawane pytania</h3>",
+                "<p><strong>1. Czy siatka pasuje do innych opraw niż FL AGOR HI GRID?</strong><br>",
+                "Producent potwierdza zgodność wyłącznie z oprawą FL AGOR HI GRID. Przy innym modelu trzeba sprawdzić wymiary i sposób mocowania w karcie katalogowej danej oprawy, ponieważ dopasowanie siatki zależy od kształtu korpusu.</p>",
+                "<p><strong>2. Z czego wykonana jest osłona?</strong><br>",
+                "Element jest metalowy, co daje fizyczną barierę chroniącą oprawę przed przypadkowym uderzeniem lub kontaktem. Materiał nie zmienia parametrów świetlnych samej oprawy, a jedynie zabezpiecza ją mechanicznie w trudniejszym otoczeniu.</p>",
+                "<p><strong>3. Czy siatka wchodzi w skład zestawu z oprawą?</strong><br>",
+                "Nie, jest to osobne akcesorium zamawiane oddzielnie od oprawy. Warto uwzględnić je w zamówieniu wtedy, gdy miejsce montażu naraża oprawę na uderzenia, na przykład w halach, magazynach albo pomieszczeniach technicznych.</p>",
+                '<script type="application/ld+json">',
+                "{\"@context\": \"https://schema.org\", \"@type\": \"FAQPage\", \"mainEntity\": [{\"@type\": \"Question\", \"name\": \"Czy siatka pasuje do innych opraw niż FL AGOR HI GRID?\", \"acceptedAnswer\": {\"@type\": \"Answer\", \"text\": \"Producent potwierdza zgodność wyłącznie z oprawą FL AGOR HI GRID. Przy innym modelu trzeba sprawdzić wymiary i sposób mocowania w karcie katalogowej danej oprawy, ponieważ dopasowanie siatki zależy od kształtu korpusu.\"}}, {\"@type\": \"Question\", \"name\": \"Z czego wykonana jest osłona?\", \"acceptedAnswer\": {\"@type\": \"Answer\", \"text\": \"Element jest metalowy, co daje fizyczną barierę chroniącą oprawę przed przypadkowym uderzeniem lub kontaktem. Materiał nie zmienia parametrów świetlnych samej oprawy, a jedynie zabezpiecza ją mechanicznie w trudniejszym otoczeniu.\"}}, {\"@type\": \"Question\", \"name\": \"Czy siatka wchodzi w skład zestawu z oprawą?\", \"acceptedAnswer\": {\"@type\": \"Answer\", \"text\": \"Nie, jest to osobne akcesorium zamawiane oddzielnie od oprawy. Warto uwzględnić je w zamówieniu wtedy, gdy miejsce montażu naraża oprawę na uderzenia, na przykład w halach, magazynach albo pomieszczeniach technicznych.\"}}]}",
+                "</script>",
             ]
         )
         brief = {
@@ -590,6 +646,216 @@ class CodexDescriptionBriefTest(unittest.TestCase):
 
         self.assertFalse(any(check["status"] in {"ERROR", "WARNING"} for check in checks))
         self.assertFalse(any(check["status"] in {"ERROR", "WARNING"} for check in review_checks))
+
+
+
+class ProductFamilyTaxonomyTest(unittest.TestCase):
+    """Regresje wokol rodzin produktowych.
+
+    Tlo: fallback `ogolny` nalezal do LIGHT_FAMILIES, wiec 74 z 98 produktow
+    Kontakt Simon (gniazda, przyciski, puszki) bylo opisywanych jak oprawy
+    oswietleniowe, a jedyna prawdziwa oprawa LED trafila do rodziny `zasilacz`.
+    """
+
+    SIMON_CATEGORY = {
+        "Kategoria produktu": "Gniazdka i Łączniki > Gniazdka Kontakt Simon > Simon 55",
+    }
+
+    def test_fallback_is_never_a_light_product(self) -> None:
+        taxonomy = load_family_taxonomy()
+        unknown = taxonomy.get("defaults", {}).get("unknown_family", "nieznana")
+        self.assertFalse(is_light_product(unknown))
+        self.assertFalse(is_light_product("ogolny"))
+
+    def test_neutral_fallback_has_no_lighting_vocabulary(self) -> None:
+        banned = ["oprawa", "oświetl", "światł", "strumień"]
+        for pool in (FAMILY_DEFINITION["ogolny"], FAMILY_INTRO_ROLE["ogolny"]):
+            for sentence in pool:
+                for word in banned:
+                    self.assertNotIn(word, sentence.lower(), sentence)
+
+    def test_socket_is_not_a_light_product(self) -> None:
+        family = classify_family(
+            "Gniazdo wtyczkowe pojedyncze z uziemieniem i przesłonami 16 A kaszmirowe TGZ1CZ.01/142",
+            {"Typ produktu": "Gniazdka", **self.SIMON_CATEGORY},
+        )
+        self.assertEqual(family, "gniazdo_zasilajace")
+        self.assertFalse(is_light_product(family))
+        self.assertEqual(subject_for(family), "To gniazdo")
+
+    def test_shop_category_does_not_override_product_name(self) -> None:
+        # Sciezka kategorii zawiera "Gniazdka" dla calej serii, takze dla ramek.
+        family = classify_family(
+            "Ramka 2-krotna LINE kaszmirowa Simon 55 TR2/142",
+            {"Typ produktu": "Ramki", **self.SIMON_CATEGORY},
+        )
+        self.assertEqual(family, "ramka")
+
+    def test_head_noun_wins_over_mentioned_part(self) -> None:
+        self.assertEqual(
+            classify_family("Zaślepka ramki (moduł) kaszmirowa DPS.01/42", {"Typ produktu": "Inne"}),
+            "zaslepka",
+        )
+        self.assertEqual(
+            classify_family(
+                "Łącznik świecznikowy z podświetleniem LED – osobne podświetlenie dla każdego klawisza",
+                {"Typ produktu": "Łączniki"},
+            ),
+            "lacznik_instalacyjny",
+        )
+        self.assertEqual(
+            classify_family(
+                "Pokrywa gniazd teleinformatycznych na Keystone płaska podwójna (moduł)",
+                {"Typ produktu": "Akcesoria"},
+            ),
+            "pokrywa_gniazda",
+        )
+
+    def test_lighting_connector_is_not_a_wall_switch(self) -> None:
+        # "Lacznik" w oswietleniu to zlaczka profilu, nie lacznik scienny.
+        self.assertEqual(
+            classify_family("Łącznik do FL STADER FLS 2 szt. szary Kanlux 38602", {}),
+            "akcesorium_oswietleniowe",
+        )
+        self.assertEqual(
+            classify_family("Linka do podwieszania lamp BRAVO SPN Kanlux 28505", {}),
+            "akcesorium_oswietleniowe",
+        )
+
+    def test_lighting_families_still_classify(self) -> None:
+        for title, expected in [
+            ("Oprawa High Bay LED HB PRO STRONG 100W", "high_bay"),
+            ("Naświetlacz LED IQ-LED FL 50W", "naswietlacz"),
+            ("Panel LED BLINGO 40W", "panel"),
+            ("Plafon LED BENO 18W", "plafon"),
+            ("Lampa ogrodowa kula STONO 200mm", "ogrodowa"),
+        ]:
+            with self.subTest(title=title):
+                family = classify_family(title, {})
+                self.assertEqual(family, expected)
+                self.assertTrue(is_light_product(family))
+
+    def test_every_family_declares_subject_and_light_flag(self) -> None:
+        for entry in load_family_taxonomy().get("families", []):
+            with self.subTest(family=entry.get("name")):
+                self.assertTrue(entry.get("subject"), entry)
+                self.assertIn("is_light", entry)
+
+
+
+
+class PhraseHarvestTest(unittest.TestCase):
+    """Zbieranie fraz z gotowych opisow do banku z zakresem rodziny."""
+
+    SAMPLE = "\n".join([
+        "<p><strong>Gniazdo wtyczkowe pojedyncze 16 A</strong> to punkt zasilania.</p>",
+        "<h2>Gniazdo wtyczkowe z przesłonami: co daje ta wersja?</h2>",
+        "<p>Przewody wpina się w szybkozłącza, a moduł unieruchamia pazurkami rozporowymi.</p>",
+        "<h3>Najważniejsze cechy</h3>",
+        "<ul>",
+        "<li><strong>Przesłony</strong> - dodatkowa bariera.</li>",
+        "</ul>",
+        "<hr>",
+        "<h3>Najczęściej zadawane pytania</h3>",
+        "<p><strong>1. Pytanie?</strong><br>",
+        "Odpowiedź z sekcji FAQ.</p>",
+    ])
+
+    def test_harvests_prose_only(self) -> None:
+        sentences = body_sentences(self.SAMPLE)
+        joined = " ".join(sentences)
+        self.assertIn("szybkozłącza", joined)
+        # Naglowek, punkt listy, otwarcie z nazwa i FAQ nie moga trafic do banku.
+        self.assertNotIn("co daje ta wersja", joined)
+        self.assertNotIn("dodatkowa bariera", joined)
+        self.assertNotIn("punkt zasilania", joined)
+        self.assertNotIn("sekcji FAQ", joined)
+
+    def test_rejects_sentences_that_cannot_be_reused(self) -> None:
+        cases = {
+            "Mechanizm pracuje przy napięciu 250 V i prądzie 16 A w typowym obwodzie.": "liczba",
+            "Model TGZ1CZ pasuje do standardowej puszki instalacyjnej w ścianie.": "kod",
+            "Dzięki temu montaż przebiega szybciej niż w rozwiązaniach śrubowych.": "kontekst",
+            "Wybierz ten model, jeśli zależy Ci na szybkim montażu bez śrubokręta.": "zwrot",
+            "Powierzchnia jest biała i matowa, co ogranicza widoczność zabrudzeń.": "kolor",
+        }
+        for sentence in cases:
+            with self.subTest(sentence=sentence[:40]):
+                self.assertTrue(rejection_reason(sentence), sentence)
+
+    def test_keeps_reusable_installation_sentence(self) -> None:
+        sentence = "Przewody wprowadza się do szybkozłączy, bez dokręcania śrub zaciskowych."
+        self.assertEqual(rejection_reason(sentence), "")
+        self.assertEqual(sentence_category(sentence), "montaz_uzytkowanie")
+
+    def test_sentence_naming_its_product_stays_in_its_family(self) -> None:
+        # Zdanie nazywajace swoj typ produktu nie moze trafic do puli domeny.
+        self.assertFalse(portable_across_family(
+            "Łącznik schodowy pracuje w układzie bistabilnym i nie wraca do pozycji.", "osprzet"))
+        self.assertTrue(portable_across_family(
+            "Przewody wprowadza się do szybkozłączy, bez dokręcania śrub zaciskowych.", "osprzet"))
+
+    def test_lighting_words_never_reach_non_lighting_domain(self) -> None:
+        for sentence in (
+            "Moduł obsługuje jeden punkt świetlny z dwóch stron pomieszczenia.",
+            "Powierzchnia ma okienko na kontrolkę świetlną umieszczoną w mechanizmie.",
+        ):
+            with self.subTest(sentence=sentence[:40]):
+                self.assertFalse(portable_across_family(sentence, "osprzet"))
+
+
+class FamilyPhraseBankTest(unittest.TestCase):
+    def test_family_pool_never_returns_another_family_phrases(self) -> None:
+        bank = load_family_phrase_bank().get("by_family") or {}
+        if len(bank) < 2:
+            self.skipTest("Bank rodzinowy ma za malo rodzin do porownania.")
+        cats = ["funkcje_korzysci", "design_estetyka", "jakosc_trwalosc"]
+        for family, buckets in bank.items():
+            own = {s for items in buckets.values() for s in items}
+            pool = set(family_bank_pool(family, cats))
+            self.assertTrue(pool <= own, f"{family} dostal fraze spoza swojej rodziny")
+
+    def test_unknown_family_gets_empty_scoped_pool(self) -> None:
+        self.assertEqual(family_bank_pool("nieznana", ["funkcje_korzysci"]), [])
+
+
+
+
+class SkuMatchingTest(unittest.TestCase):
+    """Regresja: warianty rozniace sie czlonem w SRODKU kodu.
+
+    Tlo: `normalize_sku_for_match` obcinalo kod na pierwszym ukosniku (zeby
+    zdjac sufiks dostawcy /KAN). Kody Kontakt Simon maja ukosniki w srodku,
+    wiec TW6.01/142/KON i TW6.01/X/142/KON redukowaly sie oba do "TW6.01"
+    i brief wariantu /X/ dostawal dane wariantu bazowego - z cudzym EAN-em.
+    """
+
+    FRAME = pd.DataFrame([
+        {"sku": "TW6.01/142/KON", "name": "Łącznik schodowy pojedynczy"},
+        {"sku": "TW6.01/X/142/KON", "name": "Łącznik schodowy bez piktogramu"},
+        {"sku": "TW7/2.01/142/KON", "name": "Łącznik krzyżowy podwójny"},
+        {"sku": "TW7/2.01/X/142/KON", "name": "Łącznik krzyżowy podwójny bez piktogramu"},
+    ])
+
+    def test_variant_with_middle_segment_is_not_confused_with_base(self) -> None:
+        for sku, expected in [
+            ("TW6.01/142/KON", "Łącznik schodowy pojedynczy"),
+            ("TW6.01/X/142/KON", "Łącznik schodowy bez piktogramu"),
+            ("TW7/2.01/142/KON", "Łącznik krzyżowy podwójny"),
+            ("TW7/2.01/X/142/KON", "Łącznik krzyżowy podwójny bez piktogramu"),
+        ]:
+            with self.subTest(sku=sku):
+                self.assertEqual(find_product_row_by_sku(self.FRAME, sku)["name"], expected)
+
+    def test_supplier_suffix_is_still_optional(self) -> None:
+        frame = pd.DataFrame([{"sku": "33482/KAN", "name": "Siatka ochronna"}])
+        self.assertEqual(find_product_row_by_sku(frame, "33482")["name"], "Siatka ochronna")
+        self.assertEqual(find_product_row_by_sku(frame, "33482/KAN")["name"], "Siatka ochronna")
+
+    def test_missing_sku_still_raises(self) -> None:
+        with self.assertRaises(SystemExit):
+            find_product_row_by_sku(self.FRAME, "NIE-MA-TAKIEGO")
+
 
 
 if __name__ == "__main__":
