@@ -1,0 +1,4967 @@
+version: 1
+updated_at: "2026-09-17"
+description: >
+  Struktura atrybutow Kontakt Simon w sklepie Woo (odczytana z lokalnej kopii
+  AlkanLocal, kategoria "Gniazdka Kontakt Simon", 2171 produktow). To jest
+  NADRZEDNE zrodlo dla pol Typ produktu / Podtyp produktu i atrybutow
+  filtrowych przy kazdej nowej partii Simon. Nazwy dostawcy ("Nazwa
+  produktu/Rodzaj", "Typ produktu" z ETIM) NIE trafiaja do tych pol.
+source:
+  shop_copy: "C:/laragon/www/AlkanLocal (alkanlocal.test:8443)"
+  filter_plugin: ext-product-filter (szablony 38/39 dla marek osprzetu)
+  variant_plugin: wpc-linked-variation-premium (grupy po tagu produktu)
+
+# Jak dziala filtr sklepu dla osprzetu (Simon, Ospel, Hager/Berker, Karlik):
+# - "Typ produktu" (pa_typ-produktu) to drzewo glowne filtra.
+# - "Podtyp produktu" (pa_podtyp-produktu) jest przypiety do typu
+#   (term-meta ext_pf_cross_parent_term_id) i pokazuje sie pod nim.
+# - "Krotnosc" i "Material" pokazuja sie TYLKO gdy Typ = Ramki.
+# - Pozostale filtry: Kolor, Stopien ochrony [IP], Sposob montazu,
+#   Typ lacznosci, Seria (na kategoriach glownych marek).
+filter_model:
+  typ_produktu_attribute: "Typ produktu"
+  podtyp_produktu_attribute: "Podtyp produktu"
+  types:
+    Gniazda:
+      podtypy: [Wtyczkowe, Antenowe, Komputerowe, Telefoniczne, USB, HDMI, Głośnikowe, Ekwipotencjalne, Światłowodowe]
+      dodatkowe_atrybuty: [Rodzaj gniazda, Liczba gniazd, Uziemienie, Przesłony torów prądowych, Kategoria kabli sieciowych, Podświetlenie]
+      uwagi:
+        - Kilka funkcji w jednym module = kilka podtypow rozdzielonych ", " (np. "Antenowe, Komputerowe", "Wtyczkowe, USB").
+        - Ladowarki USB (TEC2CAQ, DEC2CAQ, DC2USB) to Gniazda / USB, a nie osobny typ.
+    Łączniki:
+      podtypy: [Pojedyncze, Podwójne, Potrójne, Schodowe, Krzyżowe, Żaluzjowe, Pozostałe łączniki]
+      dodatkowe_atrybuty: [Rodzaj łącznika, Liczba biegunów, Podświetlenie, Piktogram]
+      uwagi:
+        - Podtyp mowi o FUNKCJI (schodowy, krzyzowy), nie o liczbie klawiszy; "Lacznik schodowy podwojny" to nadal Schodowe.
+        - Lacznik swiecznikowy / jednobiegunowy podwojny = Podwójne. Lacznik roletowy/zaluzjowy = Żaluzjowe.
+    Przyciski:
+      podtypy: [Zwierne, Dzwonek, Światło, Przycisk żaluzjowy]
+      dodatkowe_atrybuty: [Rodzaj łącznika, Podświetlenie, Piktogram]
+      uwagi:
+        - Przycisk pojedynczy/podwojny/potrojny/poczworny zwierny = Zwierne. Przycisk roletowy = Przycisk żaluzjowy.
+    Ramki:
+      podtypy: []
+      dodatkowe_atrybuty: [Krotność, Materiał, Rodzaj ramki, Wykończenie ramki]
+      uwagi:
+        - RAMKI NIE MAJA PODTYPU. Krotnosc idzie w atrybucie "Krotność" z wartoscia "1x".."5x".
+        - Material w sklepie: Tworzywo sztuczne / Szkło / Metal / Drewno.
+        - Ramki nie maja "Sposób montażu".
+        - Wartosci "Ramka 1- krotna" itp. to STARY model (Berker/Karlik) - nie uzywac.
+    Sterowniki i automatyka:
+      podtypy: [Ściemniacze, Sterowniki oświetleniowe, Sterowniki żaluzjowe, Regulatory temperatury i termostaty, Kontrolery, Nadajniki bateryjne]
+      dodatkowe_atrybuty: [Typ łączności]
+      uwagi:
+        - Produkty Simon GO / Simon 55 GO dostaja "Typ łączności: Wi-Fi".
+        - Sciemniacz to Sterowniki i automatyka / Ściemniacze, nie osobny typ "Ściemniacze".
+    Inne:
+      podtypy: [Pozostałe, Pokrywy do gniazd, Puszki natynkowe, Sygnalizatory i oprawy LED]
+      dodatkowe_atrybuty: []
+      uwagi:
+        - Zaslepki, wkladki, przylacza kabla, gniazdo DATA z kluczem, czujnik ruchu z przekaznikiem = Inne / Pozostałe.
+        - Oprawy oswietleniowe LED do ramek i sygnalizatory = Inne / Sygnalizatory i oprawy LED.
+        - Pokrywy do gniazd (DKP*, TKP*, TGZ1ZP) = Inne / Pokrywy do gniazd.
+        - Puszki natynkowe (DSC, DPN*, DPNR*, DSH, CSC) = Inne / Puszki natynkowe.
+    Puszki podłogowe:
+      podtypy: [Puszki podłogowe, Kasety do wylewki, Wyposażenie]
+      dodatkowe_atrybuty: []
+  klawisze:
+    uwaga: >
+      Klawisze (DKW*, DKZ*, TKW*, TKE*) w sklepie NIE MAJA Typu ani Podtypu
+      (ani w Simon 54, ani w Simon 55). "Klawisze" nie jest terminem podtypu.
+      Skrypt usuwa Typ/Podtyp dla klawiszy, zeby nie tworzyc nowych terminow.
+      Do potwierdzenia przez uzytkownika, czy klawisze maja dostac Inne / Pozostałe.
+  value_formats:
+    "Stopień ochrony [IP]": ["IP 20", "IP 44", "IP20/IP44", "IP 40"]
+    "Sposób montażu": [Podtynkowy, Natynkowy]
+    "Krotność": ["1x", "2x", "3x", "4x", "5x"]
+    "Podświetlenie": [Tak, Nie]
+    "Typ łączności": [Wi-Fi]
+
+# Normalizacja wartosci z plikow dostawcy do formatu sklepu.
+value_normalization:
+  "Stopień ochrony [IP]":
+    "IP20": "IP 20"
+    "IP44": "IP 44"
+    "IP40": "IP 40"
+    "IP 20/IP 44": "IP20/IP44"
+    "IP20 / IP44": "IP20/IP44"
+  "Sposób montażu":
+    "montaż podtynkowy": Podtynkowy
+    "podtynkowy": Podtynkowy
+    "montaż natynkowy": Natynkowy
+    "natynkowy": Natynkowy
+    "inne": null
+
+# Tagi wariantowe (WPC Linked Variation laczy produkty po tagu produktu).
+# Nowy kolor istniejacego produktu dostaje tag swojego rodzenstwa (ten sam
+# symbol bazowy). Skrypt: src/fill_variant_tags_from_siblings.py.
+variant_tags:
+  # Tagi, ktore nie sa wariantowe i nie sa kopiowane na nowe produkty.
+  ignored_tags:
+    - ElektroTargi Alkan 2026
+  # Rozstrzygniecia, gdy rodzenstwo w sklepie jest rozbite na rowne grupy.
+  # T62E: 111/114/116 maja "...RJ45 ekranowane 55 simon", 143/144/149 maja
+  # "...RJ45 kategoria 6 ekranowane 55 simon"; wzorzec nazwy z T62/T61E to
+  # wersja z "kategoria 6".
+  overrides:
+    "T62E.01": "Gniazdo komputerowe podwójne RJ45 kategoria 6 ekranowane 55 simon"
+  # Zrzut grup wariantow z AlkanLocal (2026-09-17): nazwa, status, zrodlo,
+  # slugi tagow, licznik, osie.
+  variant_groups_snapshot: dictionaries/alkanlocal_wpclv_groups.tsv
+
+# Globalne atrybuty WooCommerce (etykiety pa_*), stan AlkanLocal 2026-09-17.
+# ZASADA: do Baselinkera/Woo trafiaja TYLKO cechy z tej listy (plus
+# approved_extra_attributes). Kazda inna cecha z katalogu dostawcy jest
+# usuwana z pliku i trafia do raportu "atrybuty_do_zatwierdzenia" -
+# nowy atrybut sklepu powstaje wylacznie po decyzji uzytkownika, ktory
+# dopisuje go do approved_extra_attributes (albo zaklada w Woo).
+woo_attributes:
+  - "Barwa lampek"
+  - "Barwa światła"
+  - "Bateria"
+  - "Biegunowość"
+  - "Budowa żyły"
+  - "Charakterystyka wyzwalania"
+  - "Ciągłe napięcie robocze Uc [V]"
+  - "Czujnik ruchu"
+  - "Czujnik zmierzchu"
+  - "Człon nadmiarowy"
+  - "Dane producenta"
+  - "Do modelu puszek"
+  - "Dodatkowe funkcje"
+  - "Dodatkowe informacje"
+  - "Drzwiczki"
+  - "Długość"
+  - "Ekranowany"
+  - "Graniczna zwarciowa zdolność wyłączania Icu [kA]"
+  - "Głośność [dB]"
+  - "Głębokość"
+  - "Ilość kanałów"
+  - "Ilość lampek"
+  - "Ilość reflektorów"
+  - "Ilość styków zwiernych/rozwiernych"
+  - "Ilość w zestawie"
+  - "Impedancja falowa [Ohm]"
+  - "Kategoria kabli sieciowych"
+  - "Kategoria użytkowania"
+  - "Klapka"
+  - "Klasa energetyczna"
+  - "Klasa ograniczenia energii"
+  - "Kolor"
+  - "Kolor producenta"
+  - "Kolor przewodu"
+  - "Kolor szkła"
+  - "Kolory"
+  - "Krotność"
+  - "Kształt"
+  - "Kształt żarówki"
+  - "Kąt detekcji"
+  - "Kąt świecenia [°]"
+  - "Liczba biegunów"
+  - "Liczba faz"
+  - "Liczba gniazd"
+  - "Liczba kanałów łączności"
+  - "Liczba modułów"
+  - "Liczba rzędów"
+  - "Liczba wejść"
+  - "Liczba wyjść"
+  - "Liczba zacisków"
+  - "Liczba źródeł światła"
+  - "Liczba żył"
+  - "Maksymalna moc DC [W]"
+  - "Maksymalny prąd obciążenia [A]"
+  - "Materiał"
+  - "Materiał powłoki"
+  - "Moc [W]"
+  - "Moc [kWh]"
+  - "Możliwość łączenia"
+  - "Na żyłę o przekroju [mm2]"
+  - "Napięcie [V]"
+  - "Napięciowy poziom ochrony Up [kV]"
+  - "Odporność mechaniczna [N]"
+  - "Odporność na UV"
+  - "Opakowanie"
+  - "Optyka"
+  - "Piktogram"
+  - "Pilot"
+  - "Podtyp produktu"
+  - "Podświetlenie"
+  - "Pojemność (liczba modułów CIMA)"
+  - "Pojemność (liczba modułów K45)"
+  - "Pojemność [mAh]"
+  - "Producent"
+  - "Przeciwblokada"
+  - "Przekrój żyły [mm]"
+  - "Przesłony torów prądowych"
+  - "Przewód [mm²]"
+  - "Prąd znamionowy [A]"
+  - "Regulacja kąta"
+  - "Rodzaj"
+  - "Rodzaj akcesoria"
+  - "Rodzaj baterii"
+  - "Rodzaj gniazda"
+  - "Rodzaj przewodu"
+  - "Rodzaj ramki"
+  - "Rodzaj sieci"
+  - "Rodzaj szyny łączeniowej"
+  - "Rodzaj łącznika"
+  - "Rozmiar"
+  - "Rozmiar wkładki bezpiecznikowej"
+  - "Seria"
+  - "Sonda"
+  - "Sposób montażu"
+  - "Stopień ochrony [IP]"
+  - "Strumień świetlny [lm]"
+  - "Styk zdalnej sygnalizacji"
+  - "Symbol"
+  - "Szerokość"
+  - "Sztuk w opakowaniu"
+  - "Technologia ogranicznika przepięć"
+  - "Temperatura barwowa [K]"
+  - "Trzonek"
+  - "Typ"
+  - "Typ czujnika"
+  - "Typ izolacji"
+  - "Typ ogranicznika przepięć (SPD)"
+  - "Typ produktu"
+  - "Typ wyłącznika"
+  - "Typ zacisków"
+  - "Typ łączności"
+  - "Układ biegunów"
+  - "Uziemienie"
+  - "Wariant"
+  - "Wi-Fi"
+  - "Wskaźnik oddawania barw"
+  - "Współpraca ze ściemniaczem"
+  - "Wykończenie ramki"
+  - "Wymiary [mm]"
+  - "Wypełnienie żelem"
+  - "Wysokość"
+  - "Wyłącznik"
+  - "Zakres regulacji kąta"
+  - "Zakres temperatury pracy"
+  - "Zasilanie"
+  - "Zasięg detekcji"
+  - "Zastosowanie"
+  - "Znamionowa zwarciowa zdolność wyłączania Icn [kA]"
+  - "Znamionowy przekrój poprzeczny"
+  - "Znamionowy prąd różnicowy IΔn [mA]"
+  - "Znamionowy prąd wyładowczy In [kA]"
+  - "Znamionowy warunkowy prąd zwarciowy [kA]"
+  - "Łączny prąd udarowy Iimp [kA]"
+  - "Średnica"
+  - "Średnica wewnętrzna"
+  - "Średnica zewnętrzna"
+  - "Żyła ochronna"
+
+# Atrybuty zatwierdzone przez uzytkownika, ktorych nie ma jeszcze w lokalnej
+# kopii Woo (np. zalozone na produkcji pozniej). Dopisuj recznie.
+approved_extra_attributes: []
+
+# Atrybuty, ktore skrypt naprawczy wolno mu ruszac. Wszystko inne
+# (wymiary, GPSR, ETIM, opakowania) zostaje jak w pliku wejsciowym.
+managed_attributes:
+  - Typ produktu
+  - Podtyp produktu
+  - Krotność
+  - Materiał
+  - Rodzaj gniazda
+  - Rodzaj łącznika
+  - Liczba biegunów
+  - Podświetlenie
+  - Piktogram
+  - Uziemienie
+  - Przesłony torów prądowych
+  - Liczba gniazd
+  - Kategoria kabli sieciowych
+  - Stopień ochrony [IP]
+  - Sposób montażu
+  - Typ łączności
+
+# Atrybuty zarzadzane TYLKO gdy Typ = Ramki. Dla innych produktow zostaje
+# wartosc z pliku (np. material ETIM "tworzywo sztuczne, PC, bezhalogenowe"
+# to informacja produktowa, a nie wartosc filtra Material dla ramek).
+managed_only_for_frames:
+  - Materiał
+
+# Symbol bazowy = symbol bez koncowki koloru (TR1/142 -> TR1, DW7.01/X/11 -> DW7.01/X).
+# Kolory Simon: 11 bialy, 49 czarny, 42/142 kaszmir, 111 bialy mat, 114 jasnoszary mat,
+# 144 szampanski mat, 149 czarny mat.
+symbol_base:
+  strip_supplier_suffix: "/KON"
+  color_suffix_regex: "/\\d{2,3}$"
+
+# Reguly po nazwie - uzywane, gdy symbol bazowy nie ma rodzenstwa w sklepie
+# albo rodzenstwo nie ma Typu. Kolejnosc ma znaczenie: pierwsza pasujaca
+# wygrywa. "typ: null" = usun Typ/Podtyp.
+name_rules:
+  - match: "^klawisz"
+    typ: null
+    podtyp: null
+  - match: "^ramka"
+    typ: Ramki
+    podtyp: null
+  - match: "^pokrywa"
+    typ: Inne
+    podtyp: Pokrywy do gniazd
+  - match: "^puszka natynkowa|do składanej puszki natynkowej|^element rozszerzający"
+    typ: Inne
+    podtyp: Puszki natynkowe
+  - match: "^(zaślepka|wkładka|przyłącze|adapter|pierścień|wieszak|czujnik ruchu|gniazdo data)"
+    typ: Inne
+    podtyp: Pozostałe
+  - match: "^(oprawa oświetleniowa|sygnalizator)"
+    typ: Inne
+    podtyp: Sygnalizatory i oprawy LED
+  - match: "^gniazdo wtyczkowe z zintegrowaną ładowarką"
+    typ: Gniazda
+    podtyp: "Wtyczkowe, USB"
+  - match: "^(ładowarka|gniazdo usb)"
+    typ: Gniazda
+    podtyp: USB
+  - match: "^gniazdo antenowe.*rj45"
+    typ: Gniazda
+    podtyp: "Antenowe, Komputerowe"
+  - match: "^gniazdo (wtyczkowe|schuko|z uziemieniem)"
+    typ: Gniazda
+    podtyp: Wtyczkowe
+  - match: "^gniazdo antenowe|^gniazdo (tv|r-tv|sat)"
+    typ: Gniazda
+    podtyp: Antenowe
+  - match: "^gniazdo komputerowe.*telefoniczne"
+    typ: Gniazda
+    podtyp: "Komputerowe, Telefoniczne"
+  - match: "^gniazdo komputerowe|^gniazdo rj45"
+    typ: Gniazda
+    podtyp: Komputerowe
+  - match: "^gniazdo telefoniczne"
+    typ: Gniazda
+    podtyp: Telefoniczne
+  - match: "^gniazdo hdmi"
+    typ: Gniazda
+    podtyp: HDMI
+  - match: "^gniazdo głośnikowe"
+    typ: Gniazda
+    podtyp: Głośnikowe
+  - match: "^gniazdo ekwipotencjalne"
+    typ: Gniazda
+    podtyp: Ekwipotencjalne
+  - match: "^gniazdo światłowodowe"
+    typ: Gniazda
+    podtyp: Światłowodowe
+  - match: "^przycisk.*(roletow|żaluzjow)"
+    typ: Przyciski
+    podtyp: Przycisk żaluzjowy
+  - match: "^przycisk.*dzwonek"
+    typ: Przyciski
+    podtyp: Dzwonek
+  - match: "^przycisk.*światło"
+    typ: Przyciski
+    podtyp: Światło
+  - match: "^przycisk"
+    typ: Przyciski
+    podtyp: Zwierne
+  - match: "^łącznik.*(roletow|żaluzjow)"
+    typ: Łączniki
+    podtyp: Żaluzjowe
+  - match: "^łącznik schodowy"
+    typ: Łączniki
+    podtyp: Schodowe
+  - match: "^łącznik krzyżowy"
+    typ: Łączniki
+    podtyp: Krzyżowe
+  - match: "^łącznik potrójny"
+    typ: Łączniki
+    podtyp: Potrójne
+  - match: "^łącznik (świecznikowy|jednobiegunowy podwójny|dwubiegunowy podwójny|podwójny)"
+    typ: Łączniki
+    podtyp: Podwójne
+  - match: "^łącznik (jednobiegunowy|dwubiegunowy|pojedynczy)"
+    typ: Łączniki
+    podtyp: Pojedyncze
+  - match: "^łącznik"
+    typ: Łączniki
+    podtyp: Pozostałe łączniki
+  - match: "^ściemniacz"
+    typ: Sterowniki i automatyka
+    podtyp: Ściemniacze
+  - match: "^sterownik.*(rolet|żaluzj)"
+    typ: Sterowniki i automatyka
+    podtyp: Sterowniki żaluzjowe
+  - match: "^sterownik"
+    typ: Sterowniki i automatyka
+    podtyp: Sterowniki oświetleniowe
+  - match: "^(termostat|regulator temperatury)"
+    typ: Sterowniki i automatyka
+    podtyp: Regulatory temperatury i termostaty
+  - match: "^kontroler"
+    typ: Sterowniki i automatyka
+    podtyp: Kontrolery
+  - match: "^nadajnik"
+    typ: Sterowniki i automatyka
+    podtyp: Nadajniki bateryjne
+
+# Mapa: symbol bazowy -> atrybuty filtrowe, jakie maja produkty tego symbolu
+# (inne kolory) w sklepie. Wygenerowana z AlkanLocal 2026-09-17, tylko serie
+# Simon 5x. Wartosc {niejednoznaczne: [...]} = rodzenstwo nie jest zgodne;
+# skrypt wtedy zostawia wartosc z pliku, jesli jest na liscie, inaczej bierze pierwsza.
+symbol_map:
+  BWB:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Inne
+      Podtyp produktu: Pozostałe
+      Stopień ochrony [IP]: IP 20
+  D05562N.02:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Inne
+      Podtyp produktu: Pozostałe
+      Stopień ochrony [IP]: IP 20
+  D5T.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Komputerowe, Telefoniczne
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  D61.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 4
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Komputerowe
+      Rodzaj gniazda: Pojedyncze
+      Podświetlenie: Nie
+      Liczba gniazd: '1'
+      Kategoria kabli sieciowych: Kategoria 6
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  D61E.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Komputerowe
+      Rodzaj gniazda: Pojedyncze
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  D62.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 5
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Komputerowe
+      Rodzaj gniazda: Podwójne
+      Podświetlenie: Nie
+      Liczba gniazd: '2'
+      Kategoria kabli sieciowych: Kategoria 6
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  D62E.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Komputerowe
+      Rodzaj gniazda: Podwójne
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  D7501385.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Inne
+      Podtyp produktu: Pozostałe
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  D75310.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 1
+    atrybuty:
+      Typ produktu: Sterowniki i automatyka
+      Podtyp produktu: Ściemniacze
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DA45.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Inne
+      Podtyp produktu: Pozostałe
+      Stopień ochrony [IP]: IP 20
+  DAD.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Antenowe
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DAD1.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 1
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Antenowe
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DAK.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Antenowe
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DAK1.01:
+    seria:
+    - Simon 54
+    - Simon 54 Premium
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Antenowe
+      Rodzaj gniazda: Antenowe
+      Podświetlenie: Nie
+      Liczba gniazd: '1'
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DAP10.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Antenowe
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DASF1.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 4
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Antenowe
+      Rodzaj gniazda: Pojedyncze
+      Podświetlenie: Nie
+      Liczba gniazd: '1'
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DASF2.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Antenowe
+      Rodzaj gniazda: Podwójne
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DASFRJ45.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Antenowe, Komputerowe
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DASK.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 7
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Antenowe
+      Rodzaj gniazda: Pojedyncze
+      Podświetlenie: Nie
+      Liczba gniazd: '3'
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DASK2.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Antenowe
+      Rodzaj gniazda: Podwójne
+      Podświetlenie: Nie
+      Liczba gniazd: '3'
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DASP.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Antenowe
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DAZ.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Antenowe
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DC2USB.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: USB
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DCR10P.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Pozostałe łączniki
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DCR10T.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Pozostałe łączniki
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DCR11P.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Pozostałe łączniki
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DD1.01:
+    seria:
+    - Simon 54
+    - Simon 54 Premium
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Przyciski
+      Podtyp produktu:
+        niejednoznaczne:
+        - Dzwonek
+        - Zwierne
+      Rodzaj łącznika:
+        niejednoznaczne:
+        - Dzwonek
+        - Pojedynczy, Zwierny
+      Podświetlenie: Nie
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  DD1A.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Przyciski
+      Podtyp produktu: Dzwonek
+      Podświetlenie: Nie
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  DD1AL.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Przyciski
+      Podtyp produktu: Dzwonek
+      Podświetlenie: Tak
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  DD1L.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Przyciski
+      Podtyp produktu: Dzwonek
+      Podświetlenie: Tak
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  DDS1.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Inne
+      Podtyp produktu: Pozostałe
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DDT1.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Inne
+      Podtyp produktu: Pozostałe
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DEC2CA.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: USB
+      Liczba gniazd: '4'
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DEC2CAQ.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: USB
+      Liczba gniazd: '2'
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DETD1A.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Sterowniki i automatyka
+      Podtyp produktu: Regulatory temperatury i termostaty
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DEW4.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Pozostałe łączniki
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DEZ1G.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Sterowniki i automatyka
+      Podtyp produktu: Sterowniki żaluzjowe
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DEZ1L.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Sterowniki i automatyka
+      Podtyp produktu: Sterowniki żaluzjowe
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DEZ2.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Przyciski
+      Podtyp produktu: Przycisk żaluzjowy
+      Rodzaj gniazda: Podwójny
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DG1Z.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Wtyczkowe
+      Rodzaj gniazda: Pojedyncze
+      Uziemienie: Nie
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DG2MZ.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Wtyczkowe
+      Rodzaj gniazda: Podwójne
+      Uziemienie: Nie
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DGD1.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Wtyczkowe
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DGD1P:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty: {}
+  DGEK1.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Ekwipotencjalne
+      Rodzaj gniazda: Pojedyncze
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DGEK2.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Ekwipotencjalne
+      Rodzaj gniazda: Podwójne
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DGHDMI.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: HDMI
+      Rodzaj gniazda: Pojedyncze
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DGHDMI2.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: HDMI
+      Rodzaj gniazda: Podwójne
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DGHRJ45.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Komputerowe, HDMI
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DGL2.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Głośnikowe
+      Rodzaj gniazda: Pojedyncze
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DGL31.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 3
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Głośnikowe
+      Rodzaj gniazda: Pojedyncze
+      Podświetlenie: Nie
+      Liczba gniazd: '1'
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DGL32.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Głośnikowe
+      Rodzaj gniazda: Podwójne
+      Podświetlenie: Nie
+      Liczba gniazd: '2'
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DGL34.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Głośnikowe
+      Rodzaj gniazda: Poczwórne
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DGS1.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Światłowodowe
+      Rodzaj gniazda: Pojedyncze
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DGS2.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Światłowodowe
+      Rodzaj gniazda: Podwójne
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DGSZ1BZ.01/11A:
+    seria:
+    - Simon 54
+    rodzenstwo: 1
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Wtyczkowe
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DGSZ1BZ.01/49A:
+    seria:
+    - Simon 54
+    rodzenstwo: 1
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Wtyczkowe
+      Stopień ochrony [IP]: IP 44
+      Sposób montażu: Podtynkowy
+  DGSz1CZ.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Wtyczkowe
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DGSz1Z.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Wtyczkowe
+      Rodzaj gniazda: Pojedyncze
+      Sposób montażu: Podtynkowy
+  DGSz1Z.01/AB11:
+    seria:
+    - Simon 54
+    rodzenstwo: 1
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Wtyczkowe
+      Rodzaj gniazda: Pojedyncze
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DGSz2Z:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Wtyczkowe
+      Rodzaj gniazda: Podwójne
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DGSz2Z/AB11:
+    seria:
+    - Simon 54
+    rodzenstwo: 1
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Wtyczkowe
+      Rodzaj gniazda: Podwójne
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DGZ1BUZ.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Wtyczkowe
+      Rodzaj gniazda: Pojedyncze
+      Stopień ochrony [IP]:
+        niejednoznaczne:
+        - IP20/IP44
+        - IP 20
+      Sposób montażu: Podtynkowy
+  DGZ1BUZ.01/11A:
+    seria:
+    - Simon 54
+    rodzenstwo: 1
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Wtyczkowe
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  DGZ1BUZ.01/49A:
+    seria:
+    - Simon 54
+    rodzenstwo: 1
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Wtyczkowe
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DGZ1BUZP:
+    seria:
+    - Simon 54
+    rodzenstwo: 1
+    atrybuty: {}
+  DGZ1BUZP/11A:
+    seria:
+    - Simon 54
+    rodzenstwo: 1
+    atrybuty: {}
+  DGZ1BUZP/49A:
+    seria:
+    - Simon 54
+    rodzenstwo: 1
+    atrybuty: {}
+  DGZ1BZ.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Wtyczkowe
+      Stopień ochrony [IP]:
+        niejednoznaczne:
+        - IP 20
+        - IP 44
+      Sposób montażu: Podtynkowy
+  DGZ1BZ.01/11A:
+    seria:
+    - Simon 54
+    rodzenstwo: 1
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Wtyczkowe
+      Stopień ochrony [IP]: IP 44
+      Sposób montażu: Podtynkowy
+  DGZ1BZ.01/49A:
+    seria:
+    - Simon 54
+    rodzenstwo: 1
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Wtyczkowe
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DGZ1CZ.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Wtyczkowe
+      Rodzaj gniazda: Pojedyncze
+      Uziemienie: Tak
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DGZ1Z.01:
+    seria:
+    - Simon 54
+    - Simon 54 Premium
+    rodzenstwo: 7
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Wtyczkowe
+      Rodzaj gniazda: Pojedyncze
+      Podświetlenie: Nie
+      Uziemienie: Tak
+      Przesłony torów prądowych: Nie
+      Liczba gniazd: '1'
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DGZ1ZP:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Stopień ochrony [IP]: IP 20
+  DGZ1ZUSB2AA.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Wtyczkowe, USB
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DGZ2MZ.01:
+    seria:
+    - Simon 54
+    - Simon 54 Premium
+    rodzenstwo: 7
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Wtyczkowe
+      Rodzaj gniazda: Podwójne
+      Podświetlenie: Nie
+      Uziemienie: Tak
+      Przesłony torów prądowych: Nie
+      Liczba gniazd: '2'
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DGZ2MZN.01:
+    seria:
+    - Simon 54 Nature
+    rodzenstwo: 3
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Wtyczkowe
+      Rodzaj gniazda: Podwójne
+      Podświetlenie: Nie
+      Uziemienie: Tak
+      Przesłony torów prądowych: Nie
+      Liczba gniazd: '2'
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DGZ2MZNP:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty: {}
+  DGZ2MZP:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty: {}
+  DGZ2T:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Wtyczkowe
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DGZ2TZ:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Wtyczkowe
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DKP1S.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Inne
+      Podtyp produktu: Pokrywy do gniazd
+      Stopień ochrony [IP]: IP 20
+  DKP2.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Inne
+      Podtyp produktu: Pokrywy do gniazd
+      Stopień ochrony [IP]: IP 20
+  DKP2B.01/11A:
+    seria:
+    - Simon 54
+    rodzenstwo: 1
+    atrybuty:
+      Typ produktu: Inne
+      Podtyp produktu: Pokrywy do gniazd
+      Stopień ochrony [IP]: IP 44
+  DKP2B.01/49A:
+    seria:
+    - Simon 54
+    rodzenstwo: 1
+    atrybuty:
+      Typ produktu: Inne
+      Podtyp produktu: Pokrywy do gniazd
+      Stopień ochrony [IP]: IP 44
+  DKP2S.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Inne
+      Podtyp produktu: Pokrywy do gniazd
+      Stopień ochrony [IP]: IP 20
+  DKW1:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Stopień ochrony [IP]: IP 20
+  DKW1L:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Stopień ochrony [IP]: IP 20
+  DKW5:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Stopień ochrony [IP]: IP 20
+  DKW5L:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Stopień ochrony [IP]: IP 20
+  DKW6/2:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Stopień ochrony [IP]: IP 20
+  DKW9:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Stopień ochrony [IP]: IP 20
+  DKW9L:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Stopień ochrony [IP]: IP 20
+  DKWK1:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Stopień ochrony [IP]: IP 20
+  DKZP1:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty: {}
+  DKZP1W:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty: {}
+  DKZW1K:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty: {}
+  DOS.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Inne
+      Podtyp produktu: Sygnalizatory i oprawy LED
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DOS14.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Inne
+      Podtyp produktu: Sygnalizatory i oprawy LED
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DOS14A.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Inne
+      Podtyp produktu: Sygnalizatory i oprawy LED
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DOS14B.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Inne
+      Podtyp produktu: Sygnalizatory i oprawy LED
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DOSA.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Inne
+      Podtyp produktu: Sygnalizatory i oprawy LED
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DOSB.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Inne
+      Podtyp produktu: Sygnalizatory i oprawy LED
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DOSC.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Inne
+      Podtyp produktu: Sygnalizatory i oprawy LED
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DOSC14.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Inne
+      Podtyp produktu: Sygnalizatory i oprawy LED
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DOSC14A.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Inne
+      Podtyp produktu: Sygnalizatory i oprawy LED
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DOSC14B.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Inne
+      Podtyp produktu: Sygnalizatory i oprawy LED
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DOSCA.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Inne
+      Podtyp produktu: Sygnalizatory i oprawy LED
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DOSCB.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Inne
+      Podtyp produktu: Sygnalizatory i oprawy LED
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DP:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Inne
+      Podtyp produktu: Pozostałe
+      Stopień ochrony [IP]: IP 20
+  DP1.01:
+    seria:
+    - Simon 54
+    - Simon 54 Premium
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Przyciski
+      Podtyp produktu: Zwierne
+      Rodzaj łącznika: Pojedynczy
+      Podświetlenie: Nie
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  DP1A.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Przyciski
+      Podtyp produktu: Zwierne
+      Rodzaj łącznika: Pojedynczy
+      Podświetlenie: Nie
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  DP1AL.01:
+    seria:
+    - Simon 54
+    - Simon 54 Premium
+    rodzenstwo: 3
+    atrybuty:
+      Typ produktu: Przyciski
+      Podtyp produktu: Zwierne
+      Rodzaj łącznika: Pojedynczy
+      Podświetlenie: Tak
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  DP1K.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Pozostałe łączniki
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DP1L.01:
+    seria:
+    - Simon 54
+    - Simon 54 Premium
+    rodzenstwo: 4
+    atrybuty:
+      Typ produktu: Przyciski
+      Podtyp produktu: Zwierne
+      Rodzaj łącznika: Pojedynczy
+      Podświetlenie: Tak
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  DP2.01:
+    seria:
+    - Simon 54
+    - Simon 54 Premium
+    rodzenstwo: 4
+    atrybuty:
+      Typ produktu: Przyciski
+      Podtyp produktu: Zwierne
+      Rodzaj łącznika: Podwójny
+      Podświetlenie: Nie
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  DP31.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Przyciski
+      Podtyp produktu: Zwierne
+      Rodzaj łącznika: Potrójny
+      Podświetlenie: Nie
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DP31L.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Przyciski
+      Podtyp produktu: Zwierne
+      Rodzaj łącznika: Potrójny
+      Podświetlenie: Tak
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DPK1.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Inne
+      Podtyp produktu: Pozostałe
+      Stopień ochrony [IP]: IP 20
+  DPR1.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Przyciski
+      Podtyp produktu: Zwierne
+      Rodzaj łącznika: Pojedynczy
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  DPRZ:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Inne
+      Podtyp produktu: Pozostałe
+  DPS.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Inne
+      Podtyp produktu: Pozostałe
+      Stopień ochrony [IP]: IP 20
+  DPZK.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Pozostałe łączniki
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DR1:
+    seria:
+    - ''
+    - Simon 54 Premium
+    rodzenstwo: 12
+    atrybuty:
+      Typ produktu: Ramki
+      Krotność: 1x
+      Materiał:
+        niejednoznaczne:
+        - Tworzywo sztuczne
+        - Metal
+      Podświetlenie: Nie
+      Stopień ochrony [IP]: IP20/IP44
+  DR2:
+    seria:
+    - ''
+    - Simon 54 Premium
+    rodzenstwo: 11
+    atrybuty:
+      Typ produktu: Ramki
+      Krotność: 2x
+      Materiał:
+        niejednoznaczne:
+        - Tworzywo sztuczne
+        - Metal
+      Podświetlenie: Nie
+      Stopień ochrony [IP]: IP20/IP44
+  DR3:
+    seria:
+    - ''
+    - Simon 54 Premium
+    rodzenstwo: 11
+    atrybuty:
+      Typ produktu: Ramki
+      Krotność: 3x
+      Materiał:
+        niejednoznaczne:
+        - Tworzywo sztuczne
+        - Metal
+      Podświetlenie: Nie
+      Stopień ochrony [IP]: IP20/IP44
+  DR4:
+    seria:
+    - ''
+    - Simon 54 Premium
+    rodzenstwo: 10
+    atrybuty:
+      Typ produktu: Ramki
+      Krotność: 4x
+      Materiał:
+        niejednoznaczne:
+        - Tworzywo sztuczne
+        - Metal
+      Podświetlenie: Nie
+      Stopień ochrony [IP]: IP20/IP44
+  DR5:
+    seria:
+    - ''
+    - Simon 54 Premium
+    rodzenstwo: 7
+    atrybuty:
+      Typ produktu: Ramki
+      Krotność: 5x
+      Materiał: Tworzywo sztuczne
+      Podświetlenie: Nie
+      Stopień ochrony [IP]: IP20/IP44
+  DRK1:
+    seria:
+    - Simon 54 Premium
+    rodzenstwo: 3
+    atrybuty:
+      Typ produktu: Ramki
+      Krotność: 1x
+      Materiał: Tworzywo sztuczne
+      Podświetlenie: Nie
+      Stopień ochrony [IP]: IP20/IP44
+  DRK2:
+    seria:
+    - Simon 54 Premium
+    rodzenstwo: 3
+    atrybuty:
+      Typ produktu: Ramki
+      Krotność: 2x
+      Materiał: Tworzywo sztuczne
+      Podświetlenie: Nie
+      Stopień ochrony [IP]: IP20/IP44
+  DRK3:
+    seria:
+    - Simon 54 Premium
+    rodzenstwo: 5
+    atrybuty:
+      Typ produktu: Ramki
+      Krotność: 3x
+      Materiał: Tworzywo sztuczne
+      Podświetlenie: Nie
+      Stopień ochrony [IP]: IP20/IP44
+  DRK4:
+    seria:
+    - Simon 54 Premium
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Ramki
+      Krotność: 2x
+      Materiał: Tworzywo sztuczne
+      Podświetlenie: Nie
+      Stopień ochrony [IP]: IP20/IP44
+  DRN1:
+    seria:
+    - Simon 54 Nature
+    rodzenstwo: 10
+    atrybuty:
+      Typ produktu: Ramki
+      Krotność: 1x
+      Materiał:
+        niejednoznaczne:
+        - Szkło
+        - Drewno
+        - Metal
+      Podświetlenie: Nie
+      Stopień ochrony [IP]: IP20/IP44
+  DRN2:
+    seria:
+    - Simon 54 Nature
+    rodzenstwo: 8
+    atrybuty:
+      Typ produktu: Ramki
+      Krotność: 2x
+      Materiał:
+        niejednoznaczne:
+        - Szkło
+        - Metal
+        - Drewno
+      Podświetlenie: Nie
+      Stopień ochrony [IP]: IP20/IP44
+  DRN3:
+    seria:
+    - Simon 54 Nature
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Ramki
+      Krotność: 3x
+      Materiał:
+        niejednoznaczne:
+        - Szkło
+        - Metal
+        - Drewno
+      Podświetlenie: Nie
+      Stopień ochrony [IP]: IP20/IP44
+  DRN4:
+    seria:
+    - Simon 54 Nature
+    rodzenstwo: 5
+    atrybuty:
+      Typ produktu: Ramki
+      Krotność: 4x
+      Materiał:
+        niejednoznaczne:
+        - Szkło
+        - Metal
+      Podświetlenie: Nie
+      Stopień ochrony [IP]: IP20/IP44
+  DRN5:
+    seria:
+    - Simon 54 Nature
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Ramki
+      Krotność: 5x
+      Materiał: Szkło
+      Podświetlenie: Nie
+      Stopień ochrony [IP]: IP20/IP44
+  DRT10W.02:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Sterowniki i automatyka
+      Podtyp produktu: Regulatory temperatury i termostaty
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DRT10Z.02:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Sterowniki i automatyka
+      Podtyp produktu: Regulatory temperatury i termostaty
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DS1.01:
+    seria:
+    - Simon 54
+    - Simon 54 Premium
+    rodzenstwo: 3
+    atrybuty:
+      Typ produktu: Przyciski
+      Podtyp produktu: Światło
+      Rodzaj łącznika: Światło
+      Podświetlenie: Nie
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  DS13T.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Sterowniki i automatyka
+      Podtyp produktu: Ściemniacze
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DS1A.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Przyciski
+      Podtyp produktu: Światło
+      Podświetlenie: Nie
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  DS1AL.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Przyciski
+      Podtyp produktu: Światło
+      Podświetlenie: Tak
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  DS1L.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Przyciski
+      Podtyp produktu: Światło
+      Podświetlenie: Tak
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  DS9L.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Sterowniki i automatyka
+      Podtyp produktu: Ściemniacze
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DS9T.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Sterowniki i automatyka
+      Podtyp produktu: Ściemniacze
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DS9V.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Sterowniki i automatyka
+      Podtyp produktu: Regulatory temperatury i termostaty
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DSS1.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Inne
+      Podtyp produktu: Sygnalizatory i oprawy LED
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DSS2.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Inne
+      Podtyp produktu: Sygnalizatory i oprawy LED
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DSS3.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Inne
+      Podtyp produktu: Sygnalizatory i oprawy LED
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DT1.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Telefoniczne
+      Rodzaj gniazda: Pojedyncze
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DT2.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Telefoniczne
+      Rodzaj gniazda: Podwójne
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DTRNSZ.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Sterowniki i automatyka
+      Podtyp produktu: Regulatory temperatury i termostaty
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DTRNW.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Sterowniki i automatyka
+      Podtyp produktu: Regulatory temperatury i termostaty
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DU1W:
+    seria:
+    - Simon 54
+    rodzenstwo: 1
+    atrybuty:
+      Typ produktu: Inne
+      Podtyp produktu: Pozostałe
+      Stopień ochrony [IP]: IP 20
+  DULB:
+    seria:
+    - Simon 55
+    rodzenstwo: 1
+    atrybuty:
+      Typ produktu: Inne
+      Podtyp produktu: Pozostałe
+  DW1.01:
+    seria:
+    - ''
+    - Simon 54
+    - Simon 54 Premium
+    rodzenstwo: 8
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Pojedyncze
+      Rodzaj łącznika: Pojedynczy
+      Liczba biegunów: '1'
+      Podświetlenie: Nie
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  DW1A.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Pojedyncze
+      Rodzaj łącznika: Pojedynczy
+      Liczba biegunów: '1'
+      Podświetlenie: Nie
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  DW1AL.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Pojedyncze
+      Rodzaj łącznika: Pojedynczy
+      Liczba biegunów: '1'
+      Podświetlenie: Tak
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  DW1K.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Pozostałe łączniki
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DW1L.01:
+    seria:
+    - Simon 54
+    - Simon 54 Premium
+    rodzenstwo: 5
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Pojedyncze
+      Rodzaj łącznika: Pojedynczy
+      Liczba biegunów: '1'
+      Podświetlenie: Tak
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  DW1ZL.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Pojedyncze
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  DW2.01:
+    seria:
+    - Simon 54
+    - Simon 54 Premium
+    rodzenstwo: 3
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Pojedyncze
+      Rodzaj łącznika: Pojedynczy
+      Liczba biegunów: '2'
+      Podświetlenie: Nie
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  DW22A.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Podwójne
+      Rodzaj łącznika: Podwójny
+      Liczba biegunów: '2'
+      Podświetlenie: Nie
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  DW2A.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Pojedyncze
+      Rodzaj łącznika: Pojedynczy
+      Liczba biegunów: '2'
+      Podświetlenie: Nie
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  DW2L.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Pojedyncze
+      Rodzaj łącznika: Pojedynczy
+      Liczba biegunów: '2'
+      Podświetlenie: Tak
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  DW31.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Potrójne
+      Rodzaj łącznika: Potrójny
+      Liczba biegunów: '1'
+      Podświetlenie: Nie
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DW31L.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Potrójne
+      Rodzaj łącznika: Potrójny
+      Liczba biegunów: '1'
+      Podświetlenie: Tak
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DW5.01:
+    seria:
+    - Simon 54
+    - Simon 54 Premium
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Podwójne
+      Rodzaj łącznika: Podwójny
+      Liczba biegunów: '1'
+      Podświetlenie: Nie
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  DW5A.01:
+    seria:
+    - Simon 54
+    - Simon 54 Premium
+    rodzenstwo: 5
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Podwójne
+      Rodzaj łącznika: Podwójny
+      Liczba biegunów: '1'
+      Podświetlenie: Nie
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  DW5ABL.01:
+    seria:
+    - Simon 54
+    - Simon 54 Premium
+    rodzenstwo: 3
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Podwójne
+      Rodzaj łącznika: Podwójny
+      Liczba biegunów: '1'
+      Podświetlenie: Tak
+      Stopień ochrony [IP]:
+        niejednoznaczne:
+        - IP20/IP44
+        - IP 44
+      Sposób montażu: Podtynkowy
+  DW5B.01:
+    seria:
+    - Simon 54
+    - Simon 54 Premium
+    rodzenstwo: 3
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Podwójne
+      Rodzaj łącznika: Podwójny
+      Liczba biegunów: '1'
+      Podświetlenie: Nie
+      Stopień ochrony [IP]: IP 44
+      Sposób montażu: Podtynkowy
+  DW5BL.01:
+    seria:
+    - Simon 54
+    - Simon 54 Premium
+    rodzenstwo: 3
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Podwójne
+      Rodzaj łącznika: Podwójny
+      Liczba biegunów: '1'
+      Podświetlenie: Tak
+      Stopień ochrony [IP]:
+        niejednoznaczne:
+        - IP20/IP44
+        - IP 44
+      Sposób montażu: Podtynkowy
+  DW6.01:
+    seria:
+    - Simon 54
+    - Simon 54 Premium
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Schodowe
+      Rodzaj łącznika: Pojedynczy
+      Podświetlenie: Nie
+      Piktogram: Tak
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  DW6.01/X:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Schodowe
+      Rodzaj łącznika: Pojedynczy
+      Podświetlenie: Nie
+      Piktogram: Nie
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  DW6/2.01:
+    seria:
+    - Simon 54
+    - Simon 54 Premium
+    rodzenstwo: 7
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Schodowe
+      Rodzaj łącznika: Podwójny
+      Podświetlenie: Nie
+      Piktogram: Tak
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  DW6/2.01/X:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Schodowe
+      Rodzaj łącznika: Podwójny
+      Podświetlenie: Nie
+      Piktogram: Nie
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  DW6/2L.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Schodowe
+      Rodzaj łącznika: Podwójny
+      Podświetlenie: Tak
+      Piktogram: Tak
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  DW6/2L.01/X:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Schodowe
+      Rodzaj łącznika: Podwójny
+      Podświetlenie: Tak
+      Piktogram: Nie
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  DW6A.01:
+    seria:
+    - Simon 54
+    - Simon 54 Premium
+    rodzenstwo: 4
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Schodowe
+      Rodzaj łącznika: Schodowy
+      Podświetlenie: Nie
+      Piktogram: Tak
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  DW6A.01/X:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Schodowe
+      Podświetlenie: Nie
+      Piktogram: Nie
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  DW6AL.01:
+    seria:
+    - Simon 54
+    - Simon 54 Premium
+    rodzenstwo: 4
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Schodowe
+      Rodzaj łącznika: Schodowy
+      Podświetlenie: Tak
+      Piktogram: Tak
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  DW6AL.01/X:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Schodowe
+      Podświetlenie: Tak
+      Piktogram: Nie
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  DW6L.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Schodowe
+      Rodzaj łącznika: Pojedynczy
+      Podświetlenie: Tak
+      Piktogram: Tak
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  DW6L.01/X:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Schodowe
+      Rodzaj łącznika: Pojedynczy
+      Podświetlenie: Tak
+      Piktogram: Nie
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  DW7.01:
+    seria:
+    - Simon 54
+    - Simon 54 Premium
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Krzyżowe
+      Rodzaj łącznika: Pojedynczy
+      Podświetlenie: Nie
+      Piktogram: Tak
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  DW7.01/X:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Krzyżowe
+      Rodzaj łącznika: Pojedynczy
+      Podświetlenie: Nie
+      Piktogram: Nie
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  DW7/2.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Krzyżowe
+      Rodzaj łącznika: Podwójny
+      Podświetlenie: Nie
+      Piktogram: Tak
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DW7/2.01/X:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Krzyżowe
+      Rodzaj łącznika: Podwójny
+      Podświetlenie: Nie
+      Piktogram: Nie
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DW7/2L.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Krzyżowe
+      Rodzaj łącznika: Podwójny
+      Podświetlenie: Tak
+      Piktogram: Tak
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DW7/2L.01/X:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Krzyżowe
+      Rodzaj łącznika: Podwójny
+      Podświetlenie: Tak
+      Piktogram: Nie
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DW7A.01:
+    seria:
+    - Simon 54
+    - Simon 54 Premium
+    rodzenstwo: 3
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Krzyżowe
+      Rodzaj łącznika: Krzyżowy
+      Podświetlenie: Nie
+      Piktogram: Tak
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  DW7A.01/X:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Krzyżowe
+      Piktogram: Nie
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  DW7L.01:
+    seria:
+    - Simon 54
+    - Simon 54 Premium
+    rodzenstwo: 4
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Krzyżowe
+      Rodzaj łącznika: Pojedynczy
+      Podświetlenie: Tak
+      Piktogram: Tak
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  DW7L.01/X:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Krzyżowe
+      Rodzaj łącznika: Pojedynczy
+      Podświetlenie: Tak
+      Piktogram: Nie
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  DWC10P.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Pozostałe łączniki
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DWC10T.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Pozostałe łączniki
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DWH1.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Pozostałe łączniki
+      Rodzaj łącznika: Pojedyncze
+      Podświetlenie: Tak
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DWH2.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Pozostałe łączniki
+      Rodzaj łącznika: Podwójne
+      Podświetlenie: Nie
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DWP10P.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Pozostałe łączniki
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DWZK.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Pozostałe łączniki
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  DZP1.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Przyciski
+      Podtyp produktu: Przycisk żaluzjowy
+      Rodzaj gniazda: Pojedynczy
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  DZP1A.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Przyciski
+      Podtyp produktu: Przycisk żaluzjowy
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  DZP1W.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Przyciski
+      Podtyp produktu: Przycisk żaluzjowy
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  DZW1K.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Żaluzjowe
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  DZW2.01:
+    seria:
+    - Simon 54
+    rodzenstwo: 1
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Żaluzjowe
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  EGSZ2NZ:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Wtyczkowe
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Natynkowy
+  EGSZ2NZB:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Wtyczkowe
+      Stopień ochrony [IP]: IP 44
+      Sposób montażu: Natynkowy
+  EGSZ2PZ:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Wtyczkowe
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  EGSZ2SNZ:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Wtyczkowe
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Natynkowy
+  EGSZ2SPZ:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Wtyczkowe
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  EGSZ4NZ:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Wtyczkowe
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Natynkowy
+  EGSZ4SNZ:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Wtyczkowe
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Natynkowy
+  GL3Z:
+    seria:
+    - Simon 54
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Inne
+      Podtyp produktu: Pozostałe
+      Stopień ochrony [IP]: IP 20
+  KGD2:
+    seria:
+    - Simon 55
+    rodzenstwo: 1
+    atrybuty:
+      Typ produktu: Inne
+      Podtyp produktu: Pozostałe
+  PCR:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Inne
+      Podtyp produktu: Pozostałe
+  SGZ1CMR:
+    seria:
+    - Simon 55
+    rodzenstwo: 1
+    atrybuty:
+      Sposób montażu: Podtynkowy
+  SGZ1MR:
+    seria:
+    - Simon 55
+    rodzenstwo: 1
+    atrybuty:
+      Sposób montażu: Podtynkowy
+  SGZ2CMR:
+    seria:
+    - Simon 55
+    rodzenstwo: 1
+    atrybuty:
+      Sposób montażu: Podtynkowy
+  SP1MR:
+    seria:
+    - Simon 55
+    rodzenstwo: 1
+    atrybuty:
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  SP2L2MR:
+    seria:
+    - Simon 55
+    rodzenstwo: 1
+    atrybuty:
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  SP2MR:
+    seria:
+    - Simon 55
+    rodzenstwo: 1
+    atrybuty:
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  SW1MR:
+    seria:
+    - Simon 55
+    rodzenstwo: 1
+    atrybuty:
+      Sposób montażu: Podtynkowy
+  SW5L2MR:
+    seria:
+    - Simon 55
+    rodzenstwo: 1
+    atrybuty:
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  SW5MR:
+    seria:
+    - Simon 55
+    rodzenstwo: 1
+    atrybuty:
+      Sposób montażu: Podtynkowy
+  SW6/2L2MR:
+    seria:
+    - Simon 55
+    rodzenstwo: 1
+    atrybuty:
+      Sposób montażu: Podtynkowy
+  SW6/2WMR:
+    seria:
+    - Simon 55
+    rodzenstwo: 1
+    atrybuty:
+      Sposób montażu: Podtynkowy
+  SW6MR:
+    seria:
+    - Simon 55
+    rodzenstwo: 1
+    atrybuty:
+      Sposób montażu: Podtynkowy
+  SW7/2L2MR:
+    seria:
+    - Simon 55
+    rodzenstwo: 1
+    atrybuty:
+      Sposób montażu: Podtynkowy
+  SW7/2MR:
+    seria:
+    - Simon 55
+    rodzenstwo: 1
+    atrybuty:
+      Sposób montażu: Podtynkowy
+  SW7MR:
+    seria:
+    - Simon 55
+    rodzenstwo: 1
+    atrybuty:
+      Sposób montażu: Podtynkowy
+  SZP1KMR:
+    seria:
+    - Simon 55
+    rodzenstwo: 1
+    atrybuty:
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  SZP2MR:
+    seria:
+    - Simon 55
+    rodzenstwo: 1
+    atrybuty:
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  SZW1KMR:
+    seria:
+    - Simon 55
+    rodzenstwo: 1
+    atrybuty:
+      Sposób montażu: Podtynkowy
+  SZW2MR:
+    seria:
+    - Simon 55
+    rodzenstwo: 1
+    atrybuty:
+      Sposób montażu: Podtynkowy
+  T5F.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Komputerowe, Telefoniczne
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  T61.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Komputerowe
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  T61E.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Komputerowe
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  T62.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Komputerowe
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  T62E.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Komputerowe
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TA45.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Inne
+      Podtyp produktu: Pozostałe
+      Stopień ochrony [IP]: IP 20
+  TAK.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Antenowe
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TAK1.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Antenowe
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TAP10.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Antenowe
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TASF1.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Antenowe
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TASF2.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Antenowe
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TASFRJ45.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Antenowe, Komputerowe
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TASK.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Antenowe
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TASK2.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Antenowe
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TASP.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Antenowe
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TAZ.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Antenowe
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TD1.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Przyciski
+      Podtyp produktu: Dzwonek
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  TD1L.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Przyciski
+      Podtyp produktu: Dzwonek
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  TEC2CAQ.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: USB
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TECR1.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Inne
+      Podtyp produktu: Pozostałe
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TEGSZ1W.02:
+    seria:
+    - Simon 55 GO
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Wtyczkowe
+      Krotność: 1x
+      Uziemienie: Tak
+      Przesłony torów prądowych: Tak
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+      Typ łączności: Wi-Fi
+  TEGZ1W.02:
+    seria:
+    - Simon 55 GO
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Wtyczkowe
+      Uziemienie: Tak
+      Przesłony torów prądowych: Tak
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+      Typ łączności: Wi-Fi
+  TEK1W.01:
+    seria:
+    - Simon 55 GO
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Sterowniki i automatyka
+      Podtyp produktu: Kontrolery
+      Materiał: Tworzywo Sztuczne
+      Podświetlenie: Tak
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+      Typ łączności: Wi-Fi
+  TENB1W.01:
+    seria:
+    - Simon 55 GO
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Sterowniki i automatyka
+      Podtyp produktu: Nadajniki bateryjne
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+      Typ łączności: Wi-Fi
+  TES9L.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Sterowniki i automatyka
+      Podtyp produktu: Ściemniacze
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TESL1.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Sterowniki i automatyka
+      Podtyp produktu: Ściemniacze
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TESL1W.01:
+    seria:
+    - Simon 55 GO
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Sterowniki i automatyka
+      Podtyp produktu: Ściemniacze
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+      Typ łączności: Wi-Fi
+  TESRGB1W.01:
+    seria:
+    - Simon 55 GO
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Sterowniki i automatyka
+      Podtyp produktu: Ściemniacze
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+      Typ łączności: Wi-Fi
+  TESS2.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Inne
+      Podtyp produktu: Sygnalizatory i oprawy LED
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TESS3.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Inne
+      Podtyp produktu: Sygnalizatory i oprawy LED
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TESW1W.01:
+    seria:
+    - Simon 55 GO
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Sterowniki i automatyka
+      Podtyp produktu: Ściemniacze
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+      Typ łączności: Wi-Fi
+  TETD1A.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Sterowniki i automatyka
+      Podtyp produktu: Regulatory temperatury i termostaty
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TETD2W.01:
+    seria:
+    - Simon 55 GO
+    rodzenstwo: 1
+    atrybuty:
+      Typ produktu: Sterowniki i automatyka
+      Podtyp produktu: Regulatory temperatury i termostaty
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+      Typ łączności: Wi-Fi
+  TEW1.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Pozostałe łączniki
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TEW1W.01:
+    seria:
+    - Simon 55 GO
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Sterowniki i automatyka
+      Podtyp produktu: Sterowniki oświetleniowe
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+      Typ łączności: Wi-Fi
+  TEW2.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Pozostałe łączniki
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TEW2W.01:
+    seria:
+    - Simon 55 GO
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Sterowniki i automatyka
+      Podtyp produktu: Sterowniki oświetleniowe
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+      Typ łączności: Wi-Fi
+  TEW4.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Pozostałe łączniki
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TEWH1.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Pozostałe łączniki
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TEZ1G.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Sterowniki i automatyka
+      Podtyp produktu: Sterowniki żaluzjowe
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TEZ1L.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Sterowniki i automatyka
+      Podtyp produktu: Sterowniki żaluzjowe
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TEZ1W.01:
+    seria:
+    - Simon 55 GO
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Sterowniki i automatyka
+      Podtyp produktu: Sterowniki żaluzjowe
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+      Typ łączności: Wi-Fi
+  TEZ2.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Przyciski
+      Podtyp produktu: Przycisk żaluzjowy
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TF1.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Telefoniczne
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TF2.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Telefoniczne
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TG1CZ.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Wtyczkowe
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TG2MCZ.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Wtyczkowe
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TGD1CZ.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 7
+    atrybuty:
+      Typ produktu: Inne
+      Podtyp produktu: Pozostałe
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TGD1ZP:
+    seria:
+    - Simon 55
+    rodzenstwo: 7
+    atrybuty:
+      Sposób montażu: Podtynkowy
+  TGD1ZP/AB111:
+    seria:
+    - Simon 55
+    rodzenstwo: 1
+    atrybuty:
+      Sposób montażu: Podtynkowy
+  TGEK1.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Ekwipotencjalne
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TGEK2.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Ekwipotencjalne
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TGH21RJ45.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Komputerowe, HDMI
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TGHDMI.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: HDMI
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TGHDMI121.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: HDMI
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TGHDMI2.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: HDMI
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TGHDMI221.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: HDMI
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TGHRJ45.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Komputerowe, HDMI
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TGL.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Głośnikowe
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TGL1.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Głośnikowe
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TGL2.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Głośnikowe
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TGL4.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Głośnikowe
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TGS1.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Światłowodowe
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TGS2.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Światłowodowe
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TGSZ1BCZ.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Wtyczkowe
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  TGSZ1BCZ.01/111A:
+    seria:
+    - Simon 55
+    rodzenstwo: 1
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Wtyczkowe
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  TGSZ1BCZ.01/114A:
+    seria:
+    - Simon 55
+    rodzenstwo: 1
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Wtyczkowe
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  TGSZ1BCZ.01/116A:
+    seria:
+    - Simon 55
+    rodzenstwo: 1
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Wtyczkowe
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  TGSZ1BCZ.01/143A:
+    seria:
+    - Simon 55
+    rodzenstwo: 1
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Wtyczkowe
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  TGSZ1BCZ.01/144A:
+    seria:
+    - Simon 55
+    rodzenstwo: 1
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Wtyczkowe
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  TGSZ1BCZ.01/149A:
+    seria:
+    - Simon 55
+    rodzenstwo: 1
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Wtyczkowe
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  TGSZ1CZ.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Wtyczkowe
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TGSZ1CZ.01/AB111:
+    seria:
+    - Simon 55
+    rodzenstwo: 1
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Wtyczkowe
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TGSZ1ZUSB2AA.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Wtyczkowe, USB
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TGSZ1ZUSB2CA.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: USB
+      Uziemienie: Tak
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TGSZ2PZFAR:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Wtyczkowe
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TGUSB13.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: USB
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TGUSB23.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: USB
+      Krotność: 2x
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TGZ1BCUZ.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Wtyczkowe
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  TGZ1BCUZ.01/111A:
+    seria:
+    - Simon 55
+    rodzenstwo: 1
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Wtyczkowe
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  TGZ1BCUZ.01/114A:
+    seria:
+    - Simon 55
+    rodzenstwo: 1
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Wtyczkowe
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  TGZ1BCUZ.01/116A:
+    seria:
+    - Simon 55
+    rodzenstwo: 1
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Wtyczkowe
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  TGZ1BCUZ.01/143A:
+    seria:
+    - Simon 55
+    rodzenstwo: 1
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Wtyczkowe
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  TGZ1BCUZ.01/144A:
+    seria:
+    - Simon 55
+    rodzenstwo: 1
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Wtyczkowe
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  TGZ1BCUZ.01/149A:
+    seria:
+    - Simon 55
+    rodzenstwo: 1
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Wtyczkowe
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  TGZ1BCZ.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Wtyczkowe
+      Stopień ochrony [IP]: IP 44
+      Sposób montażu: Podtynkowy
+  TGZ1BCZ.01/111A:
+    seria:
+    - Simon 55
+    rodzenstwo: 1
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Wtyczkowe
+      Stopień ochrony [IP]: IP 44
+      Sposób montażu: Podtynkowy
+  TGZ1BCZ.01/114A:
+    seria:
+    - Simon 55
+    rodzenstwo: 1
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Wtyczkowe
+      Stopień ochrony [IP]: IP 44
+      Sposób montażu: Podtynkowy
+  TGZ1BCZ.01/116A:
+    seria:
+    - Simon 55
+    rodzenstwo: 1
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Wtyczkowe
+      Stopień ochrony [IP]: IP 44
+      Sposób montażu: Podtynkowy
+  TGZ1BCZ.01/143A:
+    seria:
+    - Simon 55
+    rodzenstwo: 1
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Wtyczkowe
+      Stopień ochrony [IP]: IP 44
+      Sposób montażu: Podtynkowy
+  TGZ1BCZ.01/144A:
+    seria:
+    - Simon 55
+    rodzenstwo: 1
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Wtyczkowe
+      Stopień ochrony [IP]: IP 44
+      Sposób montażu: Podtynkowy
+  TGZ1BCZ.01/149A:
+    seria:
+    - Simon 55
+    rodzenstwo: 1
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Wtyczkowe
+      Stopień ochrony [IP]: IP 44
+      Sposób montażu: Podtynkowy
+  TGZ1BUZP:
+    seria:
+    - Simon 55
+    rodzenstwo: 7
+    atrybuty:
+      Sposób montażu: Podtynkowy
+  TGZ1BUZP/111A:
+    seria:
+    - Simon 55
+    rodzenstwo: 1
+    atrybuty:
+      Sposób montażu: Podtynkowy
+  TGZ1BUZP/114A:
+    seria:
+    - Simon 55
+    rodzenstwo: 1
+    atrybuty:
+      Sposób montażu: Podtynkowy
+  TGZ1BUZP/116A:
+    seria:
+    - Simon 55
+    rodzenstwo: 1
+    atrybuty:
+      Sposób montażu: Podtynkowy
+  TGZ1BUZP/143A:
+    seria:
+    - Simon 55
+    rodzenstwo: 1
+    atrybuty:
+      Sposób montażu: Podtynkowy
+  TGZ1BUZP/144A:
+    seria:
+    - Simon 55
+    rodzenstwo: 1
+    atrybuty:
+      Sposób montażu: Podtynkowy
+  TGZ1BUZP/149A:
+    seria:
+    - Simon 55
+    rodzenstwo: 1
+    atrybuty:
+      Sposób montażu: Podtynkowy
+  TGZ1BUZP/AB111:
+    seria:
+    - Simon 55
+    rodzenstwo: 1
+    atrybuty:
+      Sposób montażu: Podtynkowy
+  TGZ1BUZP/AB122:
+    seria:
+    - Simon 55
+    rodzenstwo: 1
+    atrybuty:
+      Sposób montażu: Podtynkowy
+  TGZ1BUZP/AB133:
+    seria:
+    - Simon 55
+    rodzenstwo: 1
+    atrybuty:
+      Sposób montażu: Podtynkowy
+  TGZ1CZ.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 7
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Wtyczkowe
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TGZ1ZP:
+    seria:
+    - Simon 55
+    rodzenstwo: 8
+    atrybuty:
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TGZ1ZP/AB111:
+    seria:
+    - Simon 55
+    rodzenstwo: 1
+    atrybuty:
+      Sposób montażu: Podtynkowy
+  TGZ1ZP/AB122:
+    seria:
+    - Simon 55
+    rodzenstwo: 1
+    atrybuty:
+      Sposób montażu: Podtynkowy
+  TGZ1ZP/AB133:
+    seria:
+    - Simon 55
+    rodzenstwo: 1
+    atrybuty:
+      Sposób montażu: Podtynkowy
+  TGZ1ZUSB2AA.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Sposób montażu: Podtynkowy
+  TGZ1ZUSB2CA.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 3
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu:
+        niejednoznaczne:
+        - Wtyczkowe, USB
+        - USB
+      Uziemienie: Tak
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TGZ2BMCZ.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Wtyczkowe
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  TGZ2BMCZ.01/111A:
+    seria:
+    - Simon 55
+    rodzenstwo: 1
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Wtyczkowe
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  TGZ2BMCZ.01/114A:
+    seria:
+    - Simon 55
+    rodzenstwo: 1
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Wtyczkowe
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  TGZ2BMCZ.01/116A:
+    seria:
+    - Simon 55
+    rodzenstwo: 1
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Wtyczkowe
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  TGZ2BMCZ.01/143A:
+    seria:
+    - Simon 55
+    rodzenstwo: 1
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Wtyczkowe
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  TGZ2BMCZ.01/144A:
+    seria:
+    - Simon 55
+    rodzenstwo: 1
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Wtyczkowe
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  TGZ2BMCZ.01/149A:
+    seria:
+    - Simon 55
+    rodzenstwo: 1
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Wtyczkowe
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  TGZ2MCZ.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Wtyczkowe
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TGZ2MZP:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TGZ2MZP/AB111:
+    seria:
+    - Simon 55
+    rodzenstwo: 1
+    atrybuty:
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TGZ2TS:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Wtyczkowe
+      Uziemienie: Tak
+      Przesłony torów prądowych: Nie
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TGZ2TSZ:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Gniazda
+      Podtyp produktu: Wtyczkowe
+      Uziemienie: Tak
+      Przesłony torów prądowych: Tak
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TKE10:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Sposób montażu: Podtynkowy
+  TKE11:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Sposób montażu: Podtynkowy
+  TKE13:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TKE1x:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Sposób montażu: Podtynkowy
+  TKE20:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Sposób montażu: Podtynkowy
+  TKE21:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Sposób montażu: Podtynkowy
+  TKE23:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Sposób montażu: Podtynkowy
+  TKE24:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Sposób montażu: Podtynkowy
+  TKE25:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Sposób montażu: Podtynkowy
+  TKE2x:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Sposób montażu: Podtynkowy
+  TKE40:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Sposób montażu: Podtynkowy
+  TKE4x:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Sposób montażu: Podtynkowy
+  TKP2.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Inne
+      Podtyp produktu: Pokrywy do gniazd
+      Stopień ochrony [IP]: IP 20
+  TKP2S.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Inne
+      Podtyp produktu: Pokrywy do gniazd
+      Stopień ochrony [IP]: IP 20
+  TKW1:
+    seria:
+    - Simon 55
+    rodzenstwo: 8
+    atrybuty:
+      Sposób montażu: Podtynkowy
+  TKW1/AB111:
+    seria:
+    - Simon 55
+    rodzenstwo: 1
+    atrybuty:
+      Sposób montażu: Podtynkowy
+  TKW1L:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Sposób montażu: Podtynkowy
+  TKW1L/AB111:
+    seria:
+    - Simon 55
+    rodzenstwo: 1
+    atrybuty:
+      Sposób montażu: Podtynkowy
+  TKW5:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Sposób montażu: Podtynkowy
+  TKW5/AB111:
+    seria:
+    - Simon 55
+    rodzenstwo: 1
+    atrybuty:
+      Sposób montażu: Podtynkowy
+  TKW5L2:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TKW5L2/AB111:
+    seria:
+    - Simon 55
+    rodzenstwo: 1
+    atrybuty:
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TKW6:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TKW6/2:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TKW6/2/X:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Sposób montażu: Podtynkowy
+  TKW6/2/X/AB111:
+    seria:
+    - Simon 55
+    rodzenstwo: 1
+    atrybuty:
+      Sposób montażu: Podtynkowy
+  TKW6/2L2:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TKW6L:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Sposób montażu: Podtynkowy
+  TKW7:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TKW7/2:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Sposób montażu: Podtynkowy
+  TKW7/2L2:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TKW7L:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Sposób montażu: Podtynkowy
+  TKWD1:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Sposób montażu: Podtynkowy
+  TKWD1L:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Sposób montażu: Podtynkowy
+  TKWK1:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Sposób montażu: Podtynkowy
+  TKWS1:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TKWS1L:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Sposób montażu: Podtynkowy
+  TKZW1K:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Sposób montażu: Podtynkowy
+  TKZW1K/AB111:
+    seria:
+    - Simon 55
+    rodzenstwo: 1
+    atrybuty:
+      Sposób montażu: Podtynkowy
+  TKZW2:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Sposób montażu: Podtynkowy
+  TKZW2/AB111:
+    seria:
+    - Simon 55
+    rodzenstwo: 1
+    atrybuty:
+      Sposób montażu: Podtynkowy
+  TKZW2/X:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Sposób montażu: Podtynkowy
+  TOS3K.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Inne
+      Podtyp produktu: Sygnalizatory i oprawy LED
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TOS3K14.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Inne
+      Podtyp produktu: Sygnalizatory i oprawy LED
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TOS4K.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Inne
+      Podtyp produktu: Sygnalizatory i oprawy LED
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TOS4K14.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Inne
+      Podtyp produktu: Sygnalizatory i oprawy LED
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TOS5K.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Inne
+      Podtyp produktu: Sygnalizatory i oprawy LED
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TOS5K14.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Inne
+      Podtyp produktu: Sygnalizatory i oprawy LED
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TOSC3K.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Inne
+      Podtyp produktu: Sygnalizatory i oprawy LED
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TOSC3K14.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Inne
+      Podtyp produktu: Sygnalizatory i oprawy LED
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TOSC4K.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Inne
+      Podtyp produktu: Sygnalizatory i oprawy LED
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TOSC4K14.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Inne
+      Podtyp produktu: Sygnalizatory i oprawy LED
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TOSC5K.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 5
+    atrybuty:
+      Typ produktu: Inne
+      Podtyp produktu: Sygnalizatory i oprawy LED
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TOSC5K14.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Inne
+      Podtyp produktu: Sygnalizatory i oprawy LED
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TP:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Inne
+      Podtyp produktu: Pozostałe
+      Stopień ochrony [IP]: IP 20
+  TP1.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Przyciski
+      Podtyp produktu: Zwierne
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  TP1K.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Pozostałe łączniki
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TP1L.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Przyciski
+      Podtyp produktu: Zwierne
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  TP2.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Przyciski
+      Podtyp produktu: Zwierne
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  TP2L2.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Przyciski
+      Podtyp produktu: Zwierne
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TP31.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Przyciski
+      Podtyp produktu: Zwierne
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TP31L.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Przyciski
+      Podtyp produktu: Zwierne
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TP4.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Przyciski
+      Podtyp produktu: Zwierne
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TPK1.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Inne
+      Podtyp produktu: Pozostałe
+      Stopień ochrony [IP]: IP 20
+  TPN1:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Inne
+      Podtyp produktu: Puszki natynkowe
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TPN2:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Inne
+      Podtyp produktu: Puszki natynkowe
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TPN3:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Inne
+      Podtyp produktu: Puszki natynkowe
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TPNR2:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Inne
+      Podtyp produktu: Puszki natynkowe
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TPR1.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Przyciski
+      Podtyp produktu: Zwierne
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  TPS.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Inne
+      Podtyp produktu: Pozostałe
+      Stopień ochrony [IP]: IP 20
+  TPS.01/AB111:
+    seria:
+    - Simon 55
+    rodzenstwo: 1
+    atrybuty:
+      Typ produktu: Inne
+      Podtyp produktu: Pozostałe
+      Stopień ochrony [IP]: IP 20
+  TPZK.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Pozostałe łączniki
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TR1:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Ramki
+      Krotność: 1x
+      Materiał: Tworzywo sztuczne
+      Stopień ochrony [IP]: IP20/IP44
+  TR1/AB111:
+    seria:
+    - Simon 55
+    rodzenstwo: 1
+    atrybuty:
+      Typ produktu: Ramki
+      Krotność: 1x
+      Materiał: Tworzywo sztuczne
+      Stopień ochrony [IP]: IP20/IP44
+  TR2:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Ramki
+      Krotność: 2x
+      Materiał: Tworzywo sztuczne
+      Stopień ochrony [IP]: IP20/IP44
+  TR2/AB111:
+    seria:
+    - Simon 55
+    rodzenstwo: 1
+    atrybuty:
+      Typ produktu: Ramki
+      Krotność: 2x
+      Materiał: Tworzywo sztuczne
+      Stopień ochrony [IP]: IP20/IP44
+  TR3:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Ramki
+      Krotność: 3x
+      Materiał: Tworzywo sztuczne
+      Stopień ochrony [IP]: IP20/IP44
+  TR3/AB111:
+    seria:
+    - Simon 55
+    rodzenstwo: 1
+    atrybuty:
+      Typ produktu: Ramki
+      Krotność: 3x
+      Materiał: Tworzywo sztuczne
+      Stopień ochrony [IP]: IP20/IP44
+  TR4:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Ramki
+      Krotność: 4x
+      Materiał: Tworzywo sztuczne
+      Stopień ochrony [IP]: IP20/IP44
+  TR4/AB111:
+    seria:
+    - Simon 55
+    rodzenstwo: 1
+    atrybuty:
+      Typ produktu: Ramki
+      Krotność: 4x
+      Materiał: Tworzywo sztuczne
+      Stopień ochrony [IP]: IP20/IP44
+  TR5:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Ramki
+      Krotność: 5x
+      Materiał: Tworzywo sztuczne
+      Stopień ochrony [IP]: IP20/IP44
+  TR5/AB111:
+    seria:
+    - Simon 55
+    rodzenstwo: 1
+    atrybuty:
+      Typ produktu: Ramki
+      Krotność: 5x
+      Materiał: Tworzywo sztuczne
+      Stopień ochrony [IP]: IP20/IP44
+  TRD1.149:
+    seria:
+    - Simon 55
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Ramki
+      Krotność: 1x
+      Materiał: Tworzywo sztuczne
+      Stopień ochrony [IP]: IP20/IP44
+  TRD1.163:
+    seria:
+    - Simon 55
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Ramki
+      Krotność: 1x
+      Materiał: Tworzywo sztuczne
+      Stopień ochrony [IP]: IP20/IP44
+  TRD1.166:
+    seria:
+    - Simon 55
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Ramki
+      Krotność: 1x
+      Materiał: Tworzywo sztuczne
+      Stopień ochrony [IP]: IP20/IP44
+  TRD2.149:
+    seria:
+    - Simon 55
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Ramki
+      Krotność: 2x
+      Materiał: Tworzywo sztuczne
+      Stopień ochrony [IP]: IP20/IP44
+  TRD2.163:
+    seria:
+    - Simon 55
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Ramki
+      Krotność: 2x
+      Materiał: Tworzywo sztuczne
+      Stopień ochrony [IP]: IP20/IP44
+  TRD2.166:
+    seria:
+    - Simon 55
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Ramki
+      Krotność: 2x
+      Materiał: Tworzywo sztuczne
+      Stopień ochrony [IP]: IP20/IP44
+  TRD3.149:
+    seria:
+    - Simon 55
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Ramki
+      Krotność: 3x
+      Materiał: Tworzywo sztuczne
+      Stopień ochrony [IP]: IP20/IP44
+  TRD3.163:
+    seria:
+    - Simon 55
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Ramki
+      Krotność: 3x
+      Materiał: Tworzywo sztuczne
+      Stopień ochrony [IP]: IP20/IP44
+  TRD3.166:
+    seria:
+    - Simon 55
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Ramki
+      Krotność: 3x
+      Materiał: Tworzywo sztuczne
+      Stopień ochrony [IP]: IP20/IP44
+  TRD4.149:
+    seria:
+    - Simon 55
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Ramki
+      Krotność: 4x
+      Materiał: Tworzywo sztuczne
+      Stopień ochrony [IP]: IP20/IP44
+  TRD4.163:
+    seria:
+    - Simon 55
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Ramki
+      Krotność: 4x
+      Materiał: Tworzywo sztuczne
+      Stopień ochrony [IP]: IP20/IP44
+  TRD4.166:
+    seria:
+    - Simon 55
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Ramki
+      Krotność: 4x
+      Materiał: Tworzywo sztuczne
+      Stopień ochrony [IP]: IP20/IP44
+  TRD5.149:
+    seria:
+    - Simon 55
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Ramki
+      Krotność: 5x
+      Materiał: Tworzywo sztuczne
+      Stopień ochrony [IP]: IP20/IP44
+  TRD5.163:
+    seria:
+    - Simon 55
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Ramki
+      Krotność: 5x
+      Materiał: Tworzywo sztuczne
+      Stopień ochrony [IP]: IP20/IP44
+  TRD5.166:
+    seria:
+    - Simon 55
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Ramki
+      Krotność: 5x
+      Materiał: Tworzywo sztuczne
+      Stopień ochrony [IP]: IP20/IP44
+  TRLP:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Inne
+      Podtyp produktu: Pozostałe
+  TRLSD:
+    seria:
+    - Simon 55
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Inne
+      Podtyp produktu: Pozostałe
+  TRLSM:
+    seria:
+    - Simon 55
+    rodzenstwo: 2
+    atrybuty:
+      Typ produktu: Inne
+      Podtyp produktu: Pozostałe
+  TRLW:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Inne
+      Podtyp produktu: Pozostałe
+  TRN1:
+    seria:
+    - Simon 55
+    rodzenstwo: 14
+    atrybuty:
+      Typ produktu: Ramki
+      Krotność: 1x
+      Materiał:
+        niejednoznaczne:
+        - Szkło
+        - Drewno
+        - Metal
+      Stopień ochrony [IP]: IP20/IP44
+  TRN2:
+    seria:
+    - Simon 55
+    rodzenstwo: 14
+    atrybuty:
+      Typ produktu: Ramki
+      Krotność: 2x
+      Materiał:
+        niejednoznaczne:
+        - Szkło
+        - Drewno
+        - Metal
+      Stopień ochrony [IP]: IP20/IP44
+  TRN3:
+    seria:
+    - Simon 55
+    rodzenstwo: 14
+    atrybuty:
+      Typ produktu: Ramki
+      Krotność: 3x
+      Materiał:
+        niejednoznaczne:
+        - Szkło
+        - Drewno
+        - Metal
+      Stopień ochrony [IP]: IP20/IP44
+  TRN4:
+    seria:
+    - Simon 55
+    rodzenstwo: 14
+    atrybuty:
+      Typ produktu: Ramki
+      Krotność: 4x
+      Materiał:
+        niejednoznaczne:
+        - Szkło
+        - Drewno
+        - Metal
+      Stopień ochrony [IP]: IP20/IP44
+  TRN5:
+    seria:
+    - Simon 55
+    rodzenstwo: 14
+    atrybuty:
+      Typ produktu: Ramki
+      Krotność: 5x
+      Materiał:
+        niejednoznaczne:
+        - Szkło
+        - Drewno
+        - Metal
+      Stopień ochrony [IP]: IP20/IP44
+  TS1.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Przyciski
+      Podtyp produktu: Światło
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  TS1L.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Przyciski
+      Podtyp produktu: Światło
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  TSC:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Inne
+      Podtyp produktu: Puszki natynkowe
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TSH:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Inne
+      Podtyp produktu: Puszki natynkowe
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TU1:
+    seria:
+    - Simon 55
+    rodzenstwo: 1
+    atrybuty:
+      Typ produktu: Inne
+      Podtyp produktu: Pozostałe
+  TU1W:
+    seria:
+    - Simon 55
+    rodzenstwo: 1
+    atrybuty:
+      Typ produktu: Inne
+      Podtyp produktu: Pozostałe
+  TU2:
+    seria:
+    - Simon 55
+    rodzenstwo: 1
+    atrybuty:
+      Typ produktu: Inne
+      Podtyp produktu: Pozostałe
+  TU3:
+    seria:
+    - Simon 55
+    rodzenstwo: 1
+    atrybuty:
+      Typ produktu: Inne
+      Podtyp produktu: Pozostałe
+  TU4:
+    seria:
+    - Simon 55
+    rodzenstwo: 1
+    atrybuty:
+      Typ produktu: Inne
+      Podtyp produktu: Pozostałe
+  TU5:
+    seria:
+    - Simon 55
+    rodzenstwo: 1
+    atrybuty:
+      Typ produktu: Inne
+      Podtyp produktu: Pozostałe
+  TW1.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Pojedyncze
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  TW12A.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Pojedyncze
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TW1K.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Pozostałe łączniki
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TW1L.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Pojedyncze
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  TW1P1A.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Pojedyncze
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TW1ZL.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Pojedyncze
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  TW2.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Pojedyncze
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  TW22A.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Podwójne
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TW2L.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Pojedyncze
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  TW31.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Potrójne
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TW31L.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Potrójne
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TW5.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Podwójne
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  TW5L2.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Podwójne
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TW6.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Schodowe
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  TW6.01/X:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Schodowe
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  TW6/2.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Schodowe
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TW6/2.01/X:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Schodowe
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TW6/2L2.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Schodowe
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TW6/2L2.01/X:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Schodowe
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TW6L.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Schodowe
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  TW6L.01/X:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Schodowe
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  TW7.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Krzyżowe
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  TW7.01/X:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Krzyżowe
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  TW7/2.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Krzyżowe
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TW7/2.01/X:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Krzyżowe
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TW7/2L2.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Krzyżowe
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TW7/2L2.01/X:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Krzyżowe
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TW7L.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Krzyżowe
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  TW7L.01/X:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Krzyżowe
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  TWZK.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Pozostałe łączniki
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TZP1K.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Przyciski
+      Podtyp produktu: Przycisk żaluzjowy
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  TZP2.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Przyciski
+      Podtyp produktu: Przycisk żaluzjowy
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy
+  TZW1K.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Żaluzjowe
+      Stopień ochrony [IP]: IP20/IP44
+      Sposób montażu: Podtynkowy
+  TZW2.01:
+    seria:
+    - Simon 55
+    rodzenstwo: 6
+    atrybuty:
+      Typ produktu: Łączniki
+      Podtyp produktu: Żaluzjowe
+      Stopień ochrony [IP]: IP 20
+      Sposób montażu: Podtynkowy

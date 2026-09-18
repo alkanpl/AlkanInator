@@ -170,6 +170,63 @@ plikow XLSX.
   `Montaz podtynkowy`), dlatego mocowanie pazurkami rozporowymi ma pierwszenstwo
   przed tym polem. Dla ramek, klawiszy, plytek czolowych i innych elementow
   nakladanych sklep nie wypelnia sposobu montazu.
+- Atrybuty filtrowe osprzetu (Kontakt Simon, a ten sam model maja Ospel i
+  nowe partie Hager/Berker) ustala sklep, nie dostawca:
+  `dictionaries/kontakt_simon_shop_structure.yaml` (odczytany z AlkanLocal).
+  `Typ produktu` to jeden z 7 terminow (Gniazda, Laczniki, Przyciski, Ramki,
+  Sterowniki i automatyka, Inne, Puszki podlogowe), `Podtyp produktu` jest
+  przypiety do typu (np. Gniazda -> Wtyczkowe/Antenowe/USB, Laczniki ->
+  Pojedyncze/Schodowe/Krzyzowe). **Ramki nie maja podtypu** - krotnosc idzie
+  w atrybucie `Krotnosc` (`1x`..`5x`), material w `Material`, bez sposobu
+  montazu. Klawisze w sklepie nie maja typu ani podtypu. Wartosci dostawcy
+  ("Nazwa produktu/Rodzaj", ETIM) i wlasne typy ("Gniazdka", "Akcesoria",
+  "Ladowarki USB", "Ramka 1- krotna") sa bledem - tak powstala partia
+  Simon 54/55 kaszmir 98 z 2026-09-15. Naprawia to
+  `src/fix_simon_attributes_to_shop_model.py` (dopasowanie po symbolu
+  bazowym do rodzenstwa w innych kolorach, potem reguly po nazwie), test
+  `tests/test_fix_simon_attributes_to_shop_model.py`. Wysylka poprawki do
+  Baselinkera wymaga `--replace-features`, bo zwykly sync scala cechy i nie
+  usuwa zbednych kluczy.
+- **Zadnych nowych atrybutow sklepu bez zatwierdzenia.** Do Baselinkera/Woo
+  trafiaja tylko cechy z listy `woo_attributes` w
+  `dictionaries/kontakt_simon_shop_structure.yaml` (137 globalnych atrybutow
+  Woo z AlkanLocal 2026-09-17) plus `approved_extra_attributes`. Cechy z
+  katalogu dostawcy spoza tej listy (ETIM, opakowania, RAL, "Wysokosc [mm]"
+  itp.) sa usuwane z pliku i laduja w raporcie
+  (`atrybuty_do_zatwierdzenia` w JSON, arkusz "Atrybuty do zatwierdzenia" w
+  skoroszycie kontrolnym) z podpowiedzia istniejacego atrybutu Woo. Nowy
+  atrybut powstaje dopiero po decyzji uzytkownika - dopisuje go do
+  `approved_extra_attributes` albo zaklada w Woo. **Powod:** integracja
+  Baselinker -> Woo tworzy z kazdej cechy globalny atrybut, wiec kazda nowa
+  nazwa smieci w filtrach i liscie atrybutow sklepu.
+
+- Nowy kolor istniejacego produktu Simon dostaje tag wariantowy swojego
+  rodzenstwa (ten sam symbol bazowy, inne kolory) - robi to
+  `src/fill_variant_tags_from_siblings.py --color-codes 42,142` na pelnym
+  eksporcie WP All Export; zmienia tylko `Product Tags` nowych produktow.
+  Sklep laczy warianty wtyczka WPC Linked Variation po tagu, wiec tag musi byc
+  DOKLADNIE taki jak u rodzenstwa. Tagi eventowe (`variant_tags.ignored_tags`,
+  np. "ElektroTargi Alkan 2026") nie sa kopiowane; przy rozbieznosci wygrywa
+  wiekszosc, remis rozstrzyga `variant_tags.overrides`. Produkty, ktorych
+  rodzenstwo nie ma tagow (klawisze, pokrywy) albo ktore nie maja rodzenstwa,
+  zostaja bez tagu i sa raportowane - nie wymyslamy nowych grup wariantow.
+  Niespojnosci istniejacych produktow trafiaja do arkusza "Anomalie
+  rodzenstwa", nie sa poprawiane bez zgody. Test:
+  `tests/test_fill_variant_tags_from_siblings.py`.
+- **Opisy ze schema JSON-LD nie przechodza przez Baselinker -> Woo.** Baselinker
+  zapisuje produkt przez REST API WooCommerce, a kontroler produktow zawsze
+  robi `wp_filter_post_kses` na opisie, wiec `<script type="application/ld+json">`
+  znika i schema FAQ wyswietla sie w sklepie jako goly tekst JSON (w
+  Baselinkerze opis jest poprawny - blad widac dopiero w Woo). Opisy z blokiem
+  FAQ wgrywa sie do Woo plikiem WP All Import (dziala jako administrator i
+  zachowuje `<script>`). Naprawa juz zepsutych:
+  `src/restore_woo_description_scripts.py` na pelnym eksporcie - podmienia opis
+  tylko gdy tresc w Woo jest identyczna z nasza poza znacznikami `<script>`
+  (recznych poprawek w sklepie nie nadpisuje). Po kazdym imporcie opisow przez
+  Baselinker sprawdz w eksporcie Woo, czy `Content` zawiera `<script`. Trwale
+  rozwiazanie to mu-plugin po stronie sklepu (przywracanie zwalidowanego
+  FAQPage w `woocommerce_rest_pre_insert_product_object`) - do decyzji
+  uzytkownika.
 
 ## Synchronizacja instrukcji Codex <-> Claude
 
