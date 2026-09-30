@@ -7,6 +7,7 @@ import unittest
 from pathlib import Path
 
 import pandas as pd
+import yaml
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
@@ -455,6 +456,29 @@ class BaselinkerFeatureNormalizationTest(unittest.TestCase):
             ["Producent", "Dane producenta", "Typ produktu", "Moc [W]", "Wskaźnik olśnienia [UGR]"],
         )
         self.assertNotIn("Materiał", result)
+
+    def test_panel_knowledge_keeps_optional_ik_and_dimming(self) -> None:
+        knowledge_path = Path(__file__).resolve().parents[1] / "dictionaries" / "lighting_attribute_knowledge.yaml"
+        with knowledge_path.open(encoding="utf-8") as stream:
+            knowledge = yaml.safe_load(stream)
+
+        panel_rule = next(rule for rule in knowledge["categories"] if rule["category"] == "Panele LED")
+        self.assertIn("Stopień odporności [IK]", panel_rule["optional_description"])
+        self.assertIn("Współpraca ze ściemniaczem", panel_rule["optional_description"])
+
+        result = apply_category_attribute_knowledge(
+            {
+                "Typ produktu": "Panel LED",
+                "Stopień odporności [IK]": "IK02",
+                "Współpraca ze ściemniaczem": "Nie",
+            },
+            pd.Series({"Kategoria": "Panele LED"}),
+            "Oświetlenie > Oświetlenie przemysłowe wewnętrzne > Panele LED sufitowe",
+            knowledge,
+        )
+
+        self.assertEqual(result["Stopień odporności [IK]"], "IK02")
+        self.assertEqual(result["Współpraca ze ściemniaczem"], "Nie")
 
     def test_store_category_has_priority_over_source_family(self) -> None:
         knowledge = {

@@ -256,7 +256,10 @@ woo_attributes:
 
 # Atrybuty zatwierdzone przez uzytkownika, ktorych nie ma jeszcze w lokalnej
 # kopii Woo (np. zalozone na produkcji pozniej). Dopisuj recznie.
-approved_extra_attributes: []
+approved_extra_attributes:
+  # 2026-09-28: podseria Kontakt Simon (Line, Duo, Nature, GO, Premium, Flash,
+  # K45/SF/CIMA) - decyzja uzytkownika; buduje src/build_simon_subseries_woo_update.py
+  - "Podseria"
 
 # Atrybuty, ktore skrypt naprawczy wolno mu ruszac. Wszystko inne
 # (wymiary, GPSR, ETIM, opakowania) zostaje jak w pliku wejsciowym.

@@ -1,0 +1,167 @@
+version: 1
+updated_at: "2026-09-28"
+description: >
+  Reguly ustalania PODSERII Kontakt Simon (Line, Duo, Nature, GO, Premium,
+  Flash, K45/SF/CIMA) na podstawie oficjalnego e-katalogu
+  (ekatalog.kontakt-simon.com.pl/api/v2). Zrodla w kolejnosci: parametr
+  "Seria" artykulu w API, potem sciezka kategorii z drzewa katalogu.
+  Podseria trafia do atrybutu Woo "Podseria" i jest doklejana do "Seria"
+  ("Simon 55 Line") oraz do tytulu ("... Simon 55 Line TR1/111").
+  Mechanizmy (laczniki, gniazda, klawisze) pasuja do wszystkich ramek serii
+  i podserii NIE dostaja - decyzja uzytkownika 2026-09-28.
+
+# Serie bazowe, ktore sklep rozpoznaje w atrybucie "Seria". Wartosc API
+# spoza tej listy (K45, SF, CIMA, "Akcesoria do wielu serii") nie nadpisuje
+# serii w Woo.
+base_series:
+  - Simon 55
+  - Simon 54
+  - Simon 10
+  - Simon 400
+  - Simon 82
+  - Simon Basic
+  - Simon Connect
+
+# Nazwa serii sklepowej dla wartosci API, ktore w sklepie maja inna nazwe.
+series_aliases:
+  K45: Simon Connect
+  SF: Simon Connect
+  CIMA: Simon Connect
+  KFR: Simon Connect
+
+# Podseria z parametru "Seria" w API (wartosc doslowna po normalizacji
+# bialych znakow). status: OK - producent nazywa podserie wprost.
+api_series:
+  "Simon 55 Nature": {series: Simon 55, subseries: Nature, status: OK}
+  "Simon 55 GO": {series: Simon 55, subseries: GO, status: OK}
+  "Simon 54 Premium": {series: Simon 54, subseries: Premium, status: OK}
+  "Simon 54 Nature": {series: Simon 54, subseries: Nature, status: OK}
+  "Simon 54 GO": {series: Simon 54, subseries: GO, status: OK}
+  "Simon 400, Flash 60": {series: Simon 400, subseries: Flash, status: OK}
+  # System Simon Connect: podseria = system modulow / puszek wg producenta.
+  # series_full: false -> "Seria" zostaje "Simon Connect" (bez podserii),
+  # title: false -> tytulu nie ruszamy (K45/SF to czesc nazwy produktu).
+  "K45": {series: Simon Connect, subseries: K45, status: WARNING, series_full: false, title: false}
+  "SF": {series: Simon Connect, subseries: SF, status: WARNING, series_full: false, title: false}
+  "CIMA": {series: Simon Connect, subseries: CIMA, status: WARNING, series_full: false, title: false}
+
+# Podseria z nazwy kategorii w drzewie e-katalogu (dopasowanie regex,
+# bez rozrozniania wielkosci liter, do KAZDEGO poziomu sciezki).
+# Kolejnosc ma znaczenie - wygrywa pierwsza pasujaca regula.
+category_rules:
+  - match: "^Ramki Simon 55 Line w kolorze"
+    series: Simon 55
+    subseries: Line
+    status: OK
+  - match: "^Ramki Simon 55 Duo"
+    series: Simon 55
+    subseries: Duo
+    status: OK
+  - match: "^Ramki Simon 55 Nature"
+    series: Simon 55
+    subseries: Nature
+    status: OK
+  # Akcesoria montowane w ramkach Line (wieszak, podstawka, szyld) - producent
+  # trzyma je w kategorii ramek Line, ale to nie sa ramki -> WARNING.
+  - match: "^Ramki Simon 55 Line \\+ Akcesoria"
+    series: Simon 55
+    subseries: Line
+    status: WARNING
+    note: Akcesorium z kategorii ramek Line (wieszak/podstawka/szyld)
+    require_single_path: true
+  - match: "^Ramki Simon 54 Premium"
+    series: Simon 54
+    subseries: Premium
+    status: OK
+  - match: "^Ramki Simon 54 Nature"
+    series: Simon 54
+    subseries: Nature
+    status: OK
+  - match: "^Puszki natynkowe.*do ramek Premium"
+    series: Simon 54
+    subseries: Premium
+    status: WARNING
+    note: Puszka natynkowa przypisana przez producenta do ramek Premium
+  - match: "^Sterowniki Simon 55 GO"
+    series: Simon 55
+    subseries: GO
+    status: OK
+    # Klawisze TKE* leza w tej kategorii ORAZ w "Laczniki elektroniczne"
+    # (2 sciezki) i maja w API Seria = Simon 55 -> require_single_path
+    # nie pozwala nadac im GO.
+    require_single_path: true
+  - match: "^Sterowniki Simon 54 GO"
+    series: Simon 54
+    subseries: GO
+    status: OK
+    require_single_path: true
+  - match: "^Gniazda meblowe Simon 400 Flash"
+    series: Simon 400
+    subseries: Flash
+    status: WARNING
+    note: Podseria z nazwy kategorii (API podaje tylko "Simon 400")
+  - match: "^Ramki Simon 82 Detail Original"
+    series: Simon 82
+    subseries: Detail Original
+    status: OK
+  - match: "^Ramki Simon 82 Detail Select"
+    series: Simon 82
+    subseries: Detail Select
+    status: OK
+  - match: "^Ramki Simon 82 Nature"
+    series: Simon 82
+    subseries: Nature
+    status: OK
+  - match: "^Ramki Basic Standard"
+    series: Simon Basic
+    subseries: Standard
+    status: OK
+  - match: "^Ramki Basic Neos"
+    series: Simon Basic
+    subseries: Neos
+    status: OK
+  - match: "^Seria KFR"
+    series: Simon Connect
+    subseries: KFR
+    status: WARNING
+    series_full: false
+    title: false
+
+# Kategorie, ktore naleza do WIELU podserii naraz (decyzja uzytkownika
+# 2026-09-28): produkt dostaje wszystkie podserie rozdzielone "|" w atrybutach
+# (Podseria = "Line|Duo", Seria = "Simon 55 Line|Simon 55 Duo"), a tytul
+# zostaje bez zmian. Status WARNING - widac je w skoroszycie kontrolnym.
+multi_subseries_category_rules:
+  - match: "^Puszki natynkowe do ramek Line i Duo"
+    series: Simon 55
+    subseries: [Line, Duo]
+    note: Puszka natynkowa pasuje do ramek Line i Duo - podserie po "|", tytul bez zmian
+  - match: "^Uszczelki IP44 do ramek Simon 55"
+    series: Simon 55
+    subseries: [Line, Duo, Nature]
+    note: Uszczelki pasuja do ramek Line, Duo i Nature - podserie po "|", tytul bez zmian
+
+# Tytul: w tytule ma byc "<Seria> <Podseria>" tuz przed kodem producenta.
+title:
+  # Wzorce istniejacej wzmianki o serii w tytule (case-insensitive).
+  series_patterns:
+    Simon 55: "simon\\s*55(?:\\s+go)?|simon\\s+go"
+    Simon 54: "simon\\s*54"
+    Simon 10: "simon\\s*10"
+    Simon 400: "simon\\s*400"
+    Simon 82: "simon\\s*82"
+    Simon Basic: "simon\\s+basic"
+    Simon Connect: "simon\\s+connect"
+  # Samodzielne tokeny podserii usuwane z tytulu, gdy doklejamy
+  # "Simon 55 Line" (zeby nie bylo "Ramka 1-krotna LINE ... Simon 55 Line").
+  strip_tokens:
+    Line: "LINE"
+    Duo: "DUO"
+    Nature: "Nature|NATURE"
+  # Podserie, ktorych NIE wstawiamy do tytulu, gdy ich nazwa juz w nim jest
+  # jako czesc nazwy produktu (np. "Plytka K45 ...").
+  skip_if_token_present:
+    - K45
+    - SF
+    - CIMA
+    - KFR

@@ -227,6 +227,73 @@ plikow XLSX.
   rozwiazanie to mu-plugin po stronie sklepu (przywracanie zwalidowanego
   FAQPage w `woocommerce_rest_pre_insert_product_object`) - do decyzji
   uzytkownika.
+- **"Produkty kompatybilne" to osobne pole, nie cross-sell.** Sklep ma wtyczke
+  `alkan-compatible-products`: pole meta `_alkan_compatible_product_ids`
+  (tablica ID albo ID po przecinku - oba formaty sa czytane), sekcja na karcie
+  produktu tuz przed Up-Sell. Cross-sell jest widoczny tylko w koszyku. Dla
+  Hager/Berker pole buduje `src/build_hager_berker_compatible_products.py`
+  wylacznie z relacji producenta: bloki "Wspolpracuje z" z katalogu PDF
+  (`output/Hager-Berker-Katalog-PDF_BAZA_KOMPATYBILNOSCI.xlsx`) oraz relacje
+  `mandatory` i `accessories` z BMEcat (arkusz "Relacje produktowe"). Plik
+  Hagera NIE zna pojecia cross-sell - istniejace Cross-Sells/Up-Sells pochodza
+  z wlasnych regul sklepu (`build_hager_berker_cross_upsell.py`) i zostaja bez
+  zmian. Relacje dzialaja w obie strony (ramka wymienia klawisz -> na karcie
+  klawisza jest ramka). Punktacja, limit 8 sztuk, roznorodnosc i lista slow
+  obnizajacych ranking wersji specjalnych (NEMA, nadruk, KNX...) sa w
+  `dictionaries/hager_berker_compatible_products.yaml`. Element wkladany i
+  ramka musza sie zgadzac kolorem; gdy producent nie ma ramki w kolorze
+  produktu (pomaranczowe gniazdo), relacja zostaje ze statusem `WARNING`.
+  Produkty bez relacji producenta dostaja tylko PROPOZYCJE z reguly "ramka
+  1-krotna tej samej serii i koloru" (`DO_SPRAWDZENIA`, arkusz "Propozycje bez
+  relacji") - do importu trafiaja dopiero z `--include-series-fallback`.
+  Pomijane sa stare duplikaty, warianty tego samego produktu (przelacza je
+  wtyczka wariantow) i produkty juz obecne w Up-Sells tej samej karty. ID w
+  pliku importu pochodza z eksportu podanego w `--input`, wiec eksport musi byc
+  z tego sklepu, do ktorego idzie import. Uzytkownik woli dostac z powrotem
+  SUROWY eksport sklepu z wypelniona kolumna, a nie osobny plik: `--fill
+  <eksport.xlsx>` zapisuje kopie eksportu (domyslnie
+  `output/Kompatybilne-Berker-Hager_UZUPELNIONE_<data>.xlsx`), zmienia tylko
+  kolumne `_alkan_compatible_product_ids` (ID po przecinku), bierze ID i
+  aktualne Up-Sells z tego eksportu, a reczne wpisy ze sklepu zostawia na
+  poczatku listy i tylko je dopelnia. Produkty z eksportu, ktorych nie ma w
+  pliku atrybutow, dostaja rekord z samego tytulu (stare kody Berker sa wtedy
+  rozpoznawane jako duplikaty i zostaja puste). Test:
+  `tests/test_build_hager_berker_compatible_products.py`.
+
+- **API Kontakt-Simon (e-katalog).** Klient: `src/simon_api.py`
+  (`https://ekatalog.kontakt-simon.com.pl/api/v2/`, naglowek `X-ApiKey`,
+  artykuly po symbolu w paczkach po 25, drzewo kategorii
+  `catalog/category/tree.json` z `articleIdList`). Klucz lezy lokalnie w
+  `Simon API/Program.php` (`define("API_KEY", ...)`; katalog jest w
+  `.gitignore`) albo w zmiennej `SIMON_API_KEY` - nie kopiowac go do innych
+  plikow ani raportow. `src/baselinker_api/config.json` ma tylko token
+  Baselinkera. Odpowiedzi sa cache'owane w `cache/simon_api/` (`--offline`
+  pracuje bez sieci, `--refresh` odswieza).
+- **Podserie Kontakt Simon (Line, Duo, Nature, GO, Premium, Flash,
+  K45/SF/CIMA).** Model z 2026-09-28: atrybut `Seria` = pelna nazwa
+  (`Simon 55 Line`), zatwierdzony nowy atrybut `Podseria` = `Line`
+  (`approved_extra_attributes` w `kontakt_simon_shop_structure.yaml`), a w
+  tytule `<Seria> <Podseria>` tuz przed kodem producenta (`... Simon 55 Line
+  TR1/111`; samodzielne tokeny `LINE`/`DUO`/`Nature` z tytulu sa usuwane).
+  Podserie dostaja TYLKO produkty, ktore producent przypisuje do podserii
+  (ramki, sterowniki GO, puszki natynkowe "do ramek Premium", akcesoria z
+  kategorii ramek Line); mechanizmy (laczniki, gniazda, klawisze) pasuja do
+  wszystkich ramek serii i zostaja bez podserii. Zrodlo: parametr `Seria` w
+  API (np. `Simon 55 Nature`, `Simon 55 GO`, `Simon 54 Premium`), a gdy API
+  podaje gola serie - nazwa kategorii e-katalogu (`Ramki Simon 55 Line`,
+  `Ramki Simon 55 Duo`). Reguly: `dictionaries/simon_subseries_rules.yaml`,
+  skrypt `src/build_simon_subseries_woo_update.py` (kopia eksportu Woo z
+  podmienionymi `Title`/`Seria` i nowa kolumna `Atrybut Produktu: Podseria`
+  za `Seria`, skoroszyt kontrolny w `reports/`), test
+  `tests/test_build_simon_subseries_woo_update.py`. Seria Woo rozna od serii
+  producenta (np. 85 mechanizmow Simon 54 z `Simon 54 Premium`) jest
+  poprawiana ze statusem WARNING (arkusz "Korekty serii");
+  `--keep-woo-series` tylko raportuje. Produkty pasujace do kilku podserii
+  naraz (puszki natynkowe "do ramek Line i Duo", uszczelki IP44) dostaja
+  wszystkie podserie po `|` w atrybutach (`Podseria` = `Line|Duo`, `Seria` =
+  `Simon 55 Line|Simon 55 Duo`), a tytul zostaje bez zmian (status WARNING).
+  Dla Simon Connect podseria to system K45/SF/CIMA/KFR, ale `Seria` i tytul
+  zostaja.
 
 ## Synchronizacja instrukcji Codex <-> Claude
 

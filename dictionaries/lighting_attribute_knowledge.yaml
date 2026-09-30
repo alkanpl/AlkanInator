@@ -526,6 +526,7 @@ new_attributes:
   - Oprawy hermetyczne
   - Oprawy liniowe, belki
   - Oprawy najazdowe
+  - Panele LED
   - Plafony
   source: archived_input_files/Poprawione atrybuty.xlsx
   confidence: 0.95
@@ -562,6 +563,7 @@ new_attributes:
   - Naświetlacze LED
   - Oprawy hermetyczne
   - Oprawy liniowe, belki
+  - Panele LED
   source: archived_input_files/Poprawione atrybuty.xlsx
   confidence: 0.95
   status: OK
@@ -623,6 +625,8 @@ categories:
   - Skuteczność świetlna [lm/W]
   - Kolor
   - Wskaźnik olśnienia [UGR]
+  - Stopień odporności [IK]
+  - Współpraca ze ściemniaczem
   ordered_attributes:
   - Producent
   - Dane producenta
@@ -634,7 +638,9 @@ categories:
   - Temperatura barwowa [K]
   - Wskaźnik oddawania barw
   - Stopień ochrony [IP]
+  - Stopień odporności [IK]
   - Napięcie [V]
+  - Współpraca ze ściemniaczem
   - Trwałość [h]
   - Kąt świecenia [°]
   - Wysokość

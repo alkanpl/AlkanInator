@@ -27,3 +27,12 @@ google-ads.yaml
 *.token
 baselinker-token.txt
 /src/baselinker_api/config.json
+# Lokalny klient e-katalogu Kontakt-Simon z kluczem API (Program.php)
+/Simon API/
+
+# Duze PDF-y z input/ (reszta input/ jest w repo, zeby sesje w chmurze mialy dane)
+input/2026 Aparatura Schelinger.pdf
+input/Incobex/06052026cennikakcesoria.pdf
+
+# Lokalne uprawnienia Claude Code
+.claude/settings.local.json

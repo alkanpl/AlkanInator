@@ -1,0 +1,82 @@
+# Reguly pola "Produkty kompatybilne" dla Hager/Berker.
+# Czyta je src/build_hager_berker_compatible_products.py.
+#
+# Sekcja sklepu (wtyczka alkan-compatible-products, meta
+# _alkan_compatible_product_ids) pokazuje powiazania TECHNICZNE potwierdzone
+# przez producenta. To nie jest cross-sell (koszyk) ani up-sell.
+
+max_items: 8          # siatka w sklepie ma 2 widoczne rzedy + "Pokaz wiecej"
+max_per_kind: 2       # ile produktow tego samego rodzaju (rola+funkcja / seria ramki)
+
+# Punkty bazowe zrodla relacji. "reverse" = relacja odczytana w druga strone
+# (ramka wymienia klawisz jako akcesorium -> na karcie klawisza jest ramka).
+source_scores:
+  pdf: {direct: 100, reverse: 85}           # katalog PDF, blok "Wspolpracuje z"
+  mandatory: {direct: 95, reverse: 80}      # BMEcat PRODUCT_REFERENCE type=mandatory
+  accessories: {direct: 70, reverse: 65}    # BMEcat PRODUCT_REFERENCE type=accessories
+
+bonuses:
+  same_manufacturer_color: 6
+  shared_series: 4
+  single_frame: 3       # ramka 1-krotna przed wielokrotnymi
+
+# Gdy zaden kandydat nie pasuje kolorem (np. pomaranczowe gniazdo, ktore nie ma
+# pomaranczowej ramki), pokazujemy relacje producenta mimo roznicy koloru.
+# Takie powiazanie dostaje status WARNING.
+color_mismatch_penalty: 15
+
+# Role bez widocznego koloru - nie filtrujemy ich po kolorze.
+colorless_roles: [mechanism, seal]
+neutral_colors: [przezroczysty, transparentny]
+
+# Na karcie ramki najpierw produkty pierwszej potrzeby.
+function_priority:
+  power_socket: 12
+  single_switch: 11
+  stair_switch: 10
+  double_switch: 10
+  button: 9
+  shutter_control: 9
+  dimmer: 8
+  usb: 8
+  data: 7
+  tv_sat: 5
+  hdmi: 4
+  audio_video: 2
+
+# Wersje specjalne spadaja w rankingu (nie sa usuwane): zwykle gniazdo SCHUKO i
+# zwykly klawisz maja byc przed gniazdem NEMA, klawiszem z nadrukiem itd.
+# Dopasowanie po znormalizowanym tytule (bez polskich znakow, male litery).
+niche_penalty: 6
+niche_title_tokens:
+  - nema
+  - usa
+  - british
+  - francusk
+  - nadruk
+  - symbol
+  - soczewk
+  - "pole opisowe"
+  - "polem opisowym"
+  - "na klucz"
+  - hotel
+  - "na karte"
+  - knx
+  - quicklink
+  - edv
+  - sygnalizator
+  - "ochrona przepieciowa"
+  - ciegl
+  - swiatlo
+  - dzwonek
+
+# Produkty bez zadnej relacji producenta (np. kody spoza BMEcat) moga dostac
+# propozycje z reguly sklepu: element wkladany -> ramka 1-krotna tej samej serii
+# i koloru producenta. Propozycje NIE trafiaja do pliku importu, dopoki nie
+# uruchomi sie skryptu z --include-series-fallback; zawsze sa w arkuszu
+# "Propozycje bez relacji" ze statusem DO_SPRAWDZENIA.
+series_fallback:
+  score: 50
+  source_roles: [key, cover, complete]
+  # elementy natynkowe/bryzgoszczelne maja wlasne obudowy - nie proponujemy ramek
+  skip_title_tokens: [natynk, ip55, ip66]

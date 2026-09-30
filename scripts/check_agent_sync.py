@@ -38,7 +38,9 @@ CODEX_CANDIDATES = [
 
 
 def sha(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()
+    # Konce linii (CRLF na Windows vs LF po checkoutcie w Cowork/Linux) nie sa
+    # roznica tresci - porownujemy po normalizacji do LF.
+    return hashlib.sha256(path.read_bytes().replace(b"\r\n", b"\n")).hexdigest()
 
 
 def find_codex_skills(explicit: str | None) -> Path | None:
@@ -56,7 +58,7 @@ def rel_files(root: Path) -> dict[str, Path]:
     if not root.is_dir():
         return out
     for f in root.rglob("*"):
-        if not f.is_file():
+        if not f.is_file() or "__pycache__" in f.parts or f.suffix == ".pyc":
             continue
         rel = f.relative_to(root).as_posix()
         if rel.startswith(".system/") or "/agents/" in rel or rel.endswith(".marker"):
