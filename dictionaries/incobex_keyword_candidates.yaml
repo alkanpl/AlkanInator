@@ -12,6 +12,10 @@
 #   przeznaczenie - frazy "do czego / na co", czesto long tail
 #   marka_kod     - marka Incobex i oznaczenia serii (STN, FTN, PMN, RB, ZK...)
 #
+# ambiguous - frazy, ktorych wolumen pochodzi glownie z INNEGO produktu (np.
+# "wkladka do zamka" to zamki do drzwi). Zostaja w raporcie z notatka, ale nie
+# sa brane pod uwage przy wyborze frazy glownej typu.
+#
 # match.starts_with - poczatek tytulu (porownanie bez polskich znakow i wielkosci
 # liter). Wygrywa najdluzszy pasujacy prefiks. Produkt bez dopasowania trafia do
 # arkusza "Nieprzypisane" - nie wolno go wrzucac do istniejacego typu na sile.
@@ -85,11 +89,13 @@ product_types:
         - ftn incobex
         - fundament stn
 
-  płyta_izolacyjna:
+  plyta_izolacyjna:
     name: Płyta izolacyjna
     match:
       starts_with:
         - Płyta izolacyjna
+    ambiguous:
+      płyta izolacyjna: głównie izolacja termiczna budynków (XPS, wełna), nie płyty do obudów elektrycznych
     keywords:
       katalogowa:
         - płyta izolacyjna
@@ -108,7 +114,7 @@ product_types:
         - płyta pmn
         - pmn incobex
 
-  blacha_montażowa:
+  blacha_montazowa:
     name: Blacha montażowa
     match:
       starts_with:
@@ -134,6 +140,8 @@ product_types:
     match:
       starts_with:
         - Rozdzielnica budowlana
+    ambiguous:
+      tablica budowlana: głównie tablica informacyjna budowy (wymóg prawa budowlanego)
     keywords:
       katalogowa:
         - rozdzielnica budowlana
@@ -157,11 +165,14 @@ product_types:
         - rozdzielnica rb
         - rozdzielnica budowlana incobex
 
-  wkładka_do_zamka:
+  wkladka_do_zamka:
     name: Wkładka do zamka szafki
     match:
       starts_with:
         - Wkładka do zamka
+    ambiguous:
+      wkładka do zamka: głównie wkładki do zamków drzwiowych
+      wkładka bębenkowa: głównie wkładki do drzwi
     keywords:
       katalogowa:
         - wkładka do zamka
@@ -208,7 +219,7 @@ product_types:
         - szyna pen incobex
         - szyna n-80
 
-  zestaw_złączowo_pomiarowy:
+  zestaw_zlaczowo_pomiarowy:
     name: Zestaw złączowo-pomiarowy
     match:
       starts_with:
