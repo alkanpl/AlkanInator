@@ -11,10 +11,14 @@ zapisuje do katalogu raportow:
   (jedna kolumna `Keyword`, utf-8 BEZ BOM - BOM psuje naglowek przy wgrywaniu),
   do wgrania w "Sprawdz liczbe wyszukiwan i prognozy".
 
-Krok 2 (`--planner-stats`): eksport "Plan historical metrics" z Plannera
-(UTF-16, tabulatory, 2 linie tytulu nad naglowkiem) dopisuje do kandydatow
+Krok 2 (`--planner-stats`, mozna podac kilka plikow): eksporty "Plan historical
+metrics" i "Keyword ideas" z Plannera (UTF-16, tabulatory, 2 linie tytulu nad
+naglowkiem) dopisuja do kandydatow
 wolumen, konkurencje i stawki, a w "Typy produktow" wskazuje fraze glowna
 (najwyzszy wolumen, bez fraz marki/kodu i fraz oznaczonych jako `ambiguous`).
+Frazy z Plannera spoza listy kandydatow ida do arkusza "Planner poza lista" -
+te przejrzane i odrzucone (`rejected_ideas` w YAML) z powodem, pozostale z
+pustym powodem do przejrzenia.
 Konto bez aktywnych kampanii dostaje wolumeny zaokraglone do przedzialow
 (50 = 10-100, 500 = 100-1 tys., 5000 = 1-10 tys.) - kolumna `searches_range`.
 
@@ -172,10 +176,29 @@ def load_planner_stats(path: str | Path) -> dict[str, dict[str, Any]]:
     return stats
 
 
+def merge_planner_stats(paths: list[str | Path]) -> dict[str, dict[str, Any]]:
+    """Laczy kilka eksportow; fraza z wolumenem wygrywa z pusta z innego pliku."""
+    merged: dict[str, dict[str, Any]] = {}
+    for path in paths:
+        for key, metric in load_planner_stats(path).items():
+            current = merged.get(key)
+            if current is None or (current["avg_monthly_searches"] is None and metric["avg_monthly_searches"] is not None):
+                merged[key] = metric
+    return merged
+
+
 def attach_planner_stats(
-    candidates: list[dict[str, Any]], types: list[ProductType], stats: dict[str, dict[str, Any]]
+    candidates: list[dict[str, Any]],
+    types: list[ProductType],
+    stats: dict[str, dict[str, Any]],
+    rejected: dict[str, str] | None = None,
 ) -> list[dict[str, Any]]:
-    """Dopisuje metryki do kandydatow; zwraca frazy z Plannera spoza listy kandydatow."""
+    """Dopisuje metryki do kandydatow; zwraca frazy z Plannera spoza listy kandydatow.
+
+    Frazy z `rejected` (znormalizowana fraza -> powod) dostaja powod odrzucenia,
+    pozostale maja pusty powod, czyli czekaja na przejrzenie.
+    """
+    rejected = rejected or {}
     ambiguous_by_type = {product_type.name: product_type.ambiguous for product_type in types}
     used: set[str] = set()
     for row in candidates:
@@ -205,11 +228,22 @@ def attach_planner_stats(
             row["status"] = "OK"
         if metric:
             used.add(key)
-    return [
-        {"keyword": metric["planner_keyword"], "avg_monthly_searches": metric["avg_monthly_searches"] or ""}
+    extra = [
+        {
+            "keyword": metric["planner_keyword"],
+            "avg_monthly_searches": metric["avg_monthly_searches"] or "",
+            "searches_range": BUCKET_RANGES.get(metric["avg_monthly_searches"] or 0, ""),
+            "rejected_reason": rejected.get(key, ""),
+        }
         for key, metric in stats.items()
         if key not in used
     ]
+    # najpierw do przejrzenia, potem odrzucone; w grupie malejaco po wolumenie
+    return sorted(extra, key=lambda row: (bool(row["rejected_reason"]), -(row["avg_monthly_searches"] or 0)))
+
+
+def load_rejected_ideas(config: dict[str, Any]) -> dict[str, str]:
+    return {normalize_header(k): str(v) for k, v in (config.get("rejected_ideas") or {}).items()}
 
 
 def _format_keyword(row: dict[str, Any]) -> str:
@@ -273,7 +307,9 @@ def write_reports(
         )
         pd.DataFrame(unassigned, columns=["SKU", "Title"]).to_excel(writer, sheet_name="Nieprzypisane", index=False)
         if planner_extra is not None:
-            pd.DataFrame(planner_extra, columns=["keyword", "avg_monthly_searches"]).to_excel(
+            pd.DataFrame(
+                planner_extra, columns=["keyword", "avg_monthly_searches", "searches_range", "rejected_reason"]
+            ).to_excel(
                 writer, sheet_name="Planner poza lista", index=False
             )
     with paths["csv"].open("w", encoding="utf-8-sig", newline="") as handle:
@@ -293,15 +329,20 @@ def main() -> None:
     parser.add_argument("--sheet", help="Arkusz XLSX.")
     parser.add_argument("--dictionary", required=True, help="YAML z typami i kandydatami fraz.")
     parser.add_argument("--reports-dir", required=True, help="Katalog raportow.")
-    parser.add_argument("--planner-stats", help="Eksport 'Plan historical metrics' z Keyword Plannera (CSV).")
+    parser.add_argument(
+        "--planner-stats", nargs="+", help="Eksporty z Keyword Plannera (Plan historical metrics / Keyword ideas)."
+    )
     args = parser.parse_args()
 
-    types = load_product_types(load_yaml(args.dictionary))
+    config = load_yaml(args.dictionary)
+    types = load_product_types(config)
     unassigned = assign_products(read_products(args.input, args.sheet), types)
     candidates = candidate_rows(types)
     planner_extra = None
     if args.planner_stats:
-        planner_extra = attach_planner_stats(candidates, types, load_planner_stats(args.planner_stats))
+        planner_extra = attach_planner_stats(
+            candidates, types, merge_planner_stats(args.planner_stats), load_rejected_ideas(config)
+        )
     paths = write_reports(Path(args.reports_dir), types, candidates, unassigned, planner_extra)
 
     assigned = sum(len(product_type.products) for product_type in types)
@@ -312,7 +353,8 @@ def main() -> None:
         for row in candidates:
             statuses[row["status"]] = statuses.get(row["status"], 0) + 1
         print("Statusy fraz: " + ", ".join(f"{k}={v}" for k, v in sorted(statuses.items())))
-        print(f"Frazy z Plannera spoza listy: {len(planner_extra)}")
+        to_review = sum(1 for row in planner_extra if not row["rejected_reason"])
+        print(f"Frazy z Plannera spoza listy: {len(planner_extra)} (do przejrzenia: {to_review})")
     for path in paths.values():
         print(f"Zapisano: {path}")
 

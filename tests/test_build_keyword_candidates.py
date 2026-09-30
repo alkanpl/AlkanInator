@@ -13,6 +13,8 @@ from build_keyword_candidates import (  # noqa: E402
     attach_planner_stats,
     candidate_rows,
     load_planner_stats,
+    load_rejected_ideas,
+    merge_planner_stats,
     load_product_types,
     type_summary_rows,
     write_reports,
@@ -139,6 +141,29 @@ class BuildKeywordCandidatesTest(unittest.TestCase):
         # fraza niejednoznaczna i fraza marki nie wygrywaja mimo wiekszego wolumenu
         self.assertEqual(summary["primary_keyword"], "płyta montażowa izolacyjna")
         self.assertEqual(summary["ambiguous"], "płyta izolacyjna (100-1 tys.)")
+
+    def test_multiple_exports_merge_and_rejected_ideas_are_marked(self):
+        header = "Keyword\tCurrency\tAvg. monthly searches"
+        with tempfile.TemporaryDirectory() as tmp:
+            first, second = Path(tmp) / "stats.csv", Path(tmp) / "ideas.csv"
+            first.write_bytes("\n".join(["t", "d", header, "płyta montażowa pcv\tPLN\t"]).encode("utf-16"))
+            second.write_bytes(
+                "\n".join(
+                    ["t", "d", header, "plyta montazowa pcv\tPLN\t50", "cokół kuchenny\tPLN\t500", "nowa fraza\tPLN\t50"]
+                ).encode("utf-16")
+            )
+            stats = merge_planner_stats([first, second])
+        self.assertEqual(stats["plyta montazowa pcv"]["avg_monthly_searches"], 50)  # wolumen wygrywa z pustym
+
+        types = load_product_types(CONFIG)
+        assign_products(pd.DataFrame({"Title": ["Płyta izolacyjna PMN 23x36"]}), types)
+        candidates = candidate_rows(types)
+        rejected = load_rejected_ideas({"rejected_ideas": {"Cokół kuchenny": "meble kuchenne"}})
+        extra = attach_planner_stats(candidates, types, stats, rejected)
+        self.assertEqual(
+            [(row["keyword"], row["rejected_reason"]) for row in extra],
+            [("nowa fraza", ""), ("cokół kuchenny", "meble kuchenne")],  # najpierw do przejrzenia
+        )
 
     def test_missing_keyword_header_is_rejected(self):
         with tempfile.TemporaryDirectory() as tmp:

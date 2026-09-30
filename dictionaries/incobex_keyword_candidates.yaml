@@ -46,6 +46,8 @@ product_types:
         - szafka elektryczna zewnętrzna
         - szafka elektryczna na zewnątrz
         - obudowa hermetyczna
+        - rozdzielnica termoutwardzalna
+        - rozdzielnice termoutwardzalne
       przeznaczenie:
         - obudowa złącza kablowego
         - obudowa na licznik
@@ -54,12 +56,26 @@ product_types:
         - szafka licznikowa
         - obudowa złącza pomiarowego
         - szafka rozdzielcza zewnętrzna
+        - obudowa termoutwardzalna z fundamentem
+        - skrzynka licznikowa termoutwardzalna
+        - skrzynka złącza kablowego
+        - szafka złącza kablowego
       marka_kod:
         - obudowa stn
         - obudowa sstn
         - incobex stn
         - obudowy incobex
         - incobex
+        - obudowa termoutwardzalna incobex
+        - obudowy termoutwardzalne incobex
+        - incobex obudowa
+        - obudowa incobex
+        - incobex obudowy termoutwardzalne
+        - obudowa termoutwardzalna 40x60
+        - stn 40x58
+        - sstn 40x58
+        - sstn 26x42
+        - incobex stn 26x42
 
   fundament:
     name: Fundament do obudowy
@@ -68,6 +84,8 @@ product_types:
         - Fundament termoutwardzalny
         - Fundament FTN
         - Fundament
+    ambiguous:
+      cokół szafki: głównie cokoły szafek kuchennych
     keywords:
       katalogowa:
         - fundament do obudowy
@@ -78,12 +96,14 @@ product_types:
         - cokół do obudowy
         - podstawa do szafki elektrycznej
         - fundament kablowy
+        - cokół szafki
       przeznaczenie:
         - fundament do złącza kablowego
         - fundament pod złącze
         - fundament do szafki licznikowej
         - fundament do skrzynki licznikowej
         - fundament pod szafkę elektryczna
+        - złącze kablowe z fundamentem
       marka_kod:
         - fundament ftn
         - ftn incobex
@@ -119,18 +139,23 @@ product_types:
     match:
       starts_with:
         - Blacha montażowa
+    ambiguous:
+      płyta montażowa: mieszana intencja - też płyty do docieplenia/styropianu (Castorama)
     keywords:
       katalogowa:
         - blacha montażowa
         - blacha montażowa do obudowy
+        - blachy montażowe
       synonimy:
         - płyta montażowa stalowa
         - płyta montażowa metalowa
         - blacha montażowa do szafki
         - płyta montażowa do szafy
+        - płyta montażowa
       przeznaczenie:
         - blacha montażowa do rozdzielnicy
         - blacha montażowa do szafki elektrycznej
+        - rozdzielnica z płytą montażową
       marka_kod:
         - blacha bmn
         - bmn incobex
@@ -215,6 +240,7 @@ product_types:
         - szyna pen do złącza kablowego
         - szyna pen do rozdzielnicy
         - szyna pen do szafki licznikowej
+        - uziemienie złącza kablowego
       marka_kod:
         - szyna pen incobex
         - szyna n-80
@@ -225,11 +251,16 @@ product_types:
       starts_with:
         - Zestaw złączowo-pomiarowy
         - Zestaw złączowo pomiarowy
+    ambiguous:
+      złącze kablowe: mieszana intencja - złącze energetyczne ZK i złączki do przewodów (IP68, samochodowe, termokurczliwe)
+      złącza kablowe: mieszana intencja jak "złącze kablowe"
+      złącze kablowe hermetyczne: głównie hermetyczne złączki do przewodów IP68
     keywords:
       katalogowa:
         - zestaw złączowo-pomiarowy
         - złącze kablowo-pomiarowe
         - złącze kablowo pomiarowe
+        - złącza kablowo-pomiarowe
       synonimy:
         - złącze kablowe
         - złącze pomiarowe
@@ -239,15 +270,78 @@ product_types:
         - szafka na licznik
         - szafka pomiarowa
         - złącze kablowe z licznikiem
+        - złącza kablowe
+        - złącze licznikowe
+        - złącza energetyczne
+        - złącze kablowo-licznikowe
+        - złącze kablowe licznikowe
+        - złącze kablowe pomiarowe
+        - złącze kablowe hermetyczne
       przeznaczenie:
         - złącze kablowe jednofazowe
         - złącze kablowo-pomiarowe 1 licznik
         - szafka na licznik prądu na zewnątrz
         - szafka licznikowa na ogrodzenie
         - złącze do przyłącza energetycznego
+        - złącze kablowe na budynku
+        - złącze kablowe skrzynka energetyczna
+        - złącze kablowo-pomiarowe pge
       marka_kod:
         - złącze zk
         - zk1
         - złącze zk1
         - złącze zkp
         - incobex zk
+        - złącze kablowe zk1
+        - złącza kablowe incobex
+        - incobex złącze kablowo-pomiarowe
+        - złącza kablowo-pomiarowe incobex
+        - incobex złącze pomiarowe
+
+# Pomysly z Keyword Plannera ("Keyword ideas") przejrzane i odrzucone - nie
+# wracaja do arkusza "Planner poza lista" jako nowe. Powod obok.
+rejected_ideas:
+  cokół do szafek kuchennych: meble kuchenne
+  cokół kuchenny leroy merlin: meble kuchenne
+  cokół nad szafkami w kuchni: meble kuchenne
+  cokół pod szafki kuchenne: meble kuchenne
+  cokół szafek kuchennych: meble kuchenne
+  cokół w szafkach kuchennych: meble kuchenne
+  leroy merlin cokół kuchenny: meble kuchenne
+  montaż cokołu do szafek kuchennych ikea: meble kuchenne
+  szafki kuchenne bez cokołu: meble kuchenne
+  szafki w cokołach: meble kuchenne
+  płyta montażowa castorama: budownictwo (docieplenie)
+  płyta montażowa do dociepleń: budownictwo (docieplenie)
+  płyta montażowa do styropianu: budownictwo (docieplenie)
+  płyta montażowa rittal: konkurencja (Rittal)
+  pmst60: konkurencja (Simet)
+  simet pmst60: konkurencja (Simet)
+  vu48nwp: kod produktu innego producenta
+  obudowy termoutwardzalne emiter: konkurencja (Emiter)
+  zpue złącza kablowe: konkurencja (ZPUE)
+  hermetyczne złącze kablowe: złączki do przewodów, nie złącze ZK
+  złącze kablowe hermetyczne do przewodów elektrycznych ip68: złączki do przewodów
+  złącze kablowe hermetyczne ip68: złączki do przewodów
+  złącze kablowe ip67: złączki do przewodów
+  złącze kablowe ip68: złączki do przewodów
+  złącze kablowe wodoszczelne: złączki do przewodów
+  termokurczliwe złącza kablowe: złączki do przewodów
+  złącza kablowe samochodowe: złączki samochodowe
+  złącze kablowe napowietrzne: inny produkt (sieć napowietrzna)
+  złącze kablowe ziemne: inny produkt (mufa ziemna)
+  złącze kablowe przelotowe: inny produkt (złącze przelotowe)
+  złącze kablowe na szynę: inny produkt (złączka na szynę DIN)
+  złącza kablowe do słupów oświetleniowych: inny produkt (tabliczka słupowa)
+  maskownica złącza kablowego: brak w asortymencie
+  osłona złącza kablowego: brak w asortymencie
+  złącze kablowe z 22: niejasna fraza
+  złącze kablowe allegro: nazwa marketplace
+  złącze kablowe cena: modyfikator ceny
+  złącze kablowo-pomiarowe cena: modyfikator ceny
+  złącze kablowe zk3: inny model (Incobex ma ZK1)
+  złącze kablowe zk3a: inny model (Incobex ma ZK1)
+  złącze kablowe zk3a cena: inny model (Incobex ma ZK1)
+  złącze zk3: inny model (Incobex ma ZK1)
+  złącze zk3a: inny model (Incobex ma ZK1)
+  złącze kablowo-pomiarowe zk2x 2p: inny model (Incobex ma ZK1)
