@@ -8,8 +8,9 @@ zapisuje do katalogu raportow:
   "Nieprzypisane",
 - `keyword_candidates.csv` - kolumny product_type, group, keyword
   (utf-8-sig, dla Excela),
-- `planner_seed_list.txt` - unikalne frazy, jedna na linie, do wklejenia w
-  Plannerze ("Sprawdz liczbe wyszukiwan i prognozy").
+- `planner_seed_list.csv` - unikalne frazy w formacie szablonu Keyword Plannera
+  (jedna kolumna `Keyword`, utf-8 BEZ BOM - BOM psuje naglowek przy wgrywaniu),
+  do wgrania w "Sprawdz liczbe wyszukiwan i prognozy".
 
 Plik wejsciowy nie jest modyfikowany.
 """
@@ -31,6 +32,7 @@ TITLE_COLUMN_CANDIDATES = ["Title", "Nazwa", "Nazwa produktu", "name", "title"]
 SKU_COLUMN_CANDIDATES = ["SKU", "sku", "Kod", "Kod Producenta"]
 KEYWORD_GROUPS = ["katalogowa", "synonimy", "przeznaczenie", "marka_kod"]
 UNASSIGNED = "nieprzypisane"
+PLANNER_KEYWORD_HEADER = "Keyword"
 
 
 @dataclass
@@ -126,7 +128,7 @@ def write_reports(
     paths = {
         "xlsx": reports_dir / "keyword_candidates.xlsx",
         "csv": reports_dir / "keyword_candidates.csv",
-        "seed": reports_dir / "planner_seed_list.txt",
+        "seed": reports_dir / "planner_seed_list.csv",
     }
     products = [
         {"product_type": product_type.name, **product}
@@ -146,7 +148,10 @@ def write_reports(
         writer = csv.DictWriter(handle, fieldnames=["product_type", "group", "keyword"])
         writer.writeheader()
         writer.writerows(candidates)
-    paths["seed"].write_text("\n".join(row["keyword"] for row in candidates) + "\n", encoding="utf-8")
+    with paths["seed"].open("w", encoding="utf-8", newline="") as handle:
+        seed_writer = csv.writer(handle, lineterminator="\n")
+        seed_writer.writerow([PLANNER_KEYWORD_HEADER])
+        seed_writer.writerows([row["keyword"]] for row in candidates)
     return paths
 
 

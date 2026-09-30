@@ -81,7 +81,7 @@ class BuildKeywordCandidatesTest(unittest.TestCase):
         unassigned = assign_products(pd.DataFrame({"Title": ["Szyna PEN N-80", "Coś innego"]}), types)
         with tempfile.TemporaryDirectory() as tmp:
             paths = write_reports(Path(tmp), types, candidate_rows(types), unassigned)
-            self.assertEqual(paths["seed"].read_text(encoding="utf-8"), "szyna pen\n")
+            self.assertEqual(paths["seed"].read_bytes(), b"Keyword\nszyna pen\n")  # szablon Plannera, bez BOM
             sheets = pd.read_excel(paths["xlsx"], sheet_name=None)
             self.assertEqual(len(sheets["Nieprzypisane"]), 1)
             self.assertEqual(paths["csv"].read_bytes()[:3], b"\xef\xbb\xbf")
