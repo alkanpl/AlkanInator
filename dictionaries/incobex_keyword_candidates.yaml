@@ -1,0 +1,242 @@
+# Kandydaci slow kluczowych dla typow produktow Incobex.
+#
+# Plik jest wejsciem do `src/build_keyword_candidates.py`, ktory:
+#   1. przypisuje kazdy produkt z pliku wejsciowego do typu (po poczatku tytulu),
+#   2. sklada liste fraz do sprawdzenia w Google Ads Keyword Planner
+#      ("Sprawdz liczbe wyszukiwan i prognozy", Polska, jezyk polski).
+#
+# To sa KANDYDACI, nie decyzje - wolumeny z Plannera rozstrzygna, ktora fraza
+# zostaje glowna. Grupy fraz:
+#   katalogowa    - nazwa, pod ktora produkt wystepuje w katalogu i sklepie
+#   synonimy      - potoczne i branzowe nazwy tego samego produktu
+#   przeznaczenie - frazy "do czego / na co", czesto long tail
+#   marka_kod     - marka Incobex i oznaczenia serii (STN, FTN, PMN, RB, ZK...)
+#
+# match.starts_with - poczatek tytulu (porownanie bez polskich znakow i wielkosci
+# liter). Wygrywa najdluzszy pasujacy prefiks. Produkt bez dopasowania trafia do
+# arkusza "Nieprzypisane" - nie wolno go wrzucac do istniejacego typu na sile.
+
+supplier: Incobex
+
+product_types:
+  obudowa_termoutwardzalna:
+    name: Obudowa termoutwardzalna
+    match:
+      starts_with:
+        - Obudowa termoutwardzalna
+    keywords:
+      katalogowa:
+        - obudowa termoutwardzalna
+        - obudowy termoutwardzalne
+        - obudowa z tworzywa termoutwardzalnego
+      synonimy:
+        - skrzynka termoutwardzalna
+        - szafka termoutwardzalna
+        - obudowa poliestrowa
+        - skrzynka poliestrowa
+        - szafka poliestrowa
+        - obudowa smc
+        - szafka smc
+        - obudowa elektryczna zewnętrzna
+        - skrzynka elektryczna zewnętrzna
+        - szafka elektryczna zewnętrzna
+        - szafka elektryczna na zewnątrz
+        - obudowa hermetyczna
+      przeznaczenie:
+        - obudowa złącza kablowego
+        - obudowa na licznik
+        - skrzynka na licznik
+        - szafka na licznik prądu
+        - szafka licznikowa
+        - obudowa złącza pomiarowego
+        - szafka rozdzielcza zewnętrzna
+      marka_kod:
+        - obudowa stn
+        - obudowa sstn
+        - incobex stn
+        - obudowy incobex
+        - incobex
+
+  fundament:
+    name: Fundament do obudowy
+    match:
+      starts_with:
+        - Fundament termoutwardzalny
+        - Fundament FTN
+        - Fundament
+    keywords:
+      katalogowa:
+        - fundament do obudowy
+        - fundament termoutwardzalny
+        - fundament do szafki
+      synonimy:
+        - cokół do szafki elektrycznej
+        - cokół do obudowy
+        - podstawa do szafki elektrycznej
+        - fundament kablowy
+      przeznaczenie:
+        - fundament do złącza kablowego
+        - fundament pod złącze
+        - fundament do szafki licznikowej
+        - fundament do skrzynki licznikowej
+        - fundament pod szafkę elektryczna
+      marka_kod:
+        - fundament ftn
+        - ftn incobex
+        - fundament stn
+
+  płyta_izolacyjna:
+    name: Płyta izolacyjna
+    match:
+      starts_with:
+        - Płyta izolacyjna
+    keywords:
+      katalogowa:
+        - płyta izolacyjna
+        - płyta izolacyjna do obudowy
+      synonimy:
+        - płyta montażowa izolacyjna
+        - płyta montażowa z tworzywa
+        - płyta montażowa pcv
+        - płyta montażowa do szafki
+        - płyta montażowa do obudowy
+      przeznaczenie:
+        - płyta montażowa do rozdzielnicy
+        - płyta izolacyjna do szafki elektrycznej
+        - płyta montażowa do szafki licznikowej
+      marka_kod:
+        - płyta pmn
+        - pmn incobex
+
+  blacha_montażowa:
+    name: Blacha montażowa
+    match:
+      starts_with:
+        - Blacha montażowa
+    keywords:
+      katalogowa:
+        - blacha montażowa
+        - blacha montażowa do obudowy
+      synonimy:
+        - płyta montażowa stalowa
+        - płyta montażowa metalowa
+        - blacha montażowa do szafki
+        - płyta montażowa do szafy
+      przeznaczenie:
+        - blacha montażowa do rozdzielnicy
+        - blacha montażowa do szafki elektrycznej
+      marka_kod:
+        - blacha bmn
+        - bmn incobex
+
+  rozdzielnica_budowlana:
+    name: Rozdzielnica budowlana
+    match:
+      starts_with:
+        - Rozdzielnica budowlana
+    keywords:
+      katalogowa:
+        - rozdzielnica budowlana
+        - rozdzielnice budowlane
+      synonimy:
+        - skrzynka budowlana
+        - rozdzielnia budowlana
+        - skrzynka elektryczna budowlana
+        - skrzynka rozdzielcza budowlana
+        - tablica budowlana
+        - skrzynka prądowa na budowę
+        - rozdzielnica na budowę
+      przeznaczenie:
+        - rozdzielnica budowlana z gniazdami
+        - skrzynka budowlana z gniazdami
+        - rozdzielnica budowlana 32a
+        - rozdzielnica budowlana 16a
+        - rozdzielnica budowlana siłowa
+        - rozdzielnica budowlana z wyłącznikiem
+      marka_kod:
+        - rozdzielnica rb
+        - rozdzielnica budowlana incobex
+
+  wkładka_do_zamka:
+    name: Wkładka do zamka szafki
+    match:
+      starts_with:
+        - Wkładka do zamka
+    keywords:
+      katalogowa:
+        - wkładka do zamka
+        - wkładka do zamka szafki
+      synonimy:
+        - wkładka bębenkowa
+        - wkładka energetyczna
+        - zamek do szafki elektrycznej
+        - zamek do szafki licznikowej
+        - klucz do szafki licznikowej
+        - klucz energetyczny
+      przeznaczenie:
+        - wkładka do szafki elektrycznej
+        - wkładka do szafki licznikowej
+        - wkładka do złącza kablowego
+        - wkładka do obudowy termoutwardzalnej
+      marka_kod:
+        - wkładka wrs
+        - wkładka wz-kp
+        - wkładka incobex
+
+  szyna_pen:
+    name: Szyna PEN
+    match:
+      starts_with:
+        - Szyna PEN
+    keywords:
+      katalogowa:
+        - szyna pen
+        - szyna pen do obudowy
+      synonimy:
+        - listwa pen
+        - szyna n pe
+        - szyna uziemiająca
+        - szyna ochronna pe
+        - szyna zbiorcza pen
+        - listwa zaciskowa pe
+        - szyna neutralna
+      przeznaczenie:
+        - szyna pen do złącza kablowego
+        - szyna pen do rozdzielnicy
+        - szyna pen do szafki licznikowej
+      marka_kod:
+        - szyna pen incobex
+        - szyna n-80
+
+  zestaw_złączowo_pomiarowy:
+    name: Zestaw złączowo-pomiarowy
+    match:
+      starts_with:
+        - Zestaw złączowo-pomiarowy
+        - Zestaw złączowo pomiarowy
+    keywords:
+      katalogowa:
+        - zestaw złączowo-pomiarowy
+        - złącze kablowo-pomiarowe
+        - złącze kablowo pomiarowe
+      synonimy:
+        - złącze kablowe
+        - złącze pomiarowe
+        - szafka złączowo-pomiarowa
+        - szafka licznikowa zewnętrzna
+        - skrzynka licznikowa
+        - szafka na licznik
+        - szafka pomiarowa
+        - złącze kablowe z licznikiem
+      przeznaczenie:
+        - złącze kablowe jednofazowe
+        - złącze kablowo-pomiarowe 1 licznik
+        - szafka na licznik prądu na zewnątrz
+        - szafka licznikowa na ogrodzenie
+        - złącze do przyłącza energetycznego
+      marka_kod:
+        - złącze zk
+        - zk1
+        - złącze zk1
+        - złącze zkp
+        - incobex zk
