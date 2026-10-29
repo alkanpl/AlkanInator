@@ -1,0 +1,96 @@
+# Relacje produktow Kontakt Simon w sklepie: tag grupy wariantow, Up-Sells,
+# Cross-Sells i "Produkty kompatybilne" (_alkan_compatible_product_ids).
+# Czyta: src/build_simon_woo_relations.py. Pierwsza seria: Simon 24 (2026-10-28).
+#
+# Model sklepu (jak przy Simon 55):
+# - Product Tags: jeden tag na symbol bazowy (wszystkie kolory). WPC Linked
+#   Variation laczy po tagu warianty kolorystyczne; tag = rdzen nazwy bez koloru,
+#   pradu, "Push In" i kodu + sufiks serii ("Lacznik jednobiegunowy 24 simon").
+# - Up-Sells (karta produktu): dla modulu - ramki tego samego koloru; dla ramki -
+#   najczesciej kupowane moduly tego samego koloru.
+# - Cross-Sells (koszyk): produkty uzupelniajace tego samego koloru.
+# - Kompatybilne: TYLKO relacje z katalogu producenta (uszczelki, puszki
+#   natynkowe, elementy rozszerzajace). Pozycje juz obecne w Up-Sells karty sa
+#   pomijane, relacje dzialaja w obie strony.
+#
+# Listy to symbole bazowe (bez koloru). Kolor celu = kolor produktu; wersja z
+# klapka transparentna (/..A) jest tym samym kolorem. Symbol z gwiazdka (NUV2*)
+# albo produkt bez koloru = dowolny kolor (kolejnosc: color_order).
+
+series_tag_suffix: "24 simon"
+
+# Grupa WPC Linked Variation, do ktorej dopisuje sie nowe tagi, i atrybut, po
+# ktorym przelacza warianty (os grupy w sklepie, zrzut
+# dictionaries/alkanlocal_wpclv_groups.tsv). Wartosci atrybutu dla kodow koloru
+# bierze z `colors` w `colors_source` (pole `color_field` = termin Woo).
+# Raport "Grupy wariantow" sprawdza, czy produkty grupy roznia sie ta wartoscia.
+variant_group:
+  name: "Kolor - Simon"
+  attribute: "Kolor"
+  colors_source: dictionaries/simon_product_names.yaml
+  color_field: kolor
+color_order: ["11", "49", "38", "34", "42"]
+limits:
+  up_sells: 8
+  cross_sells: 6
+  compatible: 8
+
+# Fragmenty tytulu usuwane przy budowie tagu grupy (regex, bez wielkosci liter).
+tag_strip_patterns:
+  - "\\s+Simon 24\\s+\\S+$"            # seria i kod producenta na koncu
+  - "\\s+(\\d+x)?\\d+(,\\d+)?\\s*AX?\\b"  # prad 10 A / 10 AX / 16 A / 2x5 A
+  - "\\s+Push In\\b"
+  - "\\s+z klapką transparentną\\b"
+  - "\\s+(biał[aeyi]|czarn[aeyi]|grafitow[aeyi]|szampańsk[aiey]|kaszmirow[aeyi])(\\s+mat)?\\b"
+
+frames: ["NR1", "NR2", "NR3", "NR4", "NR5"]
+
+# Rola -> regex symbolu bazowego (pierwsza pasujaca wygrywa) i listy relacji.
+roles:
+  - name: ramka
+    match: "^NR[1-5]$"
+    up_sells: [NW1.01, NW6.01, NW5.01, NGZ1CZ.01, NGZ2MCZ.01, NEC2CAQ.01, NEW1W.01, N61.01, NASK.01, NGZ1C.01]
+    cross_sells: [NPS.01, NA45.01, NSC, NSH]
+  - name: akcesorium_puszka
+    match: "^(NSC|NSH)$"
+    up_sells: []
+    cross_sells: [NW1.01, NGZ1CZ.01, NGZ1BCZ.01, NPS.01]
+  - name: uszczelka
+    match: "^NU"
+    up_sells: []
+    cross_sells: [NGZ1BCU.01*, NGZ1BC.01*, NGZ1BCZ.01*]
+  - name: zaslepka_adapter
+    match: "^(NPS|NA45)\\.01$"
+    up_sells: frames
+    cross_sells: [N61.01, N62.01, NKP2.01, NGZ2MCZ.01, NW1.01]
+  - name: lacznik
+    match: "^NW|^NZW"
+    up_sells: frames
+    cross_sells: [NGZ1CZ.01, NGZ2MCZ.01, NW6.01, NW5.01, ND1.01, NEW1W.01, NW1.01]
+  - name: przycisk
+    match: "^NP\\d|^ND1|^NZP"
+    up_sells: frames
+    cross_sells: [NW1.01, NGZ1CZ.01, NZW1K.01, ND1.01, NEW1W.01, NGZ2MCZ.01]
+  - name: ladowarka
+    match: "^NEC"
+    up_sells: frames
+    cross_sells: [NGZ2MCZ.01, NGZ1CZ.01, NW1.01, N61.01, NGHDMI121.01]
+  - name: simon_go
+    match: "^NE"
+    up_sells: frames
+    cross_sells: [NEW1W.01, NEZ1W.01, NESW1W.01, NEK1W.01, NW1.01, NGZ1CZ.01]
+  - name: gniazdo_wtyczkowe
+    match: "^NG(Z|SZ)"
+    up_sells: frames
+    cross_sells: [NW1.01, NGZ2MCZ.01, NGZ1CZ.01, NEC2CAQ.01, N61.01, NASK.01, NUV2*]
+  - name: teletechnika
+    match: "^(N[56]\\d|NAS|NAK|NGL|NGHDMI|NKP)"
+    up_sells: frames
+    cross_sells: [NGZ2MCZ.01, NASK.01, N62.01, N61.01, NGHDMI121.01, NKP2.01, NA45.01]
+
+# Relacje z katalogu Simon 24 ver. 26.01 (str. 55-57). Lustrzane - druga strona
+# dostaje relacje automatycznie.
+compatible:
+  NUV2: [NR2*]
+  NSC: [NSH, NR1, NR2, NR3, NR4, NR5]
+  NSH: [NR2, NR3, NR4, NR5]

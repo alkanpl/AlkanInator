@@ -1,0 +1,76 @@
+# Fakty o zgodnosci i akcesoriach Simon 24 z katalogu producenta
+# "Osprzet elektroinstalacyjny Simon 24. Katalog produktow (ver. 26.01)"
+# (link w API e-katalogu: documents -> Katalog). Trafiaja do briefow opisow
+# jako "Pasuje do" (Compatibility facts) - nie sa cechami samego produktu.
+# Wartosci po polsku z diakrytykami, bo agent opisow cytuje je w tekscie.
+# Klucz: symbol bazowy bez koloru (NW1.01, NW6.01/X, NR2...).
+source: "Kontakt-Simon, katalog Simon 24 ver. 26.01"
+
+# Dla modulow (parametr API "Typ produktu" = "moduł").
+module: >-
+  Moduł serii Simon 24 montowany w ramkach Simon 24 NR1–NR5 (od 1- do 5-krotnych).
+
+# Dla modulow z mocowaniem Push In (parametr API "montaż" = "mocowanie Push In").
+push_in: >-
+  Mocowanie Push In: montaż bez użycia wkrętów i stabilne osadzenie w puszce, według producenta
+  nawet trzykrotnie szybszy montaż niż przy tradycyjnym mocowaniu; możliwe poziomowanie modułu
+  po montażu; w puszkach wielokrotnych zespolonych i w puszkach do ścian g-k montaż przy
+  zablokowanej łapce z użyciem wkrętów; do zestawów wielokrotnych poziomica montażowa NRM.
+
+# Dla produktow IP20/IP44 z uwaga "Do uzyskania klasy bryzgoszczelnosci IP44 zastosowac uszczelke ramki".
+ip44_seal: >-
+  IP44 po zastosowaniu uszczelki ramki: NUU1 (ramka 1-krotna), zestawy NUV2–NUV5 (ramki
+  od 2- do 5-krotnych w układzie pionowym) lub NUH2–NUH5 (układ poziomy).
+
+by_symbol:
+  NR1: "Ramka 1-krotna 85×85 mm. Uszczelka IP44: NUU1. Puszka natynkowa: NSC (składana, 40 mm) lub NPN1."
+  NR2: "Ramka 2-krotna 85×156 mm. Uszczelki IP44: NUV2 (układ pionowy), NUH2 (układ poziomy). Natynkowo: puszka NSC z elementem rozszerzającym NSH lub puszka NPN2."
+  NR3: "Ramka 3-krotna 85×227 mm. Uszczelki IP44: NUV3 (układ pionowy), NUH3 (układ poziomy). Natynkowo: puszka NSC z elementami NSH lub puszka NPN3."
+  NR4: "Ramka 4-krotna 85×298 mm. Uszczelki IP44: NUV4 (układ pionowy), NUH4 (układ poziomy). Natynkowo: puszka NSC z elementami NSH."
+  NR5: "Ramka 5-krotna 85×369 mm. Uszczelki IP44: NUV5 (układ pionowy), NUH5 (układ poziomy). Natynkowo: puszka NSC z elementami NSH."
+  NUV2: "Zestaw uszczelek IP44 do ramki 2-krotnej Simon 24 (NR2) w układzie pionowym; do układu poziomego służy zestaw NUH2, do ramki 1-krotnej uszczelka NUU1."
+  NSC: "Puszka natynkowa pojedyncza składana do ramek Simon 24, głębokość 40 mm; do ramek wielokrotnych rozbudowuje się ją elementem rozszerzającym NSH."
+  NSH: "Element rozszerzający puszkę pojedynczą składaną NSC do ramek wielokrotnych Simon 24, głębokość 40 mm."
+  NPS.01: "Zaślepka ramki Simon 24 mocowana za pomocą łapek lub wkrętów; zamyka wolne pole w ramce."
+  NA45.01: "Adapter dedykowany do gniazd teleinformatycznych Simon Connectivity standardu 45×45 mm, montowany w ramkach Simon 24."
+  NKP2.01: "Pokrywa na dwa wkłady Keystone. Dedykowane wkłady: RJ45 kat. 5e UTP (FCRJ455e, CJ545U), kat. 6 UTP (FBRJ456, CJ645u), kat. 6 FTP/STP ekranowany (FBRJ456ekr), kat. 6A FTP/STP (FBRJ456Aekr), telefoniczny RJ12 (HRJ12). Zaślepka otworu BWB, wkład ze złączem F BWBF."
+  NKP2S.01: "Pokrywa skośna z polem opisowym na dwa wkłady Keystone. Dedykowane wkłady: RJ45 kat. 5e UTP (FCRJ455e, CJ545U), kat. 6 UTP (FBRJ456, CJ645u), kat. 6 FTP/STP ekranowany (FBRJ456ekr), kat. 6A FTP/STP (FBRJ456Aekr), telefoniczny RJ12 (HRJ12). Zaślepka otworu BWB, wkład ze złączem F BWBF."
+  N51.01: "Mocowanie przewodów bez użycia narzędzi lub opcjonalnie narzędziem do dociskania wkładów RJ45 NDF albo XT100.KEY."
+  N61.01: "Mocowanie przewodów bez użycia narzędzi lub opcjonalnie narzędziem do dociskania wkładów RJ45 NDF albo XT100.KEY."
+  N61E.01: "Mocowanie przewodów bez użycia narzędzi lub opcjonalnie narzędziem do dociskania wkładów RJ45 NDF albo XT100.KEY."
+  N62.01: "Mocowanie przewodów bez użycia narzędzi lub opcjonalnie narzędziem do dociskania wkładów RJ45 NDF albo XT100.KEY."
+  N62E.01: "Mocowanie przewodów bez użycia narzędzi lub opcjonalnie narzędziem do dociskania wkładów RJ45 NDF albo XT100.KEY."
+  NASK.01: "Wejście 5 MHz – 2,4 GHz. Wyjścia: SAT złącze F 950 MHz – 2,4 GHz (tłumienie 1,0 dB), TV IEC męskie 5–70 MHz i 120–862 MHz (1,0 dB), R IEC żeńskie 88–108 MHz (1,0 dB). Gniazdo końcowe/zakończeniowe."
+  NASK2.01: "Dwa wejścia 5 MHz – 2,4 GHz. Wyjścia: SAT złącze F 950 MHz – 2,4 GHz (tłumienie 0,5 dB), drugie SAT złącze F 5 MHz – 2,4 GHz (1,5 dB), TV IEC męskie 5–862 MHz (0,5 dB)."
+  NAK.01: "Wejście 5–862 MHz. Wyjścia: TV IEC męskie 5–70 MHz i 120–862 MHz (tłumienie 1,0 dB), R IEC żeńskie 88–108 MHz (1,5 dB). Gniazdo końcowe separowane."
+  NASF1.01: "Gniazdo antenowe typu F pojedyncze do instalacji indywidualnych."
+  NASFRJ45.01: "Gniazdo antenowe typu F i gniazdo komputerowe RJ45 kat. 6 w jednym module."
+  NGL1.01: "Do podłączenia 1 kolumny głośnikowej; przekrój przewodów dla wejścia i wyjścia 2,5 mm²."
+  NGL2.01: "Do podłączenia 2 kolumn głośnikowych; przekrój przewodów dla wejścia i wyjścia 2,5 mm²."
+  NGHDMI121.01: "Gniazdo HDMI 2.1: maksymalna prędkość transmisji danych 48 Gbit/s, obsługa rozdzielczości 8K 60 Hz."
+  NEC2CAQ.01: "Napięcie pracy 127–230 V AC. Moc ładowania: A i C jednocześnie 15 W (5 V, 3 A); A albo C osobno do 30 W (5 V 3 A; 9 V 3 A; 12 V 2,5 A; 15 V 2 A; 20 V 1,5 A)."
+  NEW1W.01: "Sterownik Wi-Fi Simon GO: 230 V AC, 16 A, dodatkowe wyjście na przycisk (sterowanie przewodowe z wielu miejsc), zapis 30 akcji, pobór w czuwaniu < 1 W, Wi-Fi 2,4 GHz 802.11 b/g/n, wbudowany pomiar energii, funkcja włączania na czas. Bezpłatna aplikacja SimonGO (Android, iOS), asystenci głosowi Amazon Alexa i Google Assistant, harmonogramy (także według wschodu i zachodu słońca); ustawienia zapisane lokalnie w sterowniku - działa w domowej sieci Wi-Fi także bez Internetu."
+  NEZ1W.01: "Sterownik roletowy Wi-Fi Simon GO do rolety, żaluzji, markizy, firany: 230 V AC, 2×6 A, pobór w czuwaniu < 1 W, Wi-Fi 2,4 GHz 802.11 b/g/n. Może być sterowany grupowym sterownikiem roletowym Wi-Fi NEZG1W. Aplikacja SimonGO (Android, iOS), asystenci głosowi Amazon Alexa i Google Assistant, harmonogramy według godziny lub wschodu i zachodu słońca."
+  NEK1W.01: "Sterownik programowalny Wi-Fi Simon GO do bezprzewodowego sterowania innymi urządzeniami Simon GO: 230 V AC, zapis 30 akcji (np. otwórz roletę), pobór w czuwaniu < 1 W, Wi-Fi 2,4 GHz 802.11 b/g/n. Aplikacja SimonGO (Android, iOS)."
+  NESW1W.01: "Ściemniacz Wi-Fi Simon GO do pasków LED: zasilanie 12–24 V (należy zastosować odpowiedni zasilacz), maksymalny prąd 5 A, maksymalne obciążenie 120 W, pobór w czuwaniu < 1 W, Wi-Fi 2,4 GHz 802.11 b/g/n. Aplikacja SimonGO (Android, iOS), asystenci głosowi Amazon Alexa i Google Assistant."
+  NW1.01: "Klawisz zamienny NKW1."
+  NW5.01: "Klawisze zamienne NKW5. Do IP44 uszczelka NUU1W dedykowana łącznikowi świecznikowemu NW5.01."
+  NW6.01: "Klawisz zamienny NKW6 (z piktogramem schody)."
+  NW6.01/X: "Klawisz zamienny NKW1 (bez piktogramu)."
+  NW6/2.01: "Klawisze zamienne NKW6/2. Dostępny tylko w wersji IP20."
+  NW6/2.01/X: "Dostępny tylko w wersji IP20."
+  NW7/2.01: "Dostępny tylko w wersji IP20."
+  NW7/2.01/X: "Dostępny tylko w wersji IP20."
+  NP1.01: "Klawisz zamienny NKW1."
+  NP2.01: "Dostępny tylko w wersji IP20."
+  NP31.01: "Dostępny tylko w wersji IP20."
+  NZW1K.01: "Klawisz zamienny NKZW1."
+  NZP1K.01: "Klawisz zamienny NKZW1. Może służyć jako sterowanie centralne przewodowych sterowników roletowych NEZ1L/NEZ1G."
+  NZP2.01: "Klawisze zamienne NKZW2."
+  NGZ1C.01: "Pokrywa zamienna NGZ1ZP."
+  NGZ1CZ.01: "Pokrywa zamienna NGZ1ZP."
+  NGZ2MC.01: "Pokrywa zamienna NGZ2MZP."
+  NGZ2MCZ.01: "Pokrywa zamienna NGZ2MZP."
+  NGZ1BC.01: "Gniazdo do wersji IP44 z uszczelką w zestawie; klapka w kolorze pokrywy (wersja /..A - klapka transparentna)."
+  NGZ1BCZ.01: "Gniazdo do wersji IP44 z uszczelką w zestawie i przesłonami torów prądowych; klapka w kolorze pokrywy (wersja /..A - klapka transparentna)."
+  NGZ1BCU.01: "Gniazdo do wersji IP44 bez uszczelki - wymagana uszczelka ramki (NUU1 dla ramki 1-krotnej, NUV/NUH dla wielokrotnych); wersja /..A ma klapkę transparentną."
