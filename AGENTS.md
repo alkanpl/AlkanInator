@@ -14,6 +14,16 @@ Zasada nadrzedna: **oryginalne pliki wejsciowe nigdy nie sa nadpisywane** -
 wyniki ida do `output/` i `reports/`. Kazda zmiana atrybutu niesie `source`,
 `confidence` i `status` (`OK` / `WARNING` / `DO_SPRAWDZENIA`).
 
+Wzory tytulow i atrybutow sa wspolne dla wszystkich osob pracujacych z repo i
+leza w `configs/title_patterns.yaml` (oswietlenie: `configs/title_anatomy.yaml`).
+Przed nadaniem nazw sprawdz, czy rodzina ma tam wzor, i trzymaj sie go. Gdy
+ustalisz nowy wzor albo zmienisz istniejacy (nowy producent, nowa rodzina,
+poprawka po uwagach uzytkownika), dopisz go do `configs/title_patterns.yaml`
+z prawdziwymi przykladami i uruchom `py -m pytest tests/test_title_patterns.py`.
+Katalogi `output/` i `outputs/` (takze `outputs/<id-sesji>` tworzone przez agenta)
+nie sa w gicie - skrypt czy tabela zostawione tylko tam przepadaja dla innych,
+wiec wzor zapisany wylacznie w jednorazowym skrypcie nie jest wzorem projektu.
+
 ## Uruchamianie
 
 Interpreter to `py` (Windows launcher) - `python` nie jest w PATH.
@@ -58,8 +68,12 @@ Sklep ma wtyczke `alkan-inator-bridge` (repo AlkanLocal,
 `wp-content/plugins/alkan-inator-bridge`) z REST API `alkan-inator/v1`. Klient:
 `src/woo_api/` + `py src/woo_api_cli.py`. Polaczenie: `src/woo_api/config.json`
 (ignorowany przez git; `url`, `token`, `verify_ssl` - dla lokalnego Laragona
-`false`) albo zmienne `ALKAN_WOO_URL` / `ALKAN_WOO_TOKEN`. Token generuje sie w
-WooCommerce > AlkanInator API (pokazywany raz). Na razie dziala tylko na
+`false`) albo zmienne `ALKAN_WOO_URL` / `ALKAN_WOO_TOKEN`. Kilka sklepow:
+`{"default": "local", "profiles": {"local": {...}, "prod": {..., "production": true}}}`
+i `--profile prod` (plaski format = profil `local`). Kazda osoba ma wlasny token
+(WooCommerce > AlkanInator API, pokazywany raz), dziennik zapisow pokazuje, kto
+zapisal. Klient sprawdza wersje API wtyczki (naglowek
+`X-Alkan-Inator-Api-Version`, obslugiwana 2.x). Na razie dziala tylko na
 AlkanLocal (`https://alkanlocal.test:8443`); na produkcji wtyczki jeszcze nie ma,
 tam nadal obowiazuje WP All Import (`dictionaries/woo_all_export_import_workflow.yaml`).
 
@@ -85,7 +99,11 @@ tam nadal obowiazuje WP All Import (`dictionaries/woo_all_export_import_workflow
   kolumn - uzywaj go, gdy zadanie dotyczy kilku kolumn (odpowiednik zasady
   "modyfikuj tylko jawnie wskazane kolumny"). Nowe tagi i wartosci atrybutow
   powstaja tylko z `--allow-new-terms`. Nowe zdjecia z `Image URL` dry-run
-  sprawdza (JPG 1000x1000, inaczej blad).
+  sprawdza (JPG 1000x1000, inaczej blad). Wyczyszczenie `Content`,
+  `Short Description` albo `Image URL` wymaga `--allow-destructive`. Sklep
+  zapisuje produkt tylko, gdy jego zmiany sa identyczne jak w dry-run
+  (`_plan_hash`); inaczej blad "zmiany roznia sie od podgladu" - uruchom push
+  jeszcze raz.
 - `changesets` i `revert <zapis> [--apply]` - kazdy zapis ma identyfikator
   (np. `ai-20261021-153259-plik`) i dziennik starych wartosci w sklepie.
   Cofniecie pomija pola zmienione w sklepie po tym zapisie. Cofnac mozna tez
@@ -118,6 +136,27 @@ Zasady zapisu:
 - Gdy produkt zmienil sie w sklepie po pobraniu pliku (`Post Modified Date`),
   dry-run daje ostrzezenie - plik moze cofac cudze zmiany, pobierz go od nowa.
 - Nie tworzy nowych produktow i nie obsluguje wariantow `product_variation`.
+
+### Strefa chroniona (bezpieczniki zapisu)
+
+Z AlkanInatora korzysta kilka osob, a docelowo zapis idzie do sklepu
+produkcyjnego. Bezpieczniki sa we wtyczce (wylacznik zapisu, limit produktow na
+jeden zapis, zgoda na czyszczenie pol, zgodnosc z dry-run, tokeny osob) i w CLI
+(potwierdzenie zapisu na produkcje w terminalu). Zasady dla agentow:
+- NIE zmieniaj `src/woo_api/`, `src/woo_api_cli.py` ani testow w
+  `tests/test_woo_api.py` bez wyraznej prosby uzytkownika w tej rozmowie.
+  Testy pilnuja formatu `config.json`, plikow knowledge i XLSX - nie
+  dopasowuj ich do zmienionego kodu, tylko zapytaj.
+- NIE wolaj API sklepu z pominieciem CLI (wlasne `requests`/`curl`/skrypty z
+  tokenem) i nie czytaj ani nie wypisuj tokenu z `config.json`.
+- NIE uruchamiaj `push --apply` ani `revert --apply` na profilu produkcyjnym.
+  CLI i tak odmowi bez terminala - przygotuj plik i dry-run, a polecenie z
+  `--apply` podaj uzytkownikowi do uruchomienia samodzielnie. Na AlkanLocal
+  `--apply` tylko na prosbe uzytkownika.
+- NIE obchodz bezpiecznikow: `--allow-destructive`, `--skip-errors`,
+  `--skip-image-check` i podnoszenie limitu tylko na wyrazne zyczenie.
+  Blad "Zapis wstrzymany" albo "limit" zglos uzytkownikowi zamiast szukac
+  obejscia.
 
 ## Testy
 

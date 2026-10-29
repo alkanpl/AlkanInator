@@ -60,7 +60,8 @@ Prefer existing scripts over one-off logic:
    - Keep a clean manufacturer value consistent with the shop catalog, not necessarily the raw supplier value.
 
 3. Generate names.
-   - Use local title patterns and prior exports as style reference.
+   - Start from the shared patterns in `configs/title_patterns.yaml` (lighting: `configs/title_anatomy.yaml`); prior exports are only a secondary style reference.
+   - When a new or corrected pattern is agreed, add it to `configs/title_patterns.yaml` with real example titles and run `py -m pytest tests/test_title_patterns.py`. `output/` and `outputs/` are not in git, so a pattern kept only in a one-off script there is lost for the other team member.
    - Do not blindly preserve the supplier title prefix. Enforce the catalog-style product type for the final store category, e.g. `Oprawa High Bay LED...` instead of supplier `High Bay LED...`, `Oprawa uliczna LED...` instead of `Oprawa drogowa LED...`, and `Słupek ogrodowy...` instead of `Słup...` when the catalog uses that pattern.
    - In Polish product names, inflect the color adjective to agree with the main product noun, not with a later noun in the phrase, and do not copy an uninflected or masculine supplier form blindly. Examples: `pokrywa`, `puszka`, `zaślepka`, `ładowarka` → `kaszmirowa`; `gniazdo`, `wyjście`, `przyłącze` and plural `klawisze` → `kaszmirowe`; `przycisk`, `łącznik`, `klawisz`, `ściemniacz`, `element` → `kaszmirowy`.
    - Include meaningful attributes such as type, series/model, power, lumens, CCT, IP, color, dimensions, socket, sensor, and producer/brand.

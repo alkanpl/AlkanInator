@@ -1,0 +1,284 @@
+# Wzory tytulow i atrybutow produktow - wspolna wiedza Oskara i Eweliny.
+#
+# Po co ten plik: wyniki pracy (XLSX/CSV dla Baselinkera i Woo) laduja w output/ i
+# outputs/, ktorych git nie sledzi. Wzor, ktory ma zostac na przyszlosc, musi trafic
+# TUTAJ - wtedy druga osoba (i jej agent AI) dostaje go przy pobraniu repo.
+# Silnik regul dla oswietlenia jest osobno: configs/title_anatomy.yaml (typ produktu ->
+# kolejnosc atrybutow). Tu sa wzory pozostalych rodzin, w formie do czytania przez
+# czlowieka i agenta oraz sprawdzane testem (tests/test_title_patterns.py).
+#
+# Jak dodac wzor (rodzine):
+#   - id: unikalny, male litery i _ (np. eti_stycznik)
+#   - producer / sku_suffix / category: jak w imporcie (category = sciezka "A > B"
+#     z taksonomii sklepu; null, gdy kategoria jest jeszcze do decyzji)
+#   - template: tytul z polami {nazwa}; wszystko poza polami to stały tekst.
+#     Bez template rodzina ma tylko przyklady (tytuly zbyt rozne na jeden wzor).
+#   - attributes: atrybuty (cechy) w kolejnosci jak w imporcie, nazwy malą literą,
+#     kazda w cudzyslowie (nawiasy jak "[A]" psuja YAML bez cudzyslowu)
+#   - examples: prawdziwe tytuly z wystawionych produktow; values wypelniaja
+#     template i musza dac dokladnie title (pilnuje tego test)
+#   - source: kto i kiedy ustalil wzor; notes: wyjatki i decyzje
+#
+# Zasady wspolne dla wszystkich tytulow (ustalone w praktyce, stosuj tez dla nowych rodzin):
+general_rules:
+  - "Kolejnosc: typ produktu > parametry rozrozniajace warianty > seria/model producenta > marka > kod producenta (bez sufiksu /ETI, /SIM itp.)."
+  - "Typ produktu po polsku, tak jak w kategorii sklepu (np. 'Wyłącznik nadprądowy', nie 'MCB'); skrot angielski moze dojsc po typie (RCCB, RCBO)."
+  - "Jednostki zbite z liczba: 16A, 30mA, 6kA, 230V, 2,5-35mm2. W tytule mm2 zamiast mm², 1000VAC/1500VDC zamiast '1000V AC/1500V DC'. W atrybutach jednostka w nazwie: 'Przekrój znamionowy [mm²]'."
+  - "Kolor uzgodniony z rodzajem typu produktu: złączka szara, listwa pomarańczowa, wstawka szara (nie 'szary')."
+  - "Bieguny: 1P, 3P, 1P+N, 3P+N; liczba torow: '12-torowa'."
+  - "Tytuly wariantow musza sie roznic czyms poza kodem producenta (test duplikatow przed kodem)."
+  - "Nazwy atrybutow malą literą poza pierwszym slowem: 'Liczba modułów', 'Prąd znamionowy [A]', 'Układ biegunów' (nie 'Liczba Modułów')."
+
+families:
+  # --- ETI, aparatura modulowa (Ewelina, import 127 produktow do Baselinkera 25.09.2026) ---
+  - id: eti_wylacznik_nadpradowy
+    producer: ETI
+    sku_suffix: ETI
+    category: Aparatura modułowa > Wyłączniki nadprądowe
+    template: "Wyłącznik nadprądowy {charakterystyka}{prad} {bieguny} {icn}kA {seria} ETI {kod}"
+    attributes: ["Producent", "Dane producenta", "Symbol", "Typ produktu", "Charakterystyka wyzwalania", "Prąd znamionowy [A]", "Układ biegunów", "Znamionowa zdolność zwarciowa Icn [kA]"]
+    examples:
+      - values: {charakterystyka: B, prad: "6", bieguny: 1P, icn: "6", seria: ETIMAT 6, kod: "002111512"}
+        title: Wyłącznik nadprądowy B6 1P 6kA ETIMAT 6 ETI 002111512
+      - values: {charakterystyka: D, prad: "16", bieguny: 3P, icn: "6", seria: ETIMAT 6, kod: "002164516"}
+        title: Wyłącznik nadprądowy D16 3P 6kA ETIMAT 6 ETI 002164516
+    source: Ewelina, moduly ETI 25.09.2026
+    notes: "Symbol producenta 'ETIMAT 6 1p B6' -> charakterystyka B, prad 6, 1P, seria ETIMAT 6."
+
+  - id: eti_ogranicznik_mocy
+    producer: ETI
+    sku_suffix: ETI
+    category: Aparatura modułowa > Ograniczniki mocy
+    template: "Ogranicznik mocy {prad}A {bieguny} {seria} ETI {kod}"
+    attributes: ["Producent", "Dane producenta", "Symbol", "Typ produktu", "Prąd znamionowy [A]", "Układ biegunów"]
+    examples:
+      - values: {prad: "6", bieguny: 3P, seria: ETIMAT T, kod: "002181094"}
+        title: Ogranicznik mocy 6A 3P ETIMAT T ETI 002181094
+      - values: {prad: "63", bieguny: 3P, seria: ETIMAT T, kod: "002181089"}
+        title: Ogranicznik mocy 63A 3P ETIMAT T ETI 002181089
+    source: Ewelina, moduly ETI 25.09.2026
+
+  - id: eti_wylacznik_roznicowopradowy
+    producer: ETI
+    sku_suffix: ETI
+    category: Aparatura modułowa > Wyłączniki różnicowoprądowe
+    template: "Wyłącznik różnicowoprądowy RCCB {prad}A {idn}mA typ {typ_rcd} {bieguny} {inc}kA {seria} ETI {kod}"
+    attributes: ["Producent", "Dane producenta", "Symbol", "Typ produktu", "Prąd znamionowy [A]", "Układ biegunów", "Prąd różnicowy IΔn [mA]", "Typ prądu różnicowego", "Warunkowy prąd zwarciowy Inc [kA]"]
+    examples:
+      - values: {prad: "25", idn: "30", typ_rcd: A, bieguny: 1P+N, inc: "6", seria: EFI6-P2, kod: "002061261"}
+        title: Wyłącznik różnicowoprądowy RCCB 25A 30mA typ A 1P+N 6kA EFI6-P2 ETI 002061261
+    source: Ewelina, moduly ETI 25.09.2026
+    notes: "EFI6-P2 = 1P+N, EFI6-P4 = 3P+N."
+
+  - id: eti_wylacznik_roznicowo_nadpradowy
+    producer: ETI
+    sku_suffix: ETI
+    category: Aparatura modułowa
+    template: "Wyłącznik różnicowo-nadprądowy RCBO {charakterystyka}{prad} {idn}mA typ {typ_rcd} {bieguny} {icn}kA {seria} ETI {kod}"
+    attributes: ["Producent", "Dane producenta", "Symbol", "Typ produktu", "Charakterystyka wyzwalania", "Prąd znamionowy [A]", "Układ biegunów", "Znamionowa zdolność zwarciowa Icn [kA]", "Prąd różnicowy IΔn [mA]", "Typ prądu różnicowego"]
+    examples:
+      - values: {charakterystyka: B, prad: "6", idn: "30", typ_rcd: AC, bieguny: 1P+N, icn: "10", seria: KZS-2M, kod: "002173101"}
+        title: Wyłącznik różnicowo-nadprądowy RCBO B6 30mA typ AC 1P+N 10kA KZS-2M ETI 002173101
+      - values: {charakterystyka: C, prad: "25", idn: "30", typ_rcd: A, bieguny: 1P+N, icn: "10", seria: KZS-2M, kod: "002173226"}
+        title: Wyłącznik różnicowo-nadprądowy RCBO C25 30mA typ A 1P+N 10kA KZS-2M ETI 002173226
+    source: Ewelina, moduly ETI 25.09.2026
+    notes: "DO DECYZJI: w taksonomii sklepu nie ma podkategorii dla RCBO, wiec produkty poszly do samej 'Aparatura modułowa'. Uwaga: w configs/categories/gazetka-produkty.yaml regula 'kzs' ma inny typ ('Wyłącznik różnicowoprądowy z członem nadprądowym') - ustalic jeden."
+
+  - id: eti_rozlacznik_izolacyjny
+    producer: ETI
+    sku_suffix: ETI
+    category: Aparatura modułowa > Rozłączniki izolacyjne
+    template: "Rozłącznik izolacyjny {prad}A {bieguny} {symbol} ETI {kod}"
+    attributes: ["Producent", "Dane producenta", "Symbol", "Typ produktu", "Prąd znamionowy [A]", "Układ biegunów"]
+    examples:
+      - values: {prad: "25", bieguny: 1P, symbol: SV 125, kod: "002423122"}
+        title: Rozłącznik izolacyjny 25A 1P SV 125 ETI 002423122
+      - values: {prad: "40", bieguny: 3P, symbol: SV 340, kod: "002423323"}
+        title: Rozłącznik izolacyjny 40A 3P SV 340 ETI 002423323
+      - values: {prad: "125", bieguny: 3P, symbol: ED2 125/3, kod: "004671271"}
+        title: Rozłącznik izolacyjny 125A 3P ED2 125/3 ETI 004671271
+    source: Ewelina, moduly ETI 25.09.2026
+    notes: "DO DECYZJI: ED2 (125-250A) to rozlaczniki kompaktowe; Ewelina proponowala kategorie 'Wyłączniki i rozłączniki kompaktowe > Rozłączniki kompaktowe', ktorej w sklepie nie ma."
+
+  - id: eti_przelacznik_trojpolozeniowy
+    producer: ETI
+    sku_suffix: ETI
+    category: Aparatura modułowa > Przełączniki Sieć-Agregat
+    template: "Przełącznik trójpołożeniowy modułowy {prad}A {bieguny} {symbol} ETI {kod}"
+    attributes: ["Producent", "Dane producenta", "Symbol", "Typ produktu", "Prąd znamionowy [A]", "Układ biegunów", "Napięcie znamionowe AC [V]", "Pozycje przełącznika"]
+    examples:
+      - values: {prad: "25", bieguny: 1P, symbol: SSQ 125, kod: "002421414"}
+        title: Przełącznik trójpołożeniowy modułowy 25A 1P SSQ 125 ETI 002421414
+      - values: {prad: "40", bieguny: 3P, symbol: SSQ 340, kod: "002421435"}
+        title: Przełącznik trójpołożeniowy modułowy 40A 3P SSQ 340 ETI 002421435
+    source: Ewelina, moduly ETI 25.09.2026
+
+  - id: eti_sygnalizator_napiecia
+    producer: ETI
+    sku_suffix: ETI
+    category: Aparatura modułowa > Lampki sygnalizacyjne
+    template: "Sygnalizator obecności napięcia LED {lampki} {symbol} ETI {kod}"
+    attributes: ["Producent", "Dane producenta", "Symbol", "Typ produktu", "Napięcie znamionowe AC [V]", "Barwa lampek", "Ilość lampek"]
+    examples:
+      - values: {lampki: 3 kolory, symbol: SON H-3K, kod: "002471553"}
+        title: Sygnalizator obecności napięcia LED 3 kolory SON H-3K ETI 002471553
+      - values: {lampki: 3 zielone diody, symbol: SON H-3G, kod: "002471556"}
+        title: Sygnalizator obecności napięcia LED 3 zielone diody SON H-3G ETI 002471556
+    source: Ewelina, moduly ETI 25.09.2026
+
+  - id: eti_stycznik
+    producer: ETI
+    sku_suffix: ETI
+    category: Aparatura modułowa > Styczniki
+    template: "Stycznik modułowy {prad}A {styki} cewka {cewka}V {symbol} ETI {kod}"
+    attributes: ["Producent", "Dane producenta", "Symbol", "Typ produktu", "Prąd znamionowy [A]", "Napięcie cewki [V]", "Konfiguracja styków", "Liczba modułów"]
+    examples:
+      - values: {prad: "20", styki: 2 styki zwierne, cewka: "230", symbol: R 20-20, kod: "002461210"}
+        title: Stycznik modułowy 20A 2 styki zwierne cewka 230V R 20-20 ETI 002461210
+      - values: {prad: "20", styki: 1 styk zwierny i 1 rozwierny, cewka: "230", symbol: R 20-11, kod: "002461220"}
+        title: Stycznik modułowy 20A 1 styk zwierny i 1 rozwierny cewka 230V R 20-11 ETI 002461220
+      - values: {prad: "40", styki: 4 styki zwierne, cewka: "230", symbol: R 40-40, kod: "002463410"}
+        title: Stycznik modułowy 40A 4 styki zwierne cewka 230V R 40-40 ETI 002463410
+    source: Ewelina, moduly ETI 25.09.2026
+    notes: "Symbol R xx-20 = 2 styki zwierne, -11 = 1 zwierny i 1 rozwierny, -40 = 4 zwierne."
+
+  - id: eti_rozlacznik_bezpiecznikowy
+    producer: ETI
+    sku_suffix: ETI
+    category: Aparatura modułowa
+    template: "Rozłącznik bezpiecznikowy {wkladka}{bieguny} {symbol} ETI {kod}"
+    attributes: ["Producent", "Dane producenta", "Symbol", "Typ produktu", "Prąd znamionowy [A]", "Układ biegunów", "Rodzaj wkładki", "Rozmiar"]
+    examples:
+      - values: {wkladka: "D02 63A ", bieguny: 1P, symbol: STV D02, kod: "002271001"}
+        title: Rozłącznik bezpiecznikowy D02 63A 1P STV D02 ETI 002271001
+      - values: {wkladka: "", bieguny: 3P, symbol: EFD 10, kod: "002540004"}
+        title: Rozłącznik bezpiecznikowy 3P EFD 10 ETI 002540004
+    source: Ewelina, moduly ETI 25.09.2026
+    notes: "DO DECYZJI: brak podkategorii dla rozlacznikow i podstaw bezpiecznikowych - poszly do samej 'Aparatura modułowa'. Rozmiar wkladki i prad podawany, gdy symbol go nie zawiera (STV D02); EFD ma je w symbolu."
+
+  - id: eti_akcesoria_bezpiecznikowe
+    producer: ETI
+    sku_suffix: ETI
+    category: Aparatura modułowa
+    attributes: ["Producent", "Dane producenta", "Symbol", "Typ produktu", "Prąd znamionowy [A]"]
+    examples:
+      - title: Podstawa bezpiecznikowa DC 2P EFH 10 ETI 002540203
+      - title: Wstawka redukcyjna D01 do STV D02 16A szara ETI 002243020
+    source: Ewelina, moduly ETI 25.09.2026
+    notes: "Pojedyncze produkty - tylko przyklady stylu: typ, do czego pasuje, parametr, kolor uzgodniony z rodzajem."
+
+  # --- Zlaczki i bloki (Ewelina, tytuly SEO 09.10.2026) ---
+  - id: simet_zlaczka_skretna
+    producer: Simet
+    sku_suffix: SIM
+    category: Puszki i złączki > Złączki skręcane
+    template: "Złączka skrętna uniwersalna {przekroj}mm2 {kolor} Simet {model} {kod}"
+    attributes: ["Producent", "Dane producenta", "Rodzaj", "Model", "Kolor", "Liczba torów", "Przekrój znamionowy [mm²]", "Napięcie [V]", "Prąd znamionowy [A]", "Materiał", "Temperatura pracy [°C]", "Wymiary [mm]"]
+    examples:
+      - values: {przekroj: 1-6, kolor: żółta, model: ZSE1-1.0/6.0z, kod: "43814204"}
+        title: Złączka skrętna uniwersalna 1-6mm2 żółta Simet ZSE1-1.0/6.0z 43814204
+      - values: {przekroj: 1-6, kolor: czarna, model: ZSE1-1.0/6.0d, kod: "43814207"}
+        title: Złączka skrętna uniwersalna 1-6mm2 czarna Simet ZSE1-1.0/6.0d 43814207
+    source: Ewelina, zlaczki SEO 09.10.2026
+
+  - id: simet_listwa_zaciskowa
+    producer: Simet
+    sku_suffix: SIM
+    category: Puszki i złączki > Złączki skręcane
+    template: "Listwa zaciskowa gwintowa termoplastyczna {tory}-torowa {przekroj}mm2 {kolor} Simet {model} {kod}"
+    attributes: ["Producent", "Dane producenta", "Rodzaj", "Model", "Kolor", "Liczba torów", "Przekrój znamionowy drut [mm²]", "Przekrój znamionowy linka [mm²]", "Napięcie [V]", "Prąd znamionowy [A]", "Materiał", "Temperatura pracy [°C]", "Wymiary [mm]"]
+    examples:
+      - values: {tory: "12", przekroj: "6", kolor: pomarańczowa, model: LTF12-6.0, kod: "21412108"}
+        title: Listwa zaciskowa gwintowa termoplastyczna 12-torowa 6mm2 pomarańczowa Simet LTF12-6.0 21412108
+    source: Ewelina, zlaczki SEO 09.10.2026
+
+  - id: morek_zlaczka_otl
+    producer: Morek
+    sku_suffix: MOR
+    category: Puszki i złączki > Bloki rozdzielcze
+    template: "Złączka uniwersalna {model} {przylacza}xAl/Cu {przekroj}mm2 1000VAC/1500VDC {kolor} Morek {kod}"
+    attributes: ["Producent", "Dane producenta", "Wymiary [mm]", "Rodzaj", "Model", "Kolor", "Materiał przewodu", "Liczba grup przyłączeniowych", "Przekrój znamionowy [mm²]", "Napięcie [V]", "Stopień ochrony [IP]", "Sposób montażu", "Liczba otworów"]
+    examples:
+      - values: {model: OTL35, przylacza: "1", przekroj: "2,5-35", kolor: szara, kod: MAA1035A10}
+        title: Złączka uniwersalna OTL35 1xAl/Cu 2,5-35mm2 1000VAC/1500VDC szara Morek MAA1035A10
+      - values: {model: OTL50-3, przylacza: "3", przekroj: "1,5-50", kolor: niebieska, kod: MAA3050B10}
+        title: Złączka uniwersalna OTL50-3 3xAl/Cu 1,5-50mm2 1000VAC/1500VDC niebieska Morek MAA3050B10
+    source: Ewelina, zlaczki SEO 09.10.2026
+    notes: "Zgodne z regula morek_otl w configs/categories/gazetka-produkty.yaml."
+
+  - id: morek_blok_dystrybucyjny
+    producer: Morek
+    sku_suffix: MOR
+    category: Puszki i złączki > Bloki rozdzielcze
+    template: "Blok dystrybucyjny {seria} {bieguny} {napiecie}V {wariant} {zaciski} Morek {kod}"
+    attributes: ["Producent", "Dane producenta", "Rodzaj", "Seria", "Prąd znamionowy [A]", "Liczba biegunów", "Liczba zacisków na biegun", "Przekrój wejścia Cu [mm²]", "Przekrój wyjść Cu [mm²]", "Napięcie znamionowe AC/DC [V]", "Stopień ochrony [IP]", "Sposób montażu", "Wymiary (dł. x szer. x wys.) [mm]"]
+    examples:
+      - values: {seria: MOBLOCK, bieguny: 2P, napiecie: "1000", wariant: 125A-7, zaciski: 2x35mm2 + 5x6mm2, kod: MAB2124A18}
+        title: Blok dystrybucyjny MOBLOCK 2P 1000V 125A-7 2x35mm2 + 5x6mm2 Morek MAB2124A18
+      - values: {seria: MOBLOCK, bieguny: 4P, napiecie: "500", wariant: 125A-7, zaciski: 2x35mm2 + 5x6mm2, kod: MAB4124A18}
+        title: Blok dystrybucyjny MOBLOCK 4P 500V 125A-7 2x35mm2 + 5x6mm2 Morek MAB4124A18
+    source: Ewelina, bloki rozdzielcze 09.10.2026
+
+  # --- Incobex, obudowy i rozdzielnice (Oskar, import do Baselinkera 04.09.2026) ---
+  - id: incobex_obudowa_termoutwardzalna
+    producer: Incobex
+    sku_suffix: INC
+    category: null
+    template: "Obudowa termoutwardzalna {seria} {wymiar} {wykonczenie} Incobex {kod}"
+    attributes: ["Producent", "Dane producenta", "Szerokość", "Wysokość", "Głębokość"]
+    examples:
+      - values: {seria: STN, wymiar: 26X42, wykonczenie: lakierowana, kod: IOB-30110-01-002}
+        title: Obudowa termoutwardzalna STN 26X42 lakierowana Incobex IOB-30110-01-002
+      - values: {seria: STN, wymiar: 53X84, wykonczenie: lakierowana, kod: IOBK-32310-01-002}
+        title: Obudowa termoutwardzalna STN 53X84 lakierowana Incobex IOBK-32310-01-002
+    source: Oskar, Incobex 04.09.2026
+    notes: "Kategoria nie byla ustawiona w imporcie; w taksonomii pasuje 'Rozdzielnice elektryczne > Skrzynki rozdzielcze' - do potwierdzenia."
+
+  - id: incobex_fundament
+    producer: Incobex
+    sku_suffix: INC
+    category: null
+    template: "Fundament termoutwardzalny {seria} {rozmiar} {wykonczenie} {kod}"
+    attributes: ["Producent", "Dane producenta", "Szerokość", "Wysokość", "Głębokość"]
+    examples:
+      - values: {seria: FTN, rozmiar: "26", wykonczenie: lakierowany, kod: IOB-50301-01-000}
+        title: Fundament termoutwardzalny FTN 26 lakierowany IOB-50301-01-000
+      - values: {seria: FTN, rozmiar: 80/32, wykonczenie: lakierowany, kod: ION-54301-01-000}
+        title: Fundament termoutwardzalny FTN 80/32 lakierowany ION-54301-01-000
+    source: Oskar, Incobex 04.09.2026
+    notes: "DO DECYZJI: w tych tytulach brakuje marki 'Incobex' przed kodem (inaczej niz w reszcie rodzin). Kategoria w taksonomii: 'Rozdzielnice elektryczne > Fundamenty do skrzynki elektrycznej'."
+
+  - id: incobex_akcesoria_obudow
+    producer: Incobex
+    sku_suffix: INC
+    category: null
+    attributes: ["Producent", "Dane producenta", "Szerokość", "Wysokość", "Głębokość"]
+    examples:
+      - title: Blacha montażowa BMN-26 do obudów STN-26 Incobex INC-10080
+      - title: Płyta izolacyjna gr. 4mm PMN 23x36 do obudowy STN Incobex INC-20250
+      - title: Szyna PEN N-40 Incobex AK-20109
+      - title: Wkładka do zamka bębenkowa niepowtarzalna WRS-K Incobex INC-10160N
+    source: Oskar, Incobex 04.09.2026
+    notes: "Styl akcesoriow: typ + model + 'do obudów <seria>' + marka + kod."
+
+  - id: incobex_rozdzielnica
+    producer: Incobex
+    sku_suffix: INC
+    category: null
+    attributes: ["Producent", "Dane producenta"]
+    examples:
+      - title: Rozdzielnica budowlana 32A/5+16A/5+2x230V Incobex R6E33-0001-001
+      - title: Zestaw złączowo-pomiarowy ZK1e-1P (11-1, 0, TNC) Incobex P4019-11-1-0
+    source: Oskar, Incobex 04.09.2026
+    notes: "Rozdzielnice budowlane: gniazda w kolejnosci z karty producenta (32A/5 = gniazdo 32A 5-biegunowe)."
+
+  # --- Oswietlenie: silnik regul w configs/title_anatomy.yaml ---
+  - id: ledvance_oprawa_hermetyczna
+    producer: Ledvance
+    sku_suffix: null
+    category: null
+    engine_rule: "configs/title_anatomy.yaml -> oprawa hermetyczna led"
+    examples:
+      - title: Oprawa hermetyczna LED DAMP PROOF 3TH 600 E 17W 2835lm 4000K IP65 szara Ledvance 4058075855809
+    source: Oskar, LEDVANCE oprawy hermetyczne (outputs 01a08566)
+    notes: "Tytul generuje optimize_titles.py wedlug reguly w title_anatomy.yaml; tu tylko przyklad. Kod Ledvance = EAN."

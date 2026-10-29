@@ -4,6 +4,14 @@ __pycache__/
 output/*
 !output/.gitkeep
 
+# Katalogi robocze agentow (Codex tworzy outputs/<id-sesji>/ z wynikami, skryptami,
+# node_modules i paczkami Pythona). Wzory tytulow/atrybutow, ktore maja zostac,
+# ida do configs/title_patterns.yaml, nie tutaj.
+outputs/
+node_modules/
+runtime_deps/
+*.inspect.ndjson
+
 reports/*
 !reports/.gitkeep
 
