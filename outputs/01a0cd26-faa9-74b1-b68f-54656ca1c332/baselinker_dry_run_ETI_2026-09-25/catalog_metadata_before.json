@@ -1,0 +1,1643 @@
+{
+  "categories": [
+    {
+      "category_id": 4009311,
+      "name": "Bez kategorii",
+      "parent_id": 0
+    },
+    {
+      "category_id": 4243571,
+      "name": "Kable i przewody",
+      "parent_id": 0
+    },
+    {
+      "category_id": 4501779,
+      "name": "Aparatura modułowa",
+      "parent_id": 0
+    },
+    {
+      "category_id": 4503330,
+      "name": "Gniazdka i Łączniki",
+      "parent_id": 0
+    },
+    {
+      "category_id": 4646698,
+      "name": "Zestaw",
+      "parent_id": 0
+    },
+    {
+      "category_id": 4045399,
+      "name": "Gniazdka i Łączniki",
+      "parent_id": 0
+    },
+    {
+      "category_id": 4332939,
+      "name": "Fotowoltaika/Akcesoria do fotowoltaiki",
+      "parent_id": 0
+    },
+    {
+      "category_id": 4597052,
+      "name": "Gniazdka i Łączniki/Gniazdka podtynkowe/Gniazdka Berker",
+      "parent_id": 0
+    },
+    {
+      "category_id": 4597057,
+      "name": "Oświetlenie/Latarki",
+      "parent_id": 0
+    },
+    {
+      "category_id": 4597058,
+      "name": "Odzież robocza BHP",
+      "parent_id": 0
+    },
+    {
+      "category_id": 4597060,
+      "name": "Taśmy i paski LED",
+      "parent_id": 0
+    },
+    {
+      "category_id": 5417482,
+      "name": "Narzędzia dla elektryka",
+      "parent_id": 0
+    },
+    {
+      "category_id": 5417483,
+      "name": "Ochrona odgromowa",
+      "parent_id": 0
+    },
+    {
+      "category_id": 5417484,
+      "name": "Oświetlenie",
+      "parent_id": 0
+    },
+    {
+      "category_id": 5417485,
+      "name": "Przedłużacze i akcesoria",
+      "parent_id": 0
+    },
+    {
+      "category_id": 5417486,
+      "name": "Puszki i złączki",
+      "parent_id": 0
+    },
+    {
+      "category_id": 5417487,
+      "name": "Systemy prowadzenia kabli",
+      "parent_id": 0
+    },
+    {
+      "category_id": 5417488,
+      "name": "Ochronniki przepięciowe",
+      "parent_id": 4501779
+    },
+    {
+      "category_id": 5417489,
+      "name": "Ograniczniki mocy",
+      "parent_id": 4501779
+    },
+    {
+      "category_id": 5417490,
+      "name": "Przełączniki Sieć-Agregat",
+      "parent_id": 4501779
+    },
+    {
+      "category_id": 5417491,
+      "name": "Rozłączniki izolacyjne",
+      "parent_id": 4501779
+    },
+    {
+      "category_id": 5417492,
+      "name": "Wyłączniki różnicowoprądowe",
+      "parent_id": 4501779
+    },
+    {
+      "category_id": 5417493,
+      "name": "Fotowoltaika",
+      "parent_id": 0
+    },
+    {
+      "category_id": 5417494,
+      "name": "Akcesoria do fotowoltaiki",
+      "parent_id": 5417493
+    },
+    {
+      "category_id": 5417495,
+      "name": "Osprzęt siłowy",
+      "parent_id": 0
+    },
+    {
+      "category_id": 5417496,
+      "name": "Gniazda siłowe",
+      "parent_id": 5417495
+    },
+    {
+      "category_id": 5417497,
+      "name": "Rozdzielnie elektryczne",
+      "parent_id": 5417495
+    },
+    {
+      "category_id": 5417498,
+      "name": "Latarki",
+      "parent_id": 5417484
+    },
+    {
+      "category_id": 5417499,
+      "name": "Przedłużacze na bębnie i zwijaki",
+      "parent_id": 5417485
+    },
+    {
+      "category_id": 5417500,
+      "name": "Puszki podtynkowe",
+      "parent_id": 5417486
+    },
+    {
+      "category_id": 5417501,
+      "name": "Rozdzielnice elektryczne",
+      "parent_id": 0
+    },
+    {
+      "category_id": 5417502,
+      "name": "Rozdzielnice natynkowe",
+      "parent_id": 5417501
+    },
+    {
+      "category_id": 5417503,
+      "name": "Skrzynki rozdzielcze",
+      "parent_id": 5417501
+    },
+    {
+      "category_id": 5417504,
+      "name": "Sterowanie i automatyka domowa",
+      "parent_id": 0
+    },
+    {
+      "category_id": 5417505,
+      "name": "Czujniki ruchu",
+      "parent_id": 5417504
+    },
+    {
+      "category_id": 5417506,
+      "name": "Oświetlenie przemysłowe wewnętrzne",
+      "parent_id": 5417484
+    },
+    {
+      "category_id": 5417507,
+      "name": "Lampy hermetyczne",
+      "parent_id": 5417506
+    },
+    {
+      "category_id": 5417508,
+      "name": "Panele LED sufitowe",
+      "parent_id": 5417506
+    },
+    {
+      "category_id": 5417509,
+      "name": "Oświetlenie wewnętrzne",
+      "parent_id": 5417484
+    },
+    {
+      "category_id": 5417510,
+      "name": "Plafony LED",
+      "parent_id": 5417509
+    },
+    {
+      "category_id": 5417511,
+      "name": "Oświetlenie zewnętrzne",
+      "parent_id": 5417484
+    },
+    {
+      "category_id": 5417512,
+      "name": "Lampy ogrodowe",
+      "parent_id": 5417511
+    },
+    {
+      "category_id": 5417513,
+      "name": "Naświetlacze LED",
+      "parent_id": 5417511
+    },
+    {
+      "category_id": 5417514,
+      "name": "Peszle",
+      "parent_id": 5417487
+    },
+    {
+      "category_id": 5417515,
+      "name": "Rury odporne na UV",
+      "parent_id": 5417514
+    },
+    {
+      "category_id": 5417516,
+      "name": "Żarówki",
+      "parent_id": 0
+    },
+    {
+      "category_id": 5417517,
+      "name": "Żarówki LED",
+      "parent_id": 5417516
+    },
+    {
+      "category_id": 5417518,
+      "name": "Żarówki LED E27",
+      "parent_id": 5417517
+    },
+    {
+      "category_id": 5419740,
+      "name": "Oprawy High-bay LED",
+      "parent_id": 5417506
+    },
+    {
+      "category_id": 5419741,
+      "name": "Lampy wiszące i żyrandole",
+      "parent_id": 5417509
+    },
+    {
+      "category_id": 5419742,
+      "name": "Oprawy natynkowe",
+      "parent_id": 5417509
+    },
+    {
+      "category_id": 5529502,
+      "name": "Oprawy liniowe, belki LED",
+      "parent_id": 5417506
+    },
+    {
+      "category_id": 5529503,
+      "name": "Lampy uliczne",
+      "parent_id": 5417511
+    },
+    {
+      "category_id": 5540981,
+      "name": "Akcesoria do aparatury modułowej",
+      "parent_id": 4501779
+    },
+    {
+      "category_id": 5540982,
+      "name": "Przekaźniki modułowe",
+      "parent_id": 4501779
+    },
+    {
+      "category_id": 5540983,
+      "name": "Rozłączniki i aparatura bezpiecznikowa",
+      "parent_id": 4501779
+    },
+    {
+      "category_id": 5540984,
+      "name": "Sterowanie i sygnalizacja",
+      "parent_id": 4501779
+    },
+    {
+      "category_id": 5540985,
+      "name": "Styczniki",
+      "parent_id": 4501779
+    },
+    {
+      "category_id": 5540986,
+      "name": "Szyny łączeniowe",
+      "parent_id": 4501779
+    },
+    {
+      "category_id": 5540987,
+      "name": "Wyłączniki nadprądowe",
+      "parent_id": 4501779
+    },
+    {
+      "category_id": 5572362,
+      "name": "Gniazdka i Łączniki",
+      "parent_id": 0
+    },
+    {
+      "category_id": 5572363,
+      "name": "Gniazdka Kontakt Simon",
+      "parent_id": 5572362
+    },
+    {
+      "category_id": 5572364,
+      "name": "Kontakt Simon 54",
+      "parent_id": 5572363
+    },
+    {
+      "category_id": 5572365,
+      "name": "Simon 55",
+      "parent_id": 5572363
+    },
+    {
+      "category_id": 5572366,
+      "name": "Simon 55 GO",
+      "parent_id": 5572363
+    },
+    {
+      "category_id": 5572976,
+      "name": "Lampki sygnalizacyjne",
+      "parent_id": 4501779
+    },
+    {
+      "category_id": 5572977,
+      "name": "Wyłączniki różnicowo-nadprądowe",
+      "parent_id": 4501779
+    }
+  ],
+  "manufacturers": [
+    {
+      "manufacturer_id": 1889438,
+      "name": "Anticor",
+      "manufacturer_name": "Anticor",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 1890317,
+      "name": "OSPEL",
+      "manufacturer_name": "OSPEL",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 1890381,
+      "name": "Ledvance",
+      "manufacturer_name": "Ledvance",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 1890383,
+      "name": "ELGOTECH",
+      "manufacturer_name": "ELGOTECH",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 1890384,
+      "name": "KANLUX",
+      "manufacturer_name": "KANLUX",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 1890385,
+      "name": "PCE",
+      "manufacturer_name": "PCE",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 1890388,
+      "name": "ZAMEL",
+      "manufacturer_name": "ZAMEL",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 1890389,
+      "name": "ELHURT",
+      "manufacturer_name": "ELHURT",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 1890390,
+      "name": "Plastrol",
+      "manufacturer_name": "Plastrol",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 1890391,
+      "name": "SIGNIFY LIGHTING",
+      "manufacturer_name": "SIGNIFY LIGHTING",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 1890392,
+      "name": "ETI",
+      "manufacturer_name": "ETI",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 1890394,
+      "name": "KARLIK",
+      "manufacturer_name": "KARLIK",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 1890395,
+      "name": "EMOS",
+      "manufacturer_name": "EMOS",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 1890396,
+      "name": "DOSPEL",
+      "manufacturer_name": "DOSPEL",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 1890397,
+      "name": "ALKAN SP.Z O.O.SP.J.",
+      "manufacturer_name": "ALKAN SP.Z O.O.SP.J.",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 1890398,
+      "name": "POLTRONIC",
+      "manufacturer_name": "POLTRONIC",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 1890400,
+      "name": "EPN",
+      "manufacturer_name": "EPN",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 1890419,
+      "name": "PAWBOL",
+      "manufacturer_name": "PAWBOL",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 1890420,
+      "name": "SIMET",
+      "manufacturer_name": "SIMET",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 1890421,
+      "name": "LANGE ŁUKASZUK",
+      "manufacturer_name": "LANGE ŁUKASZUK",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 1890422,
+      "name": "GRUPA TOPEX",
+      "manufacturer_name": "GRUPA TOPEX",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 1890427,
+      "name": "GTV",
+      "manufacturer_name": "GTV",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 1890428,
+      "name": "HELIOS",
+      "manufacturer_name": "HELIOS",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 1890429,
+      "name": "F&F",
+      "manufacturer_name": "F&F",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 1890430,
+      "name": "HAGER",
+      "manufacturer_name": "HAGER",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 1890499,
+      "name": "EPO",
+      "manufacturer_name": "EPO",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 1890501,
+      "name": "Lechpol",
+      "manufacturer_name": "Lechpol",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 1890502,
+      "name": "KONTAKT-SIMON",
+      "manufacturer_name": "KONTAKT-SIMON",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 1890503,
+      "name": "BEMKO",
+      "manufacturer_name": "BEMKO",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 1890504,
+      "name": "RUM-LUX",
+      "manufacturer_name": "RUM-LUX",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 1890509,
+      "name": "WAGO",
+      "manufacturer_name": "WAGO",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 1890510,
+      "name": "Kobi Light",
+      "manufacturer_name": "Kobi Light",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 1890511,
+      "name": "ORNO",
+      "manufacturer_name": "ORNO",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 1890512,
+      "name": "EATON",
+      "manufacturer_name": "EATON",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 1890524,
+      "name": "BOWI",
+      "manufacturer_name": "BOWI",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 1890525,
+      "name": "VOLTENO",
+      "manufacturer_name": "VOLTENO",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 1890526,
+      "name": "KOS",
+      "manufacturer_name": "KOS",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 1890527,
+      "name": "V-TAC",
+      "manufacturer_name": "V-TAC",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 1890529,
+      "name": "BRENNENSTUHL",
+      "manufacturer_name": "BRENNENSTUHL",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 1890530,
+      "name": "GREENLUX",
+      "manufacturer_name": "GREENLUX",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 1890531,
+      "name": "ANTICOR",
+      "manufacturer_name": "ANTICOR",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 1890539,
+      "name": "Radpol",
+      "manufacturer_name": "Radpol",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 1890540,
+      "name": "PRO-TEC",
+      "manufacturer_name": "PRO-TEC",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 1890541,
+      "name": "KENO",
+      "manufacturer_name": "KENO",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 1890549,
+      "name": "LEGRAND",
+      "manufacturer_name": "LEGRAND",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 1890550,
+      "name": "INTELIGHT",
+      "manufacturer_name": "INTELIGHT",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 1890573,
+      "name": "IDEUS O.O. Z O.O.",
+      "manufacturer_name": "IDEUS O.O. Z O.O.",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 1898220,
+      "name": "ANLUX",
+      "manufacturer_name": "ANLUX",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 1898223,
+      "name": "WOJNAROWSCY SPÓŁKA",
+      "manufacturer_name": "WOJNAROWSCY SPÓŁKA",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 1898229,
+      "name": "INCOBEX",
+      "manufacturer_name": "INCOBEX",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 1898230,
+      "name": "BAKS",
+      "manufacturer_name": "BAKS",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 1898231,
+      "name": "SCHNEIDER",
+      "manufacturer_name": "SCHNEIDER",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 1898233,
+      "name": "ATAGOR",
+      "manufacturer_name": "ATAGOR",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 1898234,
+      "name": "AWEX",
+      "manufacturer_name": "AWEX",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 1913448,
+      "name": "POLON - ALFA S.A.",
+      "manufacturer_name": "POLON - ALFA S.A.",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 1936857,
+      "name": "ROSA",
+      "manufacturer_name": "ROSA",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 1937263,
+      "name": "ELEKTROKABEL",
+      "manufacturer_name": "ELEKTROKABEL",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 1961686,
+      "name": "Brolux",
+      "manufacturer_name": "Brolux",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 1962671,
+      "name": "Ledas",
+      "manufacturer_name": "Ledas",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 1968088,
+      "name": "Kobi",
+      "manufacturer_name": "Kobi",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 1982940,
+      "name": "MPL POWER ELEKTRO",
+      "manufacturer_name": "MPL POWER ELEKTRO",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 2031347,
+      "name": "TT PLAST",
+      "manufacturer_name": "TT PLAST",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 2031348,
+      "name": "Q-SYSTEMS SP Z O O",
+      "manufacturer_name": "Q-SYSTEMS SP Z O O",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 2031363,
+      "name": "ERKO",
+      "manufacturer_name": "ERKO",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 2036135,
+      "name": "ELPAR",
+      "manufacturer_name": "ELPAR",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 2036136,
+      "name": "NKT SPÓŁKA AKCYJNA",
+      "manufacturer_name": "NKT SPÓŁKA AKCYJNA",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 2036137,
+      "name": "BITNER",
+      "manufacturer_name": "BITNER",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 2036138,
+      "name": "LAPP KABEL",
+      "manufacturer_name": "LAPP KABEL",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 2079712,
+      "name": "HELUKABEL",
+      "manufacturer_name": "HELUKABEL",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 2130388,
+      "name": "TECHNOKABEL S. A.",
+      "manufacturer_name": "TECHNOKABEL S. A.",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 2150749,
+      "name": "SIGNIFY FAREL",
+      "manufacturer_name": "SIGNIFY FAREL",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 2151810,
+      "name": "10000047",
+      "manufacturer_name": "10000047",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 2151811,
+      "name": "10000001",
+      "manufacturer_name": "10000001",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 2151812,
+      "name": "10005381",
+      "manufacturer_name": "10005381",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 2151813,
+      "name": "NKT SPÓŁKA AKCYJNA",
+      "manufacturer_name": "NKT SPÓŁKA AKCYJNA",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 2160126,
+      "name": "ELTRIM",
+      "manufacturer_name": "ELTRIM",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 2170955,
+      "name": "KOPOS",
+      "manufacturer_name": "KOPOS",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 2186021,
+      "name": "EPS",
+      "manufacturer_name": "EPS",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 2187117,
+      "name": "BREVE",
+      "manufacturer_name": "BREVE",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 2191567,
+      "name": "Kontakt Simon",
+      "manufacturer_name": "Kontakt Simon",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 2191654,
+      "name": "RAWLPLUG",
+      "manufacturer_name": "RAWLPLUG",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 2207103,
+      "name": "MOREK",
+      "manufacturer_name": "MOREK",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 2218995,
+      "name": "AKS ZIELONKA SKWIERC",
+      "manufacturer_name": "AKS ZIELONKA SKWIERC",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 2271921,
+      "name": "PRYSMIAN",
+      "manufacturer_name": "PRYSMIAN",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 2364012,
+      "name": "ELPIO",
+      "manufacturer_name": "ELPIO",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 2408859,
+      "name": "CYNK - MAL",
+      "manufacturer_name": "CYNK - MAL",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 2411210,
+      "name": "ENERGIZER CENTRAL EU",
+      "manufacturer_name": "ENERGIZER CENTRAL EU",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 2419628,
+      "name": "TRYTYT",
+      "manufacturer_name": "TRYTYT",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 2419629,
+      "name": "ELKO-BIS",
+      "manufacturer_name": "ELKO-BIS",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 2440738,
+      "name": "TADPOL",
+      "manufacturer_name": "TADPOL",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 2441086,
+      "name": "ELPLAST",
+      "manufacturer_name": "ELPLAST",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 2456845,
+      "name": "TME SP. Z O.O.",
+      "manufacturer_name": "TME SP. Z O.O.",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    },
+    {
+      "manufacturer_id": 2471210,
+      "name": "ASSMANN DISTRIBUTION",
+      "manufacturer_name": "ASSMANN DISTRIBUTION",
+      "manufacturer_photo": "",
+      "manufacturer_url": "",
+      "manufacturer_street": "",
+      "manufacturer_postcode": "",
+      "manufacturer_city": "",
+      "manufacturer_state": "",
+      "manufacturer_country_code": "",
+      "manufacturer_email": "",
+      "manufacturer_phone": ""
+    }
+  ]
+}

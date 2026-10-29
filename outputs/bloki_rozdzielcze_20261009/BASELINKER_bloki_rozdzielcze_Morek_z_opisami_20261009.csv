@@ -1,0 +1,309 @@
+﻿product_id;name;sku;ean;manufacturer_name;category;description;features;images_urls
+;Blok dystrybucyjny MOBLOCK 2P 1000V 125A-7 2x35mm2 + 5x6mm2 Morek MAB2124A18;MAB2124A18/MOR;4744397041906;Morek;Puszki i złączki > Bloki rozdzielcze;"<p><strong>Blok dystrybucyjny MOBLOCK 2P 1000V 125A-7 2x35mm2 + 5x6mm2 Morek MAB2124A18</strong> to dwubiegunowy element do rozdziału przewodów miedzianych w instalacji elektrycznej. Każdy biegun ma siedem zacisków: dwa tory wejściowe dla przewodów o przekroju 10–35 mm² oraz pięć wyjść obsługujących przekroje 1,5–6 mm². Prąd znamionowy 125 A i napięcie znamionowe 1000 V AC/DC jasno określają zakres parametrów tego wariantu. Obudowa o wymiarach 72 × 49 × 52 mm sprawdzi się tam, gdzie liczy się zwarta budowa rozdziału.</p>
+
+<h2>Blok dystrybucyjny MOBLOCK do kompaktowego rozdziału przewodów miedzianych</h2>
+
+<p>Blok dystrybucyjny MOBLOCK umożliwia poprowadzenie zasilania z dwóch większych zacisków na pięć mniejszych wyjść w obrębie każdego z dwóch biegunów. Taki układ pozwala zebrać rozdział przewodów w jednym elemencie zamiast prowadzić oddzielne połączenia bez uporządkowanego punktu rozdzielczego. Transparentna, zdejmowana osłona ułatwia kontrolę połączeń, a stopień ochrony IP20 odpowiada zastosowaniu wewnątrz odpowiednio zabezpieczonej obudowy instalacyjnej.</p>
+
+<h3>Najważniejsze zalety</h3>
+<ul>
+  <li><strong>Siedem zacisków na biegun</strong> – dwa wejścia i pięć wyjść tworzą czytelny układ rozdziału.</li>
+  <li><strong>Dwa bieguny</strong> – pozwalają prowadzić dwa niezależne tory w jednym module.</li>
+  <li><strong>Montaż na szynie DIN lub śrubami</strong> – daje wybór sposobu osadzenia w rozdzielnicy.</li>
+  <li><strong>Zdejmowana osłona transparentna</strong> – po otwarciu zapewnia dostęp do zacisków, a po zamknięciu pozostawia połączenia widoczne.</li>
+  <li><strong>Zaciski do przewodów Cu</strong> – zakresy przekrojów są rozdzielone dla wejścia i wyjść.</li>
+</ul>
+
+<h3>Zastosowanie i dobór przewodów</h3>
+<p>Model jest przeznaczony do rozdziału przewodów miedzianych. Dla przewodów elastycznych zakończonych tulejką podany zakres wynosi 1,5–25 mm², a dla przewodów sztywnych 1,5–35 mm². Przed montażem należy dopasować przekrój przewodu do konkretnego zacisku oraz uwzględnić parametry całej instalacji.</p>
+
+<h3>Specyfikacja techniczna</h3>
+<ul>
+  <li><strong>Producent:</strong> Morek</li>
+  <li><strong>Seria:</strong> MOBLOCK</li>
+  <li><strong>Kod producenta:</strong> MAB2124A18</li>
+  <li><strong>Liczba biegunów:</strong> 2</li>
+  <li><strong>Liczba zacisków na biegun:</strong> 7</li>
+  <li><strong>Wejścia dla przewodów Cu:</strong> 2 × 10–35 mm²</li>
+  <li><strong>Wyjścia dla przewodów Cu:</strong> 5 × 1,5–6 mm²</li>
+  <li><strong>Prąd znamionowy:</strong> 125 A</li>
+  <li><strong>Napięcie znamionowe AC/DC:</strong> 1000 V</li>
+  <li><strong>Stopień ochrony:</strong> IP20</li>
+  <li><strong>Sposób montażu:</strong> szyna DIN lub śruby</li>
+  <li><strong>Materiał części przewodzących:</strong> mosiądz</li>
+  <li><strong>Materiał śrub zaciskowych:</strong> stal ocynkowana</li>
+  <li><strong>Wymiary:</strong> 72 × 49 × 52 mm</li>
+  <li><strong>Klasa ETIM:</strong> EC001894</li>
+</ul>
+
+<p>Wariant MAB2124A18 warto wybrać, gdy potrzebny jest dwubiegunowy punkt rozdziału o siedmiu zaciskach na biegun, mieszczący się w obudowie o szerokości 49 mm. Przed zakupem sprawdź napięcie instalacji, liczbę wymaganych wyjść i przekroje przewodów, aby dobrać blok do projektu.</p>
+
+<h3>Najczęściej zadawane pytania</h3>
+<p><strong>Ile zacisków ma model MAB2124A18?</strong><br>Każdy z dwóch biegunów ma siedem zacisków: dwa wejścia oraz pięć wyjść.</p>
+<p><strong>Jakie przewody można podłączyć do bloku?</strong><br>Produkt jest przeznaczony do przewodów miedzianych; wejścia obsługują 2 × 10–35 mm², a wyjścia 5 × 1,5–6 mm² na każdy biegun.</p>
+<p><strong>Jak można zamontować ten model?</strong><br>Blok można zamocować na szynie DIN albo za pomocą śrub.</p>
+
+<script type=""application/ld+json"">
+{
+  ""@context"": ""https://schema.org"",
+  ""@type"": ""FAQPage"",
+  ""mainEntity"": [
+    {
+      ""@type"": ""Question"",
+      ""name"": ""Ile zacisków ma model MAB2124A18?"",
+      ""acceptedAnswer"": {
+        ""@type"": ""Answer"",
+        ""text"": ""Każdy z dwóch biegunów ma siedem zacisków: dwa wejścia oraz pięć wyjść.""
+      }
+    },
+    {
+      ""@type"": ""Question"",
+      ""name"": ""Jakie przewody można podłączyć do bloku?"",
+      ""acceptedAnswer"": {
+        ""@type"": ""Answer"",
+        ""text"": ""Produkt jest przeznaczony do przewodów miedzianych; wejścia obsługują 2 × 10–35 mm², a wyjścia 5 × 1,5–6 mm² na każdy biegun.""
+      }
+    },
+    {
+      ""@type"": ""Question"",
+      ""name"": ""Jak można zamontować ten model?"",
+      ""acceptedAnswer"": {
+        ""@type"": ""Answer"",
+        ""text"": ""Blok można zamocować na szynie DIN albo za pomocą śrub.""
+      }
+    }
+  ]
+}
+</script>";"{""Producent"":""Morek"",""Dane producenta"":""MOREK, ul. Grzybowska 87 00-844 Warszawa, morekpl@morek.eu"",""Rodzaj"":""Blok dystrybucyjny"",""Seria"":""MOBLOCK"",""Prąd znamionowy [A]"":""125"",""Materiał przewodu"":""Cu"",""Przekrój przewodu elastycznego z tulejką [mm²]"":""1,5-25"",""Przekrój przewodu sztywnego [mm²]"":""1,5-35"",""Stopień ochrony [IP]"":""IP20"",""Sposób montażu"":""Szyna DIN lub śruby"",""Materiał części przewodzących"":""Mosiądz"",""Materiał śrub zaciskowych"":""Stal ocynkowana"",""Osłona"":""Transparentna, zdejmowana"",""Szyna PE"":""Tak"",""Szyna N"":""Tak"",""Klasa ETIM"":""EC001894"",""Liczba biegunów"":""2"",""Liczba zacisków na biegun"":""7"",""Przekrój wejścia Cu [mm²]"":""2 x 10-35"",""Przekrój wyjść Cu [mm²]"":""5 x 1,5-6"",""Napięcie znamionowe AC/DC [V]"":""1000"",""Wymiary (dł. x szer. x wys.) [mm]"":""72 x 49 x 52""}";https://eleczaplive.blob.core.windows.net/productimages/5/715fbd723d524bc7a2b6a76b41e397fc.png
+;Blok dystrybucyjny MOBLOCK 2P 1000V 125A-11 2x35mm2 + 2x25mm2 + 7x6mm2 Morek MAB2125A18;MAB2125A18/MOR;4744397013590;Morek;Puszki i złączki > Bloki rozdzielcze;"<p><strong>Blok dystrybucyjny MOBLOCK 2P 1000V 125A-11 2x35mm2 + 2x25mm2 + 7x6mm2 Morek MAB2125A18</strong> jest dwubiegunowym rozwiązaniem do rozdziału przewodów miedzianych, gdy potrzebna jest większa liczba odejść z jednego punktu. Na każdy biegun przypada jedenaście zacisków: dwa wejściowe 10–35 mm², dwa wyjściowe 10–25 mm² i siedem wyjściowych 1,5–6 mm². Dzięki temu można rozdzielić tor na przewody o dwóch różnych zakresach przekroju po stronie wyjściowej. Model pracuje z prądem znamionowym 125 A oraz napięciem znamionowym do 1000 V AC/DC.</p>
+
+<h2>Blok dystrybucyjny MOBLOCK z 11 zaciskami na biegun – kiedy go wybrać?</h2>
+
+<p>Blok dystrybucyjny MOBLOCK w wersji MAB2125A18 jest przydatny wtedy, gdy dwa bieguny mają obsłużyć po dziewięć odejść zróżnicowanych pod względem przekroju przewodów. Dwa większe wyjścia na biegun przyjmują przewody Cu 10–25 mm², a siedem mniejszych wyjść przewody 1,5–6 mm². Taki podział daje konkretną konfigurację zacisków bez łączenia różnych zakresów w jednym oznaczeniu.</p>
+
+<h3>Najważniejsze zalety</h3>
+<ul>
+  <li><strong>Jedenaście zacisków na każdym biegunie</strong> – dwa zaciski wejściowe współpracują z dziewięcioma wyjściowymi.</li>
+  <li><strong>Dwa zakresy wyjściowe</strong> – osobne miejsca dla 2 × 10–25 mm² oraz 7 × 1,5–6 mm².</li>
+  <li><strong>Parametry 125 A i 1000 V AC/DC</strong> – jasno określają znamionowe warunki pracy modelu.</li>
+  <li><strong>Mosiężne części przewodzące</strong> – materiał toru prądowego jest jednoznacznie wskazany w danych produktu.</li>
+  <li><strong>Dwa sposoby montażu</strong> – produkt można osadzić na szynie DIN albo przykręcić śrubami.</li>
+</ul>
+
+<h3>Budowa przeznaczona do kontroli połączeń</h3>
+<p>Zdejmowana, transparentna osłona zapewnia dostęp do zacisków podczas wykonywania połączeń, a po założeniu pozwala wzrokowo ocenić ich rozmieszczenie. Części przewodzące wykonano z mosiądzu, natomiast śruby zaciskowe ze stali ocynkowanej. Stopień ochrony IP20 należy uwzględnić przy wyborze obudowy i miejsca instalacji.</p>
+
+<h3>Specyfikacja techniczna</h3>
+<ul>
+  <li><strong>Producent:</strong> Morek</li>
+  <li><strong>Seria:</strong> MOBLOCK</li>
+  <li><strong>Kod producenta:</strong> MAB2125A18</li>
+  <li><strong>Liczba biegunów:</strong> 2</li>
+  <li><strong>Liczba zacisków na biegun:</strong> 11</li>
+  <li><strong>Wejścia dla przewodów Cu:</strong> 2 × 10–35 mm²</li>
+  <li><strong>Wyjścia dla przewodów Cu:</strong> 2 × 10–25 mm² + 7 × 1,5–6 mm²</li>
+  <li><strong>Przekrój przewodu elastycznego z tulejką:</strong> 1,5–25 mm²</li>
+  <li><strong>Przekrój przewodu sztywnego:</strong> 1,5–35 mm²</li>
+  <li><strong>Prąd znamionowy:</strong> 125 A</li>
+  <li><strong>Napięcie znamionowe AC/DC:</strong> 1000 V</li>
+  <li><strong>Stopień ochrony:</strong> IP20</li>
+  <li><strong>Montaż:</strong> szyna DIN lub śruby</li>
+  <li><strong>Osłona:</strong> transparentna, zdejmowana</li>
+  <li><strong>Szyny:</strong> PE i N</li>
+  <li><strong>Wymiary:</strong> 109 × 49 × 52 mm</li>
+  <li><strong>Klasa ETIM:</strong> EC001894</li>
+</ul>
+
+<p>MAB2125A18 jest trafnym wyborem do projektu wymagającego dwóch biegunów oraz dziewięciu wyjść na każdy z nich, w tym dwóch dla większych przekrojów. Porównaj układ 2 + 2 + 7 z planowaną liczbą przewodów i wybierz ten wariant, jeśli odpowiada schematowi rozdziału.</p>
+
+<h3>Najczęściej zadawane pytania</h3>
+<p><strong>Jak są podzielone zaciski w modelu MAB2125A18?</strong><br>Na każdy biegun przypadają dwa wejścia 10–35 mm², dwa wyjścia 10–25 mm² i siedem wyjść 1,5–6 mm².</p>
+<p><strong>Jakie jest napięcie znamionowe tego wariantu?</strong><br>Napięcie znamionowe wynosi 1000 V zarówno dla prądu przemiennego, jak i stałego.</p>
+<p><strong>Czy osłonę można zdjąć?</strong><br>Tak. Model ma transparentną, zdejmowaną osłonę.</p>
+
+<script type=""application/ld+json"">
+{
+  ""@context"": ""https://schema.org"",
+  ""@type"": ""FAQPage"",
+  ""mainEntity"": [
+    {
+      ""@type"": ""Question"",
+      ""name"": ""Jak są podzielone zaciski w modelu MAB2125A18?"",
+      ""acceptedAnswer"": {
+        ""@type"": ""Answer"",
+        ""text"": ""Na każdy biegun przypadają dwa wejścia 10–35 mm², dwa wyjścia 10–25 mm² i siedem wyjść 1,5–6 mm².""
+      }
+    },
+    {
+      ""@type"": ""Question"",
+      ""name"": ""Jakie jest napięcie znamionowe tego wariantu?"",
+      ""acceptedAnswer"": {
+        ""@type"": ""Answer"",
+        ""text"": ""Napięcie znamionowe wynosi 1000 V zarówno dla prądu przemiennego, jak i stałego.""
+      }
+    },
+    {
+      ""@type"": ""Question"",
+      ""name"": ""Czy osłonę można zdjąć?"",
+      ""acceptedAnswer"": {
+        ""@type"": ""Answer"",
+        ""text"": ""Tak. Model ma transparentną, zdejmowaną osłonę.""
+      }
+    }
+  ]
+}
+</script>";"{""Producent"":""Morek"",""Dane producenta"":""MOREK, ul. Grzybowska 87 00-844 Warszawa, morekpl@morek.eu"",""Rodzaj"":""Blok dystrybucyjny"",""Seria"":""MOBLOCK"",""Prąd znamionowy [A]"":""125"",""Materiał przewodu"":""Cu"",""Przekrój przewodu elastycznego z tulejką [mm²]"":""1,5-25"",""Przekrój przewodu sztywnego [mm²]"":""1,5-35"",""Stopień ochrony [IP]"":""IP20"",""Sposób montażu"":""Szyna DIN lub śruby"",""Materiał części przewodzących"":""Mosiądz"",""Materiał śrub zaciskowych"":""Stal ocynkowana"",""Osłona"":""Transparentna, zdejmowana"",""Szyna PE"":""Tak"",""Szyna N"":""Tak"",""Klasa ETIM"":""EC001894"",""Liczba biegunów"":""2"",""Liczba zacisków na biegun"":""11"",""Przekrój wejścia Cu [mm²]"":""2 x 10-35"",""Przekrój wyjść Cu [mm²]"":""2 x 10-25 + 7 x 1,5-6"",""Napięcie znamionowe AC/DC [V]"":""1000"",""Wymiary (dł. x szer. x wys.) [mm]"":""109 x 49 x 52""}";https://eleczaplive.blob.core.windows.net/productimages/5/MAB2125A18.png
+;Blok dystrybucyjny MOBLOCK 2P 1000V 125A-15 2x35mm2 + 2x25mm2 + 11x6mm2 Morek MAB2126A18;MAB2126A18/MOR;4744397013606;Morek;Puszki i złączki > Bloki rozdzielcze;"<p><strong>Blok dystrybucyjny MOBLOCK 2P 1000V 125A-15 2x35mm2 + 2x25mm2 + 11x6mm2 Morek MAB2126A18</strong> to wariant dwubiegunowy z piętnastoma zaciskami przypadającymi na każdy biegun. Dwa zaciski wejściowe przyjmują przewody miedziane 10–35 mm², a strona wyjściowa obejmuje dwa zaciski 10–25 mm² oraz jedenaście zacisków 1,5–6 mm². Rozbudowany układ odejść odpowiada instalacjom, w których z jednego punktu trzeba wyprowadzić wiele przewodów o zdefiniowanych przekrojach. Znamionowe parametry elektryczne wynoszą 125 A i 1000 V AC/DC.</p>
+
+<h2>Blok dystrybucyjny MOBLOCK do rozbudowanego układu odejść</h2>
+
+<p>Blok dystrybucyjny MOBLOCK MAB2126A18 łączy na każdym biegunie dwa zaciski wejściowe z trzynastoma wyjściowymi. Jedenaście mniejszych wyjść przeznaczono dla przewodów Cu 1,5–6 mm², natomiast dwa większe dla zakresu 10–25 mm². Taka konfiguracja jest szczególnie istotna przy doborze, ponieważ odróżnia ten model od wariantów o siedmiu lub jedenastu zaciskach na biegun.</p>
+
+<h3>Najważniejsze zalety</h3>
+<ul>
+  <li><strong>Piętnaście zacisków na biegun</strong> – umożliwia wykonanie trzynastu odejść z dwóch wejść.</li>
+  <li><strong>Jedenaście wyjść 1,5–6 mm²</strong> – zapewnia dużą liczbę punktów dla przewodów o mniejszym przekroju.</li>
+  <li><strong>Dwa wyjścia 10–25 mm²</strong> – pozwalają uwzględnić również większe przekroje po stronie rozdziału.</li>
+  <li><strong>Szyna DIN albo mocowanie śrubowe</strong> – montaż można dopasować do konstrukcji rozdzielnicy.</li>
+  <li><strong>Transparentna osłona</strong> – chroni dostęp do zacisków zgodnie z klasą IP20 i pozostaje zdejmowana podczas prac montażowych.</li>
+</ul>
+
+<h3>Przemyślany dobór miejsca w rozdzielnicy</h3>
+<p>Większa liczba zacisków wiąże się z długością obudowy 137 mm, przy szerokości 49 mm i wysokości 52 mm. Przed instalacją warto zatem zweryfikować dostępną przestrzeń oraz sposób mocowania. Produkt jest wyposażony w szyny PE i N, a jego części przewodzące wykonano z mosiądzu.</p>
+
+<h3>Specyfikacja techniczna</h3>
+<ul>
+  <li><strong>Marka:</strong> Morek</li>
+  <li><strong>Seria produktowa:</strong> MOBLOCK</li>
+  <li><strong>Numer katalogowy:</strong> MAB2126A18</li>
+  <li><strong>Bieguny:</strong> 2</li>
+  <li><strong>Zaciski na biegun:</strong> 15</li>
+  <li><strong>Zaciski wejściowe Cu:</strong> 2 × 10–35 mm²</li>
+  <li><strong>Zaciski wyjściowe Cu:</strong> 2 × 10–25 mm² + 11 × 1,5–6 mm²</li>
+  <li><strong>Zakres dla przewodu elastycznego z tulejką:</strong> 1,5–25 mm²</li>
+  <li><strong>Zakres dla przewodu sztywnego:</strong> 1,5–35 mm²</li>
+  <li><strong>Prąd znamionowy:</strong> 125 A</li>
+  <li><strong>Napięcie znamionowe AC/DC:</strong> 1000 V</li>
+  <li><strong>Klasa ochrony:</strong> IP20</li>
+  <li><strong>Materiał toru przewodzącego:</strong> mosiądz</li>
+  <li><strong>Śruby zaciskowe:</strong> stal ocynkowana</li>
+  <li><strong>Gabaryty:</strong> 137 × 49 × 52 mm</li>
+  <li><strong>Klasyfikacja ETIM:</strong> EC001894</li>
+</ul>
+
+<p>Model MAB2126A18 należy rozważyć, gdy kluczowa jest maksymalna liczba zacisków spośród opisanych wariantów dwubiegunowych i potrzebne są dwa zakresy wyjściowe. Zweryfikuj wymiary, prąd, napięcie i planowane przekroje, a następnie dobierz go do przygotowanego schematu instalacji.</p>
+
+<h3>Najczęściej zadawane pytania</h3>
+<p><strong>Ile odejść oferuje jeden biegun?</strong><br>Jeden biegun ma trzynaście zacisków wyjściowych: dwa w zakresie 10–25 mm² i jedenaście w zakresie 1,5–6 mm².</p>
+<p><strong>Jakie są wymiary MAB2126A18?</strong><br>Wymiary bloku wynoszą 137 × 49 × 52 mm.</p>
+<p><strong>Czy produkt nadaje się do montażu na szynie DIN?</strong><br>Tak. Przewidziano montaż na szynie DIN lub za pomocą śrub.</p>
+
+<script type=""application/ld+json"">
+{
+  ""@context"": ""https://schema.org"",
+  ""@type"": ""FAQPage"",
+  ""mainEntity"": [
+    {
+      ""@type"": ""Question"",
+      ""name"": ""Ile odejść oferuje jeden biegun?"",
+      ""acceptedAnswer"": {
+        ""@type"": ""Answer"",
+        ""text"": ""Jeden biegun ma trzynaście zacisków wyjściowych: dwa w zakresie 10–25 mm² i jedenaście w zakresie 1,5–6 mm².""
+      }
+    },
+    {
+      ""@type"": ""Question"",
+      ""name"": ""Jakie są wymiary MAB2126A18?"",
+      ""acceptedAnswer"": {
+        ""@type"": ""Answer"",
+        ""text"": ""Wymiary bloku wynoszą 137 × 49 × 52 mm.""
+      }
+    },
+    {
+      ""@type"": ""Question"",
+      ""name"": ""Czy produkt nadaje się do montażu na szynie DIN?"",
+      ""acceptedAnswer"": {
+        ""@type"": ""Answer"",
+        ""text"": ""Tak. Przewidziano montaż na szynie DIN lub za pomocą śrub.""
+      }
+    }
+  ]
+}
+</script>";"{""Producent"":""Morek"",""Dane producenta"":""MOREK, ul. Grzybowska 87 00-844 Warszawa, morekpl@morek.eu"",""Rodzaj"":""Blok dystrybucyjny"",""Seria"":""MOBLOCK"",""Prąd znamionowy [A]"":""125"",""Materiał przewodu"":""Cu"",""Przekrój przewodu elastycznego z tulejką [mm²]"":""1,5-25"",""Przekrój przewodu sztywnego [mm²]"":""1,5-35"",""Stopień ochrony [IP]"":""IP20"",""Sposób montażu"":""Szyna DIN lub śruby"",""Materiał części przewodzących"":""Mosiądz"",""Materiał śrub zaciskowych"":""Stal ocynkowana"",""Osłona"":""Transparentna, zdejmowana"",""Szyna PE"":""Tak"",""Szyna N"":""Tak"",""Klasa ETIM"":""EC001894"",""Liczba biegunów"":""2"",""Liczba zacisków na biegun"":""15"",""Przekrój wejścia Cu [mm²]"":""2 x 10-35"",""Przekrój wyjść Cu [mm²]"":""2 x 10-25 + 11 x 1,5-6"",""Napięcie znamionowe AC/DC [V]"":""1000"",""Wymiary (dł. x szer. x wys.) [mm]"":""137 x 49 x 52""}";https://eleczaplive.blob.core.windows.net/productimages/5/MAB2126A18.png
+;Blok dystrybucyjny MOBLOCK 4P 500V 125A-7 2x35mm2 + 5x6mm2 Morek MAB4124A18;MAB4124A18/MOR;4744397041913;Morek;Puszki i złączki > Bloki rozdzielcze;"<p><strong>Blok dystrybucyjny MOBLOCK 4P 500V 125A-7 2x35mm2 + 5x6mm2 Morek MAB4124A18</strong> jest czterobiegunowym elementem rozdzielczym przeznaczonym do przewodów miedzianych. Na każdy z czterech biegunów przypada siedem zacisków: dwa wejścia 10–35 mm² oraz pięć wyjść 1,5–6 mm². Prąd znamionowy wynosi 125 A, natomiast napięcie znamionowe dla AC/DC to 500 V. Konstrukcja o wymiarach 72 × 97 × 52 mm pozwala ująć cztery tory w jednym produkcie.</p>
+
+<h2>Blok dystrybucyjny MOBLOCK z czterema biegunami do wspólnego punktu rozdziału</h2>
+
+<p>Blok dystrybucyjny MOBLOCK w wersji 4P grupuje cztery identyczne zestawy zacisków, dlatego przed zakupem można precyzyjnie policzyć potrzebne wejścia i odejścia dla każdego toru. Dwa większe zaciski wejściowe współpracują z przewodami Cu 10–35 mm², a pięć wyjściowych z przewodami 1,5–6 mm². Układ siedmiu zacisków na biegun pozostaje czytelny, a wspólna obudowa ma szerokość 97 mm.</p>
+
+<h3>Najważniejsze zalety</h3>
+<ul>
+  <li><strong>Cztery bieguny w jednej obudowie</strong> – każdy ma taki sam układ dwóch wejść i pięciu wyjść.</li>
+  <li><strong>Łącznie 28 zacisków</strong> – po siedem punktów przyłączeniowych przypada na każdy biegun.</li>
+  <li><strong>Przystosowanie do przewodów Cu</strong> – wejścia i wyjścia mają jasno określone zakresy przekrojów.</li>
+  <li><strong>Elastyczne mocowanie</strong> – możliwy jest montaż na szynie DIN albo przy użyciu śrub.</li>
+  <li><strong>Zdejmowana osłona transparentna</strong> – daje dostęp montażowy i umożliwia kontrolę rozmieszczenia połączeń.</li>
+</ul>
+
+<h3>Parametry ważne przy planowaniu instalacji</h3>
+<p>Wariant czterobiegunowy ma napięcie znamionowe 500 V AC/DC i stopień ochrony IP20. Zakres dla przewodów elastycznych z tulejką wynosi 1,5–25 mm², a dla przewodów sztywnych 1,5–35 mm². Przy przygotowaniu miejsca należy uwzględnić szerokość 97 mm oraz wybrany sposób montażu.</p>
+
+<h3>Specyfikacja techniczna</h3>
+<ul>
+  <li><strong>Producent:</strong> Morek</li>
+  <li><strong>Rodzina:</strong> MOBLOCK</li>
+  <li><strong>Kod:</strong> MAB4124A18</li>
+  <li><strong>Liczba biegunów:</strong> 4</li>
+  <li><strong>Liczba zacisków na każdy biegun:</strong> 7</li>
+  <li><strong>Wejścia Cu na biegun:</strong> 2 × 10–35 mm²</li>
+  <li><strong>Wyjścia Cu na biegun:</strong> 5 × 1,5–6 mm²</li>
+  <li><strong>Przewód elastyczny z tulejką:</strong> 1,5–25 mm²</li>
+  <li><strong>Przewód sztywny:</strong> 1,5–35 mm²</li>
+  <li><strong>Prąd znamionowy:</strong> 125 A</li>
+  <li><strong>Napięcie znamionowe AC/DC:</strong> 500 V</li>
+  <li><strong>Stopień ochrony:</strong> IP20</li>
+  <li><strong>Materiał części przewodzących:</strong> mosiądz</li>
+  <li><strong>Materiał śrub zaciskowych:</strong> stal ocynkowana</li>
+  <li><strong>Wymiary obudowy:</strong> 72 × 97 × 52 mm</li>
+  <li><strong>Klasa ETIM:</strong> EC001894</li>
+</ul>
+
+<p>MAB4124A18 jest przeznaczony do sytuacji, w której cztery tory mają otrzymać po pięć wyjść z dwóch zacisków wejściowych. Jeśli taki układ, napięcie 500 V AC/DC oraz wymiary 72 × 97 × 52 mm odpowiadają projektowi, wybierz ten wariant do przygotowanego punktu rozdziału.</p>
+
+<h3>Najczęściej zadawane pytania</h3>
+<p><strong>Ile zacisków ma cały blok MAB4124A18?</strong><br>Produkt ma łącznie 28 zacisków, ponieważ każdy z czterech biegunów zawiera siedem punktów przyłączeniowych.</p>
+<p><strong>Jakie napięcie znamionowe ma wersja czterobiegunowa?</strong><br>Napięcie znamionowe modelu MAB4124A18 wynosi 500 V AC/DC.</p>
+<p><strong>Jaką szerokość ma obudowa?</strong><br>Obudowa ma 97 mm szerokości; pełne wymiary wynoszą 72 × 97 × 52 mm.</p>
+
+<script type=""application/ld+json"">
+{
+  ""@context"": ""https://schema.org"",
+  ""@type"": ""FAQPage"",
+  ""mainEntity"": [
+    {
+      ""@type"": ""Question"",
+      ""name"": ""Ile zacisków ma cały blok MAB4124A18?"",
+      ""acceptedAnswer"": {
+        ""@type"": ""Answer"",
+        ""text"": ""Produkt ma łącznie 28 zacisków, ponieważ każdy z czterech biegunów zawiera siedem punktów przyłączeniowych.""
+      }
+    },
+    {
+      ""@type"": ""Question"",
+      ""name"": ""Jakie napięcie znamionowe ma wersja czterobiegunowa?"",
+      ""acceptedAnswer"": {
+        ""@type"": ""Answer"",
+        ""text"": ""Napięcie znamionowe modelu MAB4124A18 wynosi 500 V AC/DC.""
+      }
+    },
+    {
+      ""@type"": ""Question"",
+      ""name"": ""Jaką szerokość ma obudowa?"",
+      ""acceptedAnswer"": {
+        ""@type"": ""Answer"",
+        ""text"": ""Obudowa ma 97 mm szerokości; pełne wymiary wynoszą 72 × 97 × 52 mm.""
+      }
+    }
+  ]
+}
+</script>";"{""Producent"":""Morek"",""Dane producenta"":""MOREK, ul. Grzybowska 87 00-844 Warszawa, morekpl@morek.eu"",""Rodzaj"":""Blok dystrybucyjny"",""Seria"":""MOBLOCK"",""Prąd znamionowy [A]"":""125"",""Materiał przewodu"":""Cu"",""Przekrój przewodu elastycznego z tulejką [mm²]"":""1,5-25"",""Przekrój przewodu sztywnego [mm²]"":""1,5-35"",""Stopień ochrony [IP]"":""IP20"",""Sposób montażu"":""Szyna DIN lub śruby"",""Materiał części przewodzących"":""Mosiądz"",""Materiał śrub zaciskowych"":""Stal ocynkowana"",""Osłona"":""Transparentna, zdejmowana"",""Szyna PE"":""Tak"",""Szyna N"":""Tak"",""Klasa ETIM"":""EC001894"",""Liczba biegunów"":""4"",""Liczba zacisków na biegun"":""7"",""Przekrój wejścia Cu [mm²]"":""2 x 10-35"",""Przekrój wyjść Cu [mm²]"":""5 x 1,5-6"",""Napięcie znamionowe AC/DC [V]"":""500"",""Wymiary (dł. x szer. x wys.) [mm]"":""72 x 97 x 52""}";https://eleczaplive.blob.core.windows.net/productimages/5/c1f713cb0a094352a51f1e8514aa5437.png

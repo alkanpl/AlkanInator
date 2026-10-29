@@ -1,0 +1,3655 @@
+[
+  {
+    "sku": "43814204/SIM",
+    "status": "OK",
+    "confidence": 1.0,
+    "title_source": "ZLACZKI_tytuly_SEO.xlsx",
+    "attribute_source": "https://www.simet.com.pl/produkty/zlaczka-skretna-uniwersalna-do-przewodow-1-6-mm%C2%B2-5/",
+    "image_source": "https://www.simet.com.pl/produkty/zlaczka-skretna-uniwersalna-do-przewodow-1-6-mm%C2%B2-5/",
+    "attributes": [
+      {
+        "name": "Producent",
+        "value": "Simet",
+        "source": "https://www.simet.com.pl/produkty/zlaczka-skretna-uniwersalna-do-przewodow-1-6-mm%C2%B2-5/",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Dane producenta",
+        "value": "SIMET, Aleja Jana Pawła II 33 58-506 Jelenia Góra, sekretariat@simet.com.pl",
+        "source": "https://www.simet.com.pl/produkty/zlaczka-skretna-uniwersalna-do-przewodow-1-6-mm%C2%B2-5/",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Rodzaj",
+        "value": "Złączka skrętna",
+        "source": "https://www.simet.com.pl/produkty/zlaczka-skretna-uniwersalna-do-przewodow-1-6-mm%C2%B2-5/",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Model",
+        "value": "ZSE1-1.0/6.0z",
+        "source": "https://www.simet.com.pl/produkty/zlaczka-skretna-uniwersalna-do-przewodow-1-6-mm%C2%B2-5/",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Kolor",
+        "value": "Żółty",
+        "source": "https://www.simet.com.pl/produkty/zlaczka-skretna-uniwersalna-do-przewodow-1-6-mm%C2%B2-5/",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Liczba torów",
+        "value": "1",
+        "source": "https://www.simet.com.pl/produkty/zlaczka-skretna-uniwersalna-do-przewodow-1-6-mm%C2%B2-5/",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Przekrój znamionowy [mm²]",
+        "value": "1-6",
+        "source": "https://www.simet.com.pl/produkty/zlaczka-skretna-uniwersalna-do-przewodow-1-6-mm%C2%B2-5/",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Napięcie [V]",
+        "value": "400",
+        "source": "https://www.simet.com.pl/produkty/zlaczka-skretna-uniwersalna-do-przewodow-1-6-mm%C2%B2-5/",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Prąd znamionowy [A]",
+        "value": "41",
+        "source": "https://www.simet.com.pl/produkty/zlaczka-skretna-uniwersalna-do-przewodow-1-6-mm%C2%B2-5/",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Materiał",
+        "value": "Poliamid PA 66",
+        "source": "https://www.simet.com.pl/produkty/zlaczka-skretna-uniwersalna-do-przewodow-1-6-mm%C2%B2-5/",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Temperatura pracy [°C]",
+        "value": "-25 do +125",
+        "source": "https://www.simet.com.pl/produkty/zlaczka-skretna-uniwersalna-do-przewodow-1-6-mm%C2%B2-5/",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Wymiary [mm]",
+        "value": "19 x 27",
+        "source": "https://www.simet.com.pl/produkty/zlaczka-skretna-uniwersalna-do-przewodow-1-6-mm%C2%B2-5/",
+        "confidence": 1.0,
+        "status": "OK"
+      }
+    ]
+  },
+  {
+    "sku": "43814207/SIM",
+    "status": "OK",
+    "confidence": 1.0,
+    "title_source": "ZLACZKI_tytuly_SEO.xlsx",
+    "attribute_source": "https://www.simet.com.pl/produkty/zlaczka-skretna-uniwersalna-do-przewodow-1-6-mm%C2%B2-2/",
+    "image_source": "https://www.simet.com.pl/produkty/zlaczka-skretna-uniwersalna-do-przewodow-1-6-mm%C2%B2-2/",
+    "attributes": [
+      {
+        "name": "Producent",
+        "value": "Simet",
+        "source": "https://www.simet.com.pl/produkty/zlaczka-skretna-uniwersalna-do-przewodow-1-6-mm%C2%B2-2/",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Dane producenta",
+        "value": "SIMET, Aleja Jana Pawła II 33 58-506 Jelenia Góra, sekretariat@simet.com.pl",
+        "source": "https://www.simet.com.pl/produkty/zlaczka-skretna-uniwersalna-do-przewodow-1-6-mm%C2%B2-2/",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Rodzaj",
+        "value": "Złączka skrętna",
+        "source": "https://www.simet.com.pl/produkty/zlaczka-skretna-uniwersalna-do-przewodow-1-6-mm%C2%B2-2/",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Model",
+        "value": "ZSE1-1.0/6.0d",
+        "source": "https://www.simet.com.pl/produkty/zlaczka-skretna-uniwersalna-do-przewodow-1-6-mm%C2%B2-2/",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Kolor",
+        "value": "Czarny",
+        "source": "https://www.simet.com.pl/produkty/zlaczka-skretna-uniwersalna-do-przewodow-1-6-mm%C2%B2-2/",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Liczba torów",
+        "value": "1",
+        "source": "https://www.simet.com.pl/produkty/zlaczka-skretna-uniwersalna-do-przewodow-1-6-mm%C2%B2-2/",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Przekrój znamionowy [mm²]",
+        "value": "1-6",
+        "source": "https://www.simet.com.pl/produkty/zlaczka-skretna-uniwersalna-do-przewodow-1-6-mm%C2%B2-2/",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Napięcie [V]",
+        "value": "400",
+        "source": "https://www.simet.com.pl/produkty/zlaczka-skretna-uniwersalna-do-przewodow-1-6-mm%C2%B2-2/",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Prąd znamionowy [A]",
+        "value": "41",
+        "source": "https://www.simet.com.pl/produkty/zlaczka-skretna-uniwersalna-do-przewodow-1-6-mm%C2%B2-2/",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Materiał",
+        "value": "Poliamid PA 66",
+        "source": "https://www.simet.com.pl/produkty/zlaczka-skretna-uniwersalna-do-przewodow-1-6-mm%C2%B2-2/",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Temperatura pracy [°C]",
+        "value": "-25 do +125",
+        "source": "https://www.simet.com.pl/produkty/zlaczka-skretna-uniwersalna-do-przewodow-1-6-mm%C2%B2-2/",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Wymiary [mm]",
+        "value": "19 x 27",
+        "source": "https://www.simet.com.pl/produkty/zlaczka-skretna-uniwersalna-do-przewodow-1-6-mm%C2%B2-2/",
+        "confidence": 1.0,
+        "status": "OK"
+      }
+    ]
+  },
+  {
+    "sku": "21412108/SIM",
+    "status": "OK",
+    "confidence": 1.0,
+    "title_source": "ZLACZKI_tytuly_SEO.xlsx",
+    "attribute_source": "https://www.simet.com.pl/produkty/listwa-zaciskowa-gwintowa-termoplastyczna-6-mm%C2%B2-12-torowa-55c/",
+    "image_source": "https://www.simet.com.pl/produkty/listwa-zaciskowa-gwintowa-termoplastyczna-6-mm%C2%B2-12-torowa-55c/",
+    "attributes": [
+      {
+        "name": "Producent",
+        "value": "Simet",
+        "source": "https://www.simet.com.pl/produkty/listwa-zaciskowa-gwintowa-termoplastyczna-6-mm%C2%B2-12-torowa-55c/",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Dane producenta",
+        "value": "SIMET, Aleja Jana Pawła II 33 58-506 Jelenia Góra, sekretariat@simet.com.pl",
+        "source": "https://www.simet.com.pl/produkty/listwa-zaciskowa-gwintowa-termoplastyczna-6-mm%C2%B2-12-torowa-55c/",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Rodzaj",
+        "value": "Listwa zaciskowa",
+        "source": "https://www.simet.com.pl/produkty/listwa-zaciskowa-gwintowa-termoplastyczna-6-mm%C2%B2-12-torowa-55c/",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Model",
+        "value": "LTF12-6.0",
+        "source": "https://www.simet.com.pl/produkty/listwa-zaciskowa-gwintowa-termoplastyczna-6-mm%C2%B2-12-torowa-55c/",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Kolor",
+        "value": "Pomarańczowy",
+        "source": "https://www.simet.com.pl/produkty/listwa-zaciskowa-gwintowa-termoplastyczna-6-mm%C2%B2-12-torowa-55c/",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Liczba torów",
+        "value": "12",
+        "source": "https://www.simet.com.pl/produkty/listwa-zaciskowa-gwintowa-termoplastyczna-6-mm%C2%B2-12-torowa-55c/",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Przekrój znamionowy drut [mm²]",
+        "value": "2,5-6",
+        "source": "https://www.simet.com.pl/produkty/listwa-zaciskowa-gwintowa-termoplastyczna-6-mm%C2%B2-12-torowa-55c/",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Przekrój znamionowy linka [mm²]",
+        "value": "1,5-4",
+        "source": "https://www.simet.com.pl/produkty/listwa-zaciskowa-gwintowa-termoplastyczna-6-mm%C2%B2-12-torowa-55c/",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Napięcie [V]",
+        "value": "450",
+        "source": "https://www.simet.com.pl/produkty/listwa-zaciskowa-gwintowa-termoplastyczna-6-mm%C2%B2-12-torowa-55c/",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Prąd znamionowy [A]",
+        "value": "41",
+        "source": "https://www.simet.com.pl/produkty/listwa-zaciskowa-gwintowa-termoplastyczna-6-mm%C2%B2-12-torowa-55c/",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Materiał",
+        "value": "Polietylen + mosiądz",
+        "source": "https://www.simet.com.pl/produkty/listwa-zaciskowa-gwintowa-termoplastyczna-6-mm%C2%B2-12-torowa-55c/",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Temperatura pracy [°C]",
+        "value": "-25 do +55",
+        "source": "https://www.simet.com.pl/produkty/listwa-zaciskowa-gwintowa-termoplastyczna-6-mm%C2%B2-12-torowa-55c/",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Wymiary [mm]",
+        "value": "118 x 19 x 15",
+        "source": "https://www.simet.com.pl/produkty/listwa-zaciskowa-gwintowa-termoplastyczna-6-mm%C2%B2-12-torowa-55c/",
+        "confidence": 1.0,
+        "status": "OK"
+      }
+    ]
+  },
+  {
+    "sku": "21512108/SIM",
+    "status": "OK",
+    "confidence": 1.0,
+    "title_source": "ZLACZKI_tytuly_SEO.xlsx",
+    "attribute_source": "https://www.simet.com.pl/produkty/listwa-zaciskowa-gwintowa-termoplastyczna-10-mm%C2%B2-12-torowa-55c/",
+    "image_source": "https://www.simet.com.pl/produkty/listwa-zaciskowa-gwintowa-termoplastyczna-10-mm%C2%B2-12-torowa-55c/",
+    "attributes": [
+      {
+        "name": "Producent",
+        "value": "Simet",
+        "source": "https://www.simet.com.pl/produkty/listwa-zaciskowa-gwintowa-termoplastyczna-10-mm%C2%B2-12-torowa-55c/",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Dane producenta",
+        "value": "SIMET, Aleja Jana Pawła II 33 58-506 Jelenia Góra, sekretariat@simet.com.pl",
+        "source": "https://www.simet.com.pl/produkty/listwa-zaciskowa-gwintowa-termoplastyczna-10-mm%C2%B2-12-torowa-55c/",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Rodzaj",
+        "value": "Listwa zaciskowa",
+        "source": "https://www.simet.com.pl/produkty/listwa-zaciskowa-gwintowa-termoplastyczna-10-mm%C2%B2-12-torowa-55c/",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Model",
+        "value": "LTF12-10.0",
+        "source": "https://www.simet.com.pl/produkty/listwa-zaciskowa-gwintowa-termoplastyczna-10-mm%C2%B2-12-torowa-55c/",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Kolor",
+        "value": "Pomarańczowy",
+        "source": "https://www.simet.com.pl/produkty/listwa-zaciskowa-gwintowa-termoplastyczna-10-mm%C2%B2-12-torowa-55c/",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Liczba torów",
+        "value": "12",
+        "source": "https://www.simet.com.pl/produkty/listwa-zaciskowa-gwintowa-termoplastyczna-10-mm%C2%B2-12-torowa-55c/",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Przekrój znamionowy drut [mm²]",
+        "value": "4-10",
+        "source": "https://www.simet.com.pl/produkty/listwa-zaciskowa-gwintowa-termoplastyczna-10-mm%C2%B2-12-torowa-55c/",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Przekrój znamionowy linka [mm²]",
+        "value": "2,5-6",
+        "source": "https://www.simet.com.pl/produkty/listwa-zaciskowa-gwintowa-termoplastyczna-10-mm%C2%B2-12-torowa-55c/",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Napięcie [V]",
+        "value": "750",
+        "source": "https://www.simet.com.pl/produkty/listwa-zaciskowa-gwintowa-termoplastyczna-10-mm%C2%B2-12-torowa-55c/",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Prąd znamionowy [A]",
+        "value": "57",
+        "source": "https://www.simet.com.pl/produkty/listwa-zaciskowa-gwintowa-termoplastyczna-10-mm%C2%B2-12-torowa-55c/",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Materiał",
+        "value": "Polietylen + mosiądz",
+        "source": "https://www.simet.com.pl/produkty/listwa-zaciskowa-gwintowa-termoplastyczna-10-mm%C2%B2-12-torowa-55c/",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Temperatura pracy [°C]",
+        "value": "-25 do +55",
+        "source": "https://www.simet.com.pl/produkty/listwa-zaciskowa-gwintowa-termoplastyczna-10-mm%C2%B2-12-torowa-55c/",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Wymiary [mm]",
+        "value": "141 x 25 x 20",
+        "source": "https://www.simet.com.pl/produkty/listwa-zaciskowa-gwintowa-termoplastyczna-10-mm%C2%B2-12-torowa-55c/",
+        "confidence": 1.0,
+        "status": "OK"
+      }
+    ]
+  },
+  {
+    "sku": "21612108/SIM",
+    "status": "OK",
+    "confidence": 1.0,
+    "title_source": "ZLACZKI_tytuly_SEO.xlsx",
+    "attribute_source": "https://www.simet.com.pl/produkty/listwa-zaciskowa-gwintowa-termoplastyczna-16-mm%C2%B2-12-torowa-55c/",
+    "image_source": "https://www.simet.com.pl/produkty/listwa-zaciskowa-gwintowa-termoplastyczna-16-mm%C2%B2-12-torowa-55c/",
+    "attributes": [
+      {
+        "name": "Producent",
+        "value": "Simet",
+        "source": "https://www.simet.com.pl/produkty/listwa-zaciskowa-gwintowa-termoplastyczna-16-mm%C2%B2-12-torowa-55c/",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Dane producenta",
+        "value": "SIMET, Aleja Jana Pawła II 33 58-506 Jelenia Góra, sekretariat@simet.com.pl",
+        "source": "https://www.simet.com.pl/produkty/listwa-zaciskowa-gwintowa-termoplastyczna-16-mm%C2%B2-12-torowa-55c/",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Rodzaj",
+        "value": "Listwa zaciskowa",
+        "source": "https://www.simet.com.pl/produkty/listwa-zaciskowa-gwintowa-termoplastyczna-16-mm%C2%B2-12-torowa-55c/",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Model",
+        "value": "LTF12-16.0",
+        "source": "https://www.simet.com.pl/produkty/listwa-zaciskowa-gwintowa-termoplastyczna-16-mm%C2%B2-12-torowa-55c/",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Kolor",
+        "value": "Pomarańczowy",
+        "source": "https://www.simet.com.pl/produkty/listwa-zaciskowa-gwintowa-termoplastyczna-16-mm%C2%B2-12-torowa-55c/",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Liczba torów",
+        "value": "12",
+        "source": "https://www.simet.com.pl/produkty/listwa-zaciskowa-gwintowa-termoplastyczna-16-mm%C2%B2-12-torowa-55c/",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Przekrój znamionowy drut [mm²]",
+        "value": "6-16",
+        "source": "https://www.simet.com.pl/produkty/listwa-zaciskowa-gwintowa-termoplastyczna-16-mm%C2%B2-12-torowa-55c/",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Przekrój znamionowy linka [mm²]",
+        "value": "4-10",
+        "source": "https://www.simet.com.pl/produkty/listwa-zaciskowa-gwintowa-termoplastyczna-16-mm%C2%B2-12-torowa-55c/",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Napięcie [V]",
+        "value": "750",
+        "source": "https://www.simet.com.pl/produkty/listwa-zaciskowa-gwintowa-termoplastyczna-16-mm%C2%B2-12-torowa-55c/",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Prąd znamionowy [A]",
+        "value": "76",
+        "source": "https://www.simet.com.pl/produkty/listwa-zaciskowa-gwintowa-termoplastyczna-16-mm%C2%B2-12-torowa-55c/",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Materiał",
+        "value": "Polietylen + mosiądz",
+        "source": "https://www.simet.com.pl/produkty/listwa-zaciskowa-gwintowa-termoplastyczna-16-mm%C2%B2-12-torowa-55c/",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Temperatura pracy [°C]",
+        "value": "-25 do +55",
+        "source": "https://www.simet.com.pl/produkty/listwa-zaciskowa-gwintowa-termoplastyczna-16-mm%C2%B2-12-torowa-55c/",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Wymiary [mm]",
+        "value": "153 x 27 x 22",
+        "source": "https://www.simet.com.pl/produkty/listwa-zaciskowa-gwintowa-termoplastyczna-16-mm%C2%B2-12-torowa-55c/",
+        "confidence": 1.0,
+        "status": "OK"
+      }
+    ]
+  },
+  {
+    "sku": "21712008/SIM",
+    "status": "OK",
+    "confidence": 1.0,
+    "title_source": "ZLACZKI_tytuly_SEO.xlsx",
+    "attribute_source": "https://www.simet.com.pl/produkty/listwa-zaciskowa-gwintowa-termoplastyczna-25-mm%C2%B2-12-torowa-85c/",
+    "image_source": "https://www.simet.com.pl/produkty/listwa-zaciskowa-gwintowa-termoplastyczna-25-mm%C2%B2-12-torowa-85c/",
+    "attributes": [
+      {
+        "name": "Producent",
+        "value": "Simet",
+        "source": "https://www.simet.com.pl/produkty/listwa-zaciskowa-gwintowa-termoplastyczna-25-mm%C2%B2-12-torowa-85c/",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Dane producenta",
+        "value": "SIMET, Aleja Jana Pawła II 33 58-506 Jelenia Góra, sekretariat@simet.com.pl",
+        "source": "https://www.simet.com.pl/produkty/listwa-zaciskowa-gwintowa-termoplastyczna-25-mm%C2%B2-12-torowa-85c/",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Rodzaj",
+        "value": "Listwa zaciskowa",
+        "source": "https://www.simet.com.pl/produkty/listwa-zaciskowa-gwintowa-termoplastyczna-25-mm%C2%B2-12-torowa-85c/",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Model",
+        "value": "LTF12-25",
+        "source": "https://www.simet.com.pl/produkty/listwa-zaciskowa-gwintowa-termoplastyczna-25-mm%C2%B2-12-torowa-85c/",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Kolor",
+        "value": "Pomarańczowy",
+        "source": "https://www.simet.com.pl/produkty/listwa-zaciskowa-gwintowa-termoplastyczna-25-mm%C2%B2-12-torowa-85c/",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Liczba torów",
+        "value": "12",
+        "source": "https://www.simet.com.pl/produkty/listwa-zaciskowa-gwintowa-termoplastyczna-25-mm%C2%B2-12-torowa-85c/",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Przekrój znamionowy drut [mm²]",
+        "value": "10-25",
+        "source": "https://www.simet.com.pl/produkty/listwa-zaciskowa-gwintowa-termoplastyczna-25-mm%C2%B2-12-torowa-85c/",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Przekrój znamionowy linka [mm²]",
+        "value": "6-16",
+        "source": "https://www.simet.com.pl/produkty/listwa-zaciskowa-gwintowa-termoplastyczna-25-mm%C2%B2-12-torowa-85c/",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Napięcie [V]",
+        "value": "750",
+        "source": "https://www.simet.com.pl/produkty/listwa-zaciskowa-gwintowa-termoplastyczna-25-mm%C2%B2-12-torowa-85c/",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Prąd znamionowy [A]",
+        "value": "81",
+        "source": "https://www.simet.com.pl/produkty/listwa-zaciskowa-gwintowa-termoplastyczna-25-mm%C2%B2-12-torowa-85c/",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Materiał",
+        "value": "Polietylen + mosiądz",
+        "source": "https://www.simet.com.pl/produkty/listwa-zaciskowa-gwintowa-termoplastyczna-25-mm%C2%B2-12-torowa-85c/",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Temperatura pracy [°C]",
+        "value": "-40 do +85",
+        "source": "https://www.simet.com.pl/produkty/listwa-zaciskowa-gwintowa-termoplastyczna-25-mm%C2%B2-12-torowa-85c/",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Wymiary [mm]",
+        "value": "212 x 33 x 25",
+        "source": "https://www.simet.com.pl/produkty/listwa-zaciskowa-gwintowa-termoplastyczna-25-mm%C2%B2-12-torowa-85c/",
+        "confidence": 1.0,
+        "status": "OK"
+      }
+    ]
+  },
+  {
+    "sku": "MAA1035A10/MOR",
+    "status": "OK",
+    "confidence": 1.0,
+    "title_source": "ZLACZKI_tytuly_SEO.xlsx",
+    "attribute_source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 71",
+    "image_source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 71",
+    "attributes": [
+      {
+        "name": "Producent",
+        "value": "Morek",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 71",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Dane producenta",
+        "value": "MOREK, ul. Grzybowska 87 00-844 Warszawa, morekpl@morek.eu",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 71",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Wymiary [mm]",
+        "value": "45 x 16 x 40",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 71",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Rodzaj",
+        "value": "Bloki rozdzielcze",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 71",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Model",
+        "value": "OTL35",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 71",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Kolor",
+        "value": "Szary",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 71",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Materiał przewodu",
+        "value": "Al/Cu",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 71",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Liczba grup przyłączeniowych",
+        "value": "1",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 71",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Przekrój znamionowy [mm²]",
+        "value": "2,5-35",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 71",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Napięcie [V]",
+        "value": "1000 V AC / 1500 V DC",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 71",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Stopień ochrony [IP]",
+        "value": "IP20",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 71",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Sposób montażu",
+        "value": "Szyna DIN lub śruby",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 71",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Liczba otworów",
+        "value": "2",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 71",
+        "confidence": 1.0,
+        "status": "OK"
+      }
+    ]
+  },
+  {
+    "sku": "MAA1035B10/MOR",
+    "status": "OK",
+    "confidence": 1.0,
+    "title_source": "ZLACZKI_tytuly_SEO.xlsx",
+    "attribute_source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 72",
+    "image_source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 72",
+    "attributes": [
+      {
+        "name": "Producent",
+        "value": "Morek",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 72",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Dane producenta",
+        "value": "MOREK, ul. Grzybowska 87 00-844 Warszawa, morekpl@morek.eu",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 72",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Wymiary [mm]",
+        "value": "45 x 16 x 40",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 72",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Rodzaj",
+        "value": "Bloki rozdzielcze",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 72",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Model",
+        "value": "OTL35",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 72",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Kolor",
+        "value": "Niebieski",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 72",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Materiał przewodu",
+        "value": "Al/Cu",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 72",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Liczba grup przyłączeniowych",
+        "value": "1",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 72",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Przekrój znamionowy [mm²]",
+        "value": "2,5-35",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 72",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Napięcie [V]",
+        "value": "1000 V AC / 1500 V DC",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 72",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Stopień ochrony [IP]",
+        "value": "IP20",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 72",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Sposób montażu",
+        "value": "Szyna DIN lub śruby",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 72",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Liczba otworów",
+        "value": "2",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 72",
+        "confidence": 1.0,
+        "status": "OK"
+      }
+    ]
+  },
+  {
+    "sku": "MAA1035R10/MOR",
+    "status": "OK",
+    "confidence": 1.0,
+    "title_source": "ZLACZKI_tytuly_SEO.xlsx",
+    "attribute_source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 73",
+    "image_source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 73",
+    "attributes": [
+      {
+        "name": "Producent",
+        "value": "Morek",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 73",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Dane producenta",
+        "value": "MOREK, ul. Grzybowska 87 00-844 Warszawa, morekpl@morek.eu",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 73",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Wymiary [mm]",
+        "value": "45 x 16 x 40",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 73",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Rodzaj",
+        "value": "Bloki rozdzielcze",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 73",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Model",
+        "value": "OTL35",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 73",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Kolor",
+        "value": "Czerwony",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 73",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Materiał przewodu",
+        "value": "Al/Cu",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 73",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Liczba grup przyłączeniowych",
+        "value": "1",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 73",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Przekrój znamionowy [mm²]",
+        "value": "2,5-35",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 73",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Napięcie [V]",
+        "value": "1000 V AC / 1500 V DC",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 73",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Stopień ochrony [IP]",
+        "value": "IP20",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 73",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Sposób montażu",
+        "value": "Szyna DIN lub śruby",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 73",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Liczba otworów",
+        "value": "2",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 73",
+        "confidence": 1.0,
+        "status": "OK"
+      }
+    ]
+  },
+  {
+    "sku": "MAA1035Y10/MOR",
+    "status": "OK",
+    "confidence": 1.0,
+    "title_source": "ZLACZKI_tytuly_SEO.xlsx",
+    "attribute_source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 75",
+    "image_source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 75",
+    "attributes": [
+      {
+        "name": "Producent",
+        "value": "Morek",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 75",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Dane producenta",
+        "value": "MOREK, ul. Grzybowska 87 00-844 Warszawa, morekpl@morek.eu",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 75",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Wymiary [mm]",
+        "value": "45 x 16 x 40",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 75",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Rodzaj",
+        "value": "Bloki rozdzielcze",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 75",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Model",
+        "value": "OTL35",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 75",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Kolor",
+        "value": "Żółto-zielony",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 75",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Materiał przewodu",
+        "value": "Al/Cu",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 75",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Liczba grup przyłączeniowych",
+        "value": "1",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 75",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Przekrój znamionowy [mm²]",
+        "value": "2,5-35",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 75",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Napięcie [V]",
+        "value": "1000 V AC / 1500 V DC",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 75",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Stopień ochrony [IP]",
+        "value": "IP20",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 75",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Sposób montażu",
+        "value": "Szyna DIN lub śruby",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 75",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Liczba otworów",
+        "value": "2",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 75",
+        "confidence": 1.0,
+        "status": "OK"
+      }
+    ]
+  },
+  {
+    "sku": "MAA1050A10/MOR",
+    "status": "OK",
+    "confidence": 1.0,
+    "title_source": "ZLACZKI_tytuly_SEO.xlsx",
+    "attribute_source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 76",
+    "image_source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 76",
+    "attributes": [
+      {
+        "name": "Producent",
+        "value": "Morek",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 76",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Dane producenta",
+        "value": "MOREK, ul. Grzybowska 87 00-844 Warszawa, morekpl@morek.eu",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 76",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Wymiary [mm]",
+        "value": "50 x 18 x 43",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 76",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Rodzaj",
+        "value": "Bloki rozdzielcze",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 76",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Model",
+        "value": "OTL50",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 76",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Kolor",
+        "value": "Szary",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 76",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Materiał przewodu",
+        "value": "Al/Cu",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 76",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Liczba grup przyłączeniowych",
+        "value": "1",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 76",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Przekrój znamionowy [mm²]",
+        "value": "1,5-50",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 76",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Napięcie [V]",
+        "value": "1000 V AC / 1500 V DC",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 76",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Stopień ochrony [IP]",
+        "value": "IP20",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 76",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Sposób montażu",
+        "value": "Szyna DIN lub śruby",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 76",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Liczba otworów",
+        "value": "2",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 76",
+        "confidence": 1.0,
+        "status": "OK"
+      }
+    ]
+  },
+  {
+    "sku": "MAA1050Y10/MOR",
+    "status": "OK",
+    "confidence": 1.0,
+    "title_source": "ZLACZKI_tytuly_SEO.xlsx",
+    "attribute_source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 80",
+    "image_source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 80",
+    "attributes": [
+      {
+        "name": "Producent",
+        "value": "Morek",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 80",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Dane producenta",
+        "value": "MOREK, ul. Grzybowska 87 00-844 Warszawa, morekpl@morek.eu",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 80",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Wymiary [mm]",
+        "value": "50 x 18 x 43",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 80",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Rodzaj",
+        "value": "Bloki rozdzielcze",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 80",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Model",
+        "value": "OTL50",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 80",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Kolor",
+        "value": "Żółto-zielony",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 80",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Materiał przewodu",
+        "value": "Al/Cu",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 80",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Liczba grup przyłączeniowych",
+        "value": "1",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 80",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Przekrój znamionowy [mm²]",
+        "value": "1,5-50",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 80",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Napięcie [V]",
+        "value": "1000 V AC / 1500 V DC",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 80",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Stopień ochrony [IP]",
+        "value": "IP20",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 80",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Sposób montażu",
+        "value": "Szyna DIN lub śruby",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 80",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Liczba otworów",
+        "value": "2",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 80",
+        "confidence": 1.0,
+        "status": "OK"
+      }
+    ]
+  },
+  {
+    "sku": "MAA1095A10/MOR",
+    "status": "OK",
+    "confidence": 1.0,
+    "title_source": "ZLACZKI_tytuly_SEO.xlsx",
+    "attribute_source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 81",
+    "image_source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 81",
+    "attributes": [
+      {
+        "name": "Producent",
+        "value": "Morek",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 81",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Dane producenta",
+        "value": "MOREK, ul. Grzybowska 87 00-844 Warszawa, morekpl@morek.eu",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 81",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Wymiary [mm]",
+        "value": "84 x 25 x 51",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 81",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Rodzaj",
+        "value": "Bloki rozdzielcze",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 81",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Model",
+        "value": "OTL95",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 81",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Kolor",
+        "value": "Szary",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 81",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Materiał przewodu",
+        "value": "Al/Cu",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 81",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Liczba grup przyłączeniowych",
+        "value": "1",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 81",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Przekrój znamionowy [mm²]",
+        "value": "6-95",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 81",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Napięcie [V]",
+        "value": "1000 V AC / 1500 V DC",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 81",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Stopień ochrony [IP]",
+        "value": "IP20",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 81",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Sposób montażu",
+        "value": "Szyna DIN lub śruby",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 81",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Liczba otworów",
+        "value": "2",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 81",
+        "confidence": 1.0,
+        "status": "OK"
+      }
+    ]
+  },
+  {
+    "sku": "MAA1095B10/MOR",
+    "status": "OK",
+    "confidence": 1.0,
+    "title_source": "ZLACZKI_tytuly_SEO.xlsx",
+    "attribute_source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 82",
+    "image_source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 82",
+    "attributes": [
+      {
+        "name": "Producent",
+        "value": "Morek",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 82",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Dane producenta",
+        "value": "MOREK, ul. Grzybowska 87 00-844 Warszawa, morekpl@morek.eu",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 82",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Wymiary [mm]",
+        "value": "84 x 25 x 51",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 82",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Rodzaj",
+        "value": "Bloki rozdzielcze",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 82",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Model",
+        "value": "OTL95",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 82",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Kolor",
+        "value": "Niebieski",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 82",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Materiał przewodu",
+        "value": "Al/Cu",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 82",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Liczba grup przyłączeniowych",
+        "value": "1",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 82",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Przekrój znamionowy [mm²]",
+        "value": "6-95",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 82",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Napięcie [V]",
+        "value": "1000 V AC / 1500 V DC",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 82",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Stopień ochrony [IP]",
+        "value": "IP20",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 82",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Sposób montażu",
+        "value": "Szyna DIN lub śruby",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 82",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Liczba otworów",
+        "value": "2",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 82",
+        "confidence": 1.0,
+        "status": "OK"
+      }
+    ]
+  },
+  {
+    "sku": "MAA1095Y10/MOR",
+    "status": "OK",
+    "confidence": 1.0,
+    "title_source": "ZLACZKI_tytuly_SEO.xlsx",
+    "attribute_source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 85",
+    "image_source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 85",
+    "attributes": [
+      {
+        "name": "Producent",
+        "value": "Morek",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 85",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Dane producenta",
+        "value": "MOREK, ul. Grzybowska 87 00-844 Warszawa, morekpl@morek.eu",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 85",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Wymiary [mm]",
+        "value": "84 x 25 x 51",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 85",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Rodzaj",
+        "value": "Bloki rozdzielcze",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 85",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Model",
+        "value": "OTL95",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 85",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Kolor",
+        "value": "Żółto-zielony",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 85",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Materiał przewodu",
+        "value": "Al/Cu",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 85",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Liczba grup przyłączeniowych",
+        "value": "1",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 85",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Przekrój znamionowy [mm²]",
+        "value": "6-95",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 85",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Napięcie [V]",
+        "value": "1000 V AC / 1500 V DC",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 85",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Stopień ochrony [IP]",
+        "value": "IP20",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 85",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Sposób montażu",
+        "value": "Szyna DIN lub śruby",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 85",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Liczba otworów",
+        "value": "2",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 85",
+        "confidence": 1.0,
+        "status": "OK"
+      }
+    ]
+  },
+  {
+    "sku": "MAA1150A10/MOR",
+    "status": "OK",
+    "confidence": 1.0,
+    "title_source": "ZLACZKI_tytuly_SEO.xlsx",
+    "attribute_source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 86",
+    "image_source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 86",
+    "attributes": [
+      {
+        "name": "Producent",
+        "value": "Morek",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 86",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Dane producenta",
+        "value": "MOREK, ul. Grzybowska 87 00-844 Warszawa, morekpl@morek.eu",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 86",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Wymiary [mm]",
+        "value": "84 x 31 x 54",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 86",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Rodzaj",
+        "value": "Bloki rozdzielcze",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 86",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Model",
+        "value": "OTL150",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 86",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Kolor",
+        "value": "Szary",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 86",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Materiał przewodu",
+        "value": "Al/Cu",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 86",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Liczba grup przyłączeniowych",
+        "value": "1",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 86",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Przekrój znamionowy [mm²]",
+        "value": "25-150",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 86",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Napięcie [V]",
+        "value": "1000 V AC / 1500 V DC",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 86",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Stopień ochrony [IP]",
+        "value": "IP20",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 86",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Sposób montażu",
+        "value": "Szyna DIN lub śruby",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 86",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Liczba otworów",
+        "value": "2",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 86",
+        "confidence": 1.0,
+        "status": "OK"
+      }
+    ]
+  },
+  {
+    "sku": "MAA1150B10/MOR",
+    "status": "OK",
+    "confidence": 1.0,
+    "title_source": "ZLACZKI_tytuly_SEO.xlsx",
+    "attribute_source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 87",
+    "image_source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 87",
+    "attributes": [
+      {
+        "name": "Producent",
+        "value": "Morek",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 87",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Dane producenta",
+        "value": "MOREK, ul. Grzybowska 87 00-844 Warszawa, morekpl@morek.eu",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 87",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Wymiary [mm]",
+        "value": "84 x 31 x 54",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 87",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Rodzaj",
+        "value": "Bloki rozdzielcze",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 87",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Model",
+        "value": "OTL150",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 87",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Kolor",
+        "value": "Niebieski",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 87",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Materiał przewodu",
+        "value": "Al/Cu",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 87",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Liczba grup przyłączeniowych",
+        "value": "1",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 87",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Przekrój znamionowy [mm²]",
+        "value": "25-150",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 87",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Napięcie [V]",
+        "value": "1000 V AC / 1500 V DC",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 87",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Stopień ochrony [IP]",
+        "value": "IP20",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 87",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Sposób montażu",
+        "value": "Szyna DIN lub śruby",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 87",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Liczba otworów",
+        "value": "2",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 87",
+        "confidence": 1.0,
+        "status": "OK"
+      }
+    ]
+  },
+  {
+    "sku": "MAA1150Y10/MOR",
+    "status": "OK",
+    "confidence": 1.0,
+    "title_source": "ZLACZKI_tytuly_SEO.xlsx",
+    "attribute_source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 90",
+    "image_source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 90",
+    "attributes": [
+      {
+        "name": "Producent",
+        "value": "Morek",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 90",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Dane producenta",
+        "value": "MOREK, ul. Grzybowska 87 00-844 Warszawa, morekpl@morek.eu",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 90",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Wymiary [mm]",
+        "value": "84 x 31 x 54",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 90",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Rodzaj",
+        "value": "Bloki rozdzielcze",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 90",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Model",
+        "value": "OTL150",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 90",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Kolor",
+        "value": "Żółto-zielony",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 90",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Materiał przewodu",
+        "value": "Al/Cu",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 90",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Liczba grup przyłączeniowych",
+        "value": "1",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 90",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Przekrój znamionowy [mm²]",
+        "value": "25-150",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 90",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Napięcie [V]",
+        "value": "1000 V AC / 1500 V DC",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 90",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Stopień ochrony [IP]",
+        "value": "IP20",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 90",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Sposób montażu",
+        "value": "Szyna DIN lub śruby",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 90",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Liczba otworów",
+        "value": "2",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 90",
+        "confidence": 1.0,
+        "status": "OK"
+      }
+    ]
+  },
+  {
+    "sku": "MAA2035A10/MOR",
+    "status": "OK",
+    "confidence": 1.0,
+    "title_source": "ZLACZKI_tytuly_SEO.xlsx",
+    "attribute_source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 101",
+    "image_source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 101",
+    "attributes": [
+      {
+        "name": "Producent",
+        "value": "Morek",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 101",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Dane producenta",
+        "value": "MOREK, ul. Grzybowska 87 00-844 Warszawa, morekpl@morek.eu",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 101",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Wymiary [mm]",
+        "value": "46 x 27 x 40",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 101",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Rodzaj",
+        "value": "Bloki rozdzielcze",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 101",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Model",
+        "value": "OTL35-2",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 101",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Kolor",
+        "value": "Szary",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 101",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Materiał przewodu",
+        "value": "Al/Cu",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 101",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Liczba grup przyłączeniowych",
+        "value": "2",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 101",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Przekrój znamionowy [mm²]",
+        "value": "2,5-35",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 101",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Napięcie [V]",
+        "value": "1000 V AC / 1500 V DC",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 101",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Stopień ochrony [IP]",
+        "value": "IP20",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 101",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Sposób montażu",
+        "value": "Szyna DIN lub śruby",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 101",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Liczba otworów",
+        "value": "4",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 101",
+        "confidence": 1.0,
+        "status": "OK"
+      }
+    ]
+  },
+  {
+    "sku": "MAA2035B10/MOR",
+    "status": "OK",
+    "confidence": 1.0,
+    "title_source": "ZLACZKI_tytuly_SEO.xlsx",
+    "attribute_source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 102",
+    "image_source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 102",
+    "attributes": [
+      {
+        "name": "Producent",
+        "value": "Morek",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 102",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Dane producenta",
+        "value": "MOREK, ul. Grzybowska 87 00-844 Warszawa, morekpl@morek.eu",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 102",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Wymiary [mm]",
+        "value": "46 x 27 x 40",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 102",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Rodzaj",
+        "value": "Bloki rozdzielcze",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 102",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Model",
+        "value": "OTL35-2",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 102",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Kolor",
+        "value": "Niebieski",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 102",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Materiał przewodu",
+        "value": "Al/Cu",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 102",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Liczba grup przyłączeniowych",
+        "value": "2",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 102",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Przekrój znamionowy [mm²]",
+        "value": "2,5-35",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 102",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Napięcie [V]",
+        "value": "1000 V AC / 1500 V DC",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 102",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Stopień ochrony [IP]",
+        "value": "IP20",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 102",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Sposób montażu",
+        "value": "Szyna DIN lub śruby",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 102",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Liczba otworów",
+        "value": "4",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 102",
+        "confidence": 1.0,
+        "status": "OK"
+      }
+    ]
+  },
+  {
+    "sku": "MAA2035Y10/MOR",
+    "status": "OK",
+    "confidence": 1.0,
+    "title_source": "ZLACZKI_tytuly_SEO.xlsx",
+    "attribute_source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 105",
+    "image_source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 105",
+    "attributes": [
+      {
+        "name": "Producent",
+        "value": "Morek",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 105",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Dane producenta",
+        "value": "MOREK, ul. Grzybowska 87 00-844 Warszawa, morekpl@morek.eu",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 105",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Wymiary [mm]",
+        "value": "46 x 27 x 40",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 105",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Rodzaj",
+        "value": "Bloki rozdzielcze",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 105",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Model",
+        "value": "OTL35-2",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 105",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Kolor",
+        "value": "Żółto-zielony",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 105",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Materiał przewodu",
+        "value": "Al/Cu",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 105",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Liczba grup przyłączeniowych",
+        "value": "2",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 105",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Przekrój znamionowy [mm²]",
+        "value": "2,5-35",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 105",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Napięcie [V]",
+        "value": "1000 V AC / 1500 V DC",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 105",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Stopień ochrony [IP]",
+        "value": "IP20",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 105",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Sposób montażu",
+        "value": "Szyna DIN lub śruby",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 105",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Liczba otworów",
+        "value": "4",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 105",
+        "confidence": 1.0,
+        "status": "OK"
+      }
+    ]
+  },
+  {
+    "sku": "MAA2050A10/MOR",
+    "status": "OK",
+    "confidence": 1.0,
+    "title_source": "ZLACZKI_tytuly_SEO.xlsx",
+    "attribute_source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 106",
+    "image_source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 106",
+    "attributes": [
+      {
+        "name": "Producent",
+        "value": "Morek",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 106",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Dane producenta",
+        "value": "MOREK, ul. Grzybowska 87 00-844 Warszawa, morekpl@morek.eu",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 106",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Wymiary [mm]",
+        "value": "49 x 30 x 43",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 106",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Rodzaj",
+        "value": "Bloki rozdzielcze",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 106",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Model",
+        "value": "OTL50-2",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 106",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Kolor",
+        "value": "Szary",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 106",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Materiał przewodu",
+        "value": "Al/Cu",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 106",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Liczba grup przyłączeniowych",
+        "value": "2",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 106",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Przekrój znamionowy [mm²]",
+        "value": "1,5-50",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 106",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Napięcie [V]",
+        "value": "1000 V AC / 1500 V DC",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 106",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Stopień ochrony [IP]",
+        "value": "IP20",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 106",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Sposób montażu",
+        "value": "Szyna DIN lub śruby",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 106",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Liczba otworów",
+        "value": "4",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 106",
+        "confidence": 1.0,
+        "status": "OK"
+      }
+    ]
+  },
+  {
+    "sku": "MAA2050B10/MOR",
+    "status": "OK",
+    "confidence": 1.0,
+    "title_source": "ZLACZKI_tytuly_SEO.xlsx",
+    "attribute_source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 107",
+    "image_source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 107",
+    "attributes": [
+      {
+        "name": "Producent",
+        "value": "Morek",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 107",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Dane producenta",
+        "value": "MOREK, ul. Grzybowska 87 00-844 Warszawa, morekpl@morek.eu",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 107",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Wymiary [mm]",
+        "value": "49 x 30 x 43",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 107",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Rodzaj",
+        "value": "Bloki rozdzielcze",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 107",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Model",
+        "value": "OTL50-2",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 107",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Kolor",
+        "value": "Niebieski",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 107",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Materiał przewodu",
+        "value": "Al/Cu",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 107",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Liczba grup przyłączeniowych",
+        "value": "2",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 107",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Przekrój znamionowy [mm²]",
+        "value": "1,5-50",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 107",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Napięcie [V]",
+        "value": "1000 V AC / 1500 V DC",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 107",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Stopień ochrony [IP]",
+        "value": "IP20",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 107",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Sposób montażu",
+        "value": "Szyna DIN lub śruby",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 107",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Liczba otworów",
+        "value": "4",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 107",
+        "confidence": 1.0,
+        "status": "OK"
+      }
+    ]
+  },
+  {
+    "sku": "MAA2050Y10/MOR",
+    "status": "OK",
+    "confidence": 1.0,
+    "title_source": "ZLACZKI_tytuly_SEO.xlsx",
+    "attribute_source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 110",
+    "image_source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 110",
+    "attributes": [
+      {
+        "name": "Producent",
+        "value": "Morek",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 110",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Dane producenta",
+        "value": "MOREK, ul. Grzybowska 87 00-844 Warszawa, morekpl@morek.eu",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 110",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Wymiary [mm]",
+        "value": "49 x 30 x 43",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 110",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Rodzaj",
+        "value": "Bloki rozdzielcze",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 110",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Model",
+        "value": "OTL50-2",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 110",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Kolor",
+        "value": "Żółto-zielony",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 110",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Materiał przewodu",
+        "value": "Al/Cu",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 110",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Liczba grup przyłączeniowych",
+        "value": "2",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 110",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Przekrój znamionowy [mm²]",
+        "value": "1,5-50",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 110",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Napięcie [V]",
+        "value": "1000 V AC / 1500 V DC",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 110",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Stopień ochrony [IP]",
+        "value": "IP20",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 110",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Sposób montażu",
+        "value": "Szyna DIN lub śruby",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 110",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Liczba otworów",
+        "value": "4",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 110",
+        "confidence": 1.0,
+        "status": "OK"
+      }
+    ]
+  },
+  {
+    "sku": "MAA2095A10/MOR",
+    "status": "OK",
+    "confidence": 1.0,
+    "title_source": "ZLACZKI_tytuly_SEO.xlsx",
+    "attribute_source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 111",
+    "image_source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 111",
+    "attributes": [
+      {
+        "name": "Producent",
+        "value": "Morek",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 111",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Dane producenta",
+        "value": "MOREK, ul. Grzybowska 87 00-844 Warszawa, morekpl@morek.eu",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 111",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Wymiary [mm]",
+        "value": "84 x 42 x 51",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 111",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Rodzaj",
+        "value": "Bloki rozdzielcze",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 111",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Model",
+        "value": "OTL95-2",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 111",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Kolor",
+        "value": "Szary",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 111",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Materiał przewodu",
+        "value": "Al/Cu",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 111",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Liczba grup przyłączeniowych",
+        "value": "2",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 111",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Przekrój znamionowy [mm²]",
+        "value": "6-95",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 111",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Napięcie [V]",
+        "value": "1000 V AC / 1500 V DC",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 111",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Stopień ochrony [IP]",
+        "value": "IP20",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 111",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Sposób montażu",
+        "value": "Szyna DIN lub śruby",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 111",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Liczba otworów",
+        "value": "4",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 111",
+        "confidence": 1.0,
+        "status": "OK"
+      }
+    ]
+  },
+  {
+    "sku": "MAA2095B10/MOR",
+    "status": "OK",
+    "confidence": 1.0,
+    "title_source": "ZLACZKI_tytuly_SEO.xlsx",
+    "attribute_source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 112",
+    "image_source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 112",
+    "attributes": [
+      {
+        "name": "Producent",
+        "value": "Morek",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 112",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Dane producenta",
+        "value": "MOREK, ul. Grzybowska 87 00-844 Warszawa, morekpl@morek.eu",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 112",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Wymiary [mm]",
+        "value": "84 x 42 x 51",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 112",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Rodzaj",
+        "value": "Bloki rozdzielcze",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 112",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Model",
+        "value": "OTL95-2",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 112",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Kolor",
+        "value": "Niebieski",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 112",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Materiał przewodu",
+        "value": "Al/Cu",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 112",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Liczba grup przyłączeniowych",
+        "value": "2",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 112",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Przekrój znamionowy [mm²]",
+        "value": "6-95",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 112",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Napięcie [V]",
+        "value": "1000 V AC / 1500 V DC",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 112",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Stopień ochrony [IP]",
+        "value": "IP20",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 112",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Sposób montażu",
+        "value": "Szyna DIN lub śruby",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 112",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Liczba otworów",
+        "value": "4",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 112",
+        "confidence": 1.0,
+        "status": "OK"
+      }
+    ]
+  },
+  {
+    "sku": "MAA2095Y10/MOR",
+    "status": "OK",
+    "confidence": 1.0,
+    "title_source": "ZLACZKI_tytuly_SEO.xlsx",
+    "attribute_source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 115",
+    "image_source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 115",
+    "attributes": [
+      {
+        "name": "Producent",
+        "value": "Morek",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 115",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Dane producenta",
+        "value": "MOREK, ul. Grzybowska 87 00-844 Warszawa, morekpl@morek.eu",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 115",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Wymiary [mm]",
+        "value": "84 x 42 x 51",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 115",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Rodzaj",
+        "value": "Bloki rozdzielcze",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 115",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Model",
+        "value": "OTL95-2",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 115",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Kolor",
+        "value": "Żółto-zielony",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 115",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Materiał przewodu",
+        "value": "Al/Cu",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 115",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Liczba grup przyłączeniowych",
+        "value": "2",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 115",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Przekrój znamionowy [mm²]",
+        "value": "6-95",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 115",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Napięcie [V]",
+        "value": "1000 V AC / 1500 V DC",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 115",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Stopień ochrony [IP]",
+        "value": "IP20",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 115",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Sposób montażu",
+        "value": "Szyna DIN lub śruby",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 115",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Liczba otworów",
+        "value": "4",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 115",
+        "confidence": 1.0,
+        "status": "OK"
+      }
+    ]
+  },
+  {
+    "sku": "MAA2150A10/MOR",
+    "status": "OK",
+    "confidence": 1.0,
+    "title_source": "ZLACZKI_tytuly_SEO.xlsx",
+    "attribute_source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 116",
+    "image_source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 116",
+    "attributes": [
+      {
+        "name": "Producent",
+        "value": "Morek",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 116",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Dane producenta",
+        "value": "MOREK, ul. Grzybowska 87 00-844 Warszawa, morekpl@morek.eu",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 116",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Wymiary [mm]",
+        "value": "84 x 51 x 54",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 116",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Rodzaj",
+        "value": "Bloki rozdzielcze",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 116",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Model",
+        "value": "OTL150-2",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 116",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Kolor",
+        "value": "Szary",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 116",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Materiał przewodu",
+        "value": "Al/Cu",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 116",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Liczba grup przyłączeniowych",
+        "value": "2",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 116",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Przekrój znamionowy [mm²]",
+        "value": "25-150",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 116",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Napięcie [V]",
+        "value": "1000 V AC / 1500 V DC",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 116",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Stopień ochrony [IP]",
+        "value": "IP20",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 116",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Sposób montażu",
+        "value": "Szyna DIN lub śruby",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 116",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Liczba otworów",
+        "value": "4",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 116",
+        "confidence": 1.0,
+        "status": "OK"
+      }
+    ]
+  },
+  {
+    "sku": "MAA2150B10/MOR",
+    "status": "OK",
+    "confidence": 1.0,
+    "title_source": "ZLACZKI_tytuly_SEO.xlsx",
+    "attribute_source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 117",
+    "image_source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 117",
+    "attributes": [
+      {
+        "name": "Producent",
+        "value": "Morek",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 117",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Dane producenta",
+        "value": "MOREK, ul. Grzybowska 87 00-844 Warszawa, morekpl@morek.eu",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 117",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Wymiary [mm]",
+        "value": "84 x 51 x 54",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 117",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Rodzaj",
+        "value": "Bloki rozdzielcze",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 117",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Model",
+        "value": "OTL150-2",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 117",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Kolor",
+        "value": "Niebieski",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 117",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Materiał przewodu",
+        "value": "Al/Cu",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 117",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Liczba grup przyłączeniowych",
+        "value": "2",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 117",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Przekrój znamionowy [mm²]",
+        "value": "25-150",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 117",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Napięcie [V]",
+        "value": "1000 V AC / 1500 V DC",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 117",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Stopień ochrony [IP]",
+        "value": "IP20",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 117",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Sposób montażu",
+        "value": "Szyna DIN lub śruby",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 117",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Liczba otworów",
+        "value": "4",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 117",
+        "confidence": 1.0,
+        "status": "OK"
+      }
+    ]
+  },
+  {
+    "sku": "MAA2150Y10/MOR",
+    "status": "OK",
+    "confidence": 1.0,
+    "title_source": "ZLACZKI_tytuly_SEO.xlsx",
+    "attribute_source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 120",
+    "image_source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 120",
+    "attributes": [
+      {
+        "name": "Producent",
+        "value": "Morek",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 120",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Dane producenta",
+        "value": "MOREK, ul. Grzybowska 87 00-844 Warszawa, morekpl@morek.eu",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 120",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Wymiary [mm]",
+        "value": "84 x 51 x 54",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 120",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Rodzaj",
+        "value": "Bloki rozdzielcze",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 120",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Model",
+        "value": "OTL150-2",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 120",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Kolor",
+        "value": "Żółto-zielony",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 120",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Materiał przewodu",
+        "value": "Al/Cu",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 120",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Liczba grup przyłączeniowych",
+        "value": "2",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 120",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Przekrój znamionowy [mm²]",
+        "value": "25-150",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 120",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Napięcie [V]",
+        "value": "1000 V AC / 1500 V DC",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 120",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Stopień ochrony [IP]",
+        "value": "IP20",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 120",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Sposób montażu",
+        "value": "Szyna DIN lub śruby",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 120",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Liczba otworów",
+        "value": "4",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 120",
+        "confidence": 1.0,
+        "status": "OK"
+      }
+    ]
+  },
+  {
+    "sku": "MAA3050A10/MOR",
+    "status": "OK",
+    "confidence": 1.0,
+    "title_source": "ZLACZKI_tytuly_SEO.xlsx",
+    "attribute_source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 126",
+    "image_source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 126",
+    "attributes": [
+      {
+        "name": "Producent",
+        "value": "Morek",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 126",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Dane producenta",
+        "value": "MOREK, ul. Grzybowska 87 00-844 Warszawa, morekpl@morek.eu",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 126",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Wymiary [mm]",
+        "value": "80 x 46 x 41",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 126",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Rodzaj",
+        "value": "Bloki rozdzielcze",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 126",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Model",
+        "value": "OTL50-3",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 126",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Kolor",
+        "value": "Szary",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 126",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Materiał przewodu",
+        "value": "Al/Cu",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 126",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Liczba grup przyłączeniowych",
+        "value": "3",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 126",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Przekrój znamionowy [mm²]",
+        "value": "1,5-50",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 126",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Napięcie [V]",
+        "value": "1000 V AC / 1500 V DC",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 126",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Stopień ochrony [IP]",
+        "value": "IP20",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 126",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Sposób montażu",
+        "value": "Szyna DIN lub śruby",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 126",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Liczba otworów",
+        "value": "6",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 126",
+        "confidence": 1.0,
+        "status": "OK"
+      }
+    ]
+  },
+  {
+    "sku": "MAA3050B10/MOR",
+    "status": "OK",
+    "confidence": 1.0,
+    "title_source": "ZLACZKI_tytuly_SEO.xlsx",
+    "attribute_source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 127",
+    "image_source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 127",
+    "attributes": [
+      {
+        "name": "Producent",
+        "value": "Morek",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 127",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Dane producenta",
+        "value": "MOREK, ul. Grzybowska 87 00-844 Warszawa, morekpl@morek.eu",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 127",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Wymiary [mm]",
+        "value": "80 x 46 x 41",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 127",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Rodzaj",
+        "value": "Bloki rozdzielcze",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 127",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Model",
+        "value": "OTL50-3",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 127",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Kolor",
+        "value": "Niebieski",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 127",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Materiał przewodu",
+        "value": "Al/Cu",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 127",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Liczba grup przyłączeniowych",
+        "value": "3",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 127",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Przekrój znamionowy [mm²]",
+        "value": "1,5-50",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 127",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Napięcie [V]",
+        "value": "1000 V AC / 1500 V DC",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 127",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Stopień ochrony [IP]",
+        "value": "IP20",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 127",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Sposób montażu",
+        "value": "Szyna DIN lub śruby",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 127",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Liczba otworów",
+        "value": "6",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 127",
+        "confidence": 1.0,
+        "status": "OK"
+      }
+    ]
+  },
+  {
+    "sku": "MAA3050Y10/MOR",
+    "status": "OK",
+    "confidence": 1.0,
+    "title_source": "ZLACZKI_tytuly_SEO.xlsx",
+    "attribute_source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 130",
+    "image_source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 130",
+    "attributes": [
+      {
+        "name": "Producent",
+        "value": "Morek",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 130",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Dane producenta",
+        "value": "MOREK, ul. Grzybowska 87 00-844 Warszawa, morekpl@morek.eu",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 130",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Wymiary [mm]",
+        "value": "80 x 46 x 41",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 130",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Rodzaj",
+        "value": "Bloki rozdzielcze",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 130",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Model",
+        "value": "OTL50-3",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 130",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Kolor",
+        "value": "Żółto-zielony",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 130",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Materiał przewodu",
+        "value": "Al/Cu",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 130",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Liczba grup przyłączeniowych",
+        "value": "3",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 130",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Przekrój znamionowy [mm²]",
+        "value": "1,5-50",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 130",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Napięcie [V]",
+        "value": "1000 V AC / 1500 V DC",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 130",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Stopień ochrony [IP]",
+        "value": "IP20",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 130",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Sposób montażu",
+        "value": "Szyna DIN lub śruby",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 130",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Liczba otworów",
+        "value": "6",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 130",
+        "confidence": 1.0,
+        "status": "OK"
+      }
+    ]
+  },
+  {
+    "sku": "MAD0012N15/MOR",
+    "status": "OK",
+    "confidence": 1.0,
+    "title_source": "ZLACZKI_tytuly_SEO.xlsx",
+    "attribute_source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 253",
+    "image_source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 253",
+    "attributes": [
+      {
+        "name": "Producent",
+        "value": "Morek",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 253",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Dane producenta",
+        "value": "MOREK, ul. Grzybowska 87 00-844 Warszawa, morekpl@morek.eu",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 253",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Wymiary [mm]",
+        "value": "90 x 23 x 30",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 253",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Rodzaj",
+        "value": "Listwa zaciskowa neutralna",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 253",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Model",
+        "value": "N12",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 253",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Kolor",
+        "value": "Niebieski",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 253",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Liczba torów",
+        "value": "12",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 253",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Przekrój znamionowy [mm²]",
+        "value": "1,5-16",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 253",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Napięcie [V]",
+        "value": "690",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 253",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Sposób montażu",
+        "value": "Szyna TH35",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 253",
+        "confidence": 1.0,
+        "status": "OK"
+      }
+    ]
+  },
+  {
+    "sku": "MAD0052E21/MOR",
+    "status": "OK",
+    "confidence": 1.0,
+    "title_source": "ZLACZKI_tytuly_SEO.xlsx",
+    "attribute_source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 265",
+    "image_source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 265",
+    "attributes": [
+      {
+        "name": "Producent",
+        "value": "Morek",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 265",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Dane producenta",
+        "value": "MOREK, ul. Grzybowska 87 00-844 Warszawa, morekpl@morek.eu",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 265",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Wymiary [mm]",
+        "value": "345 x 6,5 x 9",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 265",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Rodzaj",
+        "value": "Listwa zaciskowa N/PE",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 265",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Model",
+        "value": "BB52",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 265",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Liczba torów",
+        "value": "52",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 265",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Przekrój znamionowy [mm²]",
+        "value": "16",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 265",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Materiał",
+        "value": "Mosiądz",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 265",
+        "confidence": 1.0,
+        "status": "OK"
+      }
+    ]
+  },
+  {
+    "sku": "MAD1007G15/MOR",
+    "status": "OK",
+    "confidence": 1.0,
+    "title_source": "ZLACZKI_tytuly_SEO.xlsx",
+    "attribute_source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 236",
+    "image_source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 236",
+    "attributes": [
+      {
+        "name": "Producent",
+        "value": "Morek",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 236",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Dane producenta",
+        "value": "MOREK, ul. Grzybowska 87 00-844 Warszawa, morekpl@morek.eu",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 236",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Wymiary [mm]",
+        "value": "53 x 13 x 27",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 236",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Rodzaj",
+        "value": "Listwa zaciskowa uziemiająca",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 236",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Model",
+        "value": "PE7H",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 236",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Kolor",
+        "value": "Zielony",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 236",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Liczba torów",
+        "value": "7",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 236",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Przekrój znamionowy [mm²]",
+        "value": "1,5-16",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 236",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Napięcie [V]",
+        "value": "690",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 236",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Prąd znamionowy [A]",
+        "value": "63",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 236",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Stopień ochrony [IP]",
+        "value": "IP20",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 236",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Sposób montażu",
+        "value": "Szyna DIN",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 236",
+        "confidence": 1.0,
+        "status": "OK"
+      }
+    ]
+  },
+  {
+    "sku": "MAD1007N15/MOR",
+    "status": "OK",
+    "confidence": 1.0,
+    "title_source": "ZLACZKI_tytuly_SEO.xlsx",
+    "attribute_source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 237",
+    "image_source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 237",
+    "attributes": [
+      {
+        "name": "Producent",
+        "value": "Morek",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 237",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Dane producenta",
+        "value": "MOREK, ul. Grzybowska 87 00-844 Warszawa, morekpl@morek.eu",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 237",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Wymiary [mm]",
+        "value": "53 x 13 x 27",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 237",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Rodzaj",
+        "value": "Listwa zaciskowa neutralna",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 237",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Model",
+        "value": "N7H",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 237",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Kolor",
+        "value": "Niebieski",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 237",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Liczba torów",
+        "value": "7",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 237",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Przekrój znamionowy [mm²]",
+        "value": "1,5-16",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 237",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Napięcie [V]",
+        "value": "690",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 237",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Prąd znamionowy [A]",
+        "value": "63",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 237",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Stopień ochrony [IP]",
+        "value": "IP20",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 237",
+        "confidence": 1.0,
+        "status": "OK"
+      },
+      {
+        "name": "Sposób montażu",
+        "value": "Szyna DIN",
+        "source": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 237",
+        "confidence": 1.0,
+        "status": "OK"
+      }
+    ]
+  }
+]

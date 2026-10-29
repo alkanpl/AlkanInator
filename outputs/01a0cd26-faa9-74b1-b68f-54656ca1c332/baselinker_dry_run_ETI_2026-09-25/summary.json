@@ -1,0 +1,33 @@
+{
+  "input": "C:\\Users\\Handlowiec\\Desktop\\AlkanInatorApp\\outputs\\01a0cd26-faa9-74b1-b68f-54656ca1c332\\ETI_modulowka_Alkan_BL_Updater_JPG_1000x1000_2026-09-25.xlsx",
+  "inventory_id": 47159,
+  "mode": "DRY_RUN",
+  "blocked": true,
+  "row_count": 127,
+  "status_counts": {
+    "READY": 116,
+    "NO_CHANGES": 10,
+    "INVALID": 1
+  },
+  "backup": "C:\\Users\\Handlowiec\\Desktop\\AlkanInatorApp\\outputs\\01a0cd26-faa9-74b1-b68f-54656ca1c332\\baselinker_dry_run_ETI_2026-09-25\\backup_before.json",
+  "catalog_metadata_backup": "C:\\Users\\Handlowiec\\Desktop\\AlkanInatorApp\\outputs\\01a0cd26-faa9-74b1-b68f-54656ca1c332\\baselinker_dry_run_ETI_2026-09-25\\catalog_metadata_before.json",
+  "audit": "C:\\Users\\Handlowiec\\Desktop\\AlkanInatorApp\\outputs\\01a0cd26-faa9-74b1-b68f-54656ca1c332\\baselinker_dry_run_ETI_2026-09-25\\audit.csv",
+  "options": {
+    "inventory_id": 47159,
+    "fields": [
+      "images"
+    ],
+    "match_by": "sku",
+    "include_variants": false,
+    "merge_features": true,
+    "update_identifiers": false,
+    "create_missing_categories": false,
+    "create_missing_manufacturers": false,
+    "allow_partial": false,
+    "allow_http_images": false,
+    "language": "pl",
+    "requests_per_minute": 80,
+    "max_retries": 5,
+    "backoff_base_seconds": 1.5
+  }
+}

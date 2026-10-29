@@ -1,0 +1,335 @@
+[
+  {
+    "SKU": "43814204/SIM",
+    "Tytuł z listy": "Złączka skrętna uniwersalna ZSE1-1.0/6.0",
+    "Tytuł SEO": "Złączka skrętna uniwersalna 1-6mm2 żółta Simet ZSE1-1.0/6.0z 43814204",
+    "Producent": "Simet",
+    "Źródło": "CENNIK SIMET.xlsx, CENNIK, wiersz 63",
+    "Pewność": 1,
+    "Status": "OK"
+  },
+  {
+    "SKU": "43814207/SIM",
+    "Tytuł z listy": "Złączka skrętna uniwersalna ZSE1-1.0/6.0",
+    "Tytuł SEO": "Złączka skrętna uniwersalna 1-6mm2 czarna Simet ZSE1-1.0/6.0d 43814207",
+    "Producent": "Simet",
+    "Źródło": "CENNIK SIMET.xlsx, CENNIK, wiersz 65",
+    "Pewność": 1,
+    "Status": "OK"
+  },
+  {
+    "SKU": "21412108/SIM",
+    "Tytuł z listy": "Listwa zaciskowa gwintowa termoplastyczn",
+    "Tytuł SEO": "Listwa zaciskowa gwintowa termoplastyczna 12-torowa 6mm2 pomarańczowa Simet LTF12-6.0 21412108",
+    "Producent": "Simet",
+    "Źródło": "CENNIK SIMET.xlsx, CENNIK, wiersz 116",
+    "Pewność": 1,
+    "Status": "OK"
+  },
+  {
+    "SKU": "21512108/SIM",
+    "Tytuł z listy": "Listwa zaciskowa gwintowa termoplastyczn",
+    "Tytuł SEO": "Listwa zaciskowa gwintowa termoplastyczna 12-torowa 10mm2 pomarańczowa Simet LTF12-10.0 21512108",
+    "Producent": "Simet",
+    "Źródło": "CENNIK SIMET.xlsx, CENNIK, wiersz 117",
+    "Pewność": 1,
+    "Status": "OK"
+  },
+  {
+    "SKU": "21612108/SIM",
+    "Tytuł z listy": "Listwa zaciskowa gwintowa termoplastyczn",
+    "Tytuł SEO": "Listwa zaciskowa gwintowa termoplastyczna 12-torowa 16mm2 pomarańczowa Simet LTF12-16.0 21612108",
+    "Producent": "Simet",
+    "Źródło": "CENNIK SIMET.xlsx, CENNIK, wiersz 118",
+    "Pewność": 1,
+    "Status": "OK"
+  },
+  {
+    "SKU": "21712008/SIM",
+    "Tytuł z listy": "Listwa zaciskowa gwintowa termoplastyczn",
+    "Tytuł SEO": "Listwa zaciskowa gwintowa termoplastyczna 12-torowa 25mm2 pomarańczowa Simet LTF12-25 21712008",
+    "Producent": "Simet",
+    "Źródło": "CENNIK SIMET.xlsx, CENNIK, wiersz 119",
+    "Pewność": 1,
+    "Status": "OK"
+  },
+  {
+    "SKU": "MAA1035A10/MOR",
+    "Tytuł z listy": "OTL35 kolor szary 1xAl/Cu 2,5-35mm? 1000",
+    "Tytuł SEO": "Złączka uniwersalna OTL35 1xAl/Cu 2,5-35mm2 1000VAC/1500VDC szara Morek MAA1035A10",
+    "Producent": "Morek",
+    "Źródło": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 71",
+    "Pewność": 1,
+    "Status": "OK"
+  },
+  {
+    "SKU": "MAA1035B10/MOR",
+    "Tytuł z listy": "OTL35 kolor niebieski 1xAl/Cu 2,5-35mm?",
+    "Tytuł SEO": "Złączka uniwersalna OTL35 1xAl/Cu 2,5-35mm2 1000VAC/1500VDC niebieska Morek MAA1035B10",
+    "Producent": "Morek",
+    "Źródło": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 72",
+    "Pewność": 1,
+    "Status": "OK"
+  },
+  {
+    "SKU": "MAA1035R10/MOR",
+    "Tytuł z listy": "OTL35 kolor czerwony 1xAl/Cu 2,5-35mm? 1",
+    "Tytuł SEO": "Złączka uniwersalna OTL35 1xAl/Cu 2,5-35mm2 1000VAC/1500VDC czerwona Morek MAA1035R10",
+    "Producent": "Morek",
+    "Źródło": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 73",
+    "Pewność": 1,
+    "Status": "OK"
+  },
+  {
+    "SKU": "MAA1035Y10/MOR",
+    "Tytuł z listy": "OTL35 kolor żółto-zielony 1xAl/Cu 2,5-35",
+    "Tytuł SEO": "Złączka uniwersalna OTL35 1xAl/Cu 2,5-35mm2 1000VAC/1500VDC żółto-zielona Morek MAA1035Y10",
+    "Producent": "Morek",
+    "Źródło": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 75",
+    "Pewność": 1,
+    "Status": "OK"
+  },
+  {
+    "SKU": "MAA1050A10/MOR",
+    "Tytuł z listy": "OTL50 kolor szary 1xAl/Cu 1,5-50mm? 1000",
+    "Tytuł SEO": "Złączka uniwersalna OTL50 1xAl/Cu 1,5-50mm2 1000VAC/1500VDC szara Morek MAA1050A10",
+    "Producent": "Morek",
+    "Źródło": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 76",
+    "Pewność": 1,
+    "Status": "OK"
+  },
+  {
+    "SKU": "MAA1050Y10/MOR",
+    "Tytuł z listy": "OTL50 kolor żółto-zielony 1xAl/Cu 1,5-50",
+    "Tytuł SEO": "Złączka uniwersalna OTL50 1xAl/Cu 1,5-50mm2 1000VAC/1500VDC żółto-zielona Morek MAA1050Y10",
+    "Producent": "Morek",
+    "Źródło": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 80",
+    "Pewność": 1,
+    "Status": "OK"
+  },
+  {
+    "SKU": "MAA1095A10/MOR",
+    "Tytuł z listy": "OTL95 kolor szary 1xAl/Cu 6-95mm? 1000V",
+    "Tytuł SEO": "Złączka uniwersalna OTL95 1xAl/Cu 6-95mm2 1000VAC/1500VDC szara Morek MAA1095A10",
+    "Producent": "Morek",
+    "Źródło": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 81",
+    "Pewność": 1,
+    "Status": "OK"
+  },
+  {
+    "SKU": "MAA1095B10/MOR",
+    "Tytuł z listy": "OTL95 kolor niebieski 1xAl/Cu 6-95mm? 10",
+    "Tytuł SEO": "Złączka uniwersalna OTL95 1xAl/Cu 6-95mm2 1000VAC/1500VDC niebieska Morek MAA1095B10",
+    "Producent": "Morek",
+    "Źródło": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 82",
+    "Pewność": 1,
+    "Status": "OK"
+  },
+  {
+    "SKU": "MAA1095Y10/MOR",
+    "Tytuł z listy": "OTL95 kolor żółto-zielony 1xAl/Cu 6-95mm",
+    "Tytuł SEO": "Złączka uniwersalna OTL95 1xAl/Cu 6-95mm2 1000VAC/1500VDC żółto-zielona Morek MAA1095Y10",
+    "Producent": "Morek",
+    "Źródło": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 85",
+    "Pewność": 1,
+    "Status": "OK"
+  },
+  {
+    "SKU": "MAA1150A10/MOR",
+    "Tytuł z listy": "OTL150 kolor szary 1xAl/Cu 25-150mm? 100",
+    "Tytuł SEO": "Złączka uniwersalna OTL150 1xAl/Cu 25-150mm2 1000VAC/1500VDC szara Morek MAA1150A10",
+    "Producent": "Morek",
+    "Źródło": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 86",
+    "Pewność": 1,
+    "Status": "OK"
+  },
+  {
+    "SKU": "MAA1150B10/MOR",
+    "Tytuł z listy": "OTL150 kolor niebieski 1xAl/Cu 25-150mm?",
+    "Tytuł SEO": "Złączka uniwersalna OTL150 1xAl/Cu 25-150mm2 1000VAC/1500VDC niebieska Morek MAA1150B10",
+    "Producent": "Morek",
+    "Źródło": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 87",
+    "Pewność": 1,
+    "Status": "OK"
+  },
+  {
+    "SKU": "MAA1150Y10/MOR",
+    "Tytuł z listy": "OTL150 kolor żółto-zielony 1xAl/Cu 25-15",
+    "Tytuł SEO": "Złączka uniwersalna OTL150 1xAl/Cu 25-150mm2 1000VAC/1500VDC żółto-zielona Morek MAA1150Y10",
+    "Producent": "Morek",
+    "Źródło": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 90",
+    "Pewność": 1,
+    "Status": "OK"
+  },
+  {
+    "SKU": "MAA2035A10/MOR",
+    "Tytuł z listy": "OTL35-2 kolor szary 2xAl/Cu 2,5-35mm? 10",
+    "Tytuł SEO": "Złączka uniwersalna OTL35-2 2xAl/Cu 2,5-35mm2 1000VAC/1500VDC szara Morek MAA2035A10",
+    "Producent": "Morek",
+    "Źródło": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 101",
+    "Pewność": 1,
+    "Status": "OK"
+  },
+  {
+    "SKU": "MAA2035B10/MOR",
+    "Tytuł z listy": "Złączka szynowa gwintowa rozgałęźna AL/C",
+    "Tytuł SEO": "Złączka uniwersalna OTL35-2 2xAl/Cu 2,5-35mm2 1000VAC/1500VDC niebieska Morek MAA2035B10",
+    "Producent": "Morek",
+    "Źródło": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 102",
+    "Pewność": 1,
+    "Status": "OK"
+  },
+  {
+    "SKU": "MAA2035Y10/MOR",
+    "Tytuł z listy": "OTL35-2 kolor żółto-zielony 2xAl/Cu 2,5-",
+    "Tytuł SEO": "Złączka uniwersalna OTL35-2 2xAl/Cu 2,5-35mm2 1000VAC/1500VDC żółto-zielona Morek MAA2035Y10",
+    "Producent": "Morek",
+    "Źródło": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 105",
+    "Pewność": 1,
+    "Status": "OK"
+  },
+  {
+    "SKU": "MAA2050A10/MOR",
+    "Tytuł z listy": "OTL50-2 kolor szary 2xAl/Cu 1,5-50mm? 10",
+    "Tytuł SEO": "Złączka uniwersalna OTL50-2 2xAl/Cu 1,5-50mm2 1000VAC/1500VDC szara Morek MAA2050A10",
+    "Producent": "Morek",
+    "Źródło": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 106",
+    "Pewność": 1,
+    "Status": "OK"
+  },
+  {
+    "SKU": "MAA2050B10/MOR",
+    "Tytuł z listy": "OTL50-2 kolor niebieski 2xAl/Cu 1,5-50mm",
+    "Tytuł SEO": "Złączka uniwersalna OTL50-2 2xAl/Cu 1,5-50mm2 1000VAC/1500VDC niebieska Morek MAA2050B10",
+    "Producent": "Morek",
+    "Źródło": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 107",
+    "Pewność": 1,
+    "Status": "OK"
+  },
+  {
+    "SKU": "MAA2050Y10/MOR",
+    "Tytuł z listy": "OTL50-2 kolor żółto-zielony 2xAl/Cu 1,5-",
+    "Tytuł SEO": "Złączka uniwersalna OTL50-2 2xAl/Cu 1,5-50mm2 1000VAC/1500VDC żółto-zielona Morek MAA2050Y10",
+    "Producent": "Morek",
+    "Źródło": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 110",
+    "Pewność": 1,
+    "Status": "OK"
+  },
+  {
+    "SKU": "MAA2095A10/MOR",
+    "Tytuł z listy": "OTL95-2 kolor szary 2xAl/Cu 6-95mm? 1000",
+    "Tytuł SEO": "Złączka uniwersalna OTL95-2 2xAl/Cu 6-95mm2 1000VAC/1500VDC szara Morek MAA2095A10",
+    "Producent": "Morek",
+    "Źródło": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 111",
+    "Pewność": 1,
+    "Status": "OK"
+  },
+  {
+    "SKU": "MAA2095B10/MOR",
+    "Tytuł z listy": "OTL95-2 kolor niebieski 2xAl/Cu 6-95mm?",
+    "Tytuł SEO": "Złączka uniwersalna OTL95-2 2xAl/Cu 6-95mm2 1000VAC/1500VDC niebieska Morek MAA2095B10",
+    "Producent": "Morek",
+    "Źródło": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 112",
+    "Pewność": 1,
+    "Status": "OK"
+  },
+  {
+    "SKU": "MAA2095Y10/MOR",
+    "Tytuł z listy": "OTL95-2 kolor żółto-zielony 2xAl/Cu 6-95",
+    "Tytuł SEO": "Złączka uniwersalna OTL95-2 2xAl/Cu 6-95mm2 1000VAC/1500VDC żółto-zielona Morek MAA2095Y10",
+    "Producent": "Morek",
+    "Źródło": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 115",
+    "Pewność": 1,
+    "Status": "OK"
+  },
+  {
+    "SKU": "MAA2150A10/MOR",
+    "Tytuł z listy": "OTL150-2 kolor szary 2xAl/Cu 25-150mm? 1",
+    "Tytuł SEO": "Złączka uniwersalna OTL150-2 2xAl/Cu 25-150mm2 1000VAC/1500VDC szara Morek MAA2150A10",
+    "Producent": "Morek",
+    "Źródło": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 116",
+    "Pewność": 1,
+    "Status": "OK"
+  },
+  {
+    "SKU": "MAA2150B10/MOR",
+    "Tytuł z listy": "OTL150-2 kolor niebieski 2xAl/Cu 25-150m",
+    "Tytuł SEO": "Złączka uniwersalna OTL150-2 2xAl/Cu 25-150mm2 1000VAC/1500VDC niebieska Morek MAA2150B10",
+    "Producent": "Morek",
+    "Źródło": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 117",
+    "Pewność": 1,
+    "Status": "OK"
+  },
+  {
+    "SKU": "MAA2150Y10/MOR",
+    "Tytuł z listy": "OTL150-2 kolor żółto-zielony 2xAl/Cu 25-",
+    "Tytuł SEO": "Złączka uniwersalna OTL150-2 2xAl/Cu 25-150mm2 1000VAC/1500VDC żółto-zielona Morek MAA2150Y10",
+    "Producent": "Morek",
+    "Źródło": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 120",
+    "Pewność": 1,
+    "Status": "OK"
+  },
+  {
+    "SKU": "MAA3050A10/MOR",
+    "Tytuł z listy": "OTL50-3 kolor szary 3xAl/Cu 1,5-50mm? 10",
+    "Tytuł SEO": "Złączka uniwersalna OTL50-3 3xAl/Cu 1,5-50mm2 1000VAC/1500VDC szara Morek MAA3050A10",
+    "Producent": "Morek",
+    "Źródło": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 126",
+    "Pewność": 1,
+    "Status": "OK"
+  },
+  {
+    "SKU": "MAA3050B10/MOR",
+    "Tytuł z listy": "OTL50-3 kolor niebieski 3xAl/Cu 1,5-50mm",
+    "Tytuł SEO": "Złączka uniwersalna OTL50-3 3xAl/Cu 1,5-50mm2 1000VAC/1500VDC niebieska Morek MAA3050B10",
+    "Producent": "Morek",
+    "Źródło": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 127",
+    "Pewność": 1,
+    "Status": "OK"
+  },
+  {
+    "SKU": "MAA3050Y10/MOR",
+    "Tytuł z listy": "OTL50-3 kolor żółto-zielony 3xAl/Cu 1,5-",
+    "Tytuł SEO": "Złączka uniwersalna OTL50-3 3xAl/Cu 1,5-50mm2 1000VAC/1500VDC żółto-zielona Morek MAA3050Y10",
+    "Producent": "Morek",
+    "Źródło": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 130",
+    "Pewność": 1,
+    "Status": "OK"
+  },
+  {
+    "SKU": "MAD0012N15/MOR",
+    "Tytuł z listy": "N12 kolor niebieski 12x16mm? Listwa zaci",
+    "Tytuł SEO": "Listwa zaciskowa neutralna N12 12x16mm2 niebieska Morek MAD0012N15",
+    "Producent": "Morek",
+    "Źródło": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 253",
+    "Pewność": 1,
+    "Status": "OK"
+  },
+  {
+    "SKU": "MAD0052E21/MOR",
+    "Tytuł z listy": "BB52 listwa N/PE mosiężna 52x16mm2",
+    "Tytuł SEO": "Listwa zaciskowa N/PE mosiężna BB52 52x16mm2 Morek MAD0052E21",
+    "Producent": "Morek",
+    "Źródło": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 265",
+    "Pewność": 1,
+    "Status": "OK"
+  },
+  {
+    "SKU": "MAD1007G15/MOR",
+    "Tytuł z listy": "PE7H kolor zielony 7x16mm? Listwa zacisk",
+    "Tytuł SEO": "Listwa zaciskowa uziemiająca PE7H 7x16mm2 IP20 zielona Morek MAD1007G15",
+    "Producent": "Morek",
+    "Źródło": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 236",
+    "Pewność": 1,
+    "Status": "OK"
+  },
+  {
+    "SKU": "MAD1007N15/MOR",
+    "Tytuł z listy": "N7H kolor niebieski 7x16mm? Listwa zacis",
+    "Tytuł SEO": "Listwa zaciskowa neutralna N7H 7x16mm2 IP20 niebieska Morek MAD1007N15",
+    "Producent": "Morek",
+    "Źródło": "MOREK - CENNIK.xlsx, CENNIK BAZOWY, wiersz 237",
+    "Pewność": 1,
+    "Status": "OK"
+  }
+]
