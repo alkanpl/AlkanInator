@@ -32,6 +32,7 @@ class SyncOptions:
     create_missing_manufacturers: bool = False
     allow_partial: bool = False
     allow_http_images: bool = False
+    raw_image_urls: bool = False
     language: str = "pl"
     requests_per_minute: int = 100
     max_retries: int = 5
@@ -306,27 +307,49 @@ def _merge_features(existing: dict[str, str], incoming: dict[str, str]) -> dict[
     return output
 
 
+def _category_plan(raw_path: str, mapping: dict[str, int]) -> tuple[int, list[str], int]:
+    """Zwraca (parent_id, czlony sciezki, indeks pierwszego czlonu do utworzenia).
+
+    Startuje od najdluzszego istniejacego prefiksu, a nie od korzenia: w Base
+    bywa kilka korzeni o tej samej nazwie ("Gniazdka i Łączniki"), wiec sam
+    korzen jest nieunikalny, choc pelna sciezka rodzica juz tak.
+    """
+    parts = [" ".join(item.split()) for item in raw_path.split(">") if item.strip()]
+    for length in range(len(parts), 0, -1):
+        existing = mapping.get(_norm_path(" > ".join(parts[:length])))
+        if existing is not None:
+            return existing, parts, length
+    return 0, parts, 0
+
+
 def _ensure_categories(
     client: BaseLinkerClient,
     requested: list[str],
     mapping: dict[str, int],
+    duplicates: set[str],
     options: SyncOptions,
     limiter: RateLimiter,
     log: LogFn,
 ) -> None:
-    for raw_path in sorted(set(requested), key=lambda value: (_norm_path(value).count(">"), _norm_path(value))):
-        if _int(raw_path) is not None:
-            continue
-        parent_id = 0
-        parts: list[str] = []
-        for part in (" ".join(item.split()) for item in raw_path.split(">") if item.strip()):
-            parts.append(part)
-            path = " > ".join(parts)
+    paths = sorted(
+        {raw_path for raw_path in requested if _int(raw_path) is None},
+        key=lambda value: (_norm_path(value).count(">"), _norm_path(value)),
+    )
+    for raw_path in paths:
+        _, parts, start = _category_plan(raw_path, mapping)
+        for index in range(start, len(parts)):
+            path = " > ".join(parts[: index + 1])
+            if _norm_path(path) in duplicates:
+                raise RuntimeError(
+                    f"Kategoria jest nieunikalna w BaseLinkerze, nie tworzę duplikatu: {path} "
+                    f"(dla ścieżki {raw_path})."
+                )
+    for raw_path in paths:
+        parent_id, parts, start = _category_plan(raw_path, mapping)
+        for index in range(start, len(parts)):
+            part = parts[index]
+            path = " > ".join(parts[: index + 1])
             normalized = _norm_path(path)
-            existing = mapping.get(normalized)
-            if existing is not None:
-                parent_id = existing
-                continue
             response = _api(
                 lambda part=part, parent_id=parent_id: client.add_category(
                     {"inventory_id": options.inventory_id, "name": part, "parent_id": parent_id}
@@ -495,6 +518,7 @@ def _plan_row(
             record.images_paths,
             input_dir=input_dir,
             allow_http=options.allow_http_images,
+            raw_urls=options.raw_image_urls,
         )
         warnings.extend(image_warnings)
         if images:
@@ -690,6 +714,7 @@ def sync_inventory(
                 client,
                 [record.category for record in eligible_records if record.category],
                 category_map,
+                category_duplicates,
                 options,
                 limiter,
                 logger,

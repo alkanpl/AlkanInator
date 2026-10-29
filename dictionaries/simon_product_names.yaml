@@ -1,0 +1,160 @@
+version: 1
+updated_at: "2026-10-20"
+description: >
+  Nazwy produktow Kontakt Simon dla Baselinkera/Woo budowane z symbolu
+  producenta: rdzen nazwy per symbol bazowy (symbol bez koncowki koloru) +
+  kolor + seria + kod producenta na koncu. Uzywa
+  src/build_simon_baselinker_from_api.py. Typ/Podtyp i kontrole wartosci robi
+  potem src/fix_simon_attributes_to_shop_model.py.
+  Wzorzec: "<rdzen> <kolor> <seria> <kod>", np.
+  "Ramka 1-krotna biała Simon 24 NR1/11",
+  "Gniazdo wtyczkowe pojedyncze z uziemieniem i przesłonami 16 A Push In grafitowy mat Simon 24 NGZ1CZ.01/38".
+  "Push In" tylko tam, gdzie API podaje montaz "mocowanie Push In" (skrypt to sprawdza).
+
+manufacturer_name: Kontakt-Simon
+producer_data: "KONTAKT-SIMON, Bestwińska 21 43-500 Czechowice-Dziedzice, info@kontakt-simon.com.pl"
+producent: Kontakt Simon
+default_series: Simon 24
+default_category: "Gniazdka i Łączniki > Gniazdka Kontakt Simon > Simon 24"
+
+# Kod koloru z konca symbolu (NR1/11, NGZ1BCZ.01/38A). Kolor w nazwie odmienia
+# sie przez rodzaj rzeczownika (m/f/n); kolory "... mat" sa nieodmienne, jak w
+# istniejacych tytulach sklepu. kolor/kolor_producenta = terminy Woo, tak jak
+# u rodzenstwa Simon 55 (149 -> Czarny/Czarny, 116 -> Grafitowy/Grafitowy,
+# 144 -> Złoty/Szampański). api = fragment, ktory musi byc w parametrze Kolor API.
+colors:
+  "11": {name: {m: biały, f: biała, n: białe}, kolor: Biały, kolor_producenta: Biały, api: biał}
+  "49": {name: czarny mat, kolor: Czarny, kolor_producenta: Czarny, api: czarny}
+  "38": {name: grafitowy mat, kolor: Grafitowy, kolor_producenta: Grafitowy, api: grafit}
+  "34": {name: szampański mat, kolor: Złoty, kolor_producenta: Szampański, api: szampa}
+  "42": {name: {m: kaszmirowy, f: kaszmirowa, n: kaszmirowe}, kolor: Kaszmir, kolor_producenta: Kaszmir, api: kaszmir}
+
+# Klucz = symbol bazowy; "/..A" = wersja z klapka transparentna (NGZ1BCZ.01/38A).
+# Pola: stem, gender (m/f/n, potrzebny przy kolorze), montaz (domyslnie
+# Podtynkowy; null = bez atrybutu), lacznosc, typ/podtyp (tylko gdy reguly
+# nazwy z kontakt_simon_shop_structure.yaml nie wystarcza), seria (null = bez
+# atrybutu Seria), name_series (seria w nazwie, gdy inna niz atrybut),
+# category, status + uwaga (dla pozycji do decyzji uzytkownika).
+products:
+  # --- Ramki ---
+  NR1: {stem: Ramka 1-krotna, gender: f, montaz: null}
+  NR2: {stem: Ramka 2-krotna, gender: f, montaz: null}
+  NR3: {stem: Ramka 3-krotna, gender: f, montaz: null}
+  NR4: {stem: Ramka 4-krotna, gender: f, montaz: null}
+  NR5: {stem: Ramka 5-krotna, gender: f, montaz: null}
+
+  # --- Laczniki ---
+  NW1.01: {stem: Łącznik jednobiegunowy 10 AX Push In, gender: m}
+  NW5.01: {stem: Łącznik świecznikowy 10 AX Push In, gender: m}
+  NW6.01: {stem: Łącznik schodowy 10 AX Push In, gender: m}
+  NW6.01/X: {stem: Łącznik schodowy bez piktogramu 10 AX Push In, gender: m}
+  NW7.01: {stem: Łącznik krzyżowy 10 AX, gender: m}
+  NW6/2.01: {stem: Łącznik schodowy podwójny 10 AX, gender: m}
+  NW6/2.01/X: {stem: Łącznik schodowy podwójny bez piktogramu 10 AX, gender: m}
+  NW7/2.01: {stem: Łącznik krzyżowy podwójny 10 AX, gender: m}
+  NW7/2.01/X: {stem: Łącznik krzyżowy podwójny bez piktogramu 10 AX, gender: m}
+  NZW1K.01: {stem: Łącznik roletowy trójpozycyjny 1-0-2 10 A, gender: m}
+
+  # --- Przyciski ---
+  ND1.01: {stem: Przycisk dzwonek 10 A Push In, gender: m}
+  NP1.01: {stem: Przycisk zwierny pojedynczy bez piktogramu 10 A Push In, gender: m}
+  NP2.01: {stem: Przycisk zwierny podwójny bez piktogramu 10 A, gender: m}
+  NP31.01: {stem: Przycisk zwierny potrójny 10 A, gender: m}
+  NZP1K.01: {stem: Przycisk roletowy trójpozycyjny 1-0-2 10 A, gender: m}
+  NZP2.01: {stem: Przycisk roletowy podwójny trójpozycyjny 1-0-2 10 A, gender: m}
+
+  # --- Gniazda wtyczkowe ---
+  NGZ1C.01: {stem: Gniazdo wtyczkowe pojedyncze z uziemieniem bez przesłon 16 A Push In, gender: n}
+  NGZ1CZ.01: {stem: Gniazdo wtyczkowe pojedyncze z uziemieniem i przesłonami 16 A Push In, gender: n}
+  NGZ2MC.01: {stem: Gniazdo wtyczkowe podwójne z uziemieniem bez przesłon 16 A, gender: n}
+  NGZ2MCZ.01: {stem: Gniazdo wtyczkowe podwójne z uziemieniem i przesłonami 16 A, gender: n}
+  NGSZ1C.01E: {stem: Gniazdo wtyczkowe Schuko pojedyncze bez przesłon 16 A, gender: n}
+  NGZ1BC.01: {stem: Gniazdo wtyczkowe pojedyncze IP44 z uszczelką bez przesłon 16 A Push In, gender: n}
+  NGZ1BC.01/..A: {stem: Gniazdo wtyczkowe pojedyncze IP44 z uszczelką bez przesłon z klapką transparentną 16 A Push In, gender: n}
+  NGZ1BCZ.01: {stem: Gniazdo wtyczkowe pojedyncze IP44 z uszczelką i przesłonami 16 A Push In, gender: n}
+  NGZ1BCZ.01/..A: {stem: Gniazdo wtyczkowe pojedyncze IP44 z uszczelką i przesłonami z klapką transparentną 16 A Push In, gender: n}
+  NGZ1BCU.01/..A: {stem: Gniazdo wtyczkowe pojedyncze IP44 bez uszczelki i bez przesłon z klapką transparentną 16 A Push In, gender: n}
+  NGZ2BMCZ.01/..A: {stem: Gniazdo wtyczkowe podwójne IP44 z uszczelką i przesłonami z klapką transparentną 16 A, gender: n}
+
+  # --- Gniazda teleinformatyczne, antenowe, multimedialne ---
+  N51.01: {stem: Gniazdo komputerowe pojedyncze RJ45 kat. 5e, gender: n}
+  N61.01: {stem: Gniazdo komputerowe pojedyncze RJ45 kat. 6, gender: n}
+  N62.01: {stem: Gniazdo komputerowe podwójne RJ45 kat. 6, gender: n}
+  N61E.01: {stem: Gniazdo komputerowe pojedyncze RJ45 kat. 6 ekranowane z przesłoną przeciwkurzową, gender: n}
+  N62E.01: {stem: Gniazdo komputerowe podwójne RJ45 kat. 6 ekranowane z przesłoną przeciwkurzową, gender: n}
+  NASK.01: {stem: Gniazdo antenowe R-TV-SAT końcowe, gender: n}
+  NASK2.01: {stem: Gniazdo antenowe satelitarne podwójne SAT-SAT-RTV, gender: n}
+  NAK.01: {stem: Gniazdo antenowe R-TV końcowe separowane, gender: n}
+  NASF1.01: {stem: Gniazdo antenowe typu F pojedyncze, gender: n}
+  NASFRJ45.01: {stem: Gniazdo antenowe typu F + RJ45 kat. 6, gender: n}
+  NGHDMI121.01: {stem: Gniazdo HDMI 2.1 pojedyncze, gender: n}
+  NGL1.01: {stem: Gniazdo głośnikowe pojedyncze, gender: n}
+  NGL2.01: {stem: Gniazdo głośnikowe podwójne, gender: n}
+  NEC2CAQ.01: {stem: Ładowarka USB C+A 30 W, gender: f}
+
+  # --- Pokrywy, zaslepki, adaptery, puszki ---
+  NKP2.01: {stem: Pokrywa gniazd teleinformatycznych Keystone płaska podwójna, gender: f}
+  NKP2S.01: {stem: Pokrywa gniazd teleinformatycznych Keystone skośna podwójna z polem opisowym, gender: f}
+  NPS.01: {stem: Zaślepka ramki, gender: f}
+  NA45.01: {stem: Adapter (przejściówka) na osprzęt standardu 45×45 mm, gender: m}
+  NSC: {stem: Puszka natynkowa pojedyncza składana 40 mm, gender: f, montaz: Natynkowy}
+  NSH: {stem: Element rozszerzający do składanej puszki natynkowej 40 mm, gender: m, montaz: Natynkowy}
+  NPN1: {stem: Puszka natynkowa pojedyncza, gender: f, montaz: Natynkowy}
+  NUV2: {stem: Zestaw uszczelek IP44 do ramki 2-krotnej w układzie pionowym, montaz: null, typ: Inne, podtyp: Pozostałe}
+
+  # --- Simon GO (Wi-Fi) w serii Simon 24 ---
+  NEW1W.01: {stem: Sterownik oświetleniowy 16 A z pomiarem energii Simon GO Wi-Fi, gender: m, lacznosc: Wi-Fi}
+  NEZ1W.01: {stem: "Sterownik rolet, żaluzji i markiz 2x5 A Simon GO Wi-Fi", gender: m, lacznosc: Wi-Fi}
+  NEK1W.01: {stem: Kontroler programowalny do urządzeń Simon GO Wi-Fi 30 akcji, gender: m, lacznosc: Wi-Fi}
+  NESW1W.01: {stem: Ściemniacz taśm LED 12-24 V jednokanałowy 5 A Simon GO Wi-Fi, gender: m, lacznosc: Wi-Fi}
+
+  # --- Akcesoria wieloseryjne z katalogu Simon 24 ---
+  NTC-03:
+    stem: Czujnik temperatury zewnętrzny NTC 10 kΩ z przewodem 3 m
+    name_series: Kontakt Simon
+    seria: null
+    montaz: null
+    typ: Sterowniki i automatyka
+    podtyp: Regulatory temperatury i termostaty
+  NDF:
+    stem: Narzędzie do dociskania wkładów RJ45 w gniazdach komputerowych
+    name_series: Kontakt Simon
+    seria: null
+    montaz: null
+    typ: Inne
+    podtyp: Pozostałe
+
+  # --- Uszczelki Simon Basic (NIE Simon 24: API i katalog Simon 24 - seria
+  # ma wlasne NUU1/NUV/NUH). Seria i kategoria do decyzji uzytkownika. ---
+  NU1: &basic_standard
+    stem: Uszczelka IP44 do ramki 1-krotnej
+    seria: Simon Basic
+    name_series: Simon Basic Standard
+    montaz: null
+    typ: Inne
+    podtyp: Pozostałe
+    category: "Gniazdka i Łączniki > Gniazdka Kontakt Simon > Simon Basic"
+    status: DO_SPRAWDZENIA
+    uwaga: "Uszczelka Simon Basic Standard / Classic wg API, nie Simon 24 (Simon 24 ma NUU1/NUV/NUH)"
+  NU2: {<<: *basic_standard, stem: Zestaw uszczelek IP44 do ramki 2-krotnej}
+  NU3: {<<: *basic_standard, stem: Zestaw uszczelek IP44 do ramki 3-krotnej}
+  NU4: {<<: *basic_standard, stem: Zestaw uszczelek IP44 do ramki 4-krotnej}
+  NU5: {<<: *basic_standard, stem: Zestaw uszczelek IP44 do ramki 5-krotnej}
+  NUC1: &basic_neos
+    <<: *basic_standard
+    name_series: Simon Basic Neos
+    uwaga: "Uszczelka Simon Basic Neos wg API, nie Simon 24 (Simon 24 ma NUU1/NUV/NUH)"
+  NUC2: {<<: *basic_neos, stem: Zestaw uszczelek IP44 do ramki 2-krotnej}
+  NUC3: {<<: *basic_neos, stem: Zestaw uszczelek IP44 do ramki 3-krotnej}
+  NUC4: {<<: *basic_neos, stem: Zestaw uszczelek IP44 do ramki 4-krotnej}
+  NUC5: {<<: *basic_neos, stem: Zestaw uszczelek IP44 do ramki 5-krotnej}
+  NU1W:
+    <<: *basic_standard
+    stem: Uszczelka IP44 wewnętrzna do łączników dwuklawiszowych
+    name_series: Simon Basic
+    uwaga: "Uszczelka Simon Basic / Classic wg API, nie Simon 24 (Simon 24 ma NUU1W)"
+  NU1WA:
+    <<: *basic_standard
+    stem: Uszczelka IP44 pod klawisze łączników dwuklawiszowych
+    name_series: Simon Basic
+    uwaga: "Brak w API Kontakt-Simon - nazwa z Ekonoma, seria przyjeta jak NU1W, brak EAN"

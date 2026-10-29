@@ -101,6 +101,11 @@ def build_parser() -> argparse.ArgumentParser:
     sync.add_argument("--create-missing-categories", action="store_true")
     sync.add_argument("--create-missing-manufacturers", action="store_true")
     sync.add_argument("--allow-http-images", action="store_true", help="Dopuszcza niezabezpieczone adresy HTTP zdjęć.")
+    sync.add_argument(
+        "--raw-image-urls",
+        action="store_true",
+        help="Wysyła images_urls jako surowe adresy, bez pobrania i obróbki do 1000x1000 na białym tle.",
+    )
     sync.add_argument("--allow-partial", action="store_true", help="Wysyła poprawne wiersze mimo błędów innych rekordów.")
     sync.add_argument("--language", default="pl")
     sync.add_argument("--requests-per-minute", type=int, default=100)
@@ -161,6 +166,7 @@ def main(argv: list[str] | None = None) -> int:
                 create_missing_manufacturers=args.create_missing_manufacturers,
                 allow_partial=args.allow_partial,
                 allow_http_images=args.allow_http_images,
+                raw_image_urls=args.raw_image_urls,
                 language=args.language,
                 requests_per_minute=args.requests_per_minute,
                 max_retries=args.max_retries,

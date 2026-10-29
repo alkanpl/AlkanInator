@@ -3,15 +3,19 @@ from __future__ import annotations
 import csv
 import json
 import sys
+import base64
 import tempfile
 from argparse import Namespace
+from io import BytesIO
 from pathlib import Path
 from unittest import TestCase
+from unittest.mock import patch
 
 from PIL import Image
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
+from baselinker_api import images as images_module
 from baselinker_api.export import ExportOptions, export_inventory_csv
 from baselinker_api.images import build_images_payload, external_image_value
 from baselinker_api.input_data import load_product_records
@@ -142,6 +146,25 @@ class BaseLinkerInputTests(TestCase):
         self.assertTrue(any("Niepoprawny JSON" in error for error in records[0].errors))
 
 
+def _png_bytes(mode: str = "RGBA", size: tuple[int, int] = (500, 300)) -> bytes:
+    """PNG dostawcy: przezroczyste tlo z kolorowym prostokatem posrodku."""
+    if mode == "P":
+        image = Image.new("P", size, 0)
+        image.putpalette([0, 0, 0, 200, 30, 30] + [0] * 762)
+        image.paste(1, (size[0] // 4, size[1] // 4, size[0] * 3 // 4, size[1] * 3 // 4))
+        image.info["transparency"] = 0
+    else:
+        image = Image.new("RGBA", size, (0, 0, 0, 0))
+        image.paste((200, 30, 30, 255), (size[0] // 4, size[1] // 4, size[0] * 3 // 4, size[1] * 3 // 4))
+    buffer = BytesIO()
+    image.save(buffer, format="PNG", transparency=0) if mode == "P" else image.save(buffer, format="PNG")
+    return buffer.getvalue()
+
+
+def _decode(value: str) -> Image.Image:
+    return Image.open(BytesIO(base64.b64decode(value[len("data:"):])))
+
+
 class BaseLinkerImageTests(TestCase):
     def test_external_urls_require_https_and_skip_base_cdn(self) -> None:
         self.assertIsNotNone(external_image_value("https://example.com/a.jpg")[0])
@@ -158,6 +181,29 @@ class BaseLinkerImageTests(TestCase):
         self.assertTrue(payload["0"].startswith("data:"))
         self.assertLessEqual(len(payload["0"]) - 5, 2_000_000)
         self.assertFalse(any("Nie można" in warning for warning in warnings))
+
+    def test_remote_image_is_downloaded_and_padded_to_1000_on_white(self) -> None:
+        for mode in ("RGBA", "P"):
+            with self.subTest(mode=mode), patch.object(images_module, "fetch_image_bytes", return_value=_png_bytes(mode)):
+                payload, warnings = build_images_payload(["https://example.com/a.png"], [], input_dir=Path("."))
+            self.assertEqual(warnings, [])
+            image = _decode(payload["0"])
+            self.assertEqual(image.size, (1000, 1000))
+            self.assertEqual(image.format, "JPEG")
+            # (50, 250) lezy w obszarze samego zdjecia (500x300 -> 1000x600 od y=200), w przezroczystym tle.
+            for corner in ((2, 2), (997, 997), (50, 250)):
+                self.assertTrue(all(channel >= 250 for channel in image.getpixel(corner)), (mode, corner))
+
+    def test_raw_urls_option_keeps_original_address(self) -> None:
+        with patch.object(images_module, "fetch_image_bytes", side_effect=AssertionError("bez pobierania")):
+            payload, _ = build_images_payload(["https://example.com/a.png"], [], input_dir=Path("."), raw_urls=True)
+        self.assertEqual(payload, {"0": "url:https://example.com/a.png"})
+
+    def test_failed_download_is_reported_not_sent_raw(self) -> None:
+        with patch.object(images_module, "fetch_image_bytes", side_effect=OSError("timeout")):
+            payload, warnings = build_images_payload(["https://example.com/a.png"], [], input_dir=Path("."))
+        self.assertEqual(payload, {})
+        self.assertTrue(any("Nie można pobrać" in warning for warning in warnings))
 
 
 class BaseLinkerMappingTests(TestCase):
@@ -177,6 +223,11 @@ class BaseLinkerMappingTests(TestCase):
 
 
 class BaseLinkerSyncTests(TestCase):
+    def setUp(self) -> None:
+        fetch = patch.object(images_module, "fetch_image_bytes", return_value=_png_bytes())
+        fetch.start()
+        self.addCleanup(fetch.stop)
+
     def test_auto_match_uses_sku_before_stale_woocommerce_product_id(self) -> None:
         client = FakeClient()
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -223,7 +274,7 @@ class BaseLinkerSyncTests(TestCase):
         self.assertEqual(text_fields["name|pl"], _valid_row()["name"])
         self.assertEqual(text_fields["features|pl"]["Seria"], "Simon 54")
         self.assertEqual(text_fields["features|pl"]["Kolor"], "kaszmirowy")
-        self.assertTrue(payload["images"]["0"].startswith("url:https://"))
+        self.assertEqual(_decode(payload["images"]["0"]).size, (1000, 1000))
 
     def test_batch_is_blocked_when_any_input_row_is_invalid(self) -> None:
         client = FakeClient()
@@ -264,6 +315,48 @@ class BaseLinkerSyncTests(TestCase):
         self.assertEqual(client.added_manufacturers, ["Nowa marka"])
         self.assertIn("category_id", client.added_products[0])
         self.assertIn("manufacturer_id", client.added_products[0])
+
+    def test_new_category_goes_under_unique_parent_path_despite_duplicate_root(self) -> None:
+        # Base ma kilka korzeni "Osprzęt"; pelna sciezka rodzica jest jednak unikalna,
+        # wiec nowa kategoria ma trafic pod nia, bez zakladania kolejnego korzenia.
+        client = FakeClient()
+        client.get_categories = lambda inventory_id: [
+            {"category_id": 1, "name": "Osprzęt", "parent_id": 0},
+            {"category_id": 2, "name": "Osprzęt", "parent_id": 0},
+            {"category_id": 10, "name": "Simon 54", "parent_id": 1},
+        ]
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            source = root / "input.csv"
+            _write_input(source, [_valid_row(category="Osprzęt > Simon 54 > Ramki")])
+            result = sync_inventory(
+                client,
+                source,
+                SyncOptions(inventory_id=1, apply=True, create_missing_categories=True),
+                report_dir=root / "report",
+            )
+        self.assertEqual(result.audit_rows[0].status, "SUCCESS")
+        self.assertEqual(client.added_categories, [{"inventory_id": 1, "name": "Ramki", "parent_id": 10}])
+
+    def test_category_under_ambiguous_root_is_not_created(self) -> None:
+        client = FakeClient()
+        client.get_categories = lambda inventory_id: [
+            {"category_id": 1, "name": "Osprzęt", "parent_id": 0},
+            {"category_id": 2, "name": "Osprzęt", "parent_id": 0},
+        ]
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            source = root / "input.csv"
+            _write_input(source, [_valid_row(category="Osprzęt > Simon 24")])
+            with self.assertRaises(RuntimeError):
+                sync_inventory(
+                    client,
+                    source,
+                    SyncOptions(inventory_id=1, apply=True, create_missing_categories=True),
+                    report_dir=root / "report",
+                )
+        self.assertEqual(client.added_categories, [])
+        self.assertEqual(client.added_products, [])
 
 
 class BaseLinkerExportTests(TestCase):

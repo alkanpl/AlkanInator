@@ -175,6 +175,35 @@ families:
       # "Zaslepka ramki" to zaslepka - dlatego rzeczownik glowny, nie `any`.
       starts_with: ["zaslepka", "zaslepki"]
 
+  # Uszczelki IP44 do ramek i lacznikow (Simon NU*/NUC*/NUV*/NU1W). Bez tej
+  # rodziny "Uszczelka ... do lacznikow dwuklawiszowych" trafiala do
+  # lacznik_instalacyjny ("Ten lacznik"), a uszczelki ramek do `nieznana`.
+  - name: uszczelka
+    domain: osprzet
+    subject: "Ta uszczelka"
+    is_light: false
+    match:
+      starts_with: ["uszczelka", "uszczelki", "zestaw uszczelek"]
+
+  # Adapter (przejsciowka) na osprzet 45x45 mm (Simon NA45, TA45).
+  - name: adapter_osprzetu
+    domain: osprzet
+    subject: "Ten adapter"
+    is_light: false
+    match:
+      starts_with: ["adapter"]
+
+  # Przeniesione wyzej (2026-10-20): "Narzedzie do dociskania wkladow RJ45 w
+  # gniazdach komputerowych" (Simon NDF) trafialo do gniazdo_komputerowe.
+  - name: narzedzie
+    domain: narzedzia
+    subject: "To narzedzie"
+    is_light: false
+    match:
+      starts_with: ["narzedzie", "narzedzia"]
+      any: ["narzedzia dla elektryka", "sciagacz izolacji", "zaciskarka",
+            "miernik", "probnik napiecia", "wkretak"]
+
   - name: pokrywa_gniazda
     domain: osprzet
     subject: "Ta pokrywa"
@@ -452,14 +481,6 @@ families:
     is_light: false
     match:
       any: ["przedluzacz", "listwa zasilajaca", "rozgaleziacz"]
-
-  - name: narzedzie
-    domain: narzedzia
-    subject: "To narzedzie"
-    is_light: false
-    match:
-      any: ["narzedzia dla elektryka", "sciagacz izolacji", "zaciskarka",
-            "miernik", "probnik napiecia", "wkretak"]
 
   # ------------------------------------------------------------------ fallbacki
   - name: osprzet_ogolny
