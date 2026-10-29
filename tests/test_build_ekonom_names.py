@@ -1,3 +1,4 @@
+import os
 import sys
 import tempfile
 import unittest
@@ -28,6 +29,7 @@ from build_ekonom_names import (  # noqa: E402
     check_catalog_cct,
     full_name,
     package_from_pdfs,
+    pdf_texts,
     lumen_from_window,
     lumens_from_pdf_codes,
     lumens_from_pdfs,
@@ -202,6 +204,25 @@ class PdfLumenTest(unittest.TestCase):
 
     def test_thousands_with_space(self):
         self.assertEqual(lumen_from_window(["60", "9.5", "1 055", "E"], 9.5, {2700}), 1055)
+
+    def test_texts_of_deleted_pdfs_come_from_cache(self):
+        # katalogi PDF (setki MB) moga zniknac z input/ - lumeny dalej licza sie z tekstu w cache
+        with tempfile.TemporaryDirectory() as tmp:
+            pdf_dir, cache_dir = Path(tmp, "pdf"), Path(tmp, "cache")
+            pdf_dir.mkdir()
+            cache_dir.mkdir()
+            (pdf_dir / "b_katalog.pdf").write_bytes(b"x" * 7)
+            (cache_dir / "b_katalog.7.txt").write_text("B 9.5 1 055", encoding="utf-8")
+            (cache_dir / "a_usuniety.2024.1.100.txt").write_text("stara wersja", encoding="utf-8")
+            newer = cache_dir / "a_usuniety.2024.1.200.txt"
+            newer.write_text(" 2.2 \n470", encoding="utf-8")
+            os.utime(newer, (2_000_000_000, 2_000_000_000))
+
+            texts = pdf_texts(pdf_dir, cache_dir)
+
+        self.assertEqual(list(texts), ["a_usuniety.2024.1.pdf", "b_katalog.pdf"])
+        self.assertEqual(texts["a_usuniety.2024.1.pdf"], ["2.2", "470"])
+        self.assertEqual(texts["b_katalog.pdf"], ["B 9.5 1 055"])
 
 
 COLUMNS = RULES["package_brand"]["catalog_columns"]

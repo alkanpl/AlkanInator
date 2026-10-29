@@ -798,20 +798,35 @@ def parse_name_lumen(u: str, rules: dict[str, Any]) -> float | None:
 # ---------------------------------------------------------------- lumeny z PDF
 
 def pdf_texts(pdf_dir: Path, cache_dir: Path) -> dict[str, list[str]]:
-    import fitz  # PyMuPDF - tylko gdy podano PDF-y
-
     ensure_dir(cache_dir)
-    texts: dict[str, list[str]] = {}
+    raw: dict[str, str] = {}
     for pdf in sorted(pdf_dir.glob("*.pdf")):
         stat = pdf.stat()
         cached = cache_dir / f"{pdf.stem}.{stat.st_size}.txt"
         if cached.exists():
             text = cached.read_text(encoding="utf-8")
         else:
+            import fitz  # PyMuPDF - tylko gdy trzeba odczytac nowy PDF
+
             doc = fitz.open(pdf)
             text = "\n".join(page.get_text() for page in doc)
             cached.write_text(text, encoding="utf-8")
-        texts[pdf.name] = [line.strip() for line in text.split("\n")]
+        raw[pdf.name] = text
+
+    # Katalogi PDF zajmuja setki MB, wiec moga zniknac z input/ - ich tekst zostaje
+    # w cache ("<nazwa>.<rozmiar>.txt"). Przy kilku wersjach jednego PDF wygrywa najnowsza.
+    cached_only: dict[str, Path] = {}
+    for cached in sorted(cache_dir.glob("*.txt"), key=lambda path: path.stat().st_mtime):
+        name = cached.name.rsplit(".", 2)[0] + ".pdf"
+        if name not in raw:
+            cached_only[name] = cached
+    for name, cached in cached_only.items():
+        raw[name] = cached.read_text(encoding="utf-8")
+
+    texts: dict[str, list[str]] = {}
+    # Kolejnosc jak przy sortowaniu plikow w katalogu - od niej zalezy, ktore dopasowanie wygrywa.
+    for name in sorted(raw, key=lambda item: pdf_dir / item):
+        texts[name] = [line.strip() for line in raw[name].split("\n")]
     return texts
 
 
