@@ -120,6 +120,21 @@ py src/enrich_variants_and_shipping.py --input "C:\Users\Handlowiec\Downloads\Ka
 
 Skrypt dopisuje kolumny kontrolne `variant_group_key`, `variant_group_size`, `variant_tag`, `variant_link_tag`, `variant_differentiating_attributes`, `variant_attribute_summary`, `variant_reason`, `shipping_class_predicted`, `shipping_class_confidence`, `shipping_class_reason` i `shipping_category_guess`. Jesli istnieje kolumna `Product Tags`/`Tagi`, tag wariantu jest do niej dopisywany tylko dla rodzin, ktore realnie roznia sie atrybutami. Raport `reports/<nazwa_wyjscia>/variant_tag_report.xlsx` pokazuje tagi, SKU w grupie i atrybuty laczace wariacje. Jesli istnieje kolumna `Shipping Class`/`Klasa wysylkowa`, puste komorki sa uzupelniane przewidywana klasa, a istniejace wartosci pozostaja bez zmian. Flaga `--overwrite-shipping` pozwala nadpisac istniejace klasy.
 
+## Sklep WooCommerce przez API (AlkanInator Bridge)
+
+Pobieranie wiedzy i produktow ze sklepu oraz wysylka zmian z pliku XLSX, bez recznego WP All Export / WP All Import. Wymaga wtyczki `alkan-inator-bridge` w sklepie i pliku `src/woo_api/config.json` (`url`, `token`, `verify_ssl`); token generuje sie w WooCommerce > AlkanInator API.
+
+```powershell
+py src/woo_api_cli.py knowledge
+py src/woo_api_cli.py pull --category "Gniazdka i Łączniki>Gniazdka Kontakt Simon" --output output/simon_woo.xlsx
+py src/woo_api_cli.py push --input output/simon_woo.xlsx --columns "Product Tags,Wysyłka w ciągu"
+py src/woo_api_cli.py push --input output/simon_woo.xlsx --columns "Product Tags,Wysyłka w ciągu" --apply
+py src/woo_api_cli.py changesets
+py src/woo_api_cli.py revert ai-20261021-153259-simon_woo --apply
+```
+
+Plik z `pull` ma uklad WP All Export (te same naglowki), wiec dziala z istniejacymi skryptami. `push` bez `--apply` tylko porownuje plik ze sklepem i zapisuje raport `reports/woo_api/*_dry-run.xlsx`; z `--apply` zapisuje zmienione produkty i podaje identyfikator zapisu do cofniecia. Szczegoly i zasady: sekcja "Polaczenie ze sklepem Woo" w `CLAUDE.md`.
+
 ## Wyniki
 
 Pipeline tworzy:
