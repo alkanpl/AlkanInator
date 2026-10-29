@@ -32,6 +32,8 @@ READ_ONLY_COLUMNS = {
     "Product Attributes",
 }
 MAX_BATCH_SIZE = 200
+# Skrot zmian produktu z dry-run; sklep porownuje go przy zapisie (wtyczka 2.0).
+PLAN_HASH_KEY = "_plan_hash"
 # Zdjecia produktow zawsze 1000x1000 JPG na bialym tle (CLAUDE.md). Sklep pobiera obce
 # URL-e z Image URL bez obrobki, wiec format sprawdza dry-run, zanim cokolwiek trafi do mediow.
 IMAGE_COLUMN = "Image URL"
@@ -44,11 +46,14 @@ class PushOptions:
     apply: bool = False
     columns: list[str] = field(default_factory=list)
     allow_new_terms: bool = False
+    allow_destructive: bool = False
     skip_errors: bool = False
     batch_size: int = 100
     changeset: str = ""
     sheet: str = ""
     check_images: bool = True
+    # Wolane przed zapisem z liczba produktow; False wstrzymuje zapis (potwierdzenie na produkcji).
+    confirm: Callable[[int], bool] | None = None
 
 
 @dataclass
@@ -104,6 +109,8 @@ def merge_results(parts: list[dict[str, Any]]) -> dict[str, Any]:
         "written_columns": [],
         "read_only_columns": [],
         "ignored_columns": [],
+        "writes_enabled": all(part.get("writes_enabled", True) for part in parts),
+        "max_products": max((int(part.get("max_products") or 0) for part in parts), default=0),
     }
     seen_terms: set[tuple[str, str]] = set()
     for part in parts:
@@ -257,7 +264,15 @@ def run_push(
     parts = []
     for number, chunk in enumerate(_chunks(payload, batch_size), start=1):
         log(f"Dry-run {number}/{-(-len(payload) // batch_size)} ({len(chunk)} wierszy)")
-        parts.append(client.sync(chunk, dry_run=True, allow_new_terms=options.allow_new_terms, columns=options.columns))
+        parts.append(
+            client.sync(
+                chunk,
+                dry_run=True,
+                allow_new_terms=options.allow_new_terms,
+                allow_destructive=options.allow_destructive,
+                columns=options.columns,
+            )
+        )
     dry = merge_results(parts)
     if options.check_images:
         verify = getattr(getattr(client, "session", None), "verify", True)
@@ -274,11 +289,27 @@ def run_push(
         log("Zapis wstrzymany: dry-run ma błędy (arkusz Problemy). Popraw plik albo użyj --skip-errors, żeby zapisać resztę.")
         return PushResult(dry, None, "", reports, blocked=True)
 
-    changed_rows = {product["row"] for product in dry["products"] if product["status"] == "changed"}
-    to_apply = [row for row in payload if row[ROW_NUMBER_KEY] in changed_rows]
+    # Sklep zapisze produkt tylko wtedy, gdy jego zmiany sa identyczne jak w raporcie dry-run.
+    plan_hashes = {product["row"]: product.get("plan_hash", "") for product in dry["products"] if product["status"] == "changed"}
+    to_apply = [{**row, PLAN_HASH_KEY: plan_hashes[row[ROW_NUMBER_KEY]]} for row in payload if row[ROW_NUMBER_KEY] in plan_hashes]
     if not to_apply:
         log("Brak zmian do zapisania.")
         return PushResult(dry, None, "", reports, blocked=False)
+
+    # Sklep i tak odrzuci taki zapis; sprawdzenie tutaj zapobiega zapisaniu tylko pierwszych partii.
+    if not dry.get("writes_enabled", True):
+        log("Zapis wstrzymany: zapis przez API jest wyłączony w sklepie (WooCommerce > AlkanInator API).")
+        return PushResult(dry, None, "", reports, blocked=True)
+    limit = int(dry.get("max_products") or 0)
+    if limit and len(to_apply) > limit:
+        log(
+            f"Zapis wstrzymany: {len(to_apply)} produktów do zmiany, a limit sklepu to {limit} na jeden zapis. "
+            "Podziel plik albo podnieś limit w WooCommerce > AlkanInator API (0 = bez limitu)."
+        )
+        return PushResult(dry, None, "", reports, blocked=True)
+    if options.confirm is not None and not options.confirm(len(to_apply)):
+        log("Zapis wstrzymany: brak potwierdzenia.")
+        return PushResult(dry, None, "", reports, blocked=True)
 
     changeset = options.changeset or make_changeset_id(input_path, now)
     parts = []
@@ -289,6 +320,7 @@ def run_push(
                 chunk,
                 dry_run=False,
                 allow_new_terms=options.allow_new_terms,
+                allow_destructive=options.allow_destructive,
                 columns=options.columns,
                 changeset=changeset,
             )
@@ -305,7 +337,12 @@ def run_revert(
     apply: bool,
     report_dir: str | Path,
     now: datetime | None = None,
+    confirm: Callable[[int], bool] | None = None,
 ) -> tuple[dict[str, Any], Path]:
+    if apply and confirm is not None:
+        preview = client.revert(changeset, dry_run=True)
+        if not confirm(int(preview.get("summary", {}).get("changed", 0))):
+            raise ValueError("Cofnięcie wstrzymane: brak potwierdzenia.")
     result = client.revert(changeset, dry_run=not apply)
     stamp = (now or datetime.now()).strftime("%Y%m%d-%H%M%S")
     mode = "REVERT_APPLY" if apply else "REVERT_DRY_RUN"

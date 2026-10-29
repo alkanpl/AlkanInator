@@ -9,6 +9,9 @@ import requests
 
 API_PATH = "/wp-json/alkan-inator/v1"
 RETRY_STATUS = {408, 429, 500, 502, 503, 504}
+# Glowna wersja API wtyczki, z ktora ten klient umie pracowac (naglowek X-Alkan-Inator-Api-Version).
+SUPPORTED_API_MAJOR = 2
+API_VERSION_HEADER = "X-Alkan-Inator-Api-Version"
 
 
 class WooBridgeError(RuntimeError):
@@ -16,6 +19,21 @@ class WooBridgeError(RuntimeError):
         super().__init__(message)
         self.status_code = status_code
         self.code = code
+
+
+def check_api_version(version: str) -> None:
+    """Klient i wtyczka musza miec te sama glowna wersje API, inaczej bezpieczniki zapisu moglyby nie dzialac."""
+    major = version.split(".", 1)[0].strip()
+    if not major:
+        raise WooBridgeError(
+            "Wtyczka AlkanInator Bridge w sklepie jest starsza niż ten AlkanInator (brak wersji API). "
+            "Zaktualizuj wtyczkę w sklepie."
+        )
+    if not major.isdigit() or int(major) != SUPPORTED_API_MAJOR:
+        raise WooBridgeError(
+            f"Sklep ma API w wersji {version}, a ten AlkanInator obsługuje {SUPPORTED_API_MAJOR}.x. "
+            + ("Zaktualizuj AlkanInator (git pull main)." if major.isdigit() and int(major) > SUPPORTED_API_MAJOR else "Zaktualizuj wtyczkę w sklepie.")
+        )
 
 
 class WooBridgeClient:
@@ -82,6 +100,7 @@ class WooBridgeClient:
                 message = payload.get("message", text[:300]) if isinstance(payload, dict) else text[:300]
                 code = payload.get("code", "") if isinstance(payload, dict) else ""
                 raise WooBridgeError(f"HTTP {response.status_code}: {message}", status_code=response.status_code, code=code)
+            check_api_version(response.headers.get(API_VERSION_HEADER, ""))
             return payload
         raise WooBridgeError(f"Nie udało się wykonać {method} {url}")
 
@@ -114,10 +133,16 @@ class WooBridgeClient:
         *,
         dry_run: bool = True,
         allow_new_terms: bool = False,
+        allow_destructive: bool = False,
         columns: list[str] | None = None,
         changeset: str = "",
     ) -> dict[str, Any]:
-        body: dict[str, Any] = {"rows": rows, "dry_run": dry_run, "allow_new_terms": allow_new_terms}
+        body: dict[str, Any] = {
+            "rows": rows,
+            "dry_run": dry_run,
+            "allow_new_terms": allow_new_terms,
+            "allow_destructive": allow_destructive,
+        }
         if columns:
             body["columns"] = columns
         if changeset:

@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "ask": [
+      "Edit(src/woo_api/**)",
+      "Edit(src/woo_api_cli.py)",
+      "Edit(tests/test_woo_api.py)",
+      "Bash(*woo_api_cli.py*--apply*)"
+    ],
+    "deny": [
+      "Read(src/woo_api/config.json)"
+    ]
+  }
+}

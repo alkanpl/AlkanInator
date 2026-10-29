@@ -1,11 +1,14 @@
 from __future__ import annotations
 
+import argparse
+import json
 import sys
 import tempfile
 from datetime import datetime
 from io import BytesIO
 from pathlib import Path
 from unittest import TestCase
+from unittest.mock import patch
 
 from openpyxl import load_workbook
 from PIL import Image
@@ -13,9 +16,11 @@ from PIL import Image
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from shop_attribute_values import load_vocabulary
+from woo_api.client import WooBridgeError, check_api_version
 from woo_api.knowledge import write_knowledge
 from woo_api.push import PushOptions, image_problems, make_changeset_id, prepare_rows, run_push
 from woo_api.workbook import merge_columns, read_products_xlsx, write_products_xlsx
+from woo_api_cli import confirm_production, load_connection
 
 
 COLUMNS = ["id", "Title", "SKU", "Width", "Product Attributes", "Atrybut Produktu: Kolor"]
@@ -26,21 +31,30 @@ def product_row(product_id: int, sku: str, title: str = "Gniazdo", width: str = 
 
 
 class FakeBridge:
-    """Sklep, w którym zmienia się tylko Title innego niż "Gniazdo", a SKU "ZLE" daje błąd."""
+    """Sklep, w którym zmienia się tylko Title innego niż "Gniazdo", a SKU "ZLE" daje błąd.
 
-    def __init__(self) -> None:
+    Jak wtyczka 2.0: zapis wymaga _plan_hash z dry-run, odpowiedź niesie limit i stan wyłącznika.
+    """
+
+    def __init__(self, *, max_products: int = 500, writes_enabled: bool = True) -> None:
         self.calls: list[dict[str, object]] = []
+        self.max_products = max_products
+        self.writes_enabled = writes_enabled
 
-    def sync(self, rows, *, dry_run=True, allow_new_terms=False, columns=None, changeset=""):
-        self.calls.append({"rows": rows, "dry_run": dry_run, "columns": columns, "changeset": changeset})
+    def sync(self, rows, *, dry_run=True, allow_new_terms=False, allow_destructive=False, columns=None, changeset=""):
+        self.calls.append({"rows": rows, "dry_run": dry_run, "columns": columns, "changeset": changeset, "allow_destructive": allow_destructive})
         products = []
         for row in rows:
             errors = ["Shipping Class: nie ma klasy"] if row.get("SKU") == "ZLE" else []
             changes = [] if row.get("Title") == "Gniazdo" else [{"column": "Title", "old": "Gniazdo", "new": row.get("Title")}]
             status = "error" if errors else ("changed" if changes else "unchanged")
+            plan_hash = f"hash-{row['id']}-{row.get('Title')}"
             if status == "changed" and not dry_run:
-                status = "applied"
-            products.append({"row": row["_row"], "id": int(row["id"]), "sku": row["SKU"], "title": "", "status": status, "changes": changes, "errors": errors, "warnings": []})
+                if row.get("_plan_hash") != plan_hash:
+                    errors, status = ["zmiany różnią się od podglądu (dry-run)"], "error"
+                else:
+                    status = "applied"
+            products.append({"row": row["_row"], "id": int(row["id"]), "sku": row["SKU"], "title": "", "status": status, "plan_hash": plan_hash, "changes": changes, "errors": errors, "warnings": []})
         summary = {
             "rows": len(products),
             "changed": sum(p["status"] in ("changed", "applied") for p in products),
@@ -49,7 +63,17 @@ class FakeBridge:
             "warnings": 0,
             "changes": sum(len(p["changes"]) for p in products),
         }
-        return {"changeset": "" if dry_run else changeset, "summary": summary, "products": products, "new_terms": [], "written_columns": ["Title"], "read_only_columns": ["id", "SKU"], "ignored_columns": []}
+        return {
+            "changeset": "" if dry_run else changeset,
+            "summary": summary,
+            "products": products,
+            "new_terms": [],
+            "written_columns": ["Title"],
+            "read_only_columns": ["id", "SKU"],
+            "ignored_columns": [],
+            "max_products": self.max_products,
+            "writes_enabled": self.writes_enabled,
+        }
 
 
 def image_bytes(size=(1000, 1000), fmt="JPEG", mode="RGB", color=(255, 255, 255)) -> bytes:
@@ -61,8 +85,8 @@ def image_bytes(size=(1000, 1000), fmt="JPEG", mode="RGB", color=(255, 255, 255)
 class ImageBridge(FakeBridge):
     """Sklep, w którym każdy produkt ma dziś zdjęcie stare.jpg, a Image URL z pliku je zmienia."""
 
-    def sync(self, rows, *, dry_run=True, allow_new_terms=False, columns=None, changeset=""):
-        result = super().sync(rows, dry_run=dry_run, allow_new_terms=allow_new_terms, columns=columns, changeset=changeset)
+    def sync(self, rows, *, dry_run=True, allow_new_terms=False, allow_destructive=False, columns=None, changeset=""):
+        result = super().sync(rows, dry_run=dry_run, allow_new_terms=allow_new_terms, allow_destructive=allow_destructive, columns=columns, changeset=changeset)
         for row, product in zip(rows, result["products"]):
             if row.get("Image URL") and row["Image URL"] != "https://sklep/stare.jpg":
                 product["changes"].append({"column": "Image URL", "old": "https://sklep/stare.jpg", "new": row["Image URL"]})
@@ -220,6 +244,38 @@ class PushTests(TestCase):
             run_push(bridge, path, PushOptions(batch_size=2), report_dir=temp_dir, log=lambda _: None)
             self.assertEqual([len(call["rows"]) for call in bridge.calls], [2, 2, 1])
 
+    def test_apply_sends_plan_hash_from_dry_run(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            bridge = FakeBridge()
+            path = self._file(temp_dir, [product_row(10, "A", title="Nowy"), product_row(11, "B")])
+            result = run_push(bridge, path, PushOptions(apply=True), report_dir=temp_dir, log=lambda _: None)
+            writes = [call for call in bridge.calls if not call["dry_run"]]
+            self.assertEqual([row["_plan_hash"] for row in writes[0]["rows"]], ["hash-10-Nowy"])
+            self.assertEqual(result.applied["summary"]["applied"], 1)
+
+    def test_apply_stops_before_writing_when_shop_disallows_it(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            path = self._file(temp_dir, [product_row(index, f"S{index}", title="Nowy") for index in range(1, 4)])
+            for bridge in (FakeBridge(writes_enabled=False), FakeBridge(max_products=2)):
+                result = run_push(bridge, path, PushOptions(apply=True), report_dir=temp_dir, log=lambda _: None)
+                self.assertTrue(result.blocked)
+                self.assertFalse(any(not call["dry_run"] for call in bridge.calls))
+
+            bridge = FakeBridge(max_products=0)
+            result = run_push(bridge, path, PushOptions(apply=True), report_dir=temp_dir, log=lambda _: None)
+            self.assertEqual(result.applied["summary"]["applied"], 3)
+
+    def test_apply_waits_for_confirmation(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            path = self._file(temp_dir, [product_row(10, "A", title="Nowy")])
+            asked: list[int] = []
+            bridge = FakeBridge()
+            options = PushOptions(apply=True, confirm=lambda count: asked.append(count) or False)
+            result = run_push(bridge, path, options, report_dir=temp_dir, log=lambda _: None)
+            self.assertEqual(asked, [1])
+            self.assertTrue(result.blocked)
+            self.assertFalse(any(not call["dry_run"] for call in bridge.calls))
+
     def test_changeset_id_is_ascii(self) -> None:
         self.assertEqual(make_changeset_id("output/Łączniki Simon 54.xlsx", datetime(2026, 1, 2, 3, 4, 5)), "ai-20260102-030405-Laczniki-Simon-54")
 
@@ -250,6 +306,100 @@ class KnowledgeTests(TestCase):
             self.assertIn("Pusty\tpa_pusty\t\t\t0\t", lines)
 
             categories = paths["categories"].read_text(encoding="utf-8").splitlines()
+            self.assertEqual(categories[2], "term_id\tparent_id\tname\tslug\tcount")
             self.assertEqual(categories[3:], ["1\t0\tGniazdka\tgniazdka\t9", "2\t1\tSimon 54\tsimon-54\t3"])
-            self.assertIn("product_shipping_class\t8\tStandard\tstandard\t100", paths["shop_terms"].read_text(encoding="utf-8"))
+            shop_terms = paths["shop_terms"].read_text(encoding="utf-8").splitlines()
+            self.assertEqual(shop_terms[2], "taxonomy\tterm_id\tname\tslug\tcount")
+            self.assertIn("product_shipping_class\t8\tStandard\tstandard\t100", shop_terms)
             self.assertTrue(paths["full"].is_file())
+
+            # Te nazwy plikow czytaja inne skrypty i agenci (CLAUDE.md/AGENTS.md) - nie zmieniac.
+            self.assertEqual(
+                {key: path.name for key, path in paths.items()},
+                {
+                    "attributes": "woo_attribute_terms_snapshot.tsv",
+                    "categories": "woo_product_categories_snapshot.tsv",
+                    "shop_terms": "woo_shop_terms_snapshot.tsv",
+                    "full": "knowledge.json",
+                },
+            )
+            self.assertEqual(json.loads(paths["full"].read_text(encoding="utf-8")), knowledge)
+
+
+class ConnectionTests(TestCase):
+    """config.json sprzed profili ma dzialac bez zmian; produkcja zawsze rozpoznana."""
+
+    def _load(self, temp_dir: str, config: dict[str, object], profile: str = "", url: str = "", env: dict[str, str] | None = None):
+        path = Path(temp_dir) / "config.json"
+        path.write_text(json.dumps(config), encoding="utf-8")
+        args = argparse.Namespace(config=str(path), profile=profile, url=url, insecure=False)
+        with patch.dict("os.environ", env or {}, clear=False) as environ:
+            if not env:
+                environ.pop("ALKAN_WOO_URL", None)
+                environ.pop("ALKAN_WOO_TOKEN", None)
+            return load_connection(args)
+
+    def test_flat_config_is_local_profile(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            flat = {"url": "https://alkanlocal.test:8443", "token": "abc", "verify_ssl": False}
+            connection = self._load(temp_dir, flat)
+            self.assertEqual(
+                connection,
+                {"url": "https://alkanlocal.test:8443", "token": "abc", "verify_ssl": False, "profile": "local", "production": False},
+            )
+            env = {"ALKAN_WOO_URL": "https://inny.test", "ALKAN_WOO_TOKEN": "xyz"}
+            connection = self._load(temp_dir, flat, env=env)
+            self.assertEqual((connection["url"], connection["token"]), ("https://inny.test", "xyz"))
+            with self.assertRaisesRegex(ValueError, "profiles"):
+                self._load(temp_dir, flat, profile="prod")
+
+    def test_profiles_and_production_detection(self) -> None:
+        config = {
+            "default": "local",
+            "profiles": {
+                "local": {"url": "https://alkanlocal.test:8443", "token": "l", "verify_ssl": False},
+                "prod": {"url": "https://alkan.pl", "token": "p"},
+            },
+        }
+        with tempfile.TemporaryDirectory() as temp_dir:
+            self.assertFalse(self._load(temp_dir, config)["production"])
+            prod = self._load(temp_dir, config, profile="prod")
+            self.assertEqual((prod["url"], prod["token"], prod["production"]), ("https://alkan.pl", "p", True))
+            # Adres produkcji podany recznie nie omija potwierdzenia.
+            self.assertTrue(self._load(temp_dir, config, url="https://alkan.pl/")["production"])
+            with self.assertRaisesRegex(ValueError, "nie ma profilu"):
+                self._load(temp_dir, config, profile="test")
+
+    def test_production_needs_a_terminal(self) -> None:
+        with patch("woo_api_cli._has_terminal") as terminal, patch("builtins.input") as answer:
+            terminal.return_value = False
+            self.assertFalse(confirm_production(3, "zapis zmian"))
+            answer.assert_not_called()
+            terminal.return_value = True
+            answer.return_value = "3"
+            self.assertTrue(confirm_production(3, "zapis zmian"))
+            answer.return_value = "tak"
+            self.assertFalse(confirm_production(3, "zapis zmian"))
+            answer.side_effect = EOFError
+            self.assertFalse(confirm_production(3, "zapis zmian"))
+
+    def test_redirected_input_is_not_a_terminal(self) -> None:
+        # Agent AI uruchamia polecenia z wejsciem z potoku albo z NUL (na Windows isatty() bywa wtedy prawdziwe).
+        import os
+        import subprocess
+
+        code = "import sys; sys.path.insert(0, 'src'); import woo_api_cli; print(woo_api_cli._has_terminal())"
+        root = Path(__file__).resolve().parents[1]
+        with open(os.devnull) as null:
+            for stdin in (null, subprocess.PIPE):
+                out = subprocess.run([sys.executable, "-c", code], cwd=root, stdin=stdin, capture_output=False, stdout=subprocess.PIPE, text=True, input=None)
+                self.assertEqual(out.stdout.strip(), "False")
+
+
+class ApiVersionTests(TestCase):
+    def test_client_refuses_other_major_version(self) -> None:
+        check_api_version("2.0")
+        check_api_version("2.7")
+        for version, hint in (("", "wtyczkę"), ("1.0", "wtyczkę"), ("3.0", "git pull")):
+            with self.assertRaisesRegex(WooBridgeError, hint):
+                check_api_version(version)
