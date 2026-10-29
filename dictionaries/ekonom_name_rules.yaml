@@ -1,0 +1,2994 @@
+# Nazwy do Ekonoma - krotkie nazwy dla sprzedawcow (nie tytuly SEO).
+# Narzedzie: src/build_ekonom_names.py. Zasady ogolne: CLAUDE.md -> "Nazwy do Ekonoma".
+#
+# Nazwa = noun + marka + atrybuty w kolejnosci z `attrs`. Atrybut bez wartosci jest
+# pomijany; jezeli jest w `required`, wiersz dostaje status DO_SPRAWDZENIA.
+# Typy sa dopasowywane po kolei (pierwszy pasujacy wygrywa) regexem na pelnej
+# nazwie z Ekonoma bez polskich znakow, wielkimi literami.
+#
+# Atrybuty (render w src/build_ekonom_names.py):
+#   gwint         E27, GU10, G24d-3 ...
+#   line          linia zarowki: Value / Performance / Superior / Star / Superstar / Vintage 1906 ...
+#   shape         ksztalt zarowki: A60 / swieczka / kulka / globe G95 / sztyft / PAR16 ...
+#   beam          kat swiecenia zarowek reflektorowych (PAR16, R50, MR16...): 36°
+#   glass         klosz: przezroczysta / matowa
+#   dim           "sciemnialna"
+#   optics        kat swiecenia (30°, asym. 45x140°) albo kod optyki (opt. VW)
+#   color         kolor obudowy wg `housing_colors` i `gender` typu
+#   ugr           UGR19
+#   version_suffix: true -> gdy nazwa dalej sie powtarza, dopisz wyroznik wersji z nazwy katalogowej
+#   tube_type     T8 / T5 / T9 / T5C
+#   tube_length   dlugosc swietlowki/tuby w cm (z mm w nazwie albo `fluorescent_lengths`)
+#   length        dlugosc oprawy liniowej w cm (600/1200/1500 albo NNNmm/NNcm)
+#   panel_size    60x60, 62,5x62,5, 120x30 ...
+#   diameter      srednica oprawy okraglej: fi190
+#   power         moc: 7,5W / 4x3,4W
+#   lumen         strumien: z PDF po EAN, potem z nazwy (920LM)
+#   cct           barwa: 4000K, 3000/4000K, TW, CCT, RGBW
+#   ip            IP65
+#   control       DALI / Zigbee / WiFi / BT
+#   sensor        "z czujnikiem"
+#   emergency     "awaryjna"
+#   tube_supply   EM / HF / 230V / EM/230V (z czym wspolpracuje tuba LED)
+#   strip         tasma: 5m 1000lm/m ...
+#   driver        zasilacz: 35W 700mA / 20W 24V
+#   ballast       statecznik: 1x18-40W
+#   voltage       12V (tylko niskonapieciowe)
+#   model         reszta nazwy oryginalnej po `strip_prefix` (typy bez schematu parametrycznego)
+
+suppliers:
+  ledvance:
+    brand: Ledvance
+    # Producent w nazwie (2026-10-19: najpierw "niepotrzebne", potem "jednak chcemy"). `brand_in_name: false`
+    # zdejmuje marke (zostaje tylko u blizniakow roznych marek); przy true `brand_words` pilnuje jednej marki
+    # ("Ledvance Bellalux" -> "Bellalux"). Zarowki LED: marka przed linia na koncu, inne typy: po rzeczowniku.
+    brand_in_name: true
+    # linia (Value / Performance / Superior / Star...) w kazdym typie, gdy jest - zaraz po marce (2026-10-19);
+    # takze ze skrotu literowego przed moca: "SPOT ADJ P 8W" = Performance, "SF DISC 300 V 21W" = Value
+    line_all_types: true
+    # marka i linia na koncu nazwy we wszystkich typach, jak w zarowkach (2026-10-19): najpierw parametry i cechy
+    brand_last: true
+    # to samo slowo dwa razy obok siebie zostaje raz ("globe Globe 95" -> "Globe 95", "SENSOR SENSOR")
+    dedupe_adjacent: true
+    # srednica jako "220 mm", nie "fi220" (2026-10-19)
+    diameter_mm: true
+    # wymiar bez jednostki "120X30" / "BL100x25" to cm (Planon), mm dopiero gdy oba wymiary >= 100 (2026-10-21)
+    deco_size_bare_cm: true
+    brand_words: [Ledvance, Osram, Bellalux, LEDV]
+    # Naprawy zapisu w Ekonomie przed parsowaniem (przeglad 2026-10-21):
+    # - Ekonom zamienil kiedys "PL" na "PANEL" w calych nazwach: PLANON PLUS -> "PANELANON PANELUS", PLUG -> "PANELUG",
+    #   PL-CN111 (PrevaLED Coin) -> "PANEL-CN111"; "PANELa Fraless" = Planon Frameless
+    # - opis po "|" ("| Dekoracyjne kolorowe paski LED ...") to nie nazwa
+    # - literowki: "Zasolacz", "specjala", "filtry fo"
+    name_cleanup:
+      - {match: 'PANELANON', repl: PLANON}
+      - {match: 'PANELUS\b', repl: PLUS}
+      - {match: 'PANELUG\b', repl: PLUG}
+      - {match: '\bPANEL-(?=CN|CUBE)', repl: PL-}
+      - {match: '(?i)\bPANELa\s+Fraless\b', repl: Planon Frameless}
+      - {match: '\s*\|.*$', repl: ''}
+      - {match: '\bZasolacz\b', repl: Zasilacz}
+      - {match: '\bspecjala\b', repl: specjalna}
+      - {match: '\bfiltry fo\b', repl: filtry do}
+      - {match: '^SMT WF', repl: SMART WF}  # "SMT WFA30D4,5W..." = SMART+ WiFi
+      - {match: '^Oprawa\s+Oprawa\b', repl: Oprawa}
+      # dekor / Smart+ (przeglad 2026-10-21): "SUNATHOME" = Sun@Home, "Obris" = Orbis, sklejone kody barwy i koloru
+      # ("RGBTWBK", "TWWT", "MGCRGBTW", "SMARTWIFI", "CORNER2000"), skroty PEND / CLICKD / CLG SUSP / REM / CAM
+      - {match: '\bSUNATHOME\b', repl: 'SUN@HOME'}
+      - {match: '(?i)\bObris\b', repl: Orbis}
+      - {match: '\bSMARTWIFI\b', repl: SMART WIFI}
+      - {match: '\bMGCRGBTW\b', repl: RGBTW}
+      - {match: '\bRGBTW(WT|BK)\b', repl: 'RGBTW \1'}
+      - {match: '\bTW(WT|BK)\b', repl: 'TW \1'}
+      - {match: '\bBWT(?=LEDV|\s|$)', repl: 'BK '}  # karta: "Orbis ZEST RGB 500mm Black"
+      - {match: '\bCORNER ?(1400|2000)\b', repl: 'CORNER \1MM'}  # wysokosc lampy narożnej -> "140cm"
+      - {match: '(?i)(?<=\dmm)TW\b', repl: ' TW'}  # "1200x300mmTW"
+      - {match: '\bTRACKL\b', repl: TRACKLIGHT}
+      - {match: '\bCLG SUSP\b', repl: SUSPENDED}
+      - {match: '(?i)\b([2-9])\s?X\s?PEND(?:ANT)?\b', repl: 'PENDANT \1XPKT'}
+      - {match: '(?i)\bPEND\b', repl: PENDANT}
+      - {match: '\bCLICKD(?=\s|LEDV|$)', repl: CLICK DIM}
+      - {match: '\bCLICK DIM(?=LEDV)', repl: 'CLICK DIM '}
+      - {match: '(?<=\d)W(?=[89]\d{2}\b)', repl: 'W '}  # "18W830"
+      - {match: '(?i)\bREM\b', repl: '+ RC'}  # "+ RC" = z pilotem; "REMOTE" robilo z panelu typ "Pilot"
+      - {match: '(?i)\bCAM\b', repl: CAMERA}
+      - {match: '(?i)\bENTRANCENUMBER\b', repl: ENTRANCE NUMBER}
+      - {match: '(?i)\bADJ WALL ADJUSTABLE WALL\b', repl: ADJUSTABLE WALL}
+      - {match: '(?i)\bGARDEN DOT (\d+) DOTS\b', repl: 'GARDEN DOT \1P'}
+      - {match: '(?i)\bGARDEN DOT (\d+)P EXT\b', repl: 'GARDEN DOT \1P EXTENSION'}
+      - {match: '(?i)(?<=\dXE27 )BW\b', repl: BROWN}  # Orbis Paris BW = Brown (karta)
+      - {match: '\bTURBANE\b', repl: TUBE}
+      - {match: '(?i)\bCEILING FAN RD\b', repl: CEILING FAN ROUND}
+      - {match: '(?i)\bCEILING FAN CYL\b', repl: CEILING FAN CYLINDER}
+      - {match: '(?i)\s6 kV S\b', repl: ''}  # tuba Ultra Output "6 kV S" (ochrona przepieciowa) - zostawalo "kV"
+      - {match: '\bPLAN PLUS BL\s?', repl: 'PLANON PLUS BACKLIGHT '}  # Smart+ Planon Plus Backlight (2026-10-21)
+      # akcesoria (przeglad 2026-10-21): sklejone "ERECESSEDMOUNTFRAME" / "ESURFACEMOUNTKITH70", "PL 1200300", "END x 10",
+      # literowki "jednsotka" / "sterując", angielski duplikat polskiego opisu jednostek sterujacych
+      - {match: '\bERECESSEDMOUNTFRAME\b', repl: E RECESSED MOUNT FRAME}
+      - {match: '\bESURFACEMOUNTKITH(\d+)\b', repl: 'E SURFACE MOUNT KIT H\1'}
+      - {match: '\bPL ?1200300\b', repl: PL 1200X300}
+      - {match: '(?i)\bEND x (\d+)$', repl: 'END x\1'}
+      - {match: '\bjednsotka\b', repl: jednostka}
+      - {match: '\bsterując\b', repl: sterująca}
+      - {match: '(?<=sterująca)(?=MANUAL\b)', repl: ' '}  # "Jednostka sterującaMANUAL CONTROL UNIT" (2026-10-26)
+      - {match: '(?i)\s(?:MANUAL |PUSH BUTTON )?CONTROL UNITS?\b', repl: ''}
+      - {match: '(?i)\b(TOUCH DALI-2 TW) \1\b', repl: '\1'}
+      - {match: '(?i)\b(TOUCH DALI-2) \1\b', repl: '\1'}
+      # zestawienie 2026-10-26 (stare kartoteki Osram i nowe Floodlight PS):
+      # - lm skrocone "1K2LM" / "10KLM" (Floodlight 10 8W 1K2LM) -> 1200LM / 10000LM
+      # - stare kody Osram z poczatku: "L15/76" = L 15W/76, "DS7/41-827" = DULUX S 7W/827, "ST8A-0.9M" = T8 900 mm
+      # - sklejki i literowki Ekonoma: "16W830EUE", "8404100 lm", "OSRA M", "EUELEDV", "Classicassic", "E277 173",
+      #   "ODWIFI" (= OUTD WIFI), "PBU SB" (= PB USB, ciecie na 40. znaku)
+      - {match: '(?i)\b(\d{1,3})K(\d)LM\b', repl: '\g<1>\g<2>00LM'}
+      - {match: '(?i)\b(\d{1,3})KLM\b', repl: '\g<1>000LM'}
+      - {match: '^L(\d{1,2})/(\d{2,3})\b', repl: 'L \1W/\2'}
+      - {match: '^D([SL])(\d{1,2})/(?:\d{2}-)?(\d{3})\b', repl: 'DULUX \1 \2W/\3'}
+      - {match: '\bST8[A-Z]?-0[.,](\d)M\b', repl: 'T8 \g<1>00MM'}
+      - {match: '\bST8[A-Z]?-1[.,](\d)M\b', repl: 'T8 1\g<1>00MM'}
+      - {match: '(?<=\d)W([89]\d{2})EUE\b', repl: 'W \1 EUE'}
+      - {match: '(?i)\b([89]\d{2})(\d{4}) ?LM\b', repl: '\1 \2LM'}
+      - {match: '(?i)\bOSRA M\b', repl: OSRAM}
+      - {match: '\bEUELEDV\b', repl: EUE LEDV}
+      - {match: '(?i)\bClassicassic\b', repl: Classic}
+      - {match: '\bE277 173$', repl: E27}
+      - {match: '\bODWIFI\b', repl: OUTD WIFI}
+      - {match: '\bPBU SB\b', repl: PB USB}
+      - {match: '(?i)\b3x 4x(\d+)\b', repl: '3x\1/4x\1'}  # statecznik "FIT8 3x 4x18" = 3x18 albo 4x18, nie "3x4W"
+      - {match: '\b2GX11\b', repl: 2G11}  # "DL28/830 HE 2GX11" - karta GTIN: DULUX L 28W/830 (trzonek 2G11)
+      # barwa slowem bez K: ENDURA Flood "Cool White" = 4000 K (karta GTIN), BASIC T5 "640" = L 6W/640 = 4000 K
+      - {match: '(?i)^(.*\bENDURA\b.*?)\bCool White\b(?!.*\d{4} ?K)', repl: '\1 4000K'}
+      - {match: '(?i)^(.*\bBASICL?\b.*\dW) 6([2-5])0\b', repl: '\1 \g<2>000K'}
+      # moc z karty GTIN (34 W, 4352 / 4420 lm) - Ekonom podaje tylko klosz OPAL / PRISM
+      - {match: '\bOFFICE LINEAR V 2CCT\b', repl: 'OFFICE LINEAR V 34W 2CCT'}
+      # zestaw Google Nest Mini Chalk + zarowka (karta: "Google Mini Bundle chalk Classic A60 FR RGBW E27")
+      - {match: '(?i)^Smart\+ WiFi Google Chalk \+ Led A60\b', repl: 'GOOGLE NEST MINI CHALK + CLA60'}
+      - {match: '^Czujnik (DALI-2) SENSORS CEILING MOUNTING KIT$', repl: 'Adapter do montażu czujników na suficie \1'}
+    # Rodzaj oprawy, gdy typ reguly daje zly rzeczownik (przeglad 2026-10-21): rodzina architektoniczna AR (FLO =
+    # naswietlacz, ING = najazdowa, WWASH = wallwasher, SPOT = reflektor), podszafkowe Puck / Magnet, Orbis Flame =
+    # kinkiet, IndiviLED Light Sources = modul, UVC Panel = panel z oczyszczaczem
+    noun_overrides:
+      # kamery z oswietleniem wg modelu (2026-10-21); Globe Camera Track & Trace wkreca sie w oprawe E27 - bez wlasnego swiatla
+      - {match: '\bFLOOD\b', noun: Naświetlacz LED z kamerą, gender: m, types: [kamera_oprawa]}
+      - {match: '\bMULTI ?SPOT\b', noun: Reflektor LED z kamerą, gender: m, types: [kamera_oprawa]}
+      - {match: '\bGLOBE\b', noun: Kamera, gender: f, types: [kamera_oprawa]}
+      - {match: '^OPRAWA AR FLO\b', noun: Naświetlacz LED, gender: m, typ: naswietlacz, types: [wpuszczana]}
+      - {match: '^OPRAWA AR ING\b', noun: Oprawa najazdowa LED, gender: f, types: [wpuszczana]}
+      - {match: '^OPRAWA AR WWASH\b', noun: Oprawa Wall Washer LED, gender: f, types: [wpuszczana]}
+      - {match: '^OPRAWA AR SPOT\d?\b', noun: Reflektor LED, gender: m, types: [wpuszczana]}
+      - {match: 'PUCK|UNDERCABINET|\bMAGNET\b', noun: Oprawa podszafkowa LED, gender: f, types: [wpuszczana, downlight]}
+      - {match: 'ORBIS FLAME WALL', noun: Kinkiet LED, gender: m, types: [plafon]}
+      - {match: 'LIGHT SOURCES', noun: Moduł LED, gender: m, typ: modul_led, types: [panel, plafon, liniowa]}
+      - {match: 'UVC PANEL.*RECIRCULATOR', noun: Panel LED z oczyszczaczem UVC, gender: m, types: [panel]}
+      - {match: 'OFFICE LINE DESK', noun: Lampa biurkowa LED, gender: f, types: [liniowa]}
+      - {match: 'BOLLARD', noun: Słupek oświetleniowy LED, gender: m, types: [uliczna]}
+      - {match: 'WALL VARIO', noun: Kinkiet zewnętrzny LED, gender: m, types: [uliczna]}
+      # "LED SQUARE IP44 14W Click-CCT" - kwadratowy plafon sufitowo-scienny (karta: rodzina LED SQUARE IP44), 2026-10-26
+      - {match: '\bLED SQUARE IP44\b', noun: Plafon LED, gender: m, typ: plafon, types: [oprawa_led]}
+    # koncowe zamiany: rozmiar banki z wyroznika katalogu do ksztaltu ("globe ... Globe 95" -> "globe G95 ...", 2026-10-21)
+    name_replace:
+      - {match: '\bglobe\b((?: \S+){0,3}?) Globe (\d{2,3})\b', repl: 'globe G\2\1'}
+    # wspolne listy cech (`features: [plug]` w typie): wtyczka CH / EU / UK zamiast golego "CH" / "EU" (2026-10-21)
+    feature_sets:
+      plug:
+        - {match: '\bCH\b(?:\s?PLUG)?|SWISS PLUG', label: z wtyczką CH, group: plug}
+        - {match: '\bEU\b(?:\s?PLUG)?', label: z wtyczką EU, group: plug}
+        - {match: '\bUK\b(?:\s?PLUG)?', label: z wtyczką UK, group: plug}
+    # karta GTIN uzupelnia brakujace parametry (moc, ksztalt, barwa TW, protokol Smart+, T8) w tych typach, gdy opisuje
+    # ten sam produkt co Ekonom (2026-10-21)
+    card_fill_types: [zarowka_led, tuba, zarowka_tradycyjna, klosz_hql, halogen, liniowa, kamera_oprawa]
+    # brakujace lm z karty ledvance.com/en/gtin/<EAN> (cache scripts/fetch_ledvance_web.py), gdy moc i barwa
+    # karty zgadzaja sie z Ekonomem (2026-10-20: "brakuje lumenow a na stronie ledvance jest")
+    lumen_from_gtin_card: true
+    # linia z rodziny produktu na karcie GTIN, gdy ktoras karta rodziny pisze ja slowem ("LED CLASSIC B V" + karta
+    # "VALUE CLAS B 60" -> Value); litera w Ekonomie nadal nic nie decyduje (2026-10-20)
+    line_from_card_family: true
+    # swietlowki liniowe nazywamy tubami (decyzja uzytkownika 2026-10-19), takze "Oprawa hermetyczna pod tuby LED"
+    tube_words: [tubę, tuby]
+    # Marka z opakowania (decyzja uzytkownika 2026-10-15). Ledvance sprzedaje te same lampy pod
+    # markami OSRAM, LEDVANCE i BELLALUX - kazda z osobnym EAN, a stara nazwa w Ekonomie jest
+    # identyczna. Zrodla: kolumny EAN marek w polskim katalogu ("Nazwa produktu | OSRAM EAN10 |
+    # LEDVANCE EAN10 | BELLALUX EAN10") i jawna koncowka kodu zamowieniowego w nazwie Ekonoma
+    # ("...2X1OSRAM", "... FS1 OSRAM"). Przy rozbieznosci wygrywa katalog.
+    package_from_pdf: true
+    package_brand:
+      catalog_columns: {OSRAM: Osram, LEDVANCE: Ledvance, BELLALUX: Bellalux}
+      name_rules:
+        - {match: 'OSRAM\s*$', brand: Osram}
+        # stare kartoteki z koncowka EAN za marka: "HALOSTAR 35W 12V GY6,35 OSRAM 7426", "120ST OSRAM8081" (2026-10-26)
+        - {match: '\bOSRAM ?\d{4}$', brand: Osram}
+        # zarowki samochodowe to zawsze Osram (Ledvance ich nie sprzedaje), takze bez slowa OSRAM w Ekonomie
+        - {match: '^(?!.*LATARKA)(?!.*FLASHLIGHT).*(?:SAMOCH|\bZAROWKA SAM\.)', brand: Osram}
+    # Multipak (decyzja 2026-10-15): liczba sztuk w opakowaniu na koncu nazwy, gdy > 1. Zrodla:
+    # nazwa w Ekonomie ("3pack", "FS3", kod "10X3OSRAM" = karton 10 x opak. 3 szt.) i wiersz katalogu
+    # retail ("... dlugosc | srednica | sztuk w opak. | sztuk w kartonie"), ten drugi tylko gdy wiersz
+    # ma moc z nazwy. Cen nie uzywamy.
+    pack_size:
+      suffix: 'op. {n} szt.'
+      from_catalog: true
+      name_patterns:
+        - '\b(\d+)\s*-?\s*PACK\b'
+        - '\bFS(\d+)\b'
+        - '\b(\d+)\s?PCS?\b'   # "DOT-IT NURSERY 3PC" = zestaw 3 lampek (2026-10-21)
+        - '\bSET ?(\d+)\b'     # "PANEL PRINT SKY ... SET9" = komplet 9 paneli jednego nadruku (2026-10-21)
+        # kod sklejony z marka, takze z gwintem ("E274X3LEDV" = E27 + 4X3); "110X30 LEDV" to kat, "500X500" wymiar
+        - '(?<![.X])\d+X(\d{1,2})(?:EUE)?(?:OSRAM|LEDV)'
+        - '\bX(\d{1,2})$'        # "... ENERGY RAIL 1500 5P END x10"
+        - '\bEND X (\d{1,2})$'   # "... 8P END x 10"
+        - '\b(\d{1,2})X$'        # "CONNECTOR BOX 5POLE L/N/E/D+/D- 4x"
+      word_packs: {DOUBLE: 2, TRIPLE: 3}  # "Terminal Block 10W 840 Triple Pack"
+      fixed_words: {DUOBOX: 2}  # "64193NBU DUOBOX" = blister 2 szt. (2026-10-26)
+    # Barwa w nazwie Ekonoma inna niz kod barwy w katalogu dla tego EAN (2026-10-15: Star PAR16 3,7W
+    # 827/840 zamienione). Moc zgodna -> barwa z katalogu (WARNING), inna moc -> DO_SPRAWDZENIA.
+    catalog_cct_check: true
+    # Katalogi (fragment nazwy pliku), w ktorych wiersz tabeli jest wiarygodny: nazwa przy swoim EAN,
+    # przedostatnia liczba = sztuk w opakowaniu (25/25 zgodne z kodem w nazwie). W innych katalogach ta
+    # kolumna to karton albo moc, a tabele opraw przesuwaja nazwy wzgledem EAN.
+    package_catalogs: ['retail_lamps_program']
+    # Wyroznik dla nazw, ktore nadal sie powtarzaja (decyzje 2026-10-15: "dodaj wyrozniki", potem "tyle
+    # informacji, zeby sie wyroznialo, ale nie wiecej; czego nie ma - wyszukaj w sieci"). Kazdy produkt
+    # dostaje NAJMNIEJSZY zestaw slow, ktorego nie ma w calosci zaden inny z grupy (slowa przed liczbami).
+    # Zrodla po kolei: katalog PDF (tylko katalogi lamp z nazwa przy EAN - w katalogach opraw nazwy sa
+    # przesuniete), stara nazwa w Ekonomie, nazwa ze strony ledvance.com (cache
+    # `scripts/fetch_ledvance_web.py`). Porownujemy tylko produkty opisane jednym stylem zapisu.
+    # `words`: tlumaczenie slow (zarowka = rodzaj zenski; kolory z `housing_colors` odmieniane wg nazwy);
+    # null = slowo pomijane. `stop`: szum ze starych nazw.
+    distinguish:
+      # fragment nazwy pliku katalogu -> styl zapisu nazw
+      catalogs: {retail_lamps_program: retail, lamps_launch_trade: broszura, vintage_edition: broszura}
+      web_cache: cache/ledvance_web
+      # karta ledvance.com/en/gtin opisuje pod EAN inny produkt (moc/barwa/gwint) niz nazwa w Ekonomie ->
+      # nazwa budowana z karty (EAN = nadruk na opakowaniu), WARNING ze stara nazwa w uwagach
+      fix_from_gtin_page: true
+      # ...ale nie, gdy karta ma inny trzonek, ksztalt banki albo dlugosc tuby - to inny produkt, nie literowka w Ekonomie:
+      # zostaje nazwa z Ekonoma, status DO_SPRAWDZENIA (decyzja uzytkownika 2026-10-21)
+      gtin_other_product: true
+      stop: [LAMPA, LAMPY, OPRAWA, ZAROWKA, PASEK, LED, LEDV, LEDVANCE, OSRAM, BELLALUX, EUE, CLASS, CLASSIC, CL, NON, NON-DIM,
+             LAMPS, LAMP, WITH, AND, THE, FOR, OF, IN,
+             # pilot w nazwie juz jako "z pilotem" (2026-10-20)
+             RC, REMOTE, CONTROL]
+      # opakowanie rozstrzyga `pack_size` ("op. N szt."), kody kartonu nie sa wyroznikiem
+      stop_patterns: ['FS\d+', '\d*-?PACK', 'SINGLE', 'TRIPLE', 'DOUBLE', '\d+X\d+', 'X\d+', '\d+X', '[VPSE]', '\d+XLAMP',
+                      # kody zamowieniowe / nazwy rodzin z karty GTIN - nic nie mowia sprzedawcy ("PIN20" = zamiennik 20 W)
+                      'LSSP\w*', 'LED(PIN|TSLIM|TUBE)\w*', 'T?SLIM', 'PIN\d*', 'PAR\d{4,}', 'SPOT', 'TUBE',
+                      'CLAS?\d*', 'VALUECLA\d*',
+                      # smieci wyroznikow z przegladu 2026-10-21 ("Valcla 100", "Ledsclb 40", "CLP 40", "FR 40", "GL 60",
+                      # "Rgbw 60", "TW 60", "T8 36", "SST", "PAR 16V", "100D", "PARATHOM+", "Big", "Special", "Retrofit");
+                      # slowo przed liczba z tej listy odbiera tez liczbe za nim (zamiennik mocy "40" nic nie mowi)
+                      'VALCLA\d*', 'LEDVCLA\d*', 'LEDS?CL[ABP]\w*', 'CL[ABP]\d*', 'FR', 'GL', 'GLFR', 'RGBW?', 'TW',
+                      # kod ksztaltu jest juz w nazwie, liczba za nim to zamiennik mocy ("PAR16 80", "R50 60")
+                      'PAR\d{2}', 'MR\d{2}', 'R\d{2}', 'AR111', 'T26',
+                      # RETROFIT nie jest tu szumem - odroznia blizniaki (decyzja uzytkownika 2026-10-21)
+                      'T[58]', 'EM', 'STICK', 'SST', 'PAR', '\d{2,3}D', 'PARATHOM\+?', 'BIG', 'SPECIAL',
+                      # plomyk BA / BW tez sklejony ("CLBW40", "BW40") - BW nie wraca jako wyroznik (decyzja 2026-10-21)
+                      'WORKLIGHTS?', '\d{3}-\d', 'BA', 'BW', 'CL?B[AW]\d*', 'A(?:15|25|40|45|55|75|100|120|150|200)V?', 'SMART\+?',
+                      # rozmiar globe jest w ksztalcie ("globe G80"), sklejone kody Vintage ("1906LGL80")
+                      'GLOBE\d+', '1906\w*', 'LGL\d*', 'COLOU?RED',
+                      # sklejony kod zamowieniowy "LED G125150" (globe 125 + zamiennik 150 W), 2026-10-21
+                      'G\d{5,6}', 'LEDS?G\d+',
+                      # "Zawiesie do paneli Zestaw", "Pilot WiFi Controller DIM" (2026-10-26)
+                      'ZESTAW', 'CONTROLLER']
+      # wyroznik sprzeczny z nazwa (inny klosz / ksztalt niz w Ekonomie) -> DO_SPRAWDZENIA, bez dopisku
+      conflicts: [[matowa, przezroczysta], [świeczka, kulka, A60, globe]]
+      words:
+        # linia Pro z karty ("HQL LED PRO") - jak inne linie stoi za marka (2026-10-21: bylo "PRO" przed marka)
+        PRO: Pro
+        # swietlowki T5 short "BASICL 6W 640" / "LUMILUXL 8W 840" (2026-10-26: wyroznik "Basicl")
+        BASICL: Basic
+        LUMILUXL: Lumilux
+        DARK: grafitowy  # "Outdoor Motion Sensor Dark Grey" (2026-10-21: bylo "Dark")
+        GLOBE: globe
+        EDISON: Edison
+        BLUE: niebieska
+        RED: czerwona
+        ORANGE: pomarańczowa
+        ROSE: różowa
+        # kolor szkla klosza po angielsku, jak na opakowaniu (decyzja uzytkownika 2026-10-21)
+        SMOKE: Smoke
+        AMBER: Amber
+        TEA: null
+        SMALL: mała
+        MEDIUM: średnia
+        LARGE: duża
+        ROUND: okrągła
+        SQUARE: kwadratowa
+        CRACKED: spękane szkło
+        # klosz dekoracyjnych FLAT LAMP (karta: "... IN CRACKED GLASS FLATTENED BROWN"), 2026-10-21
+        SMOEK: null  # literowka "SMOEK 80" w Ekonomie (globe G80 jest juz w ksztalcie)
+        FLATTENED: spłaszczona
+        LONG: podłużna
+        ELECTRO: szkło elektrostatyczne
+        GLASS: null
+        DAYL+SENS: z czujnikiem zmierzchu
+        DAYL+MOT+SENS: z czujnikiem ruchu i zmierzchu
+        DAYLIGHT: z czujnikiem zmierzchu
+        MOTION: z czujnikiem ruchu
+        SENSOR: z czujnikiem
+        GLOWDIM: GlowDim
+        STEP: 3-stopniowa
+        MAGNETIC: magnetyczna
+        FILAMENT: filament
+        FIL: filament
+        GL: null
+        DECOR: null
+        RECYCLED: PCR
+        PLASTIC: null
+        DIM: null
+        CLEAR: przezroczysta
+        FROSTED: matowa
+        FR: matowa
+        B25: świeczka
+        B35: świeczka
+        B40: świeczka
+        B60: świeczka
+        B75: świeczka
+        CLB: świeczka
+        P25: kulka
+        P40: kulka
+        P45: kulka
+        P60: kulka
+        CLP: kulka
+    # Pojedyncza litera V/P/S/E nie jest linia ani wyroznikiem (2026-10-19: "wylacz z samych liter, bo moga byc
+    # bledne" - "URBAN LITE S 15W" to rozmiar S, nie Superior). Linia tylko ze slowa: VALUE, PERFORMANCE, SUPERIOR...
+    # WITH / RC - resztki "WITH REMOTE CONTROL" / "+ RC" (pilot idzie jako "z pilotem"), nie wyroznik
+    # OVEN / SUPER / 4Y / CO / WORKLIGHT - juz w cechach ("do piekarnika", "Super 4Y", "powlekana"), 2026-10-21
+    # SKY1 - numer wzoru Print Sky jest przy nazwie wlasnej (`family_extra`), 2026-10-21
+    version_skip: ['SKY\d', '\d*-?PACK', 'FS\d+', 'SINGLE', '[VPSE]', 'WITH', 'RC', 'PASEK', 'REMOTE', 'CONTROL', 'DETEKTOR', 'MOTION', 'CONTACT', 'OVEN', 'SUPER', '4Y', 'XT', 'CO',
+                   'WORKLIGHTS?', 'MEAT', 'BREAD', 'FRUIT', 'SEAFOOD', 'VEG', 'PLUG', 'CH', 'EU',
+                   'ZESTAW', 'CONTROLLER',  # "Zawiesie do paneli Zestaw", "Pilot WiFi Controller DIM" (2026-10-26)
+                   'BA', 'BW', 'A(?:15|25|40|45|55|75|100|120|150|200)V?', 'OP']
+    # wersja z nazwy po `name_cleanup` ("PL-CN111", bez opisu po "|"), 2026-10-21
+    version_from_clean: true
+    # wersja z klosza opal: "Downlight ... OPAL OP" -> "opal" (2026-10-21)
+    version_letters: {OPAL: opal}
+    # Rodzina opraw z nazwy katalogowej, za marka ("Oprawa uliczna LED 30W ... Ledvance Urban Lite S"); `label` albo
+    # dopasowanie pisane Wielka Litera (litery rozmiaru S/M/L/XL zostaja wielkie). Pomijana, gdy juz jest w serii / modelu.
+    families:
+      - match: '\bURBAN(?: (?:LANTERN(?: SQUARE)?|LITE(?: (?:XL|S|M|L)\b)?|VILLA(?: (?:COMPACT|RETROFIT))?|WALL VARIO|WALLPACK|BOLLARD CONE|AREA|FERNANDINO|CLASSIC))?\b'
+      # oprawy SL FLEX bez karty GTIN (2026-10-21: "Oprawa Oprawa SL FLEX SM NM" - bez nazwy wlasnej)
+      - {match: '\bSL FLEX SM\b', label: Streetlight Flex Small}
+      - {match: '\bSL FLEX MD\b', label: Streetlight Flex Medium}
+      - {match: '\bSL FLEX LA\b', label: Streetlight Flex Large}
+    # Nazwa wlasna oprawy z rodziny na karcie ledvance.com/en/gtin/<EAN> (2026-10-20: "brakuje nazw wlasnych"):
+    # "DAMP PROOF MAX EMERGENCY SENSOR" -> "Damp Proof Max", "Orbis Livia", "TruSys Wide". Stoi na miejscu `family`
+    # (za marka przed linia, `family_after_noun: false`); `families` z nazwy w Ekonomie (Urban) ma pierwszenstwo. Tylko typy
+    # opraw z `types`.
+    # Z rodziny wycinane sa slowa techniczne, ktore nazwa juz niesie w parametrach (DALI, czujnik, awaryjna, IP, UGR,
+    # wymiary, moc, GEN 2), linia slowem (Value / Performance / Superior) i samotne litery klasy V / P / E.
+    # Sama nazwa kategorii (Panel, Downlight, Floodlight, Damp Proof, High Bay...) nie jest nazwa wlasna - pomijana.
+    # nazwa wlasna (Urban, rodzina z karty) na KONCU, za marka, przed linia (decyzja 2026-10-20, druga: "nazwa wlasna
+    # jednak na koncu wszedzie" - "Naswietlacz LED 50W 5000lm 6500K 100° bialy Ledvance Floodlight Compact"); v9-v15
+    # stala zaraz za rzeczownikiem (true)
+    family_after_noun: false
+    # seria / nazwa wlasna dekoru i Smart+ tez na koncu za marka (2026-10-20: "Lampa stolowa E27 brazowa Ledvance Decor
+    # Cardboard Square", nie "Lampa stolowa Decor Cardboard Square E27 ..."), jak u Kobi / Kanlux / GTV / Bemko
+    series_after_brand: true
+    # dopisek do nazwy wlasnej w wybranych typach (2026-10-20): HE w oprawach hermetycznych to High Efficiency
+    # ("Oprawa hermetyczna LED Damp Proof High Efficiency 120cm 29W ..."); w downlightach / tubach HE zostaje bez zmian
+    family_extra:
+      - types: [hermetyczna]
+        match: '\bHE\b|HIGH EFFICIENCY'
+        add: High Efficiency
+      # linia ECO CLASS stoi u Ledvance przed nazwa ("ECO CLASS DAMP PROOF HLO GEN 2"); Ekonom pisze tylko "LED ECO"
+      - types: [hermetyczna]
+        match: '\bECO CLASS\b'
+        add: Eco Class
+        prepend: true
+      - types: [hermetyczna]
+        match: '\bHLO\b|HIGH LUMEN OUTPUT'
+        add: High Lumen Output
+      # "DAMP PROOF HE 5X THROUGHWIRING" / "DP HE 5TH" - okablowanie przelotowe 5-zylowe (wczesniej resztki "HE
+      # THROUGHWIRING" / "5TH" jako wyroznik)
+      - types: [hermetyczna]
+        match: '\b5\s?X\s?THROUGH ?WIRING\b|\b5\s?TH\b'
+        add: 5x Throughwiring
+      # zwykle okablowanie przelotowe: "DAMP PROOF FLEX THROUGHWIRING", "DP COMP TH", "SUBMARINE THROUGHWIRING"
+      # (pomijane, gdy jest juz "5x Throughwiring"); "3TH" w DAMP PROOF ECO zostaje bez zmian - znaczenie niepewne
+      - types: [hermetyczna]
+        match: '\bTHROUGH ?WIRING\b|\bTH\b'
+        add: Throughwiring
+      # numer wzoru nadruku paneli Print Sky przy nazwie wlasnej: "... Ledvance Print Sky 1" (decyzja uzytkownika 2026-10-21)
+      - types: [panel]
+        match: '\bSKY ?(\d)\b'
+        family: '^Print Sky$'
+        add: '{0}'
+    # slowa nazwy wlasnej, ktore mowi juz kat swiecenia ("Damp Proof Eco Narrow ... 90x60°" -> "Damp Proof Eco")
+    family_strip:
+      - types: [hermetyczna]
+        match: '\b(?:Very )?(?:Narrow|Wide)\b'
+    # skroty cech w nazwach Ledvance (karty: "DP EL" = DAMP PROOF EMERGENCY, "BLKH RD EL SN" = ... EMERGENCY SENSOR)
+    feature_abbrev:
+      EL: [emergency, EMERGENCY]
+      SN: [sensor, SENSOR]
+    # "ON-OFF" tylko przy blizniaku w wersji DALI / 1DIM (ta sama nazwa bez slow sterowania), decyzja 2026-10-21
+    onoff_twins: true
+    # HQI D / DL: barwa w K z karty GTIN zamiast "barwa dzienna"; bez karty zostaje "barwa dzienna" (decyzja 2026-10-21)
+    hid_cct_from_card: true
+    # GU5.3 z napieciem: "GU5.3 12V" (230V tylko gdy nazwa z Ekonoma / karta GTIN tak mowi), 2026-10-20
+    gu53_voltage: true
+    family_from_card:
+      types: [downlight, wpuszczana, plafon, panel, liniowa, uliczna, naswietlacz, hermetyczna, high_bay, low_bay,
+              szynowa, lampa_robocza, oprawa_hermetyczna_tuby, oprawa_zadaszen, oprawa_led, oprawa_scienna,
+              oprawa_awaryjna, lampa_stojaca, oprawa_model]
+      # rodziny-zaslepki na karcie ("Phase out" = wycofywany, "Coming soon")
+      placeholders: ['(?i)^(phase out|coming soon)$']
+      # rodziny, w ktorych nazwa produktu na karcie jest dokladniejsza ("Orbis Click Sensor" -> karta "Orbis Square
+      # Click Sensor 430x430mm" = Orbis Square Click; Square / Sparkledot / Plate to modele), 2026-10-20
+      refine_from_name: ['(?i)^ORBIS CLICK SENSOR$']
+      # zamiany przed wycinaniem slow technicznych: "LED Color + White" to nazwa (RGB + bialy), a nie kolor obudowy
+      rename:
+        - {match: '(?i)\bCOLOU?R\s*(?:AND|\+)\s*WHITE\b', repl: COLORPLUSWHITE}
+        - {match: '(?i)^SL AREA\b', repl: Streetlight Area}  # karta "SL AREA SM" = Streetlight Area (2026-10-21)
+        # 2026-10-26: "LEDVANCE FLOODLIGHT LED" dawalo "... czarny Floodlight Ledvance" (marka z rodziny szla na koniec);
+        # "ECO CLASS AREALIGHTING Gen 2" dawalo "Arealighting" - w nazwach v20 ta rodzina to "Eco Area"
+        - {match: '(?i)^LEDVANCE\s+', repl: ''}
+        - {match: '(?i)^ECO CLASS AREALIGHTING\b', repl: ECO AREA}
+        - {match: '\s-\s', repl: ' '}  # "Worklights - Tripod"
+      remove:
+        - '(?i)\bGEN\s?\d\b|\(\s*GEN\s?\d\s*\)'
+        - '(?i)\b(DALI|ZIGBEE|WI-?FI|MATTER|BT|SENSOR|EMERGENCY|OPAL|PS|ON-OFF|1DIM|DIM(MABLE)?)\b'
+        - '(?i)\bCCT(-DIM)?\b|\b\d?CCT\b|\bCRI\s?\d+\b|\bIP\d\d\b|\bIK\d\d\b|\bUGR\s?[<-]?\s?\d\d\b'
+        - '(?i)\b(WARM|COOL|NEUTRAL|TUNABLE) WHITE\b|\bMULTICOLOU?R\b|\bRGB(\+?W)?\b'
+        - '(?i)\bACCESSORIES\b|\bLUMINAIRE HEAD\b|\bWITH EU PLUG\b|\bCH PLUG\b'
+        - '(?i)\b(RADIAL )?SYMMETRIC(\s\d+)?\b|\bA?SYM\b|\bASYMMETRIC(\s\d+\s?X\s?\d+)?\b|\bZHAGA( TOP)?\b|\bRV20ST\b'
+        - '(?i)\b\d*X?\s?THROUGH ?WIRING\b|\b\d+TH\b|\b\d+X\b'
+        - '(?i)\b\d+\s?X\s?\d+\s?MM\b|\b\d+\s?X\s?\d+\b|\bX\s\d+\b|\b\d+\s?W\b|\b\d+\s?mm\b|\b\d+°|\b\d{2,4}\b'
+        - '(?i)\bSMART\+|\bLED\b|\bPCR\b|\bVALUE\b|\bPERFORMANCE\b|\bSUPERIOR\b|\bECO CLASS\b|\bHLO\b|\bHE\b|\bHIGH EFFICIENCY\b'
+        - '(?i)\b(BLACK|WHITE|GR[AE]Y|SILVER|ANTHRACITE|DARK GR[AE]Y|GRAPHITE|BK|WT|GY)\b'
+        - '(?i)\bR[VUNSW]\d{2}\w*\b|\bTOP ?&\s?BOTTOM\b|&\s?BOTTOM\b|\bON/OFF\b|\b\d+X\d+W\b'
+        - '\b[VPE]\b'
+        - '™|\(\s*\)'
+        - '(?i)\bDAMP PROOF (?=SUBMARINE\b)'
+      # Pojedyncze slowo, ktore samo nie jest nazwa wlasna (rodzina = tylko ono jest pomijana). Od 2026-10-20 puste:
+      # "Bulkhead", "Batten", "Spot", "Floodlight" to nazwy produktow Ledvance ("tutaj nie powinien byc bulkhead jako
+      # nazwa wlasna?"); "Panel" / "Downlight" i tak wypadaja jako powtorzenie rzeczownika.
+      generic_words: []
+      # pisownia producenta ("INDIVILED" -> "IndiviLED")
+      spelling: {Indiviled: IndiviLED, Trusys: TruSys, Hcl: HCL, Gu10: GU10, Tubekit: TubeKIT, Usb: USB, Pir: PIR,
+                 Tpa: TPA, Tpb: TPB, Cps: CPS, Uvc: UVC, Colorpluswhite: Color + White}
+    # Szum z nazw katalogowych usuwany przed budowa `model`.
+    noise_patterns:
+      - '(?i)(EUE)?\s?LEDV(ANCE)?\b'
+      - '(?i)\bOSRAM\b'
+      - '(?i)\bEUE\b'
+    lumen_patterns:
+      # "61000lm", "61 000lm", "920LM"; nie skleja "830 880LM" (barwa + lm)
+      - '(?<!\d)(\d{1,2}[ .]\d{3}|\d{2,6})\s?LM\b'
+      - '^LAMPA HQL LED (\d{4,5}) '
+    # Dlugosc swietlowek liniowych z mocy (nazwa podaje tylko T8/T5 + W).
+    fluorescent_lengths:
+      T8: {15: 45, 16: 72, 18: 60, 30: 90, 36: 120, 38: 105, 58: 150, 70: 180}
+      T5: {14: 55, 21: 85, 28: 115, 35: 145, 24: 55, 39: 85, 54: 115, 49: 145, 80: 145, 6: 21, 8: 29, 13: 52}
+    # Gwint kompaktow DULUX z typu i mocy (gdy brak w nazwie).
+    dulux_sockets:
+      'D': {10: G24d-1, 13: G24d-1, 18: G24d-2, 26: G24d-3}
+      'D/E': {10: G24q-1, 13: G24q-1, 18: G24q-2, 26: G24q-3}
+      'T': {13: GX24d-1, 18: GX24d-2, 26: GX24d-3}
+      'T/E': {13: GX24q-1, 18: GX24q-2, 26: GX24q-3, 32: GX24q-3, 42: GX24q-4, 57: GX24q-5}
+      'S': {5: G23, 7: G23, 9: G23, 11: G23}
+      'S/E': {5: 2G7, 7: 2G7, 9: 2G7, 11: 2G7}
+      'L': {18: 2G11, 24: 2G11, 36: 2G11, 40: 2G11, 55: 2G11, 80: 2G11}
+      'F': {18: 2G10, 24: 2G10, 36: 2G10}
+    # Kolor obudowy (rodzaj wg `gender` typu albo rzeczownika: m / f / n). Kolejnosc ma znaczenie.
+    # kolory dwutonowe "Black and Blue" -> "czarno-niebieski", "White and Wood Decor" -> "biały/drewno" (2026-10-20)
+    two_tone_colors: true
+    color_ignore: ['COLOU?R ?(?:\+|AND) ?WHITE']
+    housing_colors:
+      czarny: {stem: czarno, m: czarny, f: czarna, n: czarne, match: ['\bBK\b', '\bBLACK\b', 'CZARN', '\bBK(?=LEDV|ON\b)', 'EMBK\b']}
+      # "Warm White", "Cool White", "Tunable White" to barwa swiatla, nie kolor obudowy (2026-10-15)
+      bialy: {stem: biało, m: biały, f: biała, n: białe, match: ['\bWT\b', '(?<!WARM )(?<!COOL )(?<!NEUTRAL )(?<!TUNABLE )(?<!DAYLIGHT )\bWHITE\b', '\bWH\b', 'BIAL', 'WT(?= LEDV)']}
+      grafit: {stem: grafitowo, m: grafitowy, f: grafitowa, n: grafitowe, match: ['\bDG\b', 'DARK GR[AE]Y', 'GUN ?METAL']}
+      szary: {stem: szaro, m: szary, f: szara, n: szare, match: ['\bGY\b', '\bGR\b', '\bGRAY\b', '\bGREY\b', 'SZAR']}
+      srebrny: {stem: srebrno, m: srebrny, f: srebrna, n: srebrne, match: ['\bSI\b', '\bSILVER\b']}
+      nikiel: {m: nikiel, f: nikiel, n: nikiel, match: ['\bBN\b', 'BRUSHED NICKEL', '\bNK\b', '\bNICKEL\b']}
+      chrom: {m: chrom, f: chrom, n: chrom, match: ['\bCR\b', '\bCHROME\b']}
+      stal: {m: stal nierdz., f: stal nierdz., n: stal nierdz., match: ['STAINLESS STEEL', '\bST\b']}
+      alu: {m: aluminium, f: aluminium, n: aluminium, match: ['\bALW\b', '\bAL(?=DA|ON)', '\bALUMINIUM\b']}
+      brazowy: {stem: brązowo, m: brązowy, f: brązowa, n: brązowe, match: ['\bBROWN\b']}
+      bezowy: {stem: beżowo, m: beżowy, f: beżowa, n: beżowe, match: ['\bBEIGE\b', '\bBG\b']}
+      niebieski: {stem: niebiesko, m: niebieski, f: niebieska, n: niebieskie, match: ['\bBLUE\b']}
+      pomaranczowy: {stem: pomarańczowo, m: pomarańczowy, f: pomarańczowa, n: pomarańczowe, match: ['\bORANGE\b']}
+      zielony: {stem: zielono, m: zielony, f: zielona, n: zielone, match: ['\bGREEN\b']}
+      zloty: {stem: złoto, m: złoty, f: złota, n: złote, match: ['\bGOLD\b']}
+      miedziany: {stem: miedziano, m: miedziany, f: miedziana, n: miedziane, match: ['\bCOPPER\b']}
+      drewno: {m: drewno, f: drewno, n: drewno, match: ['\bWOOD DECOR\b', '\bWD\b', '\bWOOD\b']}
+    # Rodzaj oprawy domowej/dekoracyjnej z nazwy katalogowej (pierwsze trafienie wygrywa).
+    mount_nouns:
+      # Planon to panel (Smart+ Planon Plus / Frameless, SMART+ MATTER Planon), nie plafon (2026-10-21)
+      - {match: 'PLANON', noun: Panel LED, gender: m}
+      # kamery z oswietleniem (Smart+ Outdoor ... Cam), wentylator, czesci Endura Hybrid / Urban Bollard (2026-10-21:
+      # byly "Kinkiet ... Entrancenumber Cam", "Plafon ... Fan", "Oprawa ... Solar Panel", "Slupek ... Concrete Anchors")
+      - {match: 'CAMERA', noun: Kamera, gender: f}
+      - {match: 'CEILING FAN', noun: Wentylator sufitowy, gender: m}
+      - {match: 'COMPONENTS SOLAR PANEL', noun: Panel solarny, gender: m}
+      - {match: 'COMPONENTS TRANSFORMATOR', noun: Transformator, gender: m}
+      - {match: 'CONCRETE ANCHORS', noun: Kotwy betonowe do słupka, gender: f}
+      - {match: 'FOUNDATION', noun: Tuleja fundamentowa do słupka, gender: f}
+      - {match: '\bPENDANT\b|\bPENDENT\b|PENDULUM|\bSUSPENDED\b', noun: Lampa wisząca, gender: f}
+      # "Cabinet LED Corner 350mm" to oprawa podszafkowa narozna, nie lampa podlogowa (2026-10-21)
+      - {match: '\bFLOOR\b|STANDING|^(?!.*CABINET).*CORNER', noun: Lampa podłogowa, gender: f}
+      - {match: '\bTABLE', noun: Lampa stołowa, gender: f}
+      - {match: '\bDESK\b|TASK ?LIGHT|DESKTOP', noun: Lampa biurkowa, gender: f}
+      - {match: '\bWALL\b|\bMIRROR\b|ENTRANCE|\bUPDOWN\b|\bW CROSS\b|NUMBER', noun: Kinkiet, gender: m}
+      - {match: '\bPOST\b|BOLLARD|\bPATH\b|GARDEN POLE|\bPOLE\b', noun: Słupek ogrodowy, gender: m}
+      - {match: '\bSPIKE\b|GARDEN|\bGROUND\b', noun: Oprawa ogrodowa, gender: f}
+      - {match: 'CAMERA', noun: Kamera, gender: f}
+      - {match: 'TRACKL', noun: Reflektor szynowy, gender: m}
+      - {match: 'CABINET|\bSHELF\b|BACKLIGHT|\bMOBILE\b', noun: Oprawa podszafkowa, gender: f}
+      - {match: 'STRIP|\bFLEX\b|NEON|STRING', noun: Taśma LED, gender: f}
+      - {match: '\bSPOT\b|\bSP\b|\bBEAM\b', noun: Reflektor, gender: m}
+      - {match: 'NIGHTLUX|LUNETTA|DOT-IT|NIGHTLIGHT|CLOCK', noun: Lampka LED, gender: f}
+      - {match: '\bCEILING\b|ORBIS|OBRIS|PLANON|CIRCULAR|\bDISC\b|\bDL\b|\bPANAN\b|\bUL\b', noun: Plafon, gender: m}
+    outdoor_pattern: 'ENDURA|\bOUTD|OUTDOOR|SOLAR|IP6[5-8]'
+    outdoor_adjective: {m: zewnętrzny, f: zewnętrzna, n: zewnętrzne}
+    # Urzadzenia Smart+ i czujniki - rodzaj po funkcji.
+    device_nouns:
+      - {match: 'OUTDOOR TERMINAL', noun: Gniazdo podwójne z repeaterem, gender: n}
+      - {match: 'TERMOSTAT|THERMOSTAT', noun: Termostat grzejnikowy, gender: m}
+      - {match: '\bDYM|SMOKE', noun: Czujnik dymu, gender: m}
+      - {match: 'TLENEK WEGLA|\bCO\b', noun: Czujnik czadu, gender: m}
+      - {match: 'DRZWI|OKNA|CONTACT', noun: Czujnik otwarcia drzwi i okien, gender: m}
+      - {match: 'ZALANI|WATER|WOD[YE]', noun: Czujnik zalania, gender: m}
+      - {match: 'TEMPERATUR', noun: Czujnik temperatury, gender: m}
+      - {match: 'COUPLER', noun: Sprzęgacz czujnika, gender: m}
+      - {match: 'LS/PD|LS-PD|RUCHU I SWIATLA|LIGHT/PRESENCE', noun: Czujnik ruchu i światła, gender: m}
+      - {match: 'RUCH|MOTION|PRESENCE|\bPD\b|SENSOR WALL|SENSORS?\b', noun: Czujnik ruchu, gender: m}
+      - {match: 'NIGHTLIGHT', noun: Lampka nocna, gender: f}
+      - {match: '\bPLUG\b|GNIAZD|WTYCZKA', noun: Gniazdko, gender: n}
+      - {match: 'CAMERA|KAMERA', noun: Kamera, gender: f}
+      - {match: 'BUTTON|SWITCH|PRZYCISK', noun: Przycisk, gender: m}
+      - {match: 'REMOTE|PILOT', noun: Pilot, gender: m}
+    # Akcesoria do opraw: rodzaj + system ("Szyna Ledvance do TruSys Flex 450cm 5P biała").
+    accessory_nouns:
+      - {match: 'SENSOR REMOTE CONTROL', noun: Pilot do czujnika, gender: m}
+      # 2026-10-21: byly "Oprawa do TruSys" (CHAIN KIT), "Oprawa do EM Exit" (FLAG KIT), "Oprawa COMPACT BATTERY", ramki
+      # natynkowe i wpuszczane paneli rozroznione tylko wersja "RECESSED FRAME" / "SURFACE KIT H75"
+      - {match: 'INDOOR GARDEN', noun: Lampa do uprawy roślin, gender: f}
+      - {match: 'BIOLUX HCL LS\b', noun: Zestaw taśmy LED TW Zigbee, gender: m}  # LS = taśma (Light Strip)
+      - {match: 'CHAIN KIT', noun: Zestaw łańcuchów, gender: m}
+      - {match: 'FLAG KIT', noun: Uchwyt flagowy, gender: m}
+      - {match: 'FLOOR STAND', noun: Statyw podłogowy, gender: m}
+      - {match: 'COVER PLATE', noun: Płytka maskująca, gender: f}
+      - {match: '\bBATTERY\b|\bBAT LI\b', noun: Akumulator, gender: m}
+      - {match: 'RECESSED (?:MOUNT )?(?:FRAME|KIT)', noun: Ramka do montażu wpuszczanego, gender: f}
+      - {match: 'SURFACE MOUNT KIT|SURF KIT', noun: Ramka natynkowa, gender: f}
+      - {match: '\bBASE\b|PODSTAWA', noun: Podstawa, gender: f}
+      - {match: 'END ?CAP|BLIND COVER|ZASLEPKA', noun: Zaślepka, gender: f}
+      - {match: 'WIRE GUARD', noun: Kosz ochronny, gender: m}
+      - {match: 'REFRACTOR', noun: Refraktor, gender: m}
+      - {match: '\bREFL\b', noun: Odbłyśnik, gender: m}
+      - {match: 'EYELID|COVER|OSLONA|HOOD|GUARD', noun: Osłona, gender: f}
+      - {match: 'PRZEJSCIOWKA|REDUCTION', noun: Adapter, gender: m}
+      - {match: 'KLOSZ', noun: Klosz, gender: m}
+      - {match: 'TH\.?-KIT', noun: Zestaw okablowania, gender: m}
+      - {match: 'ENERGY RAIL|\bRAIL\b', noun: Szyna, gender: f}
+      - {match: 'FEED[- ]?IN', noun: Zasilanie szyny, gender: n}
+      - {match: 'NODE|CONNECTOR|-CON\b|LACZNIK|INLINE|CONNECT\b', noun: Łącznik, gender: m}
+      - {match: 'SAFETY ROPE', noun: Linka zabezpieczająca, gender: f}
+      - {match: 'THROUGH-?WIRING|OKABLOWANIA', noun: Zestaw okablowania, gender: m}
+      - {match: 'SUSPENSION|\bSUSP\b|ZAWIES|PODWIESZ', noun: Zawiesie, gender: n}
+      - {match: '\bWIRE\b', noun: Przewód, gender: m}
+      - {match: 'EXCHANGEABLE RING|EXTENSION RING|\bRINGS?\b|PIERSCIEN', noun: Pierścień, gender: m}
+      - {match: 'FRAME|RAMKA|\bRAMA\b|MOUNT ?KIT|SURF KIT|RECESSED ?KIT|MOUNTFRAME|MOUNTKIT', noun: Ramka, gender: f}
+      - {match: 'BRACKET|UCHWYT|MOUNT|SPIGOT|HOLDER|\bCLIP\b', noun: Uchwyt, gender: m}
+      - {match: 'ADAPTER', noun: Adapter, gender: m}
+      - {match: 'INFILL', noun: Zaślepka liniowa, gender: f}
+      - {match: 'REFLECTOR|REFLEKTOR DO', noun: Odbłyśnik, gender: m}
+      - {match: 'CLAMP', noun: Odciążka przewodu, gender: f}
+      - {match: 'REMOTE CONTROL|PILOT', noun: Pilot, gender: m}
+      - {match: 'PICTO', noun: Piktogram, gender: m}
+      - {match: '\bPOLE\b', noun: Słupek, gender: m}
+      - {match: 'POWER CABLE|\bKABLE\b|\bCABLE\b', noun: Przewód zasilający, gender: m}
+      - {match: '\bSENSOR\b', noun: Czujnik, gender: m}
+      - {match: 'ACCESSOR|AKCESORI', noun: Akcesorium, gender: n}
+    accessory_systems:
+      - {match: 'BIOLUX HCL', label: Biolux HCL}
+      - {match: 'TRUSYS FLEX', label: TruSys Flex}
+      - {match: 'TRUSYS PERFORMANCE', label: TruSys Performance}
+      - {match: 'TRUSYS UNIV', label: TruSys Universal}
+      - {match: 'TRUSYS', label: TruSys}
+      - {match: 'OFFICE LINEAR', label: Office Linear}
+      - {match: 'DOWNLIGHT COMFORT', label: Downlight Comfort}
+      - {match: 'DOWNLIGHT SLIM', label: Downlight Slim}
+      - {match: 'DOWNLIGHT UNIV', label: Downlight Universal}
+      - {match: 'DOWNLIGHT', label: Downlight}
+      - {match: 'INDIVILED', label: Linear IndiviLED}
+      - {match: 'DAMP PROOF', label: Damp Proof}
+      - {match: 'SPOT COMBO', label: Spot Combo}
+      - {match: 'TRACKLIGHT SPOT|\bTRACK SP\b', label: Tracklight Spot}
+      - {match: '\bSPOT\b', label: Spot}
+      - {match: 'BULKHEAD', label: Bulkhead}
+      - {match: 'SURFACE FLAT', label: Surface Flat}
+      - {match: 'SURFACE CIRCULAR', label: Surface Circular}
+      - {match: 'PANEL LOUVER', label: Panel Louver}
+      - {match: '\bPANEL(?:U|I)?\b|\bPL ?\d{3,4}X', label: paneli}
+      - {match: 'HIGH BAY|\bHB\b', label: High Bay}
+      - {match: 'LOW BAY', label: Low Bay}
+      - {match: 'TRACKLIGHT|TRACK', label: Tracklight}
+      - {match: 'STREETLIGHT', label: Streetlight}
+      - {match: 'FLOODLIGHT', label: Floodlight}
+      - {match: 'EM EXIT', label: EM Exit}
+      - {match: 'FLOOR STANDING', label: Floor Standing}
+      - {match: 'LINEAR', label: Linear}
+    # Slowa usuwane z serii (seria = to, co zostaje z nazwy po zdjeciu parametrow).
+    series_drop:
+      - '(?i)\b\d+\s?x\s?(E27|E14|G9|GU10|GX53|LED)\b'
+      - '(?i)\b(E27|E14|G9|GU10|GX53|G4)\b'
+      - '(?i)\b\d{2,4}\s?x\s?\d{1,4}([.,]\d+)?\s?(mm|cm)?\b'
+      - '(?i)\b\d{2,4}\s?(mm|cm)\b'
+      - '(?i)\b\d+([.,]\d+)?\s?m\b'
+      - '(?i)\b\d+([.,]\d+)?\s?W\b'
+      - '(?i)\b\d{4}(\s?(…|\.\.\.|-)\s?\d{4})?\s?K\b'
+      - '(?i)\bIP\s?\d{2}\b'
+      - '(?i)\b(dark\s+gr[ae]y|stainless\s+steel|wood\s+decor|gun\s+metal|brushed\s+nickel)\b'
+      - '(?i)\b(black|white|grey|gray|silver|chrome|gold|brown|beige|green|copper|wt|bk|gy|gr|dg|si|cr|bn|nk|wd|bg|st|and)\b'
+      - '(?i)\b(pendant|pendent|wall|ceiling|floor|table|desk|post|spike|luminaire)\b'
+      - '(?i)(?<![\w+])(smart\+?|wifi|wif|wi-fi|zb|zigbee|bt|matter|outd|outdoor|tw|twi|rgbw|rgbtw|rgb|cct|3cct|dim|dimmable|click|click-cct|click-dim|remote|control|rc|sen|sensor|led|ledv|eue|osram|ledvance|ext|yes)(?![\w+])'
+      - '\(.*?\)'
+      - '(?<![\w.,/-])\d{2,4}(?![\w.,/-])'
+      # "COB STRIPS CCT WITH REMOTE CONTROL" -> bez wiszacego "With" (pilot idzie jako `remote`), "WIFI W/ Google Nest"
+      - '(?i)\bwith\b|(?<!\w)w/(?=\s)'
+      # "RGB + W" to RGBW (barwa), nie czesc serii ("Flex Bendable W", "Endura Garden Spot W")
+      - '(?i)\+\s?w\b'
+      # rzeczownik juz mowi, co to jest (2026-10-21): "Kamera ... Cloud Cam", "Wentylator sufitowy ... Ceiling Fan",
+      # "Panel solarny ... Components Solar Panel"; "3XPKT" (3XPendant) idzie jako cecha "3-punktowa", "3PC" jako "op. 3 szt."
+      - '(?i)\b(camera|ceiling fan|concrete anchors|foundation(\s+tube)?|components(\s+(solar panel|transformator))?|suspended)\b'
+      - '(?i)\b[2-9]xpkt\b'
+      - '(?i)\b\d+\s?pcs?\b'
+    types:
+      # --- elektronika (bez barwy) ---
+      # transformatory do halogenow 12V (HTM / HTL / HTN / HTi / ET PARROT) - w Ekonomie "Statecznik", 2026-10-21
+      - key: transformator
+        noun: Transformator elektroniczny do halogenów
+        match: ['HALOGENOWYCH', 'ET PARROT', '\bHT[MLN]\b', '\bHTI\b']
+        version_suffix: true
+        attrs: [ballast, control, features]
+        required: [ballast]
+        features:
+          - {match: '\bHTM\b', label: HTM}
+          - {match: '\bHTL\b', label: HTL}
+          - {match: '\bHTN\b', label: HTN}
+          - {match: '\bHTI\b', label: HTi}
+          - {match: '\bET PARROT\b', label: ET Parrot}
+      - key: statecznik
+        noun: Statecznik elektroniczny
+        match: ['^STATECZNIK', '^QTP\b']  # "QTP-DL, DF 2X18-24/220-240 QUICKTRONIC" (2026-10-26)
+        version_suffix: true
+        attrs: [ballast, control]
+        required: [ballast]
+      - key: zasilacz
+        noun: Zasilacz LED
+        # zasilacze naswietlaczy Floodlight Max ("FLOODLIGHT MAX MAX PSU DA P 1200W") - w Ekonomie jako oprawa (2026-10-21)
+        match: ['^ZASILACZ', 'DRIVER', '^CONSTANT CURRENT', '^STEROWNIK LED DRIVER', 'FLOOD(?:LIGHT)? MAX.*(?:\bPSU\b|POWER SUPPLY)']
+        exclude: ['^ZASILACZ LS AY', '^ZESTAW', 'CLAMP', 'PROGRAMMER', 'SCANNER', 'ACCESSORIES']
+        version_suffix: true
+        attrs: [driver, control, features]
+        required: [driver]
+        features:
+          - {match: 'FLOOD(?:LIGHT)? MAX', label: do Floodlight Max}
+      - key: zaplonnik
+        noun: Zapłonnik
+        match: ['^ZAPLONNIK']
+        attrs: [model]
+      # --- zrodla swiatla ---
+      - key: tasma
+        noun: Taśma LED
+        match: ['^PASEK LED', '^LED STRIP']
+        require_pattern: '-\d{3,4}/'
+        version_suffix: true
+        attrs: [strip, ip]
+        required: [strip]
+      - key: tasma_inna
+        noun: Taśma LED
+        match: ['^PASEK', '^PASEL', '^TASMY', '^DEKORACYJNY PASEK']
+        # "Pasek LED SMART+ WIFI NEON FLEX 3M RGBTW" to tasma Smart+ - typ `smart` (2026-10-21: surowa nazwa)
+        exclude: ['\bAY\b', 'GOOGLE NEST', '\bSMART\b']
+        strip_prefix: '(?i)^(Pasek|Pasel|Taśmy|Dekoracyjny pasek)\s+(LED\s+)?'
+        attrs: [model]
+      - key: tuba
+        noun: Tuba LED
+        match: ['^TUBA', '^TUBY', '^LEDTUBE', '^VALUE CLASS TUBE', 'LEDTUBE T', '^OPRAWA LED TUBE', 'SUBSTITUBE']
+        version_suffix: true
+        attrs: [tube_type, tube_length, power, lumen, cct, tube_supply, sensor, features]  # sensor: tuby MOTION SENSOR (2026-10-20)
+        required: [power, lumen, cct]
+        sensor_ms: true  # "LEDTUBE T8 EM MS P 1200" = MOTION SENSOR wg karty GTIN (2026-10-21)
+        # tuby o specjalnym widmie (2026-10-21: ginelo FOOD / FLUORA) - barwa "833" / brak barwy to nie blad
+        features:
+          - {match: '\bFOOD\b', label: do żywności}
+          - {match: '\bFLUORA\b', label: do roślin Fluora}
+        required_unless: {cct: '\bFOOD\b|\bFLUORA\b'}
+      - key: swietlowka_liniowa
+        # 2026-10-26: "Świetlówka", nie "Tuba fluorescencyjna" (decyzja uzytkownika; Tuba LED i "pod tuby" bez zmian)
+        noun: Świetlówka
+        # stare nazwy Osram "L15/76 NATURA ŚWIETLÓWKA" (zestawienie 2026-10-26) - `name_cleanup` robi z nich "L 15W/76"
+        match: ['^SWIETLOWKA LINIOWA', '^SWIETLOWKA T\d', '^L \d{1,2}W/\d{2,3}\b']
+        attrs: [tube_type, tube_length, power, cct, features]
+        required: [power, cct]
+        # Natura (76) i Fluora (77) to widma specjalne bez kodu barwy 8xx - brak K nie jest bledem
+        features:
+          - {match: '\bNATURA\b', label: Natura}
+          - {match: '\bFLUORA\b', label: do roślin Fluora}
+        required_unless: {cct: '\bNATURA\b|\bFLUORA\b'}
+      - key: kompakt_led
+        noun: Świetlówka kompaktowa LED
+        # tez "Lampa DULUX L LED FR 36 ECG, AC mains 18W" i "DULUXTE32LED" (2026-10-21: szly jako zwykle swietlowki)
+        match: ['DULUX LED', 'DULUX (?:[A-Z]{1,2}(?:/| )?[A-Z]? )?LED\b', 'DULUX[A-Z]{1,2}\d+LED']
+        attrs: [gwint, power, lumen, cct, tube_supply]
+        required: [gwint, power, lumen, cct]
+      - key: kompakt
+        noun: Świetlówka kompaktowa
+        # stare nazwy Osram: "DS7/41-827 G23 ŚWIETL. KOMP.", "DULUX PRO 30W/825 E27", "DSTAR/DSST 5W/825 E14" (2026-10-26)
+        match: ['^SWIETLOWKA PINOWA', '^LAMPA DULUX', '^DULUX\b', '\bSWIETL\.? ?KOMP', '^DSTAR\b']
+        attrs: [gwint, power, cct]
+        required: [gwint, power, cct]
+      - key: halogen
+        noun: Żarówka halogenowa
+        # stare nazwy Osram (2026-10-26): "64432S HALOSTAR 35W 12V GY6,35", "64502 150W 230V GX6,35 ŻAR. HAL.",
+        # "64698 ECO HALOLINE 160W 115MM" - bez slowa "halogen"
+        match: ['HALOGEN', '^ZAROWKA HALO', '\bHALOSTAR\b', '\bHALOLINE\b', '\bHALOLUX\b', '\bZAR(?:OWKA)?\.? HAL\b']
+        version_suffix: true
+        attrs: [gwint, power, voltage, features]
+        required: [gwint, power]
+        # "HALOPIN OVEN 25 W" gubil "do piekarnika", "HALOSTAR OVEN" zostawal WIELKIMI (2026-10-21)
+        features:
+          - {match: '\bOVEN\b', label: do piekarnika}
+          - {match: '(?<![\d.,])(78|114|115|117|118|189|254|332)\s?MM\b', label: '{0} mm'}  # dlugosc R7s
+      - key: zarowka_piekarnik
+        noun: Żarówka do piekarnika
+        match: ['PIEKARNIK', '\bOVEN\b']
+        version_suffix: true
+        attrs: [gwint, power, features, glass]
+        required: [power]
+        features:
+          - {match: '\b(230|240) ?V\b', label: '{0}V'}
+          - {match: '\bCL\b', label: przezroczysta}
+      - key: zarowka_sygnalizacyjna
+        noun: Żarówka sygnalizacyjna
+        # "Lampa nadciśnieniowe niskonapięciowe ... kolejowe SIG 1210" - zarowka sygnalizacyjna, nie lampa wyladowcza
+        match: ['NADCISNIENIOWE', 'SYGNALIZACYJN']
+        version_suffix: true
+        attrs: [features]
+        features:
+          - {match: '(?<![\d.,])(\d{1,2}) ?V\b', label: '{0}V'}
+          - {match: 'RUCH DROGOWY|ROAD TRAFFIC', label: drogowa, group: use}
+          - {match: 'KOLEJOW|RAILWAY', label: kolejowa, group: use}
+          - {match: 'PODWOJN|DUAL-COIL', label: dwuwłóknowa, group: coil}
+          - {match: 'SINGLE-COIL|POJEDYNCZ', label: jednowłóknowa, group: coil}
+          - {match: 'LONGLIFE|\bLL\b', label: Longlife}
+          - {match: 'PRZEZROCZYST', label: przezroczysta}
+      - key: zarowka_inna
+        noun: Żarówka
+        match: ['^ZAROWKA']
+        strip_prefix: '(?i)^Żarówka\s+'
+        attrs: [model]
+      - key: sodowa
+        noun: Lampa sodowa
+        match: ['SODOWA', '\bNAV\b']
+        exclude: ['\bLED\b']
+        version_suffix: true
+        attrs: [hid_model, hid_power, gwint, hid_color, features]
+        # linia Super 4Y / Super XT zawsze (2026-10-21: raz byla, raz nie); "/I" = z wbudowanym zaplonnikiem
+        features:
+          - {match: 'SUPER ?4Y', label: Super 4Y}
+          - {match: 'SUPER ?XT', label: Super XT}
+          - {match: '\d/I\b', label: z zapłonnikiem}
+      - key: metalohalogenkowa
+        noun: Lampa metalohalogenkowa
+        # stare nazwy Osram "HCI T 70/930 WDL G12 LAMPA MET-HAL", "HMI 575W/SE LAMPA METAL-HALOG." (2026-10-26)
+        match: ['\bHQI\b', '\bHCI\b', '\bHMI\b', '\bMET-?HAL', '\bMETAL-?HALOG']
+        exclude: ['\bLED\b']
+        version_suffix: true
+        attrs: [hid_model, hid_power, gwint, hid_color, features]
+        # banka powlekana / przezroczysta (HQI-E), 2026-10-21: raz "CO", raz nic
+        features:
+          - {match: 'POWLEKAN|\bCO\b', label: powlekana}
+          - {match: 'PRZEZROCZYST', label: przezroczysta}
+          - {match: '\bD/I\b', label: z zapłonnikiem}  # "/I" jak w NAV (2026-10-26: zostawalo samo "I")
+      - key: wyladowcza
+        noun: Lampa wyładowcza
+        match: ['WYLADOWCZA', 'NADCISNIENIOWE']
+        exclude: ['\bLED\b']
+        strip_prefix: '(?i)^Lampa\s+(wyładowcza\s+)?'
+        attrs: [model]
+      - key: uvc
+        noun: Promiennik UVC
+        match: ['^PROMIENNIK UVC', '\bPROM\.? ?UV\b']  # "HNS 6W G5 PROM.UV OZON FREE" (2026-10-26)
+        attrs: [tube_type, gwint, power, features]
+        required: [power]
+        features:
+          - {match: 'OZON(?:E)? FREE', label: bezozonowy}
+      # --- produkty, ktore Ekonom nazywa "Lampa ...", a nie sa zarowkami LED (przeglad 2026-10-21) ---
+      - key: zarowka_tradycyjna
+        noun: Żarówka tradycyjna
+        match: ['^LAMPA ZAROWA', 'ZAROWKA KROPLOWA']
+        attrs: [gwint, power, shape, glass, features]
+        required: [gwint, power]
+        features:
+          - {match: 'KROPLOW', label: kroplowa}
+      # --- stare nazwy Osram z kodem na poczatku (zestawienie 2026-10-26) ---
+      - key: zarowka_samochodowa
+        noun: Żarówka samochodowa
+        # "64210 55W 12V H7 ŻARÓWKA SAMOCHODOWA", "7528 P21/5W 12V ŻARÓWKA SAM.", "ŻARÓWKASAMOCHODOWA"
+        match: ['SAMOCH', '\bZAROWKA SAM\.']
+        exclude: ['LATARKA', 'FLASHLIGHT']
+        attrs: [features, power, voltage]
+        required: [power]
+        features:
+          - {match: '\b(H[1-9]|H1[01]|HB[34]|W5W|W21W|W21/5W|P21W|P21/5W|PY21W|R5W|R10W|C5W)\b', label: '{0}', group: socket}
+          - {match: 'POMARANCZ', label: pomarańczowa}
+          - {match: '\d+NBU\b', label: Night Breaker Unlimited}
+          - {match: '\d+NL\b', label: Night Breaker Laser}
+          - {match: '\+ ?(\d{2,3})%', label: '+{0}%'}
+      - key: zarowka_liniowa
+        noun: Żarówka liniowa
+        # "1613 LIN 35W S14D LINESTRA ŻARÓWKA LINIOWA" - wczesniej "Oprawa liniowa LED 35W 14°" (2026-10-26)
+        match: ['\bLINESTRA\b']
+        exclude: ['\bLED\b']
+        attrs: [gwint, power, features]
+        required: [gwint, power]
+        features:
+          - {match: '\bLINESTRA\b', label: Linestra}
+      - key: latarka
+        noun: Latarka LED
+        match: ['FLASHLIGHT', '\bFLASHL\b', '^LATARKA', 'LATARKA CZOLOWA', 'KEMPINGOW']
+        version_suffix: true
+        attrs: [features, ip]
+        features:
+          - {match: 'CAMP CEILING|KEMPINGOW', label: kempingowa, group: kind}
+          - {match: 'HEADL|CZOLOW', label: czołowa, group: kind}
+          - {match: 'TACTICAL', label: taktyczna, group: kind}
+          - {match: 'SPOTLI ?GHT|SPOTL\b', label: szperacz, group: kind}
+          - {match: 'MULTI-USE|WIELOFUNKCYJN', label: wielofunkcyjna}
+          - {match: '\bCOMPACT\b', label: kompaktowa}
+          - {match: 'RECH|AKUMULATOROW', label: akumulatorowa, group: power}
+          - {match: 'BATT ?ERY', label: na baterie, group: power}
+          - {match: '\bCOB\b', label: COB}
+          - {match: 'TRANSFORM', label: Transform}
+          - {match: 'SIDEL', label: z boczną lampką}
+      - key: zestaw_nest
+        noun: Zestaw Google Nest Mini +
+        match: ['GOOGLE NEST']
+        version_suffix: true
+        attrs: [features, brand, control]
+        features:
+          - {match: '\bPLUG\b', label: gniazdko, group: item}
+          - {match: '\bFLEX\b', label: taśma LED, group: item}
+          - {match: '\b2 ?X CLA60\b', label: 2x żarówka LED E27 A60, group: item}
+          - {match: '\bE55\b', label: żarówka LED E27 Edison, group: item}
+          - {match: 'CLA60|CL A60', label: żarówka LED E27 A60, group: item}
+          - {match: 'RGBW', label: RGBW, group: light}
+          - {match: '\bFIL\b|\bFI LG\b', label: filament, group: light}
+          - {match: 'ANTHRACIT', label: antracytowy, group: color}
+          - {match: '\bCHALK\b', label: Chalk, group: color}  # kolor glosnika Google po angielsku, jak na opakowaniu
+          - {match: '\bCH\b|LIGHT GREY', label: grafitowy, group: color}
+          - {match: '\bBK\b', label: czarny, group: color}
+      - key: klosz_hql
+        noun: Klosz aluminiowy do HQL LED
+        match: ['LAMP SHADE', 'HQL LED SPECIAL ACCESSORY']
+        version_suffix: true
+        attrs: [features]
+        features:
+          - {match: '(\d{4})\s?LM\b', label: '{0}lm'}
+      # kamery Smart+ z oswietleniem to jedna oprawa z kamera (karta GTIN: 1 szt., wlasne W / lm / K) - rodzaj oprawy
+      # z kamera + parametry swiatla z karty (decyzja uzytkownika 2026-10-21; bylo "Kamera Smart+ ..."); rodzaj z modelu
+      # w `noun_overrides` (Flood = naswietlacz, Multi Spot = reflektor, Globe E27 = sama kamera), reszta to kinkiety
+      - key: kamera_oprawa
+        noun: Kinkiet LED z kamerą
+        gender: m
+        noun_suffix: Smart+
+        match: ['CAMERA']
+        strip_prefix: '(?i)^((Oprawa|Lampa)\s+(LED\s+)?)+'
+        version_suffix: true
+        attrs: [control, features, gwint, power, lumen, cct, color, series]
+        cct_from_card: true
+        features:
+          - {match: '\bGLOBE\b', label: do oprawy}  # "Kamera Smart+ WiFi do oprawy E27 ... Globe Trace"
+      - key: zarowka_led
+        noun: Żarówka LED
+        # "Oprawa LED CLASSIC P ... E14", "Oprawa LED STAR MR16", "Oprawa Highbay Blade E27" i "Oprawa SMART+ Spot GU10"
+        # to w Ekonomie lampy z blednym rzeczownikiem (2026-10-19); "HQL LED FILAMENT VALUE 6000LM" bez "Lampa"
+        match: ['^LAMPA', '^LED (CLASSIC|PAR16|STAR|SUPERSTAR|RETROFIT)', '^SMART\+ MATTER (?!FLOOD)',
+                '^OPRAWA LED (CLASSIC|LAMPS|STAR)\b', 'HIGHBAY BLADE', '^OPRAWA SMART\+ (WIFI |BT |ZB )?SPOT (R50|R63|GU10)',
+                '^HQL LED', '^SMART WF[ABP]\d', '^DECOR LED LAMP IN',
+                '^PARATHOM CL\b', '^FILAMENT LED\b']  # stare nazwy bez "Lampa" (zestawienie 2026-10-26)
+        # oprawy Smart+ Decor (Swan / Twist / Wood) i panel Planon to nie zarowki - ida do `smart` (2026-10-21)
+        exclude: ['SMART\+ DECOR', 'PLANON']
+        # kolejnosc jak w starym narzedziu (2026-10-19): "Zarowka LED GU10 2.7W 230lm 4000K 36ST Philips CorePro" -
+        # najpierw gwint i parametry swiatla, potem cechy, na koncu marka (tylko blizniaki) + linia + protokol
+        attrs: [gwint, power, lumen, cct, shape, beam, glass, dim, sensor, features, brand, line, control]
+        required: [gwint, power, lumen, cct]
+        # zarowki kolorowe i do roslin nie maja barwy bialej (2026-10-21: DO_SPRAWDZENIA bez potrzeby)
+        required_unless: {cct: '\bGROW\b|\b(RED|BLUE|GREEN|ORANGE|YELLOW|PINK)\b|COLOR BOX', gwint: 'TERMINAL BLOCK'}
+        # cechy, ktore gubila nazwa (przeglad 2026-10-21): kolor swiatla, do roslin, z akumulatorem, na komary, pilot
+        features:
+          - {match: '\bGROW\b', label: do roślin}
+          - {match: '\bRED\b', label: czerwona, group: light}
+          - {match: '\bYELLOW\b', label: żółta, group: light}
+          - {match: '\bORANGE\b', label: pomarańczowa, group: light}
+          - {match: '\bGREEN\b', label: zielona, group: light}
+          - {match: '\bBLUE\b', label: niebieska, group: light}
+          - {match: '\bPINK\b', label: różowa, group: light}
+          - {match: '\bBROWN\b', label: brązowa, group: light}
+          - {match: 'COLOR BOX', label: kolorowe, group: light}
+          - {match: 'RECHARGEABLE|\bRECH\b', label: z akumulatorem}
+          - {match: 'MOSQUITO', label: odstraszająca komary}
+          # "RENOVATION LAMPS WITH TERMINAL BLOCK" - lampa bez trzonka, podlaczana kostka (2026-10-21)
+          - {match: 'TERMINAL BLOCK', label: z kostką przyłączeniową}
+          - {match: 'REMOTE CONTROL|\+\s?RC\b', label: z pilotem}
+          - {match: '\bBK\b|\bBLACK\b', label: czarna}
+          # "DECOR LED LAMP IN ELECTRO GLASS MEDIUM GOLD" = karta "1906 DECOR LED FLAT LAMP 3.5W 827 E27 ... IN ELECTRO
+          # GLASS MEDIUM GOLD" - zarowka, nie oprawa (2026-10-21)
+          - {match: 'ELECTRO GLASS', label: Electro Glass}
+          - {match: 'ELECTRO GLASS.*\bSMALL\b', label: mała}
+          - {match: 'ELECTRO GLASS.*\bMEDIUM\b', label: średnia}
+          - {match: 'ELECTRO GLASS.*\bGOLD\b', label: Gold}  # kolor szkla po angielsku (2026-10-21)
+      # --- oprawy parametryczne ---
+      # typy z rozbicia "Oprawa LED" (2026-10-19: "Oprawa LED nic nie mowi")
+      - key: modul_awaryjny
+        noun: Moduł awaryjny
+        match: ['EMERGENCY KIT']
+        requires_power: true  # akumulatory i akcesoria kitow zostaja w akcesoriach
+        version_suffix: true
+        attrs: [power, cct, color]
+      - key: oprawa_awaryjna
+        noun: Oprawa awaryjna LED
+        match: ['^OPRAWA (OPRAWA )?EM (EXIT|SPOT)\b', '^OPRAWA (OPRAWA )?EMERGENCY (TWIN|SPOT|EXIT)']
+        requires_power: true  # piktogramy, ramki, zawiesia EM Exit to akcesoria
+        gender: f
+        version_suffix: true
+        attrs: [power, ip, remote, color]
+      - key: lampa_stojaca
+        noun: Lampa stojąca LED
+        match: ['FLOOR STANDING']
+        requires_power: true
+        gender: f
+        version_suffix: true
+        attrs: [power, lumen, cct, sensor, control, remote, color, features]
+        required: [power, cct]
+        features: [plug]
+      - key: oprawa_zadaszen
+        noun: Oprawa do zadaszeń LED
+        match: ['\bCANOPY\b']
+        requires_power: true
+        gender: f
+        version_suffix: true
+        attrs: [power, lumen, cct, optics, ip, control, remote, color]
+        required: [power, lumen, cct]
+      - key: oprawa_scienna
+        noun: Oprawa ścienna LED
+        match: ['WALLPACK']
+        requires_power: true
+        gender: f
+        version_suffix: true
+        attrs: [power, lumen, cct, ip, sensor, remote, color]
+        required: [power, lumen, cct]
+      - key: oczyszczacz_uvc
+        noun: Oczyszczacz powietrza UVC
+        match: ['ULTRAVIOLET AIR', 'AIR SANITIZER']
+        attrs: [power, color]
+      - key: lampa_robocza
+        noun: Lampa robocza LED
+        match: ['WORKLIGHT']
+        requires_power: true
+        version_suffix: true
+        attrs: [power, lumen, cct, features]
+        required: [power, lumen, cct]
+        features: [plug]
+      - key: naswietlacz
+        noun: Naświetlacz LED
+        match: ['^NASWIETLACZ', 'FLOODLIGHT', '\bFLOOD\b', 'FLOODLIGHTS', '\bFL COMP\b']
+        exclude: ['^ZASILACZ', 'ACCESSOR', 'ADAPTER', 'UCHWYT', 'MOUNTING']
+        requires_power: true
+        gender: m
+        version_suffix: true
+        attrs: [power, lumen, cct, optics, sensor, control, remote, color, features]
+        required: [power, lumen, cct]
+        features: [plug]
+      # akcesoria High Bay z moca oprawy w nazwie ("HIGH BAY REFLECTOR GEN 4 147 190 210W") - wczesniej "Oprawa High Bay
+      # LED 210W Ledvance Reflector" (2026-10-21)
+      - key: akcesorium_hb
+        noun_from: accessory
+        match: ['^OPRAWA .*HIGH ?BAY', '^OPRAWA .*\bHB\b']
+        require_pattern: 'REFRACTOR|REFLECTOR|\bREFL\b|BRACKETS?\b|WIRE GUARD|\bSENSOR\b|REMOTE CONTROL'
+        # oprawa z czujnikiem ma barwe / strumien ("HIGH BAY SENSOR 190W 4000K 110DEG IP65")
+        exclude: ['\d{3,6}\s?LM\b', '\b\d{4}\s?K\b', '\b[789]\d{2}\b', '\bIP\d\d\b']
+        version_suffix: true
+        attrs: [system, acc_size, features, color]
+        features:
+          - {match: '(\d{2,3})\s?DEG\b', label: '{0}°'}
+          - {match: '(\d{2,3})\s?W?\s?[-–]\s?(\d{2,3})\s?W\b', label: 'do {0}-{1}W', group: w}
+          - {match: '(?<![\d.,-])(\d{2,3})\s?W\b', label: 'do {0}W', group: w}
+      - key: high_bay
+        noun: Oprawa High Bay LED
+        match: ['HIGH ?BAY', '\bHB\b']
+        requires_power: true
+        gender: f
+        version_suffix: true
+        attrs: [power, lumen, cct, optics, ip, control, sensor, remote, color]
+        required: [power, lumen, cct]
+      - key: low_bay
+        noun: Oprawa Low Bay LED
+        match: ['LOW BAY']
+        requires_power: true
+        gender: f
+        version_suffix: true
+        attrs: [length, power, lumen, cct, optics, control, sensor, emergency, remote, color]
+        required: [power, lumen, cct]
+      - key: hermetyczna
+        noun: Oprawa hermetyczna LED
+        match: ['DAMP PROOF', 'ESSENTIALS DAMP', 'SUBMARINE']
+        requires_power: true
+        gender: f
+        version_suffix: true
+        attrs: [length, power, lumen, cct, optics, ip, control, sensor, emergency, remote, color]
+        required: [power, lumen, cct]
+      - key: panel
+        noun: Panel LED
+        match: ['\bPANEL\b', 'PLANON', '\bPL ECO\b', '\bPL LOUVER\b', 'OPRAWA PL\b']
+        requires_power: true
+        gender: m
+        version_suffix: true
+        attrs: [round, panel_size, power, lumen, cct, ugr, ip, control, sensor, emergency, remote, color]
+        required: [panel_size, power, lumen, cct]
+      - key: downlight
+        noun: Downlight LED
+        match: ['DOWNLIGHT', '\bDL\b', '\bDN ?\d{2,3}\b']
+        requires_power: true
+        gender: m
+        version_suffix: true
+        attrs: [round, diameter, power, lumen, cct, optics, ip, control, sensor, emergency, remote, color]
+        required: [power, lumen, cct]
+      - key: liniowa
+        noun: Oprawa liniowa LED
+        match: ['LINEAR', 'BATTEN', 'TRUSYS', '\bLN\b', 'LINIOWA', 'OFFICE LINE', 'TUBEKIT']
+        requires_power: true
+        gender: f
+        version_suffix: true
+        attrs: [length, power, lumen, cct, optics, ip, control, sensor, emergency, remote, color]
+        required: [power, lumen, cct]
+      - key: uliczna
+        noun: Oprawa uliczna LED
+        match: ['STREETLIGHT', 'ULICZNA', 'URBAN', 'ECO AREA', '\bAREA\b', '^OPRAWA (OPRAWA )?SL ?(COMP|FLEX)']
+        requires_power: true
+        gender: f
+        version_suffix: true
+        attrs: [power, lumen, cct, optics, ip, control, sensor, features, remote, color]
+        required: [power, lumen, cct]
+        # wysokosc slupka i ksztalt kinkietu Wall Vario (2026-10-21: "600" i "RD" / "SQ" zostawaly jako surowe kody)
+        features:
+          - {match: 'BOLLARD.*\b600\b', label: wys. 60 cm}
+          - {match: 'BOLLARD.*\b900\b', label: wys. 90 cm}
+          - {match: 'WALL VARIO.*\bRD\b', label: okrągły}
+          - {match: 'WALL VARIO.*\bSQ\b', label: kwadratowy}
+      - key: plafon
+        noun: Plafon LED
+        match: ['SURFACE', 'CEILING', 'BULKHEAD', 'SUFITOWA', 'SCIENNA', 'ORBIS', 'OBRIS', '\bSF (DISC|CIRC)',
+                'LED CLICK', 'COLOR \+ WHITE', 'OUTDOOR ESSENTIAL', '\bSF BLKH\b']
+        requires_power: true
+        gender: m
+        version_suffix: true
+        attrs: [round, diameter, power, lumen, cct, click, ip, control, sensor, emergency, remote, color]
+        required: [power, lumen, cct]
+        # plafony: sama liczba 200-699 to srednica ("SURFACE BULKHEAD 250 10W", "SF DISC 300 V 21W"), 2026-10-20
+        diameter_bare: true
+      - key: szynowa
+        noun: Oprawa szynowa LED
+        match: ['TRACKLIGHT', 'SZYNOWA']
+        requires_power: true
+        gender: f
+        version_suffix: true
+        attrs: [power, lumen, cct, optics, features, control, remote, color]
+        required: [power, lumen, cct]
+        # Tracklight Special Food: rodzaj zywnosci zawsze i po polsku (2026-10-21: raz SEAFOOD / VEG, raz nic)
+        features:
+          - {match: '\bMEAT\b', label: do mięsa}
+          - {match: '\bBREAD\b', label: do pieczywa}
+          - {match: '\bSEAFOOD\b', label: do ryb i owoców morza}
+          - {match: '\bFRUIT\b', label: do owoców}
+          - {match: '\bVEG\b', label: do warzyw}
+      # oprawy wpuszczane i spoty sprzedajemy jako downlighty (decyzja uzytkownika 2026-10-19); klucz zostaje
+      # osobny, bo dopasowanie musi byc za szynowymi i plafonami. ENDURA (zewnetrzne) ida do dekor jak reszta ENDURA.
+      - key: wpuszczana
+        noun: Downlight LED
+        match: ['^OPRAWA AR\b', '\bSPOT\b', '^OPRAWA SP\b']
+        exclude: ['ENDURA']
+        requires_power: true
+        gender: m
+        version_suffix: true
+        attrs: [features_pre, round, diameter, power, lumen, cct, optics, ip, control, sensor, emergency, remote, color]
+        required: [power, lumen, cct]
+        # Decor Spot z kilkoma punktami: "Downlight LED 3-punktowy 3x3,4W ..." (decyzja uzytkownika 2026-10-21)
+        features_pre:
+          - {match: '\bDECOR SPOT\b.*\b([2-9])\s?X\s?\d', label: '{0}-punktowy'}
+      # --- produkty bez parametrow swietlnych (runda 6, 2026-10-14) ---
+      - key: smart_urzadzenie
+        noun_from: device
+        noun_suffix: Smart+
+        match: ['SMART', 'INTELIGENTN']
+        # termostat, pilot, detektor i Outdoor Terminal tez sa urzadzeniami (2026-10-21: byly "Oprawa Smart+ ... Termostat")
+        require_pattern: 'CZUJNIK|\bPLUG\b|GNIAZD|WTYCZKA|NIGHTLIGHT|CAMERA|BUTTON|SWITCH|REMOTE|TERMOSTAT|THERMOSTAT|DETEKTOR|DETECTOR|WYKRYWAJ|MOTION SENSOR|CONTACT SENSOR|OUTDOOR TERMINAL|\bPILOT\b'
+        # kamery (tez z oswietleniem: Cloud / Globe / Flood Cam) ida do `smart` - jeden zapis "Kamera Smart+ ..." (2026-10-21)
+        exclude: ['\bFLOOD', 'CAMERA']
+        requires_no_power: true
+        version_suffix: true
+        attrs: [control, device_extra, color]
+      - key: smart
+        noun_from: mount
+        default_noun: Oprawa
+        noun_suffix: Smart+
+        match: ['SMART', 'SUN@HOME', 'SUNATHOME']
+        # "Lampa LED Smart+ Decor Twist table" - bez "Lampa" w serii (2026-10-21)
+        strip_prefix: '(?i)^((Oprawa|Lampa|Pasek)\s+(LED\s+)?)+'
+        version_suffix: true
+        attrs: [series, features, control, size, sockets, power, cct, ip, sensor, remote, color]
+        features:
+          - {match: '\b([2-9])XPKT\b', label: {m: '{0}-punktowy', f: '{0}-punktowa', n: '{0}-punktowe'}}
+      - key: oprawa_hermetyczna_tuby
+        noun: Oprawa hermetyczna
+        match: ['DAMP ?PROOF.*HOUSING']
+        requires_no_power: true
+        version_suffix: true
+        attrs: [housing_tubes, ip, control, emergency]
+      - key: profil_led
+        noun: Profil do taśm LED
+        match: ['^PROFIL', 'WIDE PROFILES FOR']
+        exclude: ['TRUSYS']
+        attrs: [ls_profile]
+      - key: przeslona_led
+        noun: Przesłona do profilu LED
+        match: ['^PRZESLONA', 'COVERS FOR LED']
+        attrs: [ls_cover]
+      - key: akcesorium_tasm
+        noun_from: ls_accessory
+        match: ['\bLS AY\b', 'ACCESSORIES FOR WIDE', '^ZLACZ', '^ZASLEPKA LS', '^UCHWYT MONTAZOWY', '^AKCESORIA DO PROFIL', '^ZLACZE DO']
+        attrs: [ls_code]
+      - key: modul_led
+        noun: Moduł LED
+        match: ['^MODUL', '^LISOEV', 'LED RING']
+        version_suffix: true
+        attrs: [module_family, power, voltage, lumen, cct]
+      # adaptery / zestawy montazowe czujnikow (2026-10-21: byly "Czujnik ruchu CI 50mm Kit")
+      - key: adapter_czujnika
+        noun: Adapter montażowy czujnika
+        gender: m
+        match: ['^ADAPTER DO MONTAZU CZUJNIK', 'SENSORS? CEILING MOUNTING KIT']
+        strip_prefix: '(?i)^(Adapter do montażu czujników|Czujnik)\s+'
+        attrs: [model]
+      - key: czujnik
+        noun_from: device
+        default_noun: Czujnik
+        match: ['^CZUJNIK', '^ADAPTER DO MONTAZU CZUJNIK']
+        strip_prefix: '(?i)^(Czujnik|Adapter)\s+'
+        version_suffix: true
+        attrs: [model_code, color]
+      - key: elektronika
+        noun_from: first_word
+        match: ['^STEROWNIK', '^RECZNA', '^INTERFEJS', '^PRZEKAZNIK', '^WZMACNIACZ', '^KONWERTER', '^JEDNOSTKA', '^PANEL DOTYKOWY', '^WIELOKANALOWA', '^URZADZENIE', '^TERMOSTAT', '^STARTER', '^PILOT', '^LATARKA', '^INTERJS', '^KOMPAKTOWA JEDNOSTKA']
+        attrs: [model]
+      - key: dekor
+        noun_from: mount
+        default_noun: Oprawa
+        match: ['DECOR', 'ORBIS', 'OBRIS', 'ENDURA', 'VINTAGE', 'BATHROOM', 'CABINET', 'LINEAR (LED|EDGE|ANGLE|TURN|SHELF)', 'LINEARLED', 'UNDERCABINET', 'OFFICE LINE DESK', 'PANAN', 'BOLLARD', 'DOT-IT', 'NIGHTLUX', 'LUNETTA', 'FLEX TV', 'COB STRIPS', 'BATTERY STRIPS', 'OUTDOOR FLEX', 'FLEX (BENDABLE|AUDIO|RGB)', 'NEONFLEX', 'LED SPOT', 'TRACKLIGHT SPOT', 'PLANON', 'SPOT AND DOWNLIGHT', 'ESSENTIALS CEILING', 'BULKHEAD ESSENTIAL', 'DOOR LED', 'NEON']
+        # odblysnik "Reflektor do szynowych opraw TRACKLIGHT SPOT REFLECTOR D75" to akcesorium (2026-10-20), nie reflektor;
+        # taśmy FLEX RGB / AUDIO / BENDABLE z pilotem to dekor, nie akcesorium "Pilot"
+        exclude: ['ACCESSOR', 'RAIL', 'CONNECTOR', 'FRAME', 'KIT', '^REFLEKTOR DO', '\bREFLECTOR D\d']
+        strip_prefix: '(?i)^(Oprawa\s+)+'
+        version_suffix: true
+        # `remote` = "z pilotem" (WITH REMOTE CONTROL / + RC; 2026-10-20 - wczesniej w serii zostawalo samo "With")
+        # `click` = Click-DIM / Click-CCT (Decor Aura / Swirl "CLICKD", Orbis Tube "Click CCT"), 2026-10-21
+        attrs: [series, features, size, sockets, power, cct, click, ip, sensor, remote, color]
+        features:
+          - {match: '\b([2-9])XPKT\b', label: {m: '{0}-punktowy', f: '{0}-punktowa', n: '{0}-punktowe'}}
+          - {match: '\bVERT\b', label: {m: pionowy, f: pionowa, n: pionowe}}
+      - key: akcesorium
+        noun_from: accessory
+        match: ['RAIL', 'FEED', 'END CAP', 'BLIND COVER', 'NODE', 'CONNECTOR', '-CON\b', 'CONNECT\b', 'ROPE', 'WIRING', 'OKABLOWANIA', 'SUSPENSION', 'ZAWIES', 'PODWIESZ', '\bWIRE\b', '\bRINGS?\b', 'PIERSCIEN', 'FRAME', 'RAMKA', '\bRAMA\b', 'MOUNT', '\bKIT\b', 'EYELID', 'COVER', 'OSLONA', 'HOOD', 'GUARD', 'BRACKET', 'UCHWYT', 'SPIGOT', 'HOLDER', '\bCLIP\b', 'ADAPTER', 'INFILL', 'REFLECTOR', 'REFLEKTOR DO', 'CLAMP', 'REMOTE CONTROL', 'PICTO', '\bPOLE\b', '\bBASE\b', 'CABLE', 'ACCESSOR', 'AKCESORI', 'LACZNIK', 'ZASLEPKA', 'ZESTAW', 'KLOSZ', 'PRZEJSCIOWKA', 'ENDCAP']
+        requires_no_power: true
+        version_suffix: true
+        attrs: [system, acc_size, features, poles, color]
+        features:
+          - {match: 'MOUNT KIT.*\bH(\d{2,3})\b|\bH(\d{2,3})\b.*MOUNT KIT', label: 'wys. {0}{1} mm'}
+          - {match: '\bLI (\d+[.,]\d)\b', label: '{0}V'}
+          - {match: '(\d+[.,]\d)\s?AH\b', label: '{0}Ah'}
+          - {match: '\bBAT LI\b', label: Li-Ion}
+      - key: oprawa_led
+        noun: Oprawa LED
+        match: ['^OPRAWA']
+        requires_power: true
+        gender: f
+        version_suffix: true
+        attrs: [power, lumen, cct, optics, ip, control, sensor, emergency, remote, color]
+        required: [power, lumen, cct]
+      # --- reszta: nazwa z modelu (typy bez schematu parametrycznego) ---
+      - key: oprawa_model
+        noun: Oprawa
+        match: ['^OPRAWA']
+        strip_prefix: '(?i)^Oprawa\s+(Oprawa\s+)?'
+        attrs: [model]
+
+  # ===================================================================== KOBI
+  # Wejscie: CSV z Ekonoma + feed Ceneo (ceneo_kobi.xml, --feed). Dopasowanie po kodzie
+  # z `Kod towaru` (004666/KOB -> 4666) do atrybutu feedu `Kod producenta`.
+  kobi:
+    brand: Kobi
+    # zasady z Ledvance (2026-10-19): marka na koncu (seria opraw z parametrami za nia, jak linia),
+    # srednica w mm, bez powtorzonych slow obok siebie, "tubę/tuby" zamiast "świetlówkę/świetlówki"
+    brand_last: true
+    series_after_brand: true
+    diameter_mm: true
+    dedupe_adjacent: true
+    tube_words: [tubę, tuby]
+    # rodzaj z opisu w feedzie / sklepow (sprawdzone 2026-10-19); reszta starych kartotek spoza feedu zostaje "Oprawa"
+    noun_overrides:
+      - {match: '\bNEXFORCE\b', noun: Oprawa hermetyczna LED, gender: f, typ: hermetyczna, types: [dekor]}
+      # Aquarius = natynkowe oczko GU10; Kobi nazywa te rodzine "Oprawa do nadbudowania"
+      - {match: '\bAQUARIUS\b', noun: Oprawa do nadbudowania, gender: f, typ: downlight, types: [dekor]}
+    prefer_feed_name: true
+    # Literowki w nazwach Ekonoma: "1USB.-C/Zu.+W" -> "1USB-C/Zu+W".
+    name_cleanup:
+      - {match: '(?<=[A-Za-z])\.(?=[-+])', repl: ''}
+    # Rzeczownik z nazwy dostawcy konczy sie przed przyimkiem i parametrem - marka idzie za nim:
+    # "Rozeta sufitowa Kobi Pro do KOLINE K2", "Łącznik Kobi 9w1 taśmy COB 8mm" (a nie "do Kobi Pro KOLINE").
+    noun_stop_words: [do, z, ze, na, pod, dla, solar]
+    # ...chyba ze przyimek jest czescia rodzaju oprawy ("Oprawa do nadbudowania", "Lampka na monitor").
+    noun_keep_after: [nabudowania, nadbudowania, monitor]
+    noun_stop_digits: true
+    # Stara nazwa WIELKIMI w typach bez schematu: polskie slowa malymi ("Kostka halogenowa Kobi z wysięgnikiem").
+    model_polish_lower: true
+    # Wyroznik wersji z samej cyfry/litery dostaje slowo modelu: "SOLARIS 2", "LAITILINE L".
+    version_number_with_word: true
+    # Kolor jest juz w nazwie (w rodzaju gramatycznym nazwy) - "CZARNA" z nazwy katalogowej nie jest wersja.
+    # (CHROME zostaje: "PURO CHROME 2xGU10 biała" to biała oprawa z chromem, inny produkt niz PURO biała)
+    version_skip: ['(CZARN|BIAL|SZAR|ZLOT|SREBRN|GRAFIT)\w*']
+    feed_attrs:
+      brand: Marka
+      power: 'Moc [W]'
+      lumen: 'Strumień świetlny |lm|'
+      cct: 'Temperatura barwowa |K|'
+      gwint: Trzonek
+      ip: IP
+      color: 'Kolor produktu'
+      beam: 'Kąt świecenia [°]'
+      sensor: 'Typ czujnika'
+      length: 'Długość produktu |cm|'
+    brand_map:
+      Kobi Professional: Kobi Pro
+      Art Of Light: Art of Light
+    # Marka/linia z nazwy, gdy produktu nie ma w feedzie (pierwsze trafienie wygrywa).
+    brand_rules:
+      - {match: 'LED2B RED', brand: LED2B Red}
+      - {match: 'LED2B', brand: LED2B}
+      - {match: '\bLLS\b', brand: LLS}
+      - {match: 'ART OF LIGHT', brand: Art of Light}
+      - {match: '\bJVS\b', brand: JVS}
+      - {match: 'LAITICA', brand: Laitica}
+      - {match: 'WINDSTAR', brand: Kobi Windstar}
+      # stare nazwy WIELKIMI bez marki - te serie sa w feedzie zawsze Kobi Windstar
+      - {match: '\b(VIENTO|SONDO|YUGO|MISTRAL|ZEFIR|HOORN|VENLO|LISSE)\b', brand: Kobi Windstar}
+      - {match: '360 LINE', brand: Kobi 360 Line}
+      - {match: 'KOBI DESIGN', brand: Kobi Design}
+      - {match: 'KOBI PRO\b|PROFESSIONAL|\bPRO\b', brand: Kobi Pro}
+      - {match: 'PREMIUM', brand: Kobi Premium}
+    noise_patterns:
+      - '(?i)\b(Kobi|Premium|Professional|Pro|Design|LED2B|LLS|JVS|Laitica|Windstar|Nexus|LED)\b'
+      - '(?i)\bArt of Light\b'
+      - '(?i)\b360 Line\b'
+      - '(?i)\bRed\b(?=\s*$)'
+    lumen_patterns:
+      # "IP54 550lm" to nie "54 550lm"
+      - '(?<![\dA-Z])(\d{1,2}[ .]\d{3}|\d{2,6})\s?LM\b'
+    # Kody ksztaltu zarowek Kobi.
+    shape_codes:
+      - {match: '\bFGS\b', label: A60 filament}
+      - {match: '\bFMB\b', label: kulka filament}
+      - {match: '\bFSW\b', label: świeczka filament}
+      - {match: '\bFG ?125\b', label: globe G125 filament}
+      - {match: '\bFST ?64\b', label: Edison ST64 filament}
+      - {match: '\bFDE\b', label: filament}
+      - {match: '\bG ?120\b', label: globe G120}
+      - {match: '\bGS\b', label: A60}
+      - {match: '\bMB\b', label: kulka}
+      - {match: '\bSW\b', label: świeczka}
+      - {match: '\bES ?111\b', label: AR111}
+      - {match: '\bJ ?78\b', label: R7s 78mm}
+      - {match: '\bJ ?118\b', label: R7s 118mm}
+      - {match: '\bR ?50\b', label: R50}
+      - {match: '\bR ?63\b', label: R63}
+      - {match: '\bMR ?11\b', label: MR11}
+      - {match: '\bMR ?16\b', label: MR16}
+      - {match: '\bG9\b|\bG4\b', label: kapsułka}
+      - {match: '\bGX53\b', label: płaska}
+    features:
+      - {match: '\bSOLAR', label: {m: solarny, f: solarna, n: solarne}}
+      - {match: 'ROSLIN|PLANTY', label: do roślin}
+      - {match: 'DO GIRLANDY', label: do girlandy}
+      - {match: '\b(\d+)-PAK\b', label: '{0}-pak'}
+      - {match: '\bTRAMO (\d{3}) (2835|5050|3528)\b', label: 'SMD{1} {0}LED'}
+      - {match: '\bTRAMO (\d{3}) COB\b', label: 'COB {0}LED/m'}
+      - {match: '^(?!.*TRAMO \d{3} COB).*\bCOB\b', label: COB}
+      - {match: '\bAMBIENT\b', label: Ambient}
+      - {match: '\bPIR\b', label: PIR}
+      - {match: '\bMIC\b|MIKROFAL', label: mikrofalowy}
+      - {match: 'BLUETOOTH', label: Bluetooth}
+      - {match: '\bZHAGA\b', label: Zhaga}
+      - {match: '1-OBWODOW', label: 1-obwodowy}
+      - {match: '3-OBWODOW|3-FAZOW', label: 3-obwodowy}
+      - {match: '(?<!LED2B )\bRED\b', label: czerwona}
+      - {match: '\bGREEN\b', label: zielona}
+      - {match: '\bBLUE\b', label: niebieska}
+      - {match: '\bYELLOW\b', label: żółta}
+      - {match: '\bUSB\b', label: USB}
+      - {match: '\bRUCH\b|RUCHOM', label: {m: ruchomy, f: ruchoma, n: ruchome}}
+    housing_colors:
+      czarno_zloty: {m: czarno-złoty, f: czarno-złota, n: czarno-złote, match: ['CZARNO-ZLOT']}
+      chrom_mat: {m: chrom mat, f: chrom mat, n: chrom mat, match: ['MAT(OWY)? CHROM', 'CHROM MAT']}
+      czarny_mat: {m: czarny mat, f: czarna mat, n: czarne mat, match: ['MAT CZARN', 'CZARN\w* MAT']}
+      czarny: {m: czarny, f: czarna, n: czarne, match: ['CZARN', '\bBLACK\b', '\bCZ\.']}
+      bialy: {m: biały, f: biała, n: białe, match: ['BIAL', '\bWHITE\b', '\bB\.']}
+      szary: {m: szary, f: szara, n: szare, match: ['SZAR', '\bGR[AE]Y\b']}
+      chrom: {m: chrom, f: chrom, n: chrom, match: ['CHROM']}
+      zloty: {m: złoty, f: złota, n: złote, match: ['ZLOT', '\bGOLD\b']}
+      srebrny: {m: srebrny, f: srebrna, n: srebrne, match: ['SREBRN', '\bSILVER\b']}
+      stal: {m: stal, f: stal, n: stal, match: ['\bSTAL']}
+      rozowy: {m: różowy, f: różowa, n: różowe, match: ['ROZOW']}
+      mietowy: {m: miętowy, f: miętowa, n: miętowe, match: ['MIETOW']}
+      niebieski: {m: niebieski, f: niebieska, n: niebieskie, match: ['NIEBIESK']}
+      zielony: {m: zielony, f: zielona, n: zielone, match: ['ZIELON']}
+      zolty: {m: żółty, f: żółta, n: żółte, match: ['ZOLT']}
+      miedziany: {m: miedziany, f: miedziana, n: miedziane, match: ['MIEDZ']}
+      drewno: {m: drewno, f: drewno, n: drewno, match: ['DREWN']}
+      bezowy: {m: beżowy, f: beżowa, n: beżowe, match: ['BEZOW']}
+      przezroczysty: {m: przezroczysty, f: przezroczysta, n: przezroczyste, match: ['PRZEZROCZYST', 'PRZEZROCZYST', 'TRANSPARENT']}
+      patyna: {m: patyna, f: patyna, n: patyna, match: ['PATYN']}
+      pomaranczowy: {m: pomarańczowy, f: pomarańczowa, n: pomarańczowe, match: ['POMARANCZ']}
+    # Stare nazwy WIELKIMI LITERAMI (spoza feedu) - rzeczownik.
+    caps_nouns:
+      - {match: '^LAMPKA BIURKOWA', noun: Lampka biurkowa, gender: f}
+      - {match: '^LAMPA WISZACA', noun: Lampa wisząca, gender: f}
+      - {match: '^PRZEDLUZACZ', noun: Przedłużacz, gender: m}
+      - {match: '^PIERSCIEN OZDOBNY', noun: Pierścień ozdobny, gender: m}
+      - {match: '^OPRAWA DO NA', noun: Oprawa natynkowa, gender: f}
+      - {match: '^WENTYLATOR PODLOGOWY', noun: Wentylator podłogowy, gender: m}
+      - {match: '^WENTYLATOR STOLOWY', noun: Wentylator stołowy, gender: m}
+      - {match: '^GRZEJNIK KONWEKTOROWY', noun: Grzejnik konwektorowy, gender: m}
+      - {match: '^GRZEJNIK OLEJOWY', noun: Grzejnik olejowy, gender: m}
+      - {match: '^TERMOWENTYLATOR', noun: Termowentylator, gender: m}
+      - {match: '^CZUJNIK RUCHU', noun: Czujnik ruchu, gender: m}
+      - {match: '^LACZNIK', noun: Łącznik, gender: m}
+      - {match: '^ZASILANIE', noun: Zasilanie szyny, gender: n}
+      - {match: '^ZASLEPKA', noun: Zaślepka, gender: f}
+      - {match: '^SZYNA', noun: Szyna, gender: f}
+      - {match: '^ZESTAW DO Z', noun: Zestaw do zawieszenia, gender: m}
+      - {match: '^UCHWYT', noun: Uchwyt, gender: m}
+      - {match: '^OSLONA', noun: Osłona, gender: f}
+      - {match: '^SOCZEWKA', noun: Soczewka, gender: f}
+      - {match: '^KLOSZ', noun: Klosz, gender: m}
+      - {match: '^OPRAWKA', noun: Oprawka, gender: f}
+      - {match: '^KOSTKA HALOGENOWA', noun: Kostka halogenowa, gender: f}
+      - {match: '^KOSTKA', noun: Kostka, gender: f}
+      - {match: '^AKUM', noun: Akumulator, gender: m}
+      - {match: '^STEROWNIK', noun: Sterownik, gender: m}
+      - {match: '^WZMACNIACZ', noun: Wzmacniacz, gender: m}
+      - {match: '^SCIEMNIACZ', noun: Ściemniacz, gender: m}
+      - {match: '^PROGRAMATOR', noun: Programator, gender: m}
+      - {match: '^STARTER', noun: Starter, gender: m}
+      - {match: '^SMART SOCKET', noun: Gniazdko Smart, gender: n}
+      - {match: '^QUAZAR', noun: Kinkiet ogrodowy, gender: m}
+    series_drop:
+      - '(?i)\b\d+\s?x\s?(E27|E14|G9|GU10|GX53|G5[,.]3|R7s)\b'
+      - '(?i)\b(E27|E14|G9|GU10|GX53|G4|G5[,.]3|R7s)\b'
+      - '(?i)\b\d{2,4}\s?x\s?\d{1,4}([.,]\d+)?\s?(mm|cm)?\b'
+      - '(?i)\b\d{1,4}\s?(mm|cm)\b'
+      - '(?i)\b\d+([.,]\d+)?\s?m\b'
+      - '(?i)\b\d+([.,]\d+)?(-\d+([.,]\d+)?)*\s?W\b'
+      - '(?i)\b\d{4}\s?K\b'
+      - '(?i)\b\d+\s?lm\b'
+      - '(?i)\bIP\s?\d{2}\b'
+      - '(?i)\b\d?CCT\b|\bRGB\b'
+      - '(?i)\b(LED|solar|LX|ST|DIM)\b'
+      - '(?i)\b(czarn\w*|biał\w*|szar\w*|chrom\w*|złot\w*|srebrn\w*|różow\w*|zielon\w*|niebiesk\w*|drewn\w*|mat\w*|stal\w*|miedzian\w*|przeźroczyst\w*|przezroczyst\w*)\b'
+      - '(?i)\b(black|white|gold|silver)\b'
+      - '(?i)\b\d+-pak\b'
+      - '(?i)\bdo nad?budowania\b'
+      - '(?i)^(lampka biurkowa|lampa wisząca|pierścień ozdobny|oprawa)\b'
+      - '(?i)\b\d+x\d+([.,]\d+)?W\b'
+      - '(?<![\w.,/-])\d{2,4}(?![\w.,/-])'
+    types:
+      # --- zrodla swiatla ---
+      - key: zarowka_led
+        noun: Żarówka LED
+        match: ['^ZAROWKA', '^LED (GS|MB|SW|FGS|FMB|FSW|FDE|FG125|FST64|G120|R50|R63|MR11|MR16|ES111|T|J78|J118|G9|G4|GU10|GX53)\b', '^SMART LED (GS|GU10|\d)']
+        no_feed: [color]
+        version_suffix: true   # LLS GU10 5W 3000K i "GU10 PREMIUM 5W 3000K" to dwa produkty
+        # kolejnosc jak w zarowkach Ledvance (2026-10-19): gwint, W, lm, K, ksztalt i cechy, marka na koncu
+        attrs: [gwint, power, lumen, cct, shape, glass, dim, sensor, features, color, brand, control]
+        required: [gwint, power, lumen, cct]
+      - key: swietlowka_led
+        noun: Tuba LED
+        match: ['^SWIETLOWKA LED', '^LED T8', '^LED NEXTUBE']
+        attrs: [tube_type, tube_length, power, lumen, cct]
+        required: [power, lumen, cct]
+      - key: tasma
+        noun: Taśma LED
+        match: ['^TASMA', '^LED TRAMO', '^LUMOS', '^SMART LED SET']
+        version_suffix: true
+        attrs: [features, size, power, cct, voltage, ip, control]
+      # --- urzadzenia i akcesoria ---
+      - key: zasilacz
+        noun: Zasilacz LED
+        match: ['^ZASILACZ', '^MODUL ZASILACZA']
+        version_suffix: true
+        attrs: [psu_kind, voltage, power, ip]
+      - key: przedluzacz
+        noun_from: first_word
+        match: ['^PRZEDLUZACZ', '^ROZGALEZNIK']
+        version_suffix: true
+        attrs: [socket_spec, color]
+      - key: czujnik
+        noun_from: first_word
+        match: ['^CZUJNIK', '^LX\d']
+        default_noun: Czujnik ruchu
+        code_regex: '\b(LX\d+|HD\d+\w*)\b'
+        version_suffix: true
+        attrs: [code, optics, ip, features, color]
+      - key: akcesorium
+        noun_from: first_word
+        match: ['^LACZNIK', '^ADAPTER', '^BAZA', '^ZASILANIE', '^ZASLEPKA', '^SZYNA', '^SZYNOPRZEWOD', '^ZESTAW DO ZAWIESZENIA', '^ZESTAW DO ZWIESZANIA', '^ROZETA', '^UCHWYT', '^OSLONA', '^SOCZEWKA', '^KLOSZ', '^RAMKA', '^KOTWA', '^PILOT', '^PRZESLONA', '^PRZEWOD', '^PROFIL']
+        version_suffix: true
+        attrs: [model]
+      - key: urzadzenie
+        noun_from: first_word
+        match: ['^MIERNIK', '^PROGRAMATOR', '^STEROWNIK', '^WZMACNIACZ', '^SCIEMNIACZ', '^AKUM', '^BATERIA', '^STARTER', '^OPRAWKA', '^KOSTKA', '^SMART SOCKET', '^LATAR', '^WENTYLATOR', '^KLIMATOR', '^TERMOWENTYLATOR', '^GRZEJNIK', '^ZESTAW TRAMO', '^WKLAD']
+        version_suffix: true
+        attrs: [model]
+      # --- oprawy parametryczne ---
+      - key: naswietlacz
+        noun: Naświetlacz LED
+        gender: m
+        match: ['^NASWIETLACZ', '^LED (MHN|MHNC|MHC|MH|NEXPRO|ULSAN|KOLOSUM|VESPA|TIGRA|MOSS)\b']
+        feed_optics: true
+        version_suffix: true
+        attrs: [features, power, lumen, cct, optics, ip, sensor, color]
+        required: [power, lumen]
+      - key: high_bay
+        noun: Oprawa High Bay LED
+        match: ['HIGH BAY', '\bHB\b']
+        requires_power: true
+        feed_optics: true
+        version_suffix: true
+        attrs: [power, lumen, cct, optics, ip, control, color]
+        required: [power, lumen]
+      - key: uliczna_parkowa
+        noun: Oprawa parkowa LED
+        match: ['^OPRAWA PARKOWA', 'STREET PARK', 'NEXPARK']
+        version_suffix: true
+        attrs: [features, power, lumen, cct, optics, ip, control, sensor, color]
+        required: [power, lumen]
+      - key: uliczna
+        noun: Oprawa uliczna LED
+        match: ['^OPRAWA DROGOWA', 'STREET']
+        requires_power: true
+        version_suffix: true
+        attrs: [features, power, lumen, cct, optics, ip, control, sensor, color]
+        required: [power, lumen]
+      - key: panel
+        noun: Panel LED
+        gender: m
+        match: ['^PANEL LED', '^LED (ORIO|CAPRI|NELIO|CAMARO|DALIO)\b']
+        version_suffix: true
+        attrs: [panel_size, power, lumen, cct, ugr, control, color]
+        required: [power, lumen]
+      # "Zestaw szynoprzewód 1-obwodowy NEXTRACK GO 4xGU10 1m" - szyna z reflektorami na wymienne zrodla
+      - key: zestaw_szynowy
+        noun: Zestaw szynowy
+        gender: m
+        match: ['^ZESTAW SZYNOPRZEWOD']
+        version_suffix: true
+        attrs: [features, sockets, size, color]
+      - key: reflektor_szynowy
+        noun: Reflektor szynowy
+        gender: m
+        match: ['^REFLEKTOR SZYNOWY', '^NEXTRACK (NT|S-LINE)', '^NEXPULLOUT']
+        feed_optics: true
+        version_suffix: true
+        attrs: [features, sockets, power, lumen, cct, optics, cri, color]
+        required: [lumen]
+      - key: downlight
+        noun: Downlight
+        gender: m
+        match: ['^DOWNLIGHT', '^LED (NEXEYE|SATURN)\b', '^OH-\d+ OCZKO', '^OCZKO']
+        version_suffix: true
+        attrs: [diameter, sockets, power, lumen, cct, ip, control, sensor, features, color]
+        required: [lumen]
+      - key: plafon
+        noun: Plafon LED
+        gender: m
+        match: ['^PLAFON', '^LED (SIGARO|ZOE|SOLARIS|MIA|ARIEL)\b']
+        version_suffix: true
+        attrs: [power, lumen, cct, ip, sensor, color]
+        required: [power, lumen]
+      - key: hermetyczna_tuby
+        noun: Oprawa hermetyczna
+        match: ['^HERMIC \d', '^DELFIA', '^ZEBRA', 'HERMETYCZNA LED 2XT8']
+        version_suffix: true
+        attrs: [housing_tubes, cct, ip, color]
+      - key: hermetyczna
+        noun: Oprawa hermetyczna LED
+        match: ['HERMETYCZNA', '^LED CORTEZ', '^ZESTAW HERMETIC']
+        version_suffix: true
+        attrs: [length, power, lumen, cct, ip, color]
+        required: [power, lumen]
+      - key: liniowa
+        noun: Oprawa liniowa LED
+        match: ['^OPRAWA LINIOWA', '^LED DELGADO', '^OPRAWA NEXLINE', '\bKOLINE\b']
+        requires_power: true
+        version_suffix: true
+        attrs: [length, power, lumen, cct, ugr, control, color]
+        required: [power, lumen]
+      - key: meblowa
+        noun: Oprawa meblowa LED
+        match: ['^OPRAWA MEBLOWA', '^LAMPA PODSZAFKOWA', '^OPRAWA PODSZAFKOWA', '^LED WL\b']
+        version_suffix: true
+        attrs: [power, lumen, cct, color]
+        required: [power, lumen]
+      - key: lampa_roslin
+        noun: Lampa do roślin LED
+        match: ['^LAMPA DO ROSLIN']
+        version_suffix: true
+        attrs: [power, cct, color]
+      # --- oprawy domowe/dekoracyjne (rzeczownik z nazwy dostawcy) ---
+      - key: dekor
+        noun_from: first_word
+        default_noun: Oprawa
+        match: ['^LAMP', '^KINKIET', '^SLUPEK', '^GIRLANDA', '^OPRAWA', '^SPOT', '^PIERSCIEN', '^SMART LED', '^QUAZAR', '^NUUK', '^AQUARIUS', '^LO41', '^SAMIRA', '^SILVER', '^DECORO', '^LED (RIKO|CORREA|CLICK|HALO|VIVO|ORIGAMI)', '^IMPA', '^SOLAR LED']
+        # rzeczownik z nazwy dostawcy ('Lampa wisząca ', 'Kinkiet ogrodowy ') - stare nazwy WIELKIMI zostaja (seria QUAZAR)
+        strip_prefix: '^[A-ZĄĆĘŁŃÓŚŹŻ][a-ząćęłńóśźż]+(\s+[a-ząćęłńóśźż]\S*)*\s+'
+        version_suffix: true
+        attrs: [series, size, sockets, power, lumen, cct, ip, sensor, features, color]
+
+  # =================================================================== KANLUX
+  # Wejscie: CSV z Ekonoma + pliki Parametry*.xlsx z kanlux.pl (--params-dir, format dlugi:
+  # Kod Kanlux; Nazwa; Nazwa atrybutu; Wartosc). Dopasowanie po kodzie z `Kod towaru`
+  # (37246/KAN -> 37246). Parametry sa zrodlem prawdy (moc, lm, K, trzonek, IP, kolor, wymiary)
+  # i nadpisuja wartosci z nazwy; bez parametrow dane ida tylko z nazwy.
+  # Nazwa Kanlux = kod modelu + polski typ ("XLED GU10 4,9W-WW Źródło światła LED") - rzeczownik
+  # bierze sie z typu (`noun_from: tail`), seria z kodu modelu bez parametrow.
+  kanlux:
+    brand: Kanlux
+    # zasady z Ledvance (2026-10-19): marka na koncu (seria opraw z parametrami za nia, jak linia),
+    # srednica w mm, bez powtorzonych slow obok siebie, "tubę/tuby" zamiast "świetlówkę/świetlówki"
+    brand_last: true
+    series_after_brand: true
+    diameter_mm: true
+    dedupe_adjacent: true
+    tube_words: [tubę, tuby]
+    # Nazwa z parametrow tylko zamiast przerobionych nazw zaczynajacych sie od typu
+    # ("Oprawa uliczna LED PRO-SL M 105W NW 17850lm ..."); poza tym zostaje nazwa z Ekonoma.
+    prefer_feed_name: polish_start
+    # Karty produktow z kanlux.com dla kodow spoza plikow Parametry (scripts/fetch_kanlux_web.py);
+    # kod, ktorego wyszukiwarka kanlux.com nie zna, jest wycofany - zostaje z danymi z nazwy (jak Kobi spoza feedu).
+    params_web_cache: cache/kanlux_web
+    # Powtorzenia rozniace sie tylko rozmiarem z kodu (STOBI DLP 350-W / 450-W) - rozmiar przy serii.
+    version_number_with_word: true
+    split_tail: true
+    keep_case: true
+    name_cleanup:
+      - '^.*\bGwar\.\s+'
+      - '^Gwarancja\s+(lat\s+)?\d+(\s+lat)?(\s+kolor\s+\S+)?\s+'
+      - '\s+KANLUX$'
+      - '(?<=^T5)-'   # "T5-13W" - inaczej moc przelaczana "5-13W"
+      - '(?<=^G9)-'   # "G9-60W STAR"
+      - '(?<=\b[ACGP]\d\d)(?=E\d\d)'   # "G45E14" -> "G45 E14" (ksztalt sklejony z gwintem)
+    # Gwint, ktorego nazwa nie podaje.
+    socket_rules:
+      - {match: '^J-\d', socket: R7s}
+      # A60/A67/G95/G125 bez gwintu w nazwie to E27 (B22 i E14 Kanlux zawsze podaje)
+      - {match: '^(?!.*\b(E14|E27|B22)\b).*\b(A60|A67|G95C?|G125)\b', socket: E27}
+    # Kolor swiatla wezy i neonow (kod w modelu: GIVRO LED 15M-BL).
+    light_colors: {BL: niebieski, RE: czerwony, GR: zielony, YE: żółty, PK: różowy, MC: wielokolorowy}
+    params_lumen_keys:
+      - 'Strumień świetlny oprawy [lm]'
+      - 'Całkowity znamionowy strumień świetlny [lm]'
+      - 'Znamionowy strumień świetlny [lm]'
+      # FIZU, SIGO: jedyny strumien w parametrach (karta kanlux.com ma te sama nazwe)
+      - 'Użyteczny strumień świetlny źródła światła Φuse [lm]'
+    # Kody barwy w kodzie modelu (gdy brak parametrow). WW u zarowek bywa 2700K - uwaga w raporcie.
+    cct_codes: {WW: 3000K, NW: 4000K, CW: 6500K, EW: 2700K, WN: 3500K}
+    lumen_patterns:
+      - '(?<!\d)(\d{2,6})\s?LM\b'
+    noise_patterns: []
+    tail_drop:
+      - ',\s*[1-4]P$'
+      - ',\s*In \d+A'
+    tail_nouns:
+      - {match: '^WYLACZNIK NADMIAROWO-PRADOWY', noun: Wyłącznik nadprądowy, gender: m}
+      - {match: '^WYLACZNIK ROZNICOWO-PRADOWY', noun: Wyłącznik różnicowoprądowy, gender: m}
+      - {match: '^OPRAWA TYPU DOWNLIGHT', noun: Downlight LED, gender: m}
+      - {match: '^OPRAWA LED HIGH BAY', noun: Oprawa High Bay LED, gender: f}
+      - {match: '^LAMPA PODLGOWA', noun: Lampa podłogowa, gender: f}
+      - {match: '^RAMKA CZEROKROTNA', noun: Ramka czterokrotna, gender: f}
+    # Kolor: wartosc `Kolor` z parametrow albo kod w modelu (-W, -B; osprzet: bi, sr, kr, sz, pe...).
+    housing_colors:
+      bialy_mat: {m: biały mat, f: biała mat, n: białe mat, match: ['BIALY MAT']}
+      # kod osprzetu `cm` = czarny mat (parametry Kanlux LOGI ...-042 cm: Kolor "czarny mat", 2026-10-15)
+      czarny_mat: {m: czarny mat, f: czarna mat, n: czarne mat, match: ['CZARNY MAT', '\bCM\b']}
+      czarny_metalik: {m: czarny metalik, f: czarna metalik, n: czarne metalik, match: ['CZARNY METALIK']}
+      # kod koloru Kanlux to ostatni czlon kodu (przed ew. -NT/-PT/-P1/-SE): "AL-SL-NW-MAT-W-NT", "STATO 50W-B"
+      bialy: {m: biały, f: biała, n: białe, match: ['BIAL', '-W(?=(-[A-Z]{1,3}\d?)*$|/)', '\bBI\b']}
+      czarny: {m: czarny, f: czarna, n: czarne, match: ['CZARN', '-B(?=(-[A-Z]{1,3}\d?)*$|/)', '\bCZ\b']}
+      grafit: {m: grafitowy, f: grafitowa, n: grafitowe, match: ['GRAFIT', '-(GR|GM)(?=(-[A-Z]{1,3}\d?)*$)', '\bGR\b']}
+      srebrny: {m: srebrny, f: srebrna, n: srebrne, match: ['SREBRN', '-(S|SR)(?=(-[A-Z]{1,3}\d?)*$)', '\bSR\b']}
+      szampanski: {m: szampański, f: szampańska, n: szampańskie, match: ['SZAMPAN', '\bSZ\b']}
+      kremowy: {m: kremowy, f: kremowa, n: kremowe, match: ['KREM', '\bKR\b', '\bECRU\b']}
+      perlowy: {m: perłowy, f: perłowa, n: perłowe, match: ['PERL', '\bPE\b']}
+      szary: {m: szary, f: szara, n: szare, match: ['SZAR']}
+      zloty: {m: złoty, f: złota, n: złote, match: ['ZLOT', '\bZL\b']}
+      chrom: {m: chrom, f: chrom, n: chrom, match: ['CHROM']}
+      miedziany: {m: miedziany, f: miedziana, n: miedziane, match: ['MIEDZ']}
+      brazowy: {m: brązowy, f: brązowa, n: brązowe, match: ['BRAZ', '-BR(?=(-[A-Z]{1,3}\d?)*$|/)']}
+      inox: {m: stal nierdz., f: stal nierdz., n: stal nierdz., match: ['NIERDZEWN', 'INOX']}
+    shape_codes:
+      - {match: '\bST ?64\b', label: Edison ST64}
+      - {match: '\bG ?125\b', label: globe G125}
+      - {match: '\bG ?95\b', label: globe G95}
+      - {match: '\bG ?45\b|\bP ?45\b', label: kulka}
+      - {match: '\bC ?35\b|\bC37\b|\bB35\b', label: świeczka}
+      - {match: '\bPAR ?16\b|\bGU10\b', label: PAR16}
+      - {match: '\bMR ?16\b', label: MR16}
+      - {match: '\bT ?25\b|\bT ?26\b', label: T26}
+    # Z serii (kodu modelu) usuwane sa parametry, ktore sa juz osobno w nazwie.
+    series_drop:
+      # dwuczlonowy kod koloru "W-SR" (bialy/srebrny) - przed wzorcem jednoczlonowego "-SR"
+      - '(?<![\w-])(W|B|S)-(SR|GR|GM|ZL|BR|W|B|S)(?![\w-])'
+      - '(?i)(E27|E14|E40|B22|GU10|GU5[.,]3|GX5[.,]3|G9|G4|GX53|R7S|G13|MR16)(?=\b|-|[A-Z])'
+      - '(?i)\b\d+X\d+(?:[.,]\d+)?W\b'
+      - '(?i)(?<![\d.,])\d+(?:[.,]\d+)?(?:-\d+(?:[.,]\d+)?)?\s?W(?:/M)?(?![A-Z])'
+      - '(?<![A-Z])-?(WW|NW|CW|EW|WN)(?![A-Z])'
+      - '-[89](27|30|40|65)\b'
+      - '(?i)IP\s?\d{2}(?:/\d{2})?'
+      - '(?i)\b\d{1,2}\s?V(DC)?\b'
+      - '(?i)(?<![A-Z])(ST64|G125|G95|G45|C35|C37|A60|A65|A67|PAR16|R39|R50|R63|R80)(?![A-Z0-9])'
+      - '-(W|B|S|GR|SR|GM|BR)(?=(-[A-Z]{1,3}\d?)*$|/)'
+      - '-(BL|RE|GR|YE|PK|MC)\b'
+      - '\b\d{2}-\d{4}-\d{3}\b'
+      - '(?<![\w-])LED(?!\w)'
+      - '(?<![\w.,/-])\d{1,5}(?![\w.,/-])'
+      - '(?i)\b\d+(?:[.,]\d+)?M\b'
+      # "EVALO FL 3xGU10 W-SR": po wycieciu gwintu zostaje krotnosc (W/B bez myslnika - np. "XLED W",
+      # "FELINE B/W" - to czesc modelu i zostaje)
+      - '(?i)(?<![\w.])\d+x(?!\w)'
+    types:
+      # --- zrodla swiatla ---
+      - key: tuba
+        noun: Tuba LED
+        match: ['ZRODLO SWIATLA LED$']
+        require_pattern: '\bT8'
+        version_suffix: true
+        fluorescent_lengths:
+          T8: {9: 60, 10: 60, 18: 120, 22: 150, 24: 150}
+        attrs: [tube_type, tube_length, power, lumen, cct]
+        required: [power, lumen, cct]
+      - key: tasma_zrodlo
+        noun: Taśma LED
+        match: ['^LCOB.*ZRODLO SWIATLA LED$']
+        version_suffix: true
+        attrs: [series, strip_length, power, lumen, cct, voltage, ip]
+        required: [power]
+      # MOD / MODv2 - modul LED na wolnych koncach przewodow (do opraw), nie zarowka z trzonkiem
+      - key: modul_led
+        noun: Moduł LED
+        gender: m
+        match: ['^MOD(V2)?\b.*ZRODLO SWIATLA LED$']
+        version_suffix: true
+        attrs: [series, power, lumen, cct]
+        required: [power]
+      - key: zarowka_led
+        noun: Żarówka LED
+        gender: f
+        match: ['ZRODLO SWIATLA LED$']
+        version_suffix: true
+        # kolejnosc jak w zarowkach Ledvance (2026-10-19): gwint, W, lm, K, ksztalt i cechy, marka na koncu
+        attrs: [gwint, power, lumen, cct, shape, beam, dim, brand, series]
+        required: [gwint, power, lumen, cct]
+      - key: halogen
+        noun: Żarówka halogenowa
+        match: ['HALOGENOWE ZRODLO SWIATLA$']
+        version_suffix: true
+        attrs: [series, gwint, power, voltage]
+        required: [gwint, power]
+      - key: swietlowka_liniowa
+        noun: Tuba fluorescencyjna
+        match: ['SWIETLOWKA LINIOWA$']
+        fluorescent_lengths:
+          T8: {15: 45, 18: 60, 30: 90, 36: 120, 58: 150}
+          T5: {6: 21, 8: 29, 13: 52, 14: 55, 21: 85, 24: 55, 28: 115, 35: 145, 39: 85, 49: 145, 54: 115, 80: 145}
+        attrs: [tube_type, tube_length, power, cct]
+        required: [power, cct]
+      - key: tasma
+        noun: Taśma LED
+        match: ['TASMA LED$']
+        version_suffix: true
+        attrs: [series, strip_length, power, lumen, cct, voltage, ip]
+        required: [power, cct]
+      - key: waz_neon
+        noun_from: tail
+        match: ['WAZ SWIETLNY$', 'NEON LED$', 'GIRLANDA']
+        version_suffix: true
+        attrs: [series, strip_length, power, cct, light_color, ip]
+      # --- akcesoria (przed oprawami - "Akcesorium oprawy typu downlight") ---
+      - key: akcesorium_oswietlenia
+        noun_from: tail
+        match: ['AKCESORI', 'PIERSCIEN OPRAWY', 'ZASLEPKA DO', 'UCHWYT', 'KLOSZ DO', 'LACZNIK DO (TASM|WEZY|PROFILI)',
+                'LACZNIK (TYPU|ELASTYCZNY)', 'ZAWIESIE', 'PRZYLACZE PRADOWE', 'PROFIL ALUMINIOWY', 'USZCZELKI',
+                'KONTROLER DO TASM', 'PILOT DO TASM', 'OSPRZET DO OPRAW', 'RAMKA NATYNKOWA', 'RAMKA PODTYNKOWA',
+                'ZESTAW STARTOWY', 'ZESTAWY 1', 'OPRAWKA DO ZRODEL', 'ZAPLONNIK', 'STATECZNIK', 'TRANSFORMATOR',
+                'KONEKTOR']
+        exclude: ['ROZDZIELNIC', '^KMCCB', '^KMP', 'SZYNY KBB']
+        version_suffix: true
+        # rozmiar ramki (3060/6060), dlugosc profilu (2m) i moc oprawy, do ktorej pasuje (HBPH GRID 100W)
+        attrs: [series, panel_size, strip_length, power, color]
+      - key: zasilacz
+        noun_from: tail
+        match: ['ZASILACZ (CV|CC|LED)$']
+        version_suffix: true
+        attrs: [series, power, voltage, ip]
+        required: [power]
+      - key: czujnik
+        noun_from: tail
+        match: ['CZUJNIK (RUCHU|ZMIERZCH|ZALANIA|OTWARCIA)', 'PRZEKAZNIK ZMIERZCHOWY']
+        version_suffix: true
+        attrs: [series, ip, color]
+      # --- oprawy ze zintegrowanym LED (moc z nazwy albo parametrow) ---
+      - key: naswietlacz
+        noun: Naświetlacz LED
+        gender: m
+        match: ['NASWIETLACZ']
+        version_suffix: true
+        attrs: [series, power, lumen, cct, ip, sensor, color]
+        required: [power, lumen, cct]
+      - key: high_bay
+        noun_from: tail
+        match: ['HIGH BAY']
+        version_suffix: true
+        attrs: [series, power, lumen, cct, ip, control, color]
+        required: [power, lumen, cct]
+      - key: uliczna
+        noun_from: tail
+        match: ['OPRAWA (ULICZNA|PARKINGOWA|PARKOWA) LED']
+        version_suffix: true
+        attrs: [series, power, lumen, cct, ip, control, color]
+        required: [power, lumen, cct]
+      - key: panel
+        noun: Panel LED
+        gender: m
+        match: ['PANEL LED']
+        version_suffix: true
+        attrs: [series, panel_size, power, lumen, cct, ugr, control, color]
+        required: [power, lumen, cct]
+      - key: biurowa
+        noun_from: tail
+        match: ['OPRAWA BIUROWA LED', 'OPRAWA RASTROWA']
+        version_suffix: true
+        attrs: [series, panel_size, power, lumen, cct, ugr, control, color]
+        required: [power, lumen, cct]
+      - key: liniowa_tuby
+        noun_from: tail
+        match: ['POD TUBY LED']
+        version_suffix: true
+        attrs: [series, length, ip, color]
+      - key: liniowa
+        noun_from: tail
+        match: ['OPRAWA LINIOWA LED', 'OPRAWA MEBLOWA LINIOWA', 'OPRAWA PODSZAFKOWA LED', 'PYLOSZCZELNA']
+        version_suffix: true
+        attrs: [series, length, power, lumen, cct, ugr, ip, sensor, control, color]
+        required: [power, lumen, cct]
+      - key: awaryjna
+        noun_from: tail
+        match: ['OPRAWA AWARYJNA', 'OPRAWA EWAKUACYJNA', 'ZNAK EWAKUACYJNY', 'MODUL OSWIETLENIA Z PODTRZYMANIEM']
+        version_suffix: true
+        attrs: [series, power, lumen, cct, em_time, ip, color]
+      - key: downlight
+        noun_from: tail
+        match: ['DOWNLIGHT', 'OPRAWA DO WBUDOWANIA', 'ZESTAW OPRAW DO WBUDOWANIA']
+        requires_power: true
+        version_suffix: true
+        attrs: [series, diameter, power, lumen, cct, ip, sensor, control, color]
+        required: [power, lumen, cct]
+      - key: oprawa_led
+        noun_from: tail
+        match: ['(OPRAWA|PLAFONIERA|LAMPA|LAMPKA|PROJEKTOR|AKCENT|SLUPEK)']
+        requires_power: true
+        version_suffix: true
+        attrs: [series, power, lumen, cct, ip, sensor, control, color]
+        required: [power, lumen, cct]
+      # typ mowi "LED", a mocy nie ma ani w nazwie, ani w parametrach - to dalej oprawa LED (do sprawdzenia)
+      - key: oprawa_led_bez_mocy
+        noun_from: tail
+        match: ['(OPRAWA|PLAFONIERA|LAMPA|LAMPKA|PROJEKTOR|AKCENT|SLUPEK)\b.*\bLED\b']
+        version_suffix: true
+        attrs: [series, power, lumen, cct, ip, sensor, control, color]
+        required: [power, lumen, cct]
+      # --- oprawy na wymienne zrodlo swiatla (bez mocy) ---
+      - key: oprawa_wymienna
+        noun_from: tail
+        match: ['(OPRAWA|PLAFONIERA|LAMPA|LAMPKA|PROJEKTOR|AKCENT|SLUPEK)']
+        exclude: ['^K(MB|RD|CP|FL|MP|MCCB|DB|TB|BB)']
+        version_suffix: true
+        attrs: [series, gwint, ip, color]
+      # --- osprzet instalacyjny (DOMO, LOGI, TEKNO, BIURO): typ + seria + kolor + indeks ---
+      - key: osprzet
+        noun_from: tail
+        match: ['^\S+?[ -]\d{2}-\d{4}-\d{3}\b']
+        version_suffix: true
+        attrs: [series, color, osp_code]
+      # --- aparatura modulowa ---
+      - key: aparatura
+        noun_from: tail
+        match: ['^K(MB|RD|CP|FL|MP|MCCB|DB|TB|BB|SGP|DEM)']
+        no_schema: true
+        attrs: [breaker, head]
+      # --- reszta: typ + kod modelu ---
+      - key: inne
+        noun_from: tail
+        match: ['.']
+        no_schema: true
+        attrs: [head]
+
+  # ===================================================================== GTV
+  # Wejscie: CSV z Ekonoma + katalog PDF (--pdf-dir). `Kod producenta` to kod GTV (LD-SMBD45-10),
+  # nie EAN - katalog jest czytany po kodzie (`pdf_match: code`), tylko komorki z jednostka (lm, K).
+  # Nazwy GTV: "TYP [MODEL], parametr, parametr, ..., KOLOR" WIELKIMI LITERAMI. Rzeczownik = slowa
+  # typu z poczatku (`type_words`), model = reszta pierwszego czlonu, parametry z calej nazwy.
+  # Kody HT... to narzedzia i odziez Högert (nazwy juz czytelne - tylko marka po rzeczowniku),
+  # GT-... to linia G-TECH.
+  gtv:
+    brand: GTV
+    # zasady z Ledvance (2026-10-19): marka na koncu (seria opraw z parametrami za nia, jak linia),
+    # srednica w mm, bez powtorzonych slow obok siebie, "tubę/tuby" zamiast "świetlówkę/świetlówki"
+    brand_last: true
+    series_after_brand: true
+    diameter_mm: true
+    dedupe_adjacent: true
+    tube_words: [tubę, tuby]
+    # rodzaj oprawy z kategorii gtv.com.pl (sprawdzone 2026-10-19) zamiast ogolnego "Oprawa LED";
+    # tylko typy ogolne, bo te same nazwy rodzin maja tez reflektory szynowe (Sierra)
+    noun_overrides:
+      - {match: '^OPRAWA LED (AREZZO|MOZA|SAMBA|BOLERO)\b', noun: Downlight LED, gender: m, typ: downlight, types: [oprawa_led, oprawa_led_lm, oprawa_dekor]}
+      - {match: '^OPRAWA (LED )?(ARCCO|ARTEMIDA|BIANCO|KARIS|PRIME|SIERRA|TULON)\b|^OPRAWA TULON\b', noun: Plafon LED, gender: m, typ: plafon, types: [oprawa_led, oprawa_led_lm, oprawa_dekor]}
+      - {match: '^(G-TECH )?OPRAWA (LED )?(ARGO|MODULAR|BIZAR|BROS)\b', noun: Panel LED, gender: m, typ: panel, types: [oprawa_led, oprawa_led_lm, oprawa_dekor]}
+      - {match: '^OPRAWA LED (JASMIN|KATANI|ZITA)\b', noun: Kinkiet LED, gender: m, typ: kinkiet, types: [oprawa_led, oprawa_led_lm, oprawa_dekor]}
+      - {match: '^OPRAWA LED LEON\b', noun: Lampa wisząca LED, gender: f, typ: lampa_wiszaca, types: [oprawa_led, oprawa_led_lm, oprawa_dekor]}
+      - {match: '^OPRAWA LED (FORTA|LONGI)\b', noun: Oprawa liniowa LED, gender: f, typ: liniowa, types: [oprawa_led, oprawa_led_lm, oprawa_dekor]}
+      - {match: '^OPRAWA ?LED (ZEFIR|LUNAR)\b', noun: Oprawa hermetyczna LED, gender: f, typ: hermetyczna, types: [oprawa_led, oprawa_led_lm, oprawa_dekor]}
+      - {match: '^OPRAWA LED (KODO|TWIST)\b', noun: Oprawa kanałowa LED, gender: f, typ: kanalowa, types: [oprawa_led, oprawa_led_lm, oprawa_dekor]}
+      - {match: '^OPRAWA (LED )?(MISSOURI|NARIN|NICEA|PARIS|SARO|SIROLO|TERRO|TROPEA)\b|^OPRAWA SOLARNA ELEWACYJNA', noun: Oprawa elewacyjna LED, gender: f, typ: elewacyjna, types: [oprawa_led, oprawa_led_lm, oprawa_dekor]}
+      - {match: '^OPRAWA SOLARNA Z CZUJNIKIEM', noun: Naświetlacz LED, gender: m, typ: naswietlacz, types: [oprawa_led, oprawa_led_lm, oprawa_dekor]}
+      - {match: '^OPRAWA SCHODOWA', noun: Oprawa schodowa LED, gender: f, typ: schodowa, types: [oprawa_led, oprawa_led_lm, oprawa_dekor]}
+      - {match: '^OPRAWA OSWIETLENIA AWARYJNEGO', noun: Oprawa awaryjna LED, gender: f, typ: awaryjna, types: [oprawa_led, oprawa_led_lm, oprawa_dekor]}
+      - {match: '^OPRAWA PRZYPODLOGOWA', noun: Oprawa przypodłogowa LED, gender: f, typ: meblowa, types: [oprawa_led, oprawa_led_lm, oprawa_dekor]}
+      - {match: '^(OPRAWA|PORAWA) (LED )?(ELIPSO|BEZPRZEWODOWA|COB|MACARIO|MERLIN|PALERMO|PANEL VEGAS|POINT|FIDELIA|FOCUS|MAXIMUS|MIRROR|RADIUS)\b|^OPRAWA (TROJKATNA|KWADRATOWA LED NOELIA|NA WYSIEGNIKU)', noun: Oprawa meblowa LED, gender: f, typ: meblowa, types: [oprawa_led, oprawa_led_lm, oprawa_dekor]}
+    # swietlowki to tuby takze w nazwie oprawy (2026-10-19)
+    name_replace:
+      - {match: '^Oprawa świetlówkowa\b', repl: 'Oprawa pod tuby'}
+      - {match: '^Oprawa awaryjna LED oświetlenia awaryjnego\b', repl: 'Oprawa awaryjna LED'}
+    brand_code_rules:
+      - {match: '^HT', brand: Högert}
+      - {match: '^GT-', brand: GTV G-TECH}
+    # Karty gtv.com.pl (scripts/fetch_gtv_web.py) uzupelniaja braki lm/K/IP; kod spoza strony = wycofany.
+    # Slowa pisane na stronie malymi literami poprawiaja wielkosc liter w starych nazwach WIELKIMI.
+    web_params_cache: cache/gtv_web
+    web_params_keys: {lumen: 'Strumień świetlny [lm]', cct: 'Temperatura barwowa światła [K]', ip: 'Stopień ochrony IP'}
+    web_params_label: gtv.com.pl
+    web_withdrawn_note: brak na gtv.com.pl (wycofany) - dane tylko z nazwy
+    dedupe_words: true
+    # Marka za fraza rzeczownika, przed przyimkiem i parametrem: "Palnik gazowy Högert", "Cyfrowy miernik
+    # uniwersalny Högert", "Brzeszczot Högert do wyrzynarki ...", "Uchwyt Högert typu "T"".
+    noun_stop_words: [do, z, ze, na, pod, dla, typu, w, i, o, bez, oraz, fi]
+    pdf_match: code
+    name_lumen_first: true
+    lumen_from_efficacy: true
+    socket_rules:
+      - {match: '\bMR16\b(?!.*\bGU10\b)', socket: GU5.3}
+    version_from_clean: true
+    per_meter_power: true
+    series_first_segment: true
+    polish_lower: true
+    noun_no_digits: true
+    # Tokeny nazwy, ktore nie sa wyroznikiem wersji.
+    version_skip: ['\d*MA', '\d*SZT\.?', 'KARTON', 'PODANA', 'CENA', 'ZA', 'SZTUKE!*', '(AC|DC)?\d+[.-]*\d*V\w*',
+                   '\d+°', '\d+ST', 'A-G', 'PF>.*', 'RA[>?].*', '\d+Y', 'MINI', 'AMP', 'PRZEWOD', 'IK\d+']
+    name_cleanup:
+      - '^G-TECH\s+'
+      - '\bGTV\b'
+      - '(?i)\(power adj[^)]*\)'
+      - '(?i)PODANA CENA.*$'
+      # tasma: "max. 42W" to moc tasmy (a nie limit zarowki jak ponizej)
+      - {match: '(?i)^(TA[SŚ]MA\b.*?)\bmax\.?\s?(\d+(?:[.,]\d+)?\s?W\b)', repl: '\1\2'}
+      # "max. 20W" przy oprawach na zarowke to limit zrodla, nie moc oprawy
+      - '(?i)\bmax\.?\s?(\d\s?x\s?)?\d+(?:[.,]\d+)?\s?W\b(\s?\*\s?\d)?'
+      # "2W1 CIEPŁO-ZIMNY" (VEGAS) to "2 w 1", a nie moc 2W
+      - '(?i)\b2W1\b'
+      - {match: '(?<=[A-Za-zĄĆĘŁŃÓŚŹŻąćęłńóśźż]),(?=\S)', repl: ', '}
+      - {match: '(?<=\S),(?=[A-Za-zĄĆĘŁŃÓŚŹŻ])', repl: ', '}
+      - {match: ',(?=\d{4}\s?K\b)', repl: ', '}
+      - {match: '(?<=IP\d\d),', repl: ', '}
+      - ',\s*\d{1,4}\s?mA\b(?=\s*(,|$))'
+      - {match: 'DC\s?/\s?(\d+)\s?W', repl: 'DC \1W'}
+      - {match: '^PORAWA', repl: 'OPRAWA'}
+      - {match: 'ELEWACYJNALED', repl: 'ELEWACYJNA LED'}
+      - {match: 'OPRAWALED', repl: 'OPRAWA LED'}
+      - {match: 'ŃAŚ', repl: 'NAŚ'}
+      - {match: 'ZIMNYY', repl: 'ZIMNY'}
+      - {match: '(\d)\s?\*\s?(?=[EG][U\d])', repl: '\1x'}
+      - {match: '(?i)(\d{2,3})\s?(?:ST\b|\*)', repl: '\1°'}
+    lumen_patterns:
+      - '(?<!\d)(\d{1,2}[ .]\d{3}|\d{2,6})\s?LM\b(?!/W)'
+    noise_patterns: []
+    # Skroty i nazwy systemow, ktore zostaja WIELKIMI literami po zamianie wielkosci liter.
+    keep_upper: [LED, COB, SMD, USB, HDMI, RJ45, CCT, RGB, RGBW, PIR, DC, AC, UV, UVC, IP, GLAX, X-RAIL,
+                 TRACKO, SCHUKO, FRENCH, T8, PC, ABS, AL, MINI, AMP, CR, CM, CO, IR, RF, WIFI, XC11, II, III]
+    # Barwa swiatla w slowach nie jest kolorem obudowy.
+    color_ignore: ['(CIEPL\w*|NEUTRALN\w*|ZIMN\w*)\s+BIAL\w*', 'BIALE PCB', 'BIALY\s*/\s*CIEPLY']
+    # Gdy brak K w nazwie i w katalogu.
+    cct_words:
+      - {match: 'CIEPLO-ZIMN', label: ciepła/zimna biała}
+      - {match: 'CIEPL\w*\s+BIAL', label: ciepła biała}
+      - {match: 'NEUTRALN\w*\s+BIAL|BIAL\w*\s+NEUTRAL', label: neutralna biała}
+      - {match: 'ZIMN\w*\s+BIAL', label: zimna biała}
+      - {match: '\bZIMNA\b', label: zimna biała}
+      - {match: '\b3-?CCT\b|\bCCT\b', label: CCT}
+      - {match: '\bRED\b', label: czerwona}
+      - {match: '\bGREEN\b', label: zielona}
+      - {match: '\bBLUE\b', label: niebieska}
+      - {match: '\bYELLOW\b', label: żółta}
+      - {match: '\bRGBW\b', label: RGBW}
+      - {match: '\bRGB\b', label: RGB}
+    shape_codes:
+      - {match: '\bST ?64\b', label: Edison ST64}
+      - {match: '\bG ?125\b', label: globe G125}
+      - {match: '\bG ?95\b', label: globe G95}
+      - {match: '\b[GP] ?45\b', label: kulka}
+      - {match: '\b[CB] ?3[57]\b', label: świeczka}
+      - {match: '\bB45[BC]?\b', label: B45}
+      - {match: '\bES ?111\b', label: ES111}
+      - {match: '\bAR ?111\b', label: AR111}
+      - {match: '\bPLOMYK\b', label: płomyk}
+      - {match: '^SWIECZKA', label: świeczka}
+      - {match: '\bMR ?16\b', label: MR16}
+      - {match: '\bF ?\d{3}\b', label: kukurydza}
+    housing_colors:
+      czarno_zloty: {m: czarno-złoty, f: czarno-złota, n: czarno-złote, match: ['CZARNO\s*[/-]\s*ZLOT']}
+      bialo_zloty: {m: biało-złoty, f: biało-złota, n: biało-złote, match: ['BIA\w*\s*/\s*ZLOT']}
+      czarno_czerwony: {m: czarno-czerwony, f: czarno-czerwona, n: czarno-czerwone, match: ['CZARNO\s*/\s*CZERWON']}
+      czarno_miedziany: {m: czarno-miedziany, f: czarno-miedziana, n: czarno-miedziane, match: ['CZARN\w*\s*/\s*MIEDZ']}
+      antracyt: {m: antracyt, f: antracyt, n: antracyt, match: ['ANTRACYT']}
+      grafit: {m: grafitowy, f: grafitowa, n: grafitowe, match: ['GRAFIT']}
+      czarny_mat: {m: czarny mat, f: czarna mat, n: czarne mat, match: ['CZARN\w* MAT']}
+      czarny: {m: czarny, f: czarna, n: czarne, match: ['CZARN']}
+      bialy: {m: biały, f: biała, n: białe, match: ['BIAL']}
+      szary: {m: szary, f: szara, n: szare, match: ['SZAR']}
+      chrom: {m: chrom, f: chrom, n: chrom, match: ['CHROM']}
+      szampan: {m: szampan, f: szampan, n: szampan, match: ['SZAMPAN']}
+      zloty: {m: złoty, f: złota, n: złote, match: ['ZLOT']}
+      srebrny: {m: srebrny, f: srebrna, n: srebrne, match: ['SREBRN', '\bSILVER\b']}
+      inox: {m: inox, f: inox, n: inox, match: ['\bINOX\b']}
+      satyna: {m: satyna, f: satyna, n: satyna, match: ['SATYN']}
+      brazowy: {m: brązowy, f: brązowa, n: brązowe, match: ['BRAZOW']}
+      miedziany: {m: miedziany, f: miedziana, n: miedziane, match: ['MIEDZ']}
+      kremowy: {m: kremowy, f: kremowa, n: kremowe, match: ['KREMOW']}
+      rozowy: {m: różowy, f: różowa, n: różowe, match: ['ROZOW']}
+      czerwony: {m: czerwony, f: czerwona, n: czerwone, match: ['CZERWON']}
+      zielony: {m: zielony, f: zielona, n: zielone, match: ['ZIELON']}
+      niebieski: {m: niebieski, f: niebieska, n: niebieskie, match: ['NIEBIESK']}
+      zolty: {m: żółty, f: żółta, n: żółte, match: ['ZOLT']}
+      bezowy: {m: beżowy, f: beżowa, n: beżowe, match: ['BEZOW']}
+      bursztynowy: {m: bursztynowy, f: bursztynowa, n: bursztynowe, match: ['BURSZTYN']}
+      drewno: {m: drewno, f: drewno, n: drewno, match: ['DREWN']}
+      patyna: {m: patyna, f: patyna, n: patyna, match: ['PATYN']}
+      przezroczysty: {m: przezroczysty, f: przezroczysta, n: przezroczyste, match: ['PRZE[ZŹ]ROCZYST']}
+    features:
+      - {match: 'FILAMENT', label: filament}
+      - {match: '\b(\d)\s?PCS', label: '{0}-pak'}
+      - {match: '\b(\d)\s?X\s?T8\b', label: '{0}xT8'}
+      - {match: 'ROLKA (\d+(?:[.,]\d+)?)\s?M\b', label: '{0}m'}
+      - {match: '(?<![\d/])(\d{2,4})\s?LED/M\b', label: '{0}LED/m'}
+      - {match: '(?<![\d/x])(\d{2,4})\s?LED\b(?!/)', label: '{0}LED'}
+      - {match: 'SZAFK[AI] (\d{2,3})\s?CM', label: 'do szafki {0}cm'}
+      - {match: 'WODOODPORN|WOODODPORN|WODOODPRON|WODOSZCZELN', label: {m: wodoodporny, f: wodoodporna, n: wodoodporne}}
+      - {match: 'WPUSZCZAN', label: {m: wpuszczany, f: wpuszczana, n: wpuszczane}}
+      - {match: 'NATYNKOW', label: {m: natynkowy, f: natynkowa, n: natynkowe}}
+      - {match: 'KWADRAT', label: {m: kwadratowy, f: kwadratowa, n: kwadratowe}}
+      - {match: 'OKRAGL', label: {m: okrągły, f: okrągła, n: okrągłe}}
+      - {match: 'SCIEMNIALN|STOPNI\w* SCIEMNIANIA|ZE SCIEMNIACZEM', label: {m: ściemnialny, f: ściemnialna, n: ściemnialne}}
+      - {match: 'CZUJNIK\w* ZB?LIZENIOW', label: z czujnikiem zbliżeniowym}
+      - {match: 'Z CZUJ\w*\.? RUCHU(/| I )ZMIERZCH', label: z czujnikiem ruchu i zmierzchu}
+      - {match: 'CZUJ\w*\.? ZMIERZCHOW', label: z czujnikiem zmierzchu}
+      - {match: 'Z CZUJ\w*+\.?(?! RUCHU/| RUCHU I | ZB?LIZ| ZMIERZCH| MIKRO)( RUCHU)?(?!/)', label: z czujnikiem ruchu}
+      - {match: '\b(\d)X(60|120|150)\b', label: '{0}x{1}cm'}
+      - {match: 'MIKROFALOW|MICROWAVE', label: mikrofalowy}
+      - {match: 'KARTON\s?(\d+)\s?SZT', label: 'karton {0}szt'}
+      - {match: '(?<!\d),\s*(\d{1,3})\s?M\s*$', label: '{0}m'}   # (?<!\d): "PRZEWÓD 1,5m" to nie "5m"
+      - {match: '\bPIR\b', label: PIR}
+      - {match: 'SOLARN', label: {m: solarny, f: solarna, n: solarne}}
+      - {match: 'AW2C|MODUL AWARYJN', label: z modułem awaryjnym}
+      - {match: '(?<![\d.,])([123])\s?H\b', label: '{0}h'}
+      - {match: 'JEDNOZADANIOW', label: jednozadaniowa}
+      - {match: 'DWUZADANIOW', label: dwuzadaniowa}
+      - {match: 'Z WLACZNIKIEM', label: z włącznikiem}
+      - {match: 'ZASILANIE JEDNOSTRONNE', label: zasilanie jednostronne}
+      - {match: '\bUGR\s?<\s?(\d{2})', label: 'UGR<{0}'}
+    # Czlony nazwy pomijane w typach bez schematu (`segments`).
+    segment_drop:
+      - '^\d{4}$'
+      - '^(AC|DC)?\s?\d{2,3}[.]?-\d{3}\s?V'
+      - '^MAX\.?\s?250\s?V'
+      - '^\d{2}(/|-)\d{2}\s?HZ'
+      - '^PF\s?>'
+      - '^RA\s?[>?]'
+      - '^\d+Y$'
+      - '^BEZ CNBOP'
+      - '^A-G$'
+      - '^INPUT'
+    # Z modelu (1. czlonu po slowach typu) usuwane sa parametry pokazywane osobno.
+    series_drop:
+      - '(?i)-?\bLED\b(-J)?'
+      - '(?i)\bT8(-J)?\b|\b\d,?\d?x\d{2,3}\b'
+      - '(?i)\bsolarn\w*\b'
+      - '(?i)\btyp[uy]\b'
+      - '(?i)\bdownlight\b'
+      - '(?i)\bdo szyno\w*\b|\bna szyno\w*\b'
+      - '(?i)\bz\s+(mikrofalowym\s+)?czuj\w*\.?(\s+(ruchu|zmierzch\w*|mikrofal\w*|zbliż\w*|zbli\w*))*((\s+i|/)\s*(zmierzch\w*|obecn\w*))?'
+      - '(?i)\bczuj\.?\s+(zmierzchowy|mikrofalowy)\b'
+      - '(?i)\bz włącznikiem\b'
+      - '(?i)\b\d+(?:[.,]\d+)?\s?(W|V|mm|cm|m)\b'
+      - '(?i)\b(E27|E14|GU10|G9|G4|G13|MR16)\b'
+      - '(?i)\bIP\d{2}\b'
+      - '(?i)\b(czarn|biał|szar|złot|srebrn|grafit)\w*\b'
+    # Slowa typu z poczatku nazwy (bez polskich znakow, wielkie litery) - rzeczownik nazwy.
+    type_words: [ZAPINKA, ZAWIESZKA, OPRAWA, OPRAWKA, SUFITOWA, SCIENNA, SCIENNO-SUFITOWA, OGRODOWA, WISZACA, ELEWACYJNA, KANALOWA,
+                 STOLOWA, LAMPA, LAMPKA, BIURKOWA, PODLOGOWA, NOCNA, PUNKTOWA, WPUSZCZANA, ZWIESZANA, PLAFONIERA,
+                 DWUKIERUNKOWA, LED, LEDOWA, NA, DO, SZYNOPRZEWOD, SZYNOPRZEWODU, 1-FAZOWY, 3-FAZOWY, 1-FAZOWEJ,
+                 3-FAZOWEGO, SZYNY, KINKIET, REFLEKTOR, CZUJNIK, RUCHU, I, OBECNOSCI, MIKROFALOWY, ZMIERZCHU,
+                 ZMIERZCHOWY, PROFIL, ALUMINIOWY, PROFILU, ZASLEPKA, Z, OTWOREM, OSLONKA, MLECZNA, CZARNA,
+                 TRANSPARENTNA, PLASKA, ZLACZKA, ZLACZKI, ZACISKOWA, PRZEZROCZYSTA, TASM, TASMY, LACZNIK, LACZNIKI,
+                 PROSTY, KATOWY, KONCOWKA, KONCOWA, ZASILAJACA, RAMKA, RAMA, MONTAZU, NATYNKOWEGO, WPUSZCZANEGO,
+                 OPRAW, OPRAWY, ZESTAW, ZWIESZENIA, PODWIESZANIA, PODWIESZANEGO, UCHWYT, UCHWYTY, KLIP, MOCOWANIE,
+                 WLACZNIK, DOTYKOWY, BEZDOTYKOWY, BEZPRZEWODOWY, SCIEMNIACZ, PRZEDLUZACZ, BIURKOWY, BEBNOWY,
+                 GNIAZDO, MEBLOWE, WPUSZCZANE, LADOWARKA, PROGRAMATOR, KONTROLER, PILOT, TRANSFORMATOR, ZASILACZ,
+                 KABEL, PRZEWOD, ADAPTER, PRZEJSCIOWKA, ROZGALEZIACZ, MODUL, STATECZNIK, ZAPLONNIK, SOCZEWKA,
+                 MASKOWNICA, POKRYWA, POKRYWKA, HAK, WTYCZKA, BATERIA, LATARKA, PIKTOGRAM, SLUPEK, GIRLANDA,
+                 TROJZYLOWY, PRZYLACZE, NYPEL, TULEJA, NAKRETKA, BAZA, KORPUS, LINKA, WYSIEGNIK, STATYW, KOSTKA,
+                 PRZELACZNIK, NEON, FLEX, HERMETYCZNA, RASTROWA, LINIOWA, ULICZNO-PARKOWA, ULICZNO, PARKOWA,
+                 ULICZNA, PRZEMYSLOWA, AWARYJNA, NASWIETLACZ, PRZENOSNY, PANEL, SWIETLOWKA, ZRODLO, SWIATLA, TASMA,
+                 PODSZAFKOWA, HIGHBAY, SWIECZKA, ZAROWKA]
+    types:
+      # --- narzedzia i odziez Högert: nazwa dostawcy + marka po rzeczowniku ---
+      - key: odziez
+        code_match: '^HT5K'
+        noun_from: model_first
+        trusted: true
+        attrs: [model]
+      - key: narzedzia
+        code_match: '^HT'
+        noun_from: first_word
+        # marka za fraza rzeczownika (`noun_stop_words` w sekcji gtv): "Cyfrowy miernik uniwersalny Högert"
+        trusted: true
+        attrs: [model]
+      # --- akcesoria (przed oprawami: "RAMKA DO ... OPRAW DOWNLIGHT MAXIS, 9W", "SOCZEWKA DO LAMPY TEKSAS") ---
+      - key: akcesorium
+        noun_from: type_words
+        match: ['^(ZAPINKA|RAMKA|RAMA|ZESTAW DO|SOCZEWKA|REFLEKTOR DO|PILOT|KORPUS|ZASLEPKA|LACZNIK|KONCOWKA|UCHWYT|OSLONKA|PROFIL|ZLACZK|KLIP|HAK|MASKOWNICA|POKRYW|PRZEJSCIOWKA|ADAPTER|MOCOWANIE|LINKA|WYSIEGNIK|BAZA|TULEJA|NYPEL|NAKRETKA|PANEL DOTYKOWY|ZESTAW GLAX|OSPRZET)']
+        series_raw: true
+        series_limit: 9
+        version_suffix: true
+        attrs: [series, segments]
+      - key: czujnik
+        noun_from: type_words
+        match: ['^CZUJNIK']
+        version_suffix: true
+        attrs: [series, features, ip, color]
+      # --- zrodla swiatla ---
+      - key: zarowka_specjalna
+        noun_from: type_words
+        match: ['^ZAROWKA SPECJALNA']
+        version_suffix: true
+        attrs: [series, gwint, power]
+      - key: zarowka_led
+        noun: Żarówka LED
+        gender: f
+        match: ['^ZRODLO SWIATLA', '^ZAROWKA', '^SWIECZKA']
+        version_suffix: true
+        # kolejnosc jak w zarowkach Ledvance (2026-10-19): gwint, W, lm, K, ksztalt i cechy, marka na koncu
+        attrs: [gwint, power, lumen, cct, shape, beam, voltage, features, color, brand]
+        required: [gwint, power, lumen, cct]
+      - key: tuba
+        noun: Tuba LED
+        gender: f
+        match: ['^SWIETLOWKA']
+        version_suffix: true
+        attrs: [tube_type, length, power, lumen, cct, features]
+        required: [power, lumen, cct]
+      - key: tasma
+        noun: Taśma LED
+        gender: f
+        match: ['^TASMA', '^ZESTAW LED']
+        version_suffix: true
+        attrs: [series, features, power, lumen, cct, voltage]
+        required: [power, cct]
+      - key: neon
+        noun: Neon LED
+        gender: m
+        match: ['^LED NEON']
+        version_suffix: true
+        attrs: [series, features, power, cct, voltage]
+      # --- oprawy LED ---
+      - key: naswietlacz
+        noun: Naświetlacz LED
+        gender: m
+        match: ['^NASWIETLACZ']
+        version_suffix: true
+        attrs: [series, power, lumen, cct, ip, features, color]
+        # solarne podaja tylko lm (moc "200W" to marketing) - moc nie jest wymagana
+        required: [lumen, cct]
+      - key: high_bay
+        noun: Oprawa High Bay LED
+        gender: f
+        match: ['HIGHBAY|HIGH BAY']
+        version_suffix: true
+        attrs: [series, power, lumen, cct, ip, features, color]
+        required: [power, lumen, cct]
+      - key: uliczna
+        noun: Oprawa uliczna LED
+        gender: f
+        match: ['ULICZN']
+        version_suffix: true
+        attrs: [series, power, lumen, cct, ip, features, color]
+        required: [power, lumen, cct]
+      - key: awaryjna
+        noun: Oprawa awaryjna LED
+        gender: f
+        match: ['^OPRAWA AWARYJN']
+        version_suffix: true
+        attrs: [series, power, lumen, cct, ip, features, color]
+      - key: panel
+        noun: Panel LED
+        gender: m
+        match: ['^PANEL']
+        version_suffix: true
+        attrs: [series, panel_size, power, lumen, cct, ip, features, color]
+        required: [power, lumen, cct]
+      - key: hermetyczna_t8
+        noun: Oprawa hermetyczna
+        gender: f
+        match: ['HERMETYCZN']
+        require_pattern: '\bT8\b'
+        version_suffix: true
+        attrs: [series, features, length, ip, color]
+      - key: hermetyczna
+        noun: Oprawa hermetyczna LED
+        gender: f
+        match: ['HERMETYCZN']
+        version_suffix: true
+        attrs: [series, length, power, lumen, cct, ip, features, color]
+        required: [power, lumen, cct]
+      - key: rastrowa
+        noun: Oprawa rastrowa
+        gender: f
+        match: ['RASTR']
+        version_suffix: true
+        attrs: [series, features, ip, color]
+      - key: downlight
+        noun: Downlight LED
+        gender: m
+        match: ['DOWNLIGHT']
+        requires_power: true
+        version_suffix: true
+        attrs: [series, power, lumen, cct, ip, features, color]
+        required: [power, lumen, cct]
+      - key: szynowa
+        noun: Reflektor szynowy LED
+        gender: m
+        match: ['SZYNOPRZEWOD|TRACKO|\bSZYN']
+        requires_power: true
+        exclude: ['^(ZASLEPKA|LACZNIK|KONCOWKA|ZESTAW|SZYNOPRZEWOD)']
+        version_suffix: true
+        attrs: [series, power, lumen, cct, optics, features, color]
+        required: [power, lumen, cct]
+      - key: liniowa
+        noun: Oprawa liniowa LED
+        gender: f
+        match: ['LINIOWA', '^OPRAWA ZWIESZANA']
+        requires_power: true
+        version_suffix: true
+        attrs: [series, length, power, lumen, cct, ip, features, color]
+        required: [power, lumen, cct]
+      - key: meblowa
+        noun: Oprawa meblowa LED
+        gender: f
+        match: ['^OPRAWA (CLARI|BRILLO|LUMINIS)', 'SZAFK', 'MEBLOW', '^OPRAWA LEDOWA', 'PODSZAFKOW']
+        exclude: ['^GNIAZDO', '^PRZEDLUZACZ']
+        version_suffix: true
+        attrs: [series, features, power, lumen, cct, voltage, color]
+      - key: plafon
+        noun: Plafon LED
+        gender: m
+        match: ['^PLAFONIERA']
+        requires_power: true
+        version_suffix: true
+        attrs: [series, power, lumen, cct, ip, features, color]
+        required: [power, lumen, cct]
+      - key: oprawa_led
+        noun_from: type_words
+        noun_add_led: true
+        match: ['^(OPRAWA|LAMPA|LAMPKA|SUFITOWA|PLAFONIERA|REFLEKTOR|KINKIET|SLUPEK)']
+        requires_power: true
+        version_suffix: true
+        attrs: [series, size, power, lumen, cct, ip, features, color]
+        required: [power, lumen, cct]
+      # LED z lm, ale bez mocy w nazwie (solarne: "VULOS, LED, 36lm, 3000K")
+      - key: oprawa_led_lm
+        noun_from: type_words
+        noun_add_led: true
+        match: ['^(OPRAWA|LAMPA|LAMPKA|SUFITOWA|PLAFONIERA|REFLEKTOR|KINKIET|SLUPEK)']
+        require_pattern: '\d\s?LM\b'
+        version_suffix: true
+        attrs: [series, size, power, lumen, cct, ip, features, color]
+        required: [lumen, cct]
+      # --- oprawy na wymienne zrodlo swiatla ---
+      - key: oprawa_dekor
+        noun_from: type_words
+        match: ['^(OPRAWA|LAMPA|LAMPKA|SUFITOWA|PLAFONIERA|REFLEKTOR|KINKIET|SLUPEK)']
+        version_suffix: true
+        attrs: [series, size, sockets, ip, features, color]
+      # --- elektryka ---
+      - key: zasilacz
+        noun: Zasilacz LED
+        gender: m
+        match: ['^ZASILACZ', '^TRANSFORMATOR']
+        version_suffix: true
+        attrs: [series, voltage, power, ip]
+      # --- reszta: rzeczownik + model + istotne czlony nazwy ---
+      - key: inne
+        noun_from: type_words
+        match: ['.']
+        series_raw: true
+        series_limit: 9
+        version_suffix: true
+        attrs: [series, segments]
+  # Bemko (2026-10-14): nazwy w Ekonomie to juz parametry WIELKIMI LITERAMI ("NAŚWIETLACZ LED SMD KASTEL2 30W
+  # 4000K 2520LM IP65 CZARNY CZ. PIR Bemko"). Marki: Bemko, Luxmena, Kafler, Schelinger - z konca nazwy;
+  # gdy nazwa jej nie podaje, a rodzina kodu (C66-LFC) ma jedna marke, dziedziczy ja (`brand_family`).
+  # Oprocz oswietlenia: aparatura Schelinger, przedluzacze, zlaczki, opaski - cechy per typ (`features`).
+  bemko:
+    brand: Bemko
+    # zasady z Ledvance (2026-10-19): marka na koncu (seria opraw z parametrami za nia, jak linia),
+    # srednica w mm, bez powtorzonych slow obok siebie, "tubę/tuby" zamiast "świetlówkę/świetlówki"
+    brand_last: true
+    series_after_brand: true
+    diameter_mm: true
+    dedupe_adjacent: true
+    tube_words: [tubę, tuby]
+    # swietlowki to tuby takze w nazwie oprawy (2026-10-19)
+    name_replace:
+      - {match: '^Oprawa świetlówkowa\b', repl: 'Oprawa pod tuby'}
+    # rodzaj z katalogu Bemko 2026 (2026-10-19): OXAN = "oprawa kloszowa LED" 120 cm (jak liniowe), KANLO =
+    # "plafoniera LED"; ALICE (C39-ALC) nie ma w katalogu ani na stronie - kody C39 to plafony (Talar SLR/SLS)
+    noun_overrides:
+      - {match: '\bOXAN\b', noun: Oprawa liniowa LED, gender: f, typ: liniowa, types: [oprawa_led]}
+      - {match: '\bKANLO\b|\bKAN2\b', noun: Plafon LED, gender: m, typ: plafon_led, types: [oprawa_led]}
+      - {match: '\bALICE\b|\bALC\b', noun: Plafon LED, gender: m, typ: plafon_led, types: [oprawa_led]}
+    brand_from_raw: true
+    brand_rules:
+      - {match: '\bLUXMENA\b', brand: Luxmena}
+      - {match: '\bSCHELINGER\b', brand: Schelinger}
+      - {match: '\bKAFLER\b', brand: Kafler}
+    brand_explicit: '\b(BEMKO|LUXMENA|KAFLER|SCHELINGER)\b'
+    brand_family: '^(?:S-)?([A-Z]\d{2,3}-[A-Z]*\d?[A-Z]*\d?)(?:-|$)'
+    # Karty bemko.pl po kodzie (scripts/fetch_bemko_web.py): marka z pola "Marka" (zamiast rodzenstwa), lm/K/IP
+    # tylko w brakach, a gdy nazwa w Ekonomie przeczy karcie (moc, barwa, prad, kod) - nazwa z karty, WARNING.
+    web_params_cache: cache/bemko_web
+    web_params_label: bemko.pl
+    web_params_keys: {lumen: 'Strumień świetlny', cct: 'Barwa światła', ip: 'Stopień szczelności'}
+    web_withdrawn_note: brak na bemko.pl - dane tylko z nazwy
+    web_brand_key: Marka
+    fix_from_web_name: true
+    pdf_match: code_table
+    name_lumen_first: true
+    per_meter_power: true
+    version_from_clean: true
+    series_first_segment: true
+    series_drop_polish: true
+    polish_lower: true
+    noun_no_digits: true
+    proper_words: [DIANA]
+    # Akcesoria (`inne`): polskie slowa WIELKIMI z koncowka fleksyjna -> male ("WYSOKA", "Z UCHWYTEM").
+    polish_lower_re: '[A-Z]{2,}(A|Y|U|I|E|EM|YM|OM|ACH|AMI)|PO|LEWO|PRAWO|PODTYNK|KOMPLET|SZT|STANDARD|SUFIT|KARTON|MOD|MAX|LUX|INNER|OUTER|MONO|KPL|OPRAW|SZYN'
+    # Kod producenta przeczy nazwie: nazwy nie zmieniamy, wiersz idzie do sprawdzenia.
+    code_checks:
+      - {code: '-([23])K(?:-|$)', name: '\b{0}\d00K\b', label: 'barwe {0}x00K'}
+      - {code: '-([46])K(?:-|$)', name: '\b{0}\d00K\b', label: 'barwe {0}x00K'}
+      - {code: '-AWW\b', name: 'CIEPLA', label: 'barwe ciepla (AWW)'}
+      - {code: '-ANW\b', name: 'NEUTRALNA', label: 'barwe neutralna (ANW)'}
+      - {code: '-ACW\b', name: 'ZIMNA', label: 'barwe zimna (ACW)'}
+      - {code: '^A0[35]-[A-Z]\d-(\d)-(\d+)-0*(\d+)$', name: '\b{0}P {1}A {2}MA\b', label: '{0}P {1}A {2}mA'}
+      - {code: '^A0[02]-[A-Z]\d-(\d)P-([BCD])0*(\d+)$', name: '\b{0}P {1} 0?{2}A\b', label: '{0}P {1}{2}'}
+      - {code: '^A08-[A-Z]{3}-AC?-([BCD])0*(\d+)$', name: '\b{0} 0?{1}A\b', label: '{0}{1}'}
+    name_cleanup:
+      - '(?i)\b(Bemko|Luxmena|Kafler|Schelinger)\b'
+      - '(?i)-?\s*\(?\bkarton\s?\d+\s?szt\.?\)?'
+      - '(?i)\b\d\s?LATA GW\.?|\bgw\.\s?\d+y\.?'
+      - '(?i)\bPZH\b'
+      # "GU10 MAX. 2x50W" - limit zarowki, nie moc oprawy
+      - '(?i)(?<=GU10 )max\.?\s?-?(\d\s?x\s?)?\d+\s?W\b'
+      - {match: '(?i)(\d)\s?x\s?\d+W\s+(E27|E14|GU10)\b', repl: '\1x\2'}
+      - {match: '(?i)\b(\d{2,3})\s?(?:ST|\*)(?=\s|$)', repl: '\1°'}
+      - {match: '(?i)\bKASTEL2\b', repl: 'KASTEL 2'}
+      - {match: '(?i)\bIP-(\d\d)', repl: 'IP\1'}
+      # QUALIS/OXAN: "4K" = 4000K
+      - {match: '(?<![\d.,])([2-6])K\b', repl: '\g<1>000K'}
+      - {match: '(?i)\b123x30\b', repl: '120x30'}
+      - {match: '(?i)(\d)W/1M\b', repl: '\1W/M'}
+      - {match: '(?i)\((\d{3,5})-(\d{3,5})\s?lm\)', repl: '\2LM'}
+      - '(?i)\(\d+W-\d+lm[^)]*\)'
+      - {match: '(?i)(\d+)\s?VDC\b', repl: '\1V DC'}
+      - {match: '(?i)\b12CDC\b', repl: '12V DC'}
+      - {match: '(?i)"?\bEMPTY\b"?', repl: ' EMPTY '}
+      - {match: '(?i)T8\s?LED\b', repl: 'T8'}
+      - {match: '(?i)PUSZKI P/T\b', repl: 'PUSZKI PODTYNKOWEJ'}
+      - {match: '(?i)\bP/T\b', repl: 'PODTYNKOWY'}
+      - {match: '(?i)\bN/T\b', repl: 'NATYNKOWY'}
+      # oprawy "EMPTY" na swietlowki T8: 18W = 60 cm, 36W = 120 cm, 58W = 150 cm
+      - {match: '(?i)^(?=.*EMPTY)(.*?)\b(\d)\s?x\s?18W\b', repl: '\1\2xT8 60CM'}
+      - {match: '(?i)^(?=.*EMPTY)(.*?)\b(\d)\s?x\s?36W\b', repl: '\1\2xT8 120CM'}
+      - {match: '(?i)^(?=.*EMPTY)(.*?)\b(\d)\s?x\s?58W\b', repl: '\1\2xT8 150CM'}
+      - {match: '(?<=\d)\.(?=\d)', repl: ','}
+      - {match: '(?<=\d),0(?=\s?M\b)', repl: ''}
+      - {match: '(?<=[A-Za-z])\.(?=\d)', repl: '. '}
+      - {match: '(?<=\d) (mm|cm|MM|CM)\b', repl: '\1'}
+      - {match: '\b(\d+)/(\d+)W\b', repl: '\1-\2W'}
+    lumen_patterns:
+      - '(?<![\d.,])(\d{2,6})\s?LM\b(?!/)'
+    noise_patterns: []
+    keep_upper: [LED, COB, SMD, USB, RF, IR, DC, AC, DIN, MID, MBUS, PV, RGB, RGBW, CCT, PIR, CNBOP, PC, PMMA, IP,
+                 ALC, BLF, BLK, BLD, BLG, BLM, BLS, SLR, SLS, PHR, PHS, PLD, PLC, RES, NT, GLR, MC4, T8, XP7, VDE,
+                 HLA3, HBP3, HBU3, HBV2, GN, MV, OHL, OHB, OHT, LOP1, JAS1, STD2, PLZ, PLM, PLY, PLK, ZK, IN, OUT,
+                 SL7, SL8, L7, L9, MB213, FS16, GS16, MONO, II, III]
+    color_ignore: ['BIALA (CIEPLA|NEUTRALNA|ZIMNA)', 'SZKLO MLECZN\w*', 'KLOSZ \w+ MLECZN\w*', 'MULTIKOLOR',
+                   'RAMKA (WYSOKA|NISKA) ']
+    # Barwa bez K w nazwie (tasmy): "BIAŁA CIEPŁA".
+    cct_words:
+      - {match: 'BIALA CIEPLA|CIEPLA BIALA', label: ciepła biała}
+      - {match: 'BIALA NEUTRALNA|NEUTRALNA BIALA', label: neutralna biała}
+      - {match: 'BIALA ZIMNA|ZIMNA BIALA', label: zimna biała}
+      - {match: 'MULTIKOLOR', label: RGB}
+      - {match: '\bZIELONA\b', label: zielona}
+      - {match: '\bZOLTA\b', label: żółta}
+    shape_codes:
+      - {match: '\bST ?64\b', label: Edison ST64}
+      - {match: '\bG ?125\b', label: globe G125}
+      - {match: '\bG ?95\b', label: globe G95}
+      - {match: '\bG ?45\b', label: kulka}
+      - {match: '\bC ?3[57]\b', label: świeczka}
+      - {match: '\bA ?70\b', label: A70}
+    housing_colors:
+      zolto_zielony: {m: żółto-zielony, f: żółto-zielona, n: żółto-zielone, match: ['ZOLTO-ZIELON']}
+      jasnoszary: {m: jasnoszary, f: jasnoszara, n: jasnoszare, match: ['JASNOSZAR']}
+      ciemnoszary: {m: ciemnoszary, f: ciemnoszara, n: ciemnoszare, match: ['DARK ?GREY', 'CIEMNOSZAR']}
+      antracyt: {m: antracyt, f: antracyt, n: antracyt, match: ['RAL ?7016', 'ANTRACYT']}
+      grafit: {m: grafitowy, f: grafitowa, n: grafitowe, match: ['GRAFIT']}
+      szampan: {m: szampan, f: szampan, n: szampan, match: ['CHAMPA[GN]', 'SZAMPAN']}
+      stalowy: {m: stalowy, f: stalowa, n: stalowe, match: ['STALOW']}
+      chrom: {m: chrom, f: chrom, n: chrom, match: ['CHROM']}
+      czarny: {m: czarny, f: czarna, n: czarne, match: ['CZARN']}
+      bialy: {m: biały, f: biała, n: białe, match: ['BIAL']}
+      szary: {m: szary, f: szara, n: szare, match: ['SZAR']}
+      srebrny: {m: srebrny, f: srebrna, n: srebrne, match: ['SREBRN']}
+      zielony: {m: zielony, f: zielona, n: zielone, match: ['ZIELON']}
+      niebieski: {m: niebieski, f: niebieska, n: niebieskie, match: ['NIEBIESK']}
+      czerwony: {m: czerwony, f: czerwona, n: czerwone, match: ['CZERWON']}
+      zolty: {m: żółty, f: żółta, n: żółte, match: ['ZOLT']}
+      pomaranczowy: {m: pomarańczowy, f: pomarańczowa, n: pomarańczowe, match: ['POMARANCZ']}
+      kolorowy: {m: kolorowy, f: kolorowa, n: kolorowe, match: ['KOLOROW']}
+    # Wspolne listy cech - w `features` typu wpisuje sie nazwe listy.
+    feature_sets:
+      sensor:
+        - {match: 'MIKR.*POLCIENIA', label: z czujnikiem mikrofalowym i półcieniem, group: sensor}
+        - {match: 'CZUJNIKIEM MV I ZMIERZCHU', label: z czujnikiem mikrofalowym i zmierzchu, group: sensor}
+        - {match: '\bCZ\w*\.? ?MIKR|\bCZUJ\w*\.? MIKRO|\+ ?SES\b', label: z czujnikiem mikrofalowym, group: sensor}
+        - {match: '\bCZ\w*\.? ?(PIR|PODCZER)|\bPIR\b', label: z czujnikiem PIR, group: sensor}
+        - {match: '\bCZ\w*\.? ?ZMIERZCH', label: z czujnikiem zmierzchu, group: sensor}
+        # nazwa w Ekonomie bez czujnika, a kod ma wariant z czujnikiem (C30-PHR220-MS)
+        - {code_match: '-MD$', label: z czujnikiem mikrofalowym i półcieniem, group: sensor}
+        - {code_match: '-MS$', label: z czujnikiem mikrofalowym, group: sensor}
+        - {code_match: '-PIR$', label: z czujnikiem PIR, group: sensor}
+      shape:
+        - {match: '\bKWADRAT', label: {m: kwadratowy, f: kwadratowa, n: kwadratowe}, group: shape}
+        - {match: '\bOKRA?GL', label: {m: okrągły, f: okrągła, n: okrągłe}, group: shape}
+        - {match: '\bOWALN', label: {m: owalny, f: owalna, n: owalne}, group: shape}
+        - {match: '\bPROSTOKATN', label: {m: prostokątny, f: prostokątna, n: prostokątne}, group: shape}
+      klosz:
+        - {match: 'KLOSZ PMMA', label: klosz PMMA, group: klosz}
+        - {match: 'KLOSZ PC OPAL|PC-OPAL', label: klosz opal, group: klosz}
+        - {match: 'KLOSZ PC MIKRO', label: klosz mikropryzmatyczny, group: klosz}
+        - {match: 'PRYZMATYCZN', label: klosz pryzmatyczny, group: klosz}
+        - {match: 'PC-CLEAR', label: klosz przezroczysty, group: klosz}
+        - {match: 'KLOSZ PC\b|\bPC\b', label: klosz PC, group: klosz}
+      control:
+        - {match: '\b1-10V\b', label: 1-10V}
+        - {match: '\bZHAGA\b', label: Zhaga}
+    # Z modelu (slowa po slowach typu) usuwane sa parametry pokazywane osobno.
+    series_drop:
+      - '(?i)\(.*?\)'
+      - '(?i)\b\d+(?:[.,]\d+)?\s?[x*]\s?\d+(?:[.,]\d+)?(?:\s?[x*]\s?\d+)?\s?(?:MM|CM)?(?=\s|$)'
+      - '(?i)\b\d+(?:[.,]\d+)?(?:[-/]\d+(?:[.,]\d+)?)*\s?(?:W|K|LM|V|MM2?|CM|M|MA|MAH|H|A|KA|KV|HZ)(?:/\d?M)?(?=[\s,/]|$)'
+      - '(?i)\b\d+\s?x\s?\d+(?:[.,]\d+)?\s?W\b'
+      - '(?i)\b(SZAR\w*|JASNOSZAR\w*|GRAFIT\w*|CHROM|KWADRAT\w*|OTWART\w*|WYSOK\w*|NISK\w*|PIR|PODCZER\w*|ZMIERZCH\w*|MIKR\w*)\b'
+      - '(?i)\bIP\s?\d{2}(?:/IP\d{2})?\b'
+      - '(?i)\b\d?x?(E27|E14|GU10|G9|T8)\b'
+      - '(?i)\bCRI\s?>?\s?\d{2}\b'
+      - '(?i)\b\d+°(?:÷\d+°)?'
+      - '(?i)\bI{1,2}\s?KL\.?(\s?OCHR\.?)?'
+      - '(?i)\bFI-?\d+\b'
+      - '(?i)\b\d-FAZOW\w*'
+      - '(?i)PF>[\d.,]+'
+      - '(?i)\bPC-(CLEAR|OPAL)\b'
+      - '(?i)\bZ ZESTAWEM PIKTOGRAM\w*'
+      - '(?i)\+'
+      - '(?i)\b(LED|SMD|COB|DALI|ZHAGA|CCT|UGR\s?<?\s?19|PC|PMMA|OPAL|KLOSZ|EMPTY|CNBOP|AUTOTEST|TEST|SES|WW|NW|CW|AC|DC|AL|STAL|PLASTIK|RAL\s?\d+|DARK|GREY|DARKGREY|CHAMPAGNE|CHAMPANGE|MIKRO|RAMKA|PLAFON|KINKIET|OPTYKA|SOCZ|SOCZEWKI)\b'
+    # Slowa typu z poczatku nazwy (bez polskich znakow, wielkie litery) - rzeczownik nazwy i poczatek modelu.
+    type_words: [OPRAWA, OPRAWKA, OPRAWY, OPRAW, PLAFONIERA, LED, SMD, COB, NASWIETLACZ, NASWIETLACZY, SOLARNY, SOLARNA,
+                 ULICZNA, PARKOWA, PARKINGOWA, PRZEMYSLOWA, HIGHBAY, HERMETYK, HERMETYCZNA, HERMETYCZNE, HERMETYCZNYCH,
+                 ELEWACYJNA, LINIOWA, SCHODOWA, AWARYJNA, AWARYJNYCH, NATYNKOWA, NATYNKOWY, NAJAZDOWA, RASTROWA,
+                 SPOT, KINKIET, DOWNLIGHT, PANEL, BACKLIGHT, PANELI, TUBA, ZRODLO, TASMA, IZOLACYJNA,
+                 SAMOWULKANIZUJACA, ZESTAW, MONTAZOWY, MONTAZU, MONTAZOWE, DO, NA, Z, I, DLA, TYPU, ZWIESZANEGO,
+                 ZWIESZANIA, MAGNETYCZNEGO, ADAPTER, AKCESORIUM, SLUPIE, SLUPACH, BAZA, SUFITOWA, BLOK, ROZDZIELCZY,
+                 CZUJNIK, MIKROFALOWY, RUCHU, ZMIERZCHU, ZBLIZENIOWY, DEKIEL, SZYNY, DLAWNICA, KABLOWA, DZWONEK,
+                 SZYNE, GNIAZDA, PRZYLACZENIOWE, GNIAZDO, WTYKOWE, GLOWKA, BEZPIECZNIKOWA, PUSZKA, LACZENIOWA,
+                 ZLACZE, KABLOWE, LISTWA, ZACISKOWA, IZOLATORACH, PLASKICH, KONTROLKA, LAMPKA, LAMKA,
+                 SYGNALIZACYJNA, LATARKA, WIELOFUNKCYJNA, LICZNIK, ENERGII, OPASKA, CERAMICZNA, PIKTOGRAM,
+                 PIKTOGRAMU, PILOT, PODSTAWA, PROGRAMATOR, MECHANICZNY, ELEKTRONICZNY, PRZEDLUZACZ, BEBNOWY,
+                 PRZEJSCIOWKA, PRZELOTOWA, ZLACZKA, INSTALACYJNA, RAMKA, REGULOWANY, DASZEK, ROZDZIELACZ, ZASILANIA,
+                 ROZETA, ROZGALEZNIK, ROZLACZNIK, IZOLACYJNY, SIATKA, OCHRONNA, STATYW, POJEDYNCZY, PODWOJNY,
+                 STEROWNIK, SZYBKOZLACZKA, SZYNA, SZYNOPRZEWOD, SZYNOPRZEWODU, UCHWYT, METALOWY, UNIWERSALNY,
+                 UNIWERSALNE, ZAWIESIE, WKLADKA, TOPIKOWA, CYLINDRYCZNA, OGRANICZNIKA, OGRANICZNIK, PRZEPIEC,
+                 WSKAZNIK, NAPIECIA, NATEZENIA, CZESTOTLIWOSCI, WTYCZKA, SIECIOWA, WYLACZNIK, ZMIERZCHOWY,
+                 ZASILANIE, ZASLEPKA, SZYN, LACZENIOWYCH, ZASILACZ, LACZNIK, KATOWY, WEWNETRZNY, ZEWNETRZNY,
+                 SOLARNE, STADIONOWYCH, HERMETYCZNEJ, OPRAWY]
+    types:
+      # --- zrodla swiatla ---
+      - key: zarowka_led
+        noun: Żarówka LED
+        gender: f
+        match: ['^ZRODLO LED']
+        version_suffix: true
+        features_pre:
+          - {match: '\bFILAMENT\b', label: filament}
+        features: [sensor]
+        # kolejnosc jak w zarowkach Ledvance (2026-10-19): gwint, W, lm, K, ksztalt i cechy, marka na koncu
+        attrs: [gwint, power, lumen, cct, shape, features_pre, features, brand]
+        required: [gwint, power, lumen, cct]
+      - key: tuba
+        noun: Tuba LED
+        gender: f
+        match: ['^TUBA LED']
+        version_suffix: true
+        features:
+          - {match: 'SZKLO MLECZN', label: szklana mleczna}
+        attrs: [tube_type, tube_length, power, lumen, cct, features]
+        required: [power, lumen, cct]
+      - key: zestaw_tasma
+        noun: Zestaw taśma LED
+        gender: m
+        match: ['^ZESTAW TASMA']
+        version_suffix: true
+        trusted: true
+        features_pre:
+          - {match: 'STEROWNIK', label: z zasilaczem i sterownikiem, group: set}
+          - {match: 'ZASILACZ', label: z zasilaczem, group: set}
+          - {match: '\b(2835|3528|5050|COB)\b', label: '{0}'}
+          - {match: '\b(\d+)\s?LED/(\d+)\s?M\b', label: '{0}LED/{1}m'}
+        attrs: [features_pre, voltage, power, ip, cct]
+        required: [power, cct]
+      - key: tasma_led
+        noun: Taśma LED
+        gender: f
+        match: ['^TASMA LED']
+        version_suffix: true
+        trusted: true
+        features_pre:
+          - {match: '\b(2835|3528|5050|COB)\b', label: '{0}'}
+          - {match: '\b(\d+)\s?LED/(\d+)\s?M\b', label: '{0}LED/{1}m'}
+        attrs: [features_pre, voltage, power, ip, cct]
+        required: [power, cct]
+      # --- oprawy LED ---
+      - key: naswietlacz
+        noun: Naświetlacz LED
+        gender: m
+        match: ['^NASWIETLACZ']
+        version_suffix: true
+        features:
+          - {match: 'SOLARN', label: solarny}
+          - {match: 'PRZENOSN', label: przenośny}
+          - sensor
+        attrs: [series, power, lumen, cct, ip, features, color]
+        required: [power, lumen, cct]
+      - key: high_bay
+        noun: Oprawa High Bay LED
+        gender: f
+        match: ['^HIGHBAY', '^OPRAWA PRZEMYSLOWA']
+        version_suffix: true
+        features:
+          - {match: '\b(30|60|90)X(30|70|90)\b', label: '{0}x{1}°'}
+          - control
+        attrs: [series, power, lumen, cct, ip, optics, features, control, color]
+        required: [power, lumen, cct]
+      - key: uliczna
+        noun: Oprawa uliczna LED
+        gender: f
+        match: ['^(SOLARNA )?OPRAWA ULICZNA']
+        version_suffix: true
+        features:
+          - {match: 'SOLARN', label: solarna}
+          - control
+          - {match: '\bII\s?KL', label: II klasa, group: klasa}
+          - {match: '\bI\s?KL', label: I klasa, group: klasa}
+          - sensor
+        attrs: [series, power, lumen, cct, ip, control, features, color]
+        required: [power, lumen, cct]
+      - key: parkowa
+        noun: Oprawa parkowa LED
+        gender: f
+        match: ['^OPRAWA PARKOWA']
+        version_suffix: true
+        attrs: [series, power, lumen, cct, ip, color]
+        required: [power, lumen, cct]
+      - key: parkingowa
+        noun: Oprawa parkingowa LED
+        gender: f
+        match: ['^OPRAWA PARKINGOWA']
+        version_suffix: true
+        attrs: [series, power, lumen, cct, ip, color]
+        required: [power, lumen, cct]
+      # oprawy bez zrodla ("EMPTY") na swietlowki T8
+      - key: hermetyczna_t8
+        noun: Oprawa hermetyczna
+        gender: f
+        match: ['^OPRAWA HERMETYCZNA']
+        require_pattern: '\bEMPTY\b'
+        version_suffix: true
+        trusted: true
+        features:
+          - {match: '\b(\d)XT8\b', label: '{0}xT8'}
+          - klosz
+        attrs: [length, features, ip]
+      - key: rastrowa_t8
+        noun: Oprawa rastrowa
+        gender: f
+        match: ['^OPRAWA RASTROWA']
+        version_suffix: true
+        trusted: true
+        features:
+          - {match: '\b(\d)XT8\b', label: '{0}xT8'}
+          - {match: '\bNATYNKOW', label: natynkowa}
+        attrs: [series, features, length]
+      - key: swietlowkowa_t8
+        noun: Oprawa świetlówkowa
+        gender: f
+        match: ['^OPRAWA']
+        require_pattern: '\bEMPTY\b'
+        version_suffix: true
+        trusted: true
+        features:
+          - {match: '\b(\d)XT8\b', label: '{0}xT8'}
+          - klosz
+        attrs: [series, length, features, ip]
+      - key: hermetyczna
+        noun: Oprawa hermetyczna LED
+        gender: f
+        match: ['^(OPRAWA )?HERMETY']
+        exclude: ['PUSZKA|ZLACZE']
+        version_suffix: true
+        features: [klosz]
+        attrs: [series, length, power, lumen, cct, ip, features, color]
+        required: [power, lumen, cct]
+      - key: panel_backlight
+        noun: Panel LED backlight
+        gender: m
+        match: ['^PANEL BACKLIGHT']
+        version_suffix: true
+        features:
+          - {match: '\b40X40\b', label: 40x40}
+          - {match: '\b24H\b', label: 24h}
+          - sensor
+        attrs: [series, panel_size, power, lumen, cct, ip, ugr, features, color]
+        required: [power, lumen, cct]
+      - key: panel
+        noun: Panel LED
+        gender: m
+        match: ['^PANEL']
+        version_suffix: true
+        features:
+          - {match: '\b40X40\b', label: 40x40}
+          - {match: '\b24H\b', label: 24h}
+          - sensor
+        attrs: [series, panel_size, power, lumen, cct, ip, ugr, features, color]
+        required: [power, lumen, cct]
+      - key: downlight
+        noun: Downlight LED
+        gender: m
+        match: ['^DOWNLIGHT LED']
+        version_suffix: true
+        features: [shape]
+        attrs: [series, power, lumen, cct, ip, features, color]
+        required: [power, lumen, cct]
+      - key: downlight_gu10
+        noun: Downlight
+        gender: m
+        match: ['^DOWNLIGHT']
+        version_suffix: true
+        trusted: true
+        features:
+          - {match: '\bNIEREGULOWAN', label: nieregulowany, group: reg}
+          - {match: '\bREGULOWAN', label: regulowany, group: reg}
+          - {match: '\bFI\s?(\d{2,3})\b', label: 'fi{0}', group: size}
+          - {match: '\b(\d{2,3})X(\d{2,3})\b', label: '{0}x{1}mm', group: size}
+        attrs: [series, features, sockets, color]
+      - key: kinkiet
+        noun: Kinkiet LED
+        gender: m
+        match: ['^KINKIET']
+        version_suffix: true
+        features: [klosz]
+        attrs: [series, length, power, lumen, cct, ip, features, color]
+        required: [power, lumen, cct]
+      - key: liniowa
+        noun: Oprawa liniowa LED
+        gender: f
+        match: ['^OPRAWA LINIOWA']
+        version_suffix: true
+        features: [klosz]
+        attrs: [series, length, power, lumen, cct, ip, features, color]
+        required: [power, lumen, cct]
+      - key: schodowa
+        noun: Oprawa schodowa LED
+        gender: f
+        match: ['^OPRAWA SCHODOWA']
+        version_suffix: true
+        attrs: [series, power, lumen, cct, voltage, color]
+        required: [power, lumen, cct]
+      - key: elewacyjna_gu10
+        noun: Oprawa elewacyjna
+        gender: f
+        match: ['^OPRAWA ELEWACYJNA']
+        require_pattern: 'GU10\b'
+        version_suffix: true
+        trusted: true
+        features:
+          - {match: '\bKINKIET\b', label: kinkiet}
+        attrs: [series, sockets, ip, features, color]
+      - key: elewacyjna
+        noun: Oprawa elewacyjna LED
+        gender: f
+        match: ['^OPRAWA ELEWACYJNA']
+        version_suffix: true
+        features:
+          - shape
+          - {match: '\bPLAFON\b', label: plafon, group: shape}
+          - {match: '\bKINKIET\b', label: kinkiet, group: shape}
+        attrs: [series, power, lumen, cct, ip, features, color]
+        required: [power, lumen, cct]
+      - key: awaryjna
+        noun: Oprawa awaryjna LED
+        gender: f
+        match: ['^OPRAWA AWARYJNA']
+        version_suffix: true
+        trusted: true
+        features:
+          - {match: '\bNATYNKOW', label: natynkowa}
+          - shape
+          - {match: 'KORYTARZOW', label: optyka korytarzowa, group: opt}
+          - {match: 'SKUPIAJAC', label: optyka skupiająca, group: opt}
+          - {match: '(OPTYKA|SOCZ\.) OTWART', label: optyka otwarta, group: opt}
+          - {match: 'BEZ SOCZEWKI', label: bez soczewki, group: opt}
+          - {match: '\bAUTOTEST\b', label: autotest, group: test}
+          - {match: 'TEST RECZNY', label: test ręczny, group: test}
+          - {match: '(?<![\d.,])(\d)H\b', label: '{0}h'}
+          - {match: '\bCNBOP\b', label: CNBOP}
+          - {match: 'PIKTOGRAM', label: z piktogramami}
+        attrs: [series, power, features, ip]
+      - key: reflektor_led
+        noun: Reflektor LED
+        gender: m
+        match: ['^SPOT COB']
+        version_suffix: true
+        features:
+          - {match: '\b([13])-FAZOWY', label: '{0}-fazowy'}
+        attrs: [series, features, power, lumen, cct, optics, color]
+        required: [power, lumen, cct]
+      - key: reflektor_gu10
+        noun: Reflektor
+        gender: m
+        match: ['^OPRAWA SPOT']
+        version_suffix: true
+        trusted: true
+        features:
+          - {match: '\b([13])-FAZOWY', label: '{0}-fazowy szynowy'}
+          - {match: '\bNATYNKOWY\b', label: natynkowy}
+          - {match: '\bREGULOWANY\b', label: regulowany}
+        attrs: [series, sockets, features, color]
+      - key: najazdowa
+        noun: Oprawa najazdowa
+        gender: f
+        match: ['^OPRAWA NAJAZDOWA']
+        trusted: true
+        features:
+          - shape
+          - {match: 'Z OSLONA', label: z osłoną}
+        attrs: [series, sockets, features]
+      - key: plafon_led
+        noun: Plafon LED
+        gender: m
+        match: ['^PLAFONIERA']
+        require_pattern: '\d\s?LM\b'
+        version_suffix: true
+        features:
+          - shape
+          - {match: 'RAMKA WYSOKA', label: z wysoką ramką}
+          - {match: 'ZASILANIE 24V AC', label: 24V AC}
+          - sensor
+        attrs: [series, power, lumen, cct, ip, features, color]
+        required: [power, lumen, cct]
+      - key: plafon
+        noun: Plafon
+        gender: m
+        match: ['^PLAFONIERA']
+        version_suffix: true
+        trusted: true
+        features:
+          - {match: '\bFI-?(\d{2})\b', label: 'fi{0}cm', group: size}
+          - {match: '\b(\d{2})X(\d{2})\b', label: '{0}x{1}cm', group: size}
+          - sensor
+        attrs: [series, sockets, features, ip]
+      - key: oprawa_led
+        noun: Oprawa LED
+        gender: f
+        match: ['^OPRAWA']
+        require_pattern: '\d\s?LM\b'
+        version_suffix: true
+        features: [shape, klosz, sensor]
+        attrs: [series, length, power, lumen, cct, ip, features, color]
+        required: [power, lumen, cct]
+      # --- aparatura ---
+      - key: nadpradowy
+        noun: Wyłącznik nadprądowy
+        gender: m
+        match: ['^WYLACZNIK NADPRADOWY']
+        trusted: true
+        features:
+          - {match: '\b(\d)P ([BCD]) 0?(\d+)A\b', label: '{1}{2} {0}P'}
+          - {match: '\b(\d+(?:,\d+)?)KA\b', label: '{0}kA'}
+        attrs: [features]
+      - key: rcbo
+        noun: Wyłącznik RCBO
+        gender: m
+        match: ['^WYLACZNIK (RCBO|ROZNICOWOPRADOWY Z NADPRADOWYM)']
+        trusted: true
+        features:
+          - {match: '\b(\d)P ([BCD]) 0?(\d+)A\b', label: '{1}{2} {0}P'}
+          - {match: '\b(\d+)MA\b', label: '{0}mA'}
+          - {match: '\bTYP (AC|A)\b', label: 'typ {0}'}
+        attrs: [features]
+      - key: roznicowopradowy
+        noun: Wyłącznik różnicowoprądowy
+        gender: m
+        match: ['^WYLACZNIK ROZNICOWOPRADOWY']
+        trusted: true
+        features:
+          - {match: '\b(\d)P\b', label: '{0}P'}
+          - {match: '\b(\d+)A\b', label: '{0}A'}
+          - {match: '\b(\d+)MA\b', label: '{0}mA'}
+          - {match: 'ROZNICOWOPRADOWY (AC|A)\b', label: 'typ {0}'}
+          - {match: '\b(\d+(?:,\d+)?)KA\b', label: '{0}kA'}
+        attrs: [features]
+      - key: rozlacznik
+        noun: Rozłącznik izolacyjny
+        gender: m
+        match: ['^ROZLACZNIK']
+        trusted: true
+        features:
+          - {match: '\bPV\b', label: PV}
+          - {match: '\b(\d)P\b|\b(\d)-POLOWY', label: '{0}{1}P'}
+          - {match: '\b(\d+)A\b', label: '{0}A'}
+          - {match: '\b(\d+)V DC\b', label: '{0}V DC'}
+        attrs: [features, ip]
+      - key: ogranicznik
+        noun: Ogranicznik przepięć
+        gender: m
+        match: ['^OGRANICZNIK']
+        trusted: true
+        features:
+          - {match: '\b(T1\+T2|T2)\b', label: '{0}'}
+          - {match: '\b(\d)P\b', label: '{0}P'}
+          - {match: '\b(\d+(?:,\d+)?)KA\b', label: '{0}kA'}
+          - {match: '\bDC (\d+)V\b', label: '{0}V DC'}
+          - {match: 'ISKIERNIK', label: z iskiernikiem}
+        attrs: [features]
+      - key: wkladka_ogranicznika
+        noun: Wkładka do ogranicznika przepięć
+        gender: f
+        match: ['^WKLADKA DLA OGRANICZNIKA']
+        trusted: true
+        features:
+          - {match: '\bT1\+?T2\b', label: T1+T2, group: klasa}
+          - {match: '\bT2\b', label: T2, group: klasa}
+          - {match: '\b(\d+(?:,\d+)?)KA\b', label: '{0}kA'}
+          - {match: 'BEZ TRZPIENIA', label: bez trzpienia}
+        attrs: [features]
+      - key: wkladka_topikowa
+        noun: Wkładka topikowa
+        gender: f
+        match: ['^WKLADKA TOPIKOWA']
+        trusted: true
+        features:
+          - {match: '\b(\d+X\d+)\s?MM\b', label: '{0}'}
+          - {match: '\b(\d+)A\b', label: '{0}A'}
+          - {match: '\b(\d+)V DC\b', label: '{0}V DC'}
+        attrs: [features]
+      - key: podstawa_bezpiecznikowa
+        noun: Podstawa bezpiecznikowa
+        gender: f
+        match: ['^PODSTAWA BEZPIECZNIKOWA']
+        trusted: true
+        features:
+          - {match: '\b(\d+X\d+)\b', label: '{0}'}
+          - {match: '\b(\d)-POLOWA', label: '{0}P'}
+          - {match: '\b(\d+)A\b', label: '{0}A'}
+          - {match: '\b(\d+)V DC\b', label: '{0}V DC'}
+          - {match: 'KONTROLK', label: z kontrolką}
+        attrs: [features]
+      - key: licznik_energii
+        noun: Licznik energii
+        gender: m
+        match: ['^LICZNIK ENERGII']
+        trusted: true
+        features:
+          - {match: '\b(\d) FAZOWY', label: '{0}-fazowy'}
+          - {match: '\bMID\b', label: MID}
+          - {match: '\bMODBUS\b', label: Modbus, group: bus}
+          - {match: '\bMBUS\b', label: M-Bus, group: bus}
+          - {match: '\b(\d+)A\b', label: '{0}A'}
+        attrs: [features]
+      - key: wskaznik_energii
+        noun: Wskaźnik energii
+        gender: m
+        match: ['^WSKAZNIK ENERGII']
+        trusted: true
+        features:
+          - {match: '\b(\d) FAZOWY', label: '{0}-fazowy'}
+          - {match: '\b(\d+) ?\((\d+)\) ?A\b', label: '{0}({1})A'}
+          - {match: 'MECHANICZN', label: mechaniczny}
+        attrs: [features]
+      - key: lampka_sygnalizacyjna
+        noun: Lampka sygnalizacyjna
+        gender: f
+        match: ['^(LAMPKA|LAMKA) SYGNALIZACYJNA', '^KONTROLKA']
+        trusted: true
+        features:
+          - {match: '\b(S?L\d)\b', label: '{0}'}
+          - {match: '\b3-FAZOWA\b', label: 3-fazowa}
+        attrs: [features, color]
+      - key: zasilacz
+        noun: Zasilacz LED
+        gender: m
+        match: ['^ZASILACZ']
+        trusted: true
+        features_pre:
+          - {match: 'SZYNE DIN', label: na szynę DIN}
+          - {match: 'OPRAW SCHODOWYCH STEPPER', label: do opraw Stepper}
+          - {match: 'HERMETYCZN', label: hermetyczny}
+        attrs: [features_pre, voltage, power, ip]
+        required: [voltage, power]
+      # --- osprzet instalacyjny ---
+      - key: przedluzacz
+        noun_from: type_words
+        match: ['^PRZEDLUZACZ', '^ROZGALEZNIK']
+        trusted: true
+        features:
+          - {match: '\b(\d)\s?GN\b', label: '{0} gn.', group: gn}
+          - {match: '\b(\d)X\s?2P', label: '{0} gn.', group: gn}
+          - {match: '\b(\d)XGN\b', label: '{0} gn.', group: gn}
+          - {match: '\bSCHUKO\b', label: Schuko}
+          - {match: 'BEZ "0"|\b\dX\s?2P(?!\+Z)', label: bez uziemienia, group: earth}
+          - {match: '"0"|2P\+Z', label: z uziemieniem, group: earth}
+          - {match: 'WYL\.|WYLACZNIK', label: z wyłącznikiem}
+          - {match: '(\d)X ?USB ?\(C\+A\)', label: '{0}xUSB A+C', group: usb}
+          - {match: '(\d)X ?USB', label: '{0}xUSB', group: usb}
+          - {match: '\bTROJKATNY\b', label: trójkątny}
+          - {match: '\b3X(\d(?:,\d)?)\s?MM2\b', label: '3x{0}mm2', group: cross}
+          - {match: '\b(\d,\d)\s?MM\b', label: '{0}mm2', group: cross}
+          - {match: '(?:\bX|PRZEWOD)\s?(\d+(?:,\d)?)\s?M\b', label: '{0}m', group: len}
+          - {match: '\b(\d{2})M\b', label: '{0}m', group: len}
+        attrs: [features]
+      - key: szybkozlaczka
+        noun_from: type_words
+        match: ['^(SZYBKOZLACZKA|PRZELOTOWA ZLACZKA|ZLACZKA ZACISKOWA)']
+        trusted: true
+        features:
+          - {match: '\bKOMPAKT\b', label: Kompakt}
+          - {match: '\b(\d+(?:,\d+)?(?:-\d+,\d+)?)\s?MM2?\b', label: '{0}mm2'}
+          - {match: '\bX\s?(\d)\b', label: '{0}-torowa', group: tory}
+          - {match: '\b(\d)-TOROWA\b', label: '{0}-torowa', group: tory}
+          - {match: '\bTWARDA\b', label: twarda}
+        features_post:
+          - {match: '\b(\d+)\s?SZT', label: '{0} szt.'}
+        attrs: [features, ip, color, features_post]
+      - key: opaska
+        noun: Opaska zaciskowa
+        gender: f
+        match: ['^OPASKA']
+        trusted: true
+        features:
+          - {match: '\b(\d,\d)\*(\d+)\b', label: '{0}x{1}mm'}
+          - {match: '\bMIX\b', label: mix}
+        features_post:
+          - {match: '\b(\d+) SZT', label: '{0} szt.'}
+        attrs: [features, color, features_post]
+      - key: dlawnica
+        noun: Dławnica kablowa
+        gender: f
+        match: ['^DLAWNICA']
+        trusted: true
+        features:
+          - {match: '\b(M|PG)-(\d+(?:,\d)?)\b', label: '{0}{1}'}
+        features_post:
+          - {match: '\b(\d+)\s?SZT', label: '{0} szt.'}
+        attrs: [features, color, features_post]
+      - key: tasma_izolacyjna
+        noun_from: type_words
+        match: ['^TASMA (IZOLACYJNA|SAMOWULKANIZUJACA)']
+        trusted: true
+        features:
+          - {match: '\b(\d+)X(\d+)M\b', label: '{0}mm x {1}m'}
+          - {match: '\b(\d+)X(\d+)MX', label: '{0}mm x {1}m'}
+        attrs: [features, color]
+      - key: zlaczka_led
+        noun: Złączka do taśm LED
+        gender: f
+        match: ['^ZLACZKA LED']
+        trusted: true
+        features:
+          - {match: '\b(\d+)MM\b', label: '{0}mm'}
+          - {match: '\b(COB|5050|3528|2835/3528|2535/3528|550)\b', label: '{0}'}
+          - {match: '\bRGB\b', label: RGB}
+          - {match: 'SAMOZACISKOW', label: samozaciskowa}
+          - {match: '\b(\d)-STRONNA', label: '{0}-stronna'}
+          - {match: 'Z PRZEWODEM', label: z przewodem}
+        attrs: [features]
+      - key: szynoprzewod
+        noun: Szynoprzewód
+        gender: m
+        match: ['^SZYNOPRZEWOD']
+        trusted: true
+        features:
+          - {match: '\b([13])-FAZOWY', label: '{0}-fazowy'}
+          - {match: '\b(\d+(?:,\d)?)M\b', label: '{0}m'}
+        attrs: [features, color]
+      - key: listwa_zaciskowa
+        noun_from: type_words
+        match: ['^LISTWA ZACISKOWA']
+        trusted: true
+        features:
+          - {match: '\b(\d+X\d+)\b', label: '{0}'}
+          - {match: '\b(\d+)-TOROWA\b', label: '{0}-torowa'}
+        attrs: [features, color]
+      # --- reszta (akcesoria, sterowanie, osprzet): rzeczownik ze slow typu + reszta nazwy ---
+      - key: inne
+        noun_from: type_words
+        match: ['.']
+        series_raw: true
+        # marka za rzeczownikiem, przed "do/z/na ..." (jak Kobi); caly opis bez zjadania powtorzen
+        brand_before_prep: true
+        series_all_segments: true
+        series_limit: 12
+        no_schema: true
+        version_suffix: true
+        attrs: [series]
