@@ -1,0 +1,73 @@
+# Wymiary wysylkowe na 1 sztuke [cm] wyliczone z kartonu zbiorczego producenta:
+# karton (a>=b>=c) i N sztuk -> sztuka zajmuje a x b x c/N (panele leza w kartonie warstwami).
+# Dla kartonu 1-sztukowego = wymiary kartonu. Uzywa src/fill_product_weights.py (--ship-dims).
+# Sprawdzone 2026-10-05.
+products:
+  37171/KAN: {carton: [61.5, 17.5, 63], qty: 5, piece: [63, 61.5, 3.5], source: "https://www.kanlux.com/storage/products/technicznaErp/pl/37171.pdf"}
+  39173/KAN: {carton: [122, 24.5, 32], qty: 5, piece: [122, 32, 4.9], source: "https://www.kanlux.com/storage/products/technicznaErp/pl/39173.pdf"}
+  37176/KAN: {carton: [61.5, 17.5, 63], qty: 5, piece: [63, 61.5, 3.5], source: "https://www.kanlux.com/storage/products/technicznaErp/pl/37176.pdf"}
+  37177/KAN: {carton: [122, 19.5, 33.7], qty: 5, piece: [122, 33.7, 3.9], source: "https://www.kanlux.com/storage/products/technicznaErp/pl/37177.pdf"}
+  37172/KAN: {carton: [61.5, 17.5, 63], qty: 5, piece: [63, 61.5, 3.5], source: "https://www.kanlux.com/storage/products/technicznaErp/pl/37172.pdf"}
+  37178/KAN: {carton: [61.5, 17.5, 63], qty: 5, piece: [63, 61.5, 3.5], source: "https://www.kanlux.com/storage/products/technicznaErp/pl/37178.pdf"}
+  31173/KAN: {carton: [62, 26.5, 63], qty: 6, piece: [63, 62, 4.42], source: "https://www.kanlux.com/storage/products/technicznaErp/pl/31173.pdf"}
+  31174/KAN: {carton: [123, 26, 33.5], qty: 6, piece: [123, 33.5, 4.33], source: "https://www.kanlux.com/storage/products/technicznaErp/pl/31174.pdf"}
+  39233/KAN: {carton: [122, 25, 32], qty: 5, piece: [122, 32, 5], source: "https://www.kanlux.com/storage/products/technicznaErp/pl/39233.pdf"}
+  39231/KAN: {carton: [61.5, 25, 62], qty: 5, piece: [62, 61.5, 5], source: "https://www.kanlux.com/storage/products/technicznaErp/pl/39231.pdf"}
+  39237/KAN: {carton: [126, 20, 32], qty: 5, piece: [126, 32, 4], source: "https://www.kanlux.com/storage/products/technicznaErp/pl/39237.pdf"}
+  39235/KAN: {carton: [62, 18, 65.5], qty: 5, piece: [65.5, 62, 3.6], source: "https://www.kanlux.com/storage/products/technicznaErp/pl/39235.pdf"}
+  29844/KAN: {carton: [64, 61, 7.5], qty: 1, piece: [64, 61, 7.5], source: "https://www.kanlux.com/storage/products/technicznaErp/pl/29844.pdf"}
+  29845/KAN: {carton: [64, 61, 7.5], qty: 1, piece: [64, 61, 7.5], source: "https://www.kanlux.com/storage/products/technicznaErp/pl/29845.pdf"}
+  33392/KAN: {carton: [125, 30, 8], qty: 1, piece: [125, 30, 8], source: "https://www.kanlux.com/storage/products/technicznaErp/pl/33392.pdf"}
+  33391/KAN: {carton: [125, 30, 8], qty: 1, piece: [125, 30, 8], source: "https://www.kanlux.com/storage/products/technicznaErp/pl/33391.pdf"}
+  33398/KAN: {carton: [65, 62.5, 8.5], qty: 1, piece: [65, 62.5, 8.5], source: "https://www.kanlux.com/storage/products/technicznaErp/pl/33398.pdf"}
+  29843/KAN: {carton: [65, 62.5, 8.5], qty: 1, piece: [65, 62.5, 8.5], source: "https://www.kanlux.com/storage/products/technicznaErp/pl/29843.pdf"}
+  33393/KAN: {carton: [61, 31, 7.5], qty: 1, piece: [61, 31, 7.5], source: "https://www.kanlux.com/storage/products/technicznaErp/pl/33393.pdf"}
+  33390/KAN: {carton: [125, 30, 8], qty: 1, piece: [125, 30, 8], source: "https://www.kanlux.com/storage/products/technicznaErp/pl/33390.pdf"}
+  39240/KAN: {carton: [122, 19.5, 32], qty: 5, piece: [122, 32, 3.9], source: "https://www.kanlux.com/storage/products/technicznaErp/pl/39240.pdf"}
+  39239/KAN: {carton: [61.5, 16.5, 61.5], qty: 5, piece: [61.5, 61.5, 3.3], source: "https://www.kanlux.com/storage/products/technicznaErp/pl/39239.pdf"}
+  39238/KAN: {carton: [62, 20.5, 32], qty: 5, piece: [62, 32, 4.1], source: "https://www.kanlux.com/storage/products/technicznaErp/pl/39238.pdf"}
+  37278/KAN: {carton: [125, 20.5, 32.5], qty: 5, piece: [125, 32.5, 4.1], source: "https://www.kanlux.com/storage/products/technicznaErp/pl/37278.pdf"}
+  37173/KAN: {carton: [61.5, 17.5, 63], qty: 5, piece: [63, 61.5, 3.5], source: "https://www.kanlux.com/storage/products/technicznaErp/pl/37173.pdf"}
+  39172/KAN: {carton: [62, 25, 62], qty: 5, piece: [62, 62, 5], source: "https://www.kanlux.com/storage/products/technicznaErp/pl/39172.pdf"}
+  37179/KAN: {carton: [61.5, 17.5, 63], qty: 5, piece: [63, 61.5, 3.5], source: "https://www.kanlux.com/storage/products/technicznaErp/pl/37179.pdf"}
+  28515/KAN: {carton: [21, 4, 3], qty: 1, piece: [21, 4, 3], source: "https://www.kanlux.com/storage/products/technicznaErp/pl/28515.pdf"}
+  33174/KAN: {carton: [61.5, 16.5, 63.5], qty: 5, piece: [63.5, 61.5, 3.3], source: "https://www.kanlux.com/storage/products/technicznaErp/pl/33174.pdf"}
+  37170/KAN: {carton: [61.5, 17.5, 63], qty: 5, piece: [63, 61.5, 3.5], source: "https://www.kanlux.com/storage/products/technicznaErp/pl/37170.pdf"}
+  39170/KAN: {carton: [61.5, 16.5, 61.5], qty: 5, piece: [61.5, 61.5, 3.3], source: "https://www.kanlux.com/storage/products/technicznaErp/pl/39170.pdf"}
+  37279/KAN: {carton: [63, 22, 63], qty: 5, piece: [63, 63, 4.4], source: "https://www.kanlux.com/storage/products/technicznaErp/pl/37279.pdf"}
+  33179/KAN: {carton: [61.5, 17.5, 63], qty: 5, piece: [63, 61.5, 3.5], source: "https://www.kanlux.com/storage/products/technicznaErp/pl/33179.pdf"}
+  33177/KAN: {carton: [61, 16.5, 63.5], qty: 5, piece: [63.5, 61, 3.3], source: "https://www.kanlux.com/storage/products/technicznaErp/pl/33177.pdf"}
+  31176/KAN: {carton: [60.5, 37, 61], qty: 10, piece: [61, 60.5, 3.7], source: "https://www.kanlux.com/storage/products/technicznaErp/pl/31176.pdf"}
+  27617/KAN: {carton: [63.5, 61, 7], qty: 1, piece: [63.5, 61, 7], source: "https://www.kanlux.com/storage/products/technicznaErp/pl/27617.pdf"}
+  27616/KAN: {carton: [63.5, 61, 5.5], qty: 1, piece: [63.5, 61, 5.5], source: "https://www.kanlux.com/storage/products/technicznaErp/pl/27616.pdf"}
+  39232/KAN: {carton: [122, 25, 32], qty: 5, piece: [122, 32, 5], source: "https://www.kanlux.com/storage/products/technicznaErp/pl/39232.pdf"}
+  39230/KAN: {carton: [61.5, 25, 62], qty: 5, piece: [62, 61.5, 5], source: "https://www.kanlux.com/storage/products/technicznaErp/pl/39230.pdf"}
+  39236/KAN: {carton: [126, 20, 32], qty: 5, piece: [126, 32, 4], source: "https://www.kanlux.com/storage/products/technicznaErp/pl/39236.pdf"}
+  39234/KAN: {carton: [62, 18, 65.5], qty: 5, piece: [65.5, 62, 3.6], source: "https://www.kanlux.com/storage/products/technicznaErp/pl/39234.pdf"}
+  27610/KAN: {carton: [63, 61.5, 5.5], qty: 1, piece: [63, 61.5, 5.5], source: "https://www.kanlux.com/storage/products/technicznaErp/pl/27610.pdf"}
+  27615/KAN: {carton: [63, 61.5, 5.5], qty: 1, piece: [63, 61.5, 5.5], source: "https://www.kanlux.com/storage/products/technicznaErp/pl/27615.pdf"}
+  29841/KAN: {carton: [123, 32.5, 5.5], qty: 1, piece: [123, 32.5, 5.5], source: "https://www.kanlux.com/storage/products/technicznaErp/pl/29841.pdf"}
+  29842/KAN: {carton: [123, 32.5, 5.5], qty: 1, piece: [123, 32.5, 5.5], source: "https://www.kanlux.com/storage/products/technicznaErp/pl/29842.pdf"}
+  27612/KAN: {carton: [123, 32.5, 5.5], qty: 1, piece: [123, 32.5, 5.5], source: "https://www.kanlux.com/storage/products/technicznaErp/pl/27612.pdf"}
+  27614/KAN: {carton: [123, 32.5, 5.5], qty: 1, piece: [123, 32.5, 5.5], source: "https://www.kanlux.com/storage/products/technicznaErp/pl/27614.pdf"}
+  39755/KAN: {carton: [63, 61, 6], qty: 1, piece: [63, 61, 6], source: "https://www.kanlux.com/storage/products/technicznaErp/pl/39755.pdf"}
+  27609/KAN: {carton: [66, 64.5, 3], qty: 1, piece: [66, 64.5, 3], source: "https://www.kanlux.com/storage/products/technicznaErp/pl/27609.pdf"}
+  27608/KAN: {carton: [66, 64.5, 3], qty: 1, piece: [66, 64.5, 3], source: "https://www.kanlux.com/storage/products/technicznaErp/pl/27608.pdf"}
+  27618/KAN: {carton: [63, 61, 7], qty: 1, piece: [63, 61, 7], source: "https://www.kanlux.com/storage/products/technicznaErp/pl/27618.pdf"}
+  27613/KAN: {carton: [66, 61, 5.5], qty: 1, piece: [66, 61, 5.5], source: "https://www.kanlux.com/storage/products/technicznaErp/pl/27613.pdf"}
+  29840/KAN: {carton: [124, 32.5, 5.5], qty: 1, piece: [124, 32.5, 5.5], source: "https://www.kanlux.com/storage/products/technicznaErp/pl/29840.pdf"}
+  27611/KAN: {carton: [123, 32.5, 5.5], qty: 1, piece: [123, 32.5, 5.5], source: "https://www.kanlux.com/storage/products/technicznaErp/pl/27611.pdf"}
+  28010/KAN: {carton: [64, 13, 64], qty: 6, piece: [64, 64, 2.17], source: "https://www.kanlux.com/storage/products/technicznaErp/pl/28010.pdf"}
+  28022/KAN: {carton: [123, 14, 34], qty: 6, piece: [123, 34, 2.33], source: "https://www.kanlux.com/storage/products/technicznaErp/pl/28022.pdf"}
+  26785/KAN: {carton: [63, 34, 64], qty: 10, piece: [64, 63, 3.4], source: "https://www.kanlux.com/storage/products/technicznaErp/pl/26785.pdf"}
+  46070/KAN: {carton: [63, 31, 64], qty: 6, piece: [64, 63, 5.17], source: "https://www.kanlux.com/storage/products/technicznaErp/pl/46070.pdf"}
+  26779/KAN: {carton: [63, 34, 64], qty: 10, piece: [64, 63, 3.4], source: "https://www.kanlux.com/storage/products/technicznaErp/pl/26779.pdf"}
+  26778/KAN: {carton: [63, 34, 64], qty: 10, piece: [64, 63, 3.4], source: "https://www.kanlux.com/storage/products/technicznaErp/pl/26778.pdf"}
+  26789/KAN: {carton: [63, 33.5, 63.5], qty: 10, piece: [63.5, 63, 3.35], source: "https://www.kanlux.com/storage/products/technicznaErp/pl/26789.pdf"}
+  26788/KAN: {carton: [63, 33.5, 63.5], qty: 10, piece: [63.5, 63, 3.35], source: "https://www.kanlux.com/storage/products/technicznaErp/pl/26788.pdf"}
+  001559/KOB: {carton: [63, 63, 26], qty: 6, piece: [63, 63, 4.33], source: "https://b2b.kobi.pl/pl/product/9896"}
+  001560/KOB: {carton: [63, 63, 26], qty: 6, piece: [63, 63, 4.33], source: "https://b2b.kobi.pl/pl/product/9896", status: WARNING, note: "karton wersji bialej 001559 (ten sam model)"}
+  001561/KOB: {carton: [123, 33, 26], qty: 6, piece: [123, 33, 4.33], source: "https://b2b.kobi.pl/pl/product/9898"}
+  001562/KOB: {carton: [123, 33, 26], qty: 6, piece: [123, 33, 4.33], source: "https://b2b.kobi.pl/pl/product/9898", status: WARNING, note: "karton wersji bialej 001561 (ten sam model)"}
+  003825/KOB: {carton: [64.5, 63, 26], qty: 6, piece: [64.5, 63, 4.33], source: "https://b2b.kobi.pl/pl/product/12268"}
+  # Brak danych o kartonach: Philips, Bemko, GTV, Ledvance, Kobi DAVRO/CAPRI G2 - zostaja wymiary produktu

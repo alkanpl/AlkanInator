@@ -1,0 +1,124 @@
+# Wagi wysylkowe produktow (kg) z kart producentow - sprawdzone 2026-10-05.
+# kind: brutto (sztuka z opakowaniem), karton/szt (waga kartonu zbiorczego / liczba sztuk),
+# netto (sam produkt - producent nie podaje brutto). Czyta src/fill_product_weights.py.
+products:
+  37171/KAN: {kg: 1.8, kind: karton/szt, source: "https://www.kanlux.com/storage/products/technicznaErp/pl/37171.pdf", note: "netto 1.37 kg"}
+  39173/KAN: {kg: 2.122, kind: brutto, source: "https://www.kanlux.com/storage/products/technicznaErp/pl/39173.pdf", note: "netto 1.784 kg"}
+  37176/KAN: {kg: 1.74, kind: karton/szt, source: "https://www.kanlux.com/storage/products/technicznaErp/pl/37176.pdf", note: "netto 1.308 kg"}
+  37177/KAN: {kg: 1.81, kind: karton/szt, source: "https://www.kanlux.com/storage/products/technicznaErp/pl/37177.pdf", note: "netto 1.318 kg"}
+  37172/KAN: {kg: 1.8, kind: karton/szt, source: "https://www.kanlux.com/storage/products/technicznaErp/pl/37172.pdf", note: "netto 1.37 kg"}
+  37178/KAN: {kg: 1.976, kind: karton/szt, source: "https://www.kanlux.com/storage/products/technicznaErp/pl/37178.pdf", note: "netto 1.542 kg"}
+  31173/KAN: {kg: 2.003, kind: karton/szt, source: "https://www.kanlux.com/storage/products/technicznaErp/pl/31173.pdf", note: "netto 1.956 kg"}
+  31174/KAN: {kg: 2.412, kind: brutto, source: "https://www.kanlux.com/storage/products/technicznaErp/pl/31174.pdf", note: "netto 2.116 kg"}
+  39233/KAN: {kg: 2.26, kind: brutto, source: "https://www.kanlux.com/storage/products/technicznaErp/pl/39233.pdf", note: "netto 1.898 kg"}
+  39231/KAN: {kg: 1.912, kind: brutto, source: "https://www.kanlux.com/storage/products/technicznaErp/pl/39231.pdf", note: "netto 1.602 kg"}
+  39237/KAN: {kg: 1.988, kind: brutto, source: "https://www.kanlux.com/storage/products/technicznaErp/pl/39237.pdf", note: "netto 1.608 kg"}
+  39235/KAN: {kg: 1.864, kind: brutto, source: "https://www.kanlux.com/storage/products/technicznaErp/pl/39235.pdf", note: "netto 1.546 kg"}
+  29844/KAN: {kg: 1.8, kind: karton/szt, source: "https://www.kanlux.com/storage/products/technicznaErp/pl/29844.pdf", note: "netto 1.352 kg"}
+  29845/KAN: {kg: 1.8, kind: karton/szt, source: "https://www.kanlux.com/storage/products/technicznaErp/pl/29845.pdf", note: "netto 1.352 kg"}
+  33392/KAN: {kg: 2.3, kind: karton/szt, source: "https://www.kanlux.com/storage/products/technicznaErp/pl/33392.pdf", note: "netto 1.76 kg"}
+  33391/KAN: {kg: 2.3, kind: karton/szt, source: "https://www.kanlux.com/storage/products/technicznaErp/pl/33391.pdf", note: "netto 1.76 kg"}
+  33398/KAN: {kg: 2.018, kind: brutto, source: "https://www.kanlux.com/storage/products/technicznaErp/pl/33398.pdf", note: "netto 1.508 kg"}
+  29843/KAN: {kg: 1.8, kind: karton/szt, source: "https://www.kanlux.com/storage/products/technicznaErp/pl/29843.pdf", note: "netto 1.416 kg"}
+  33393/KAN: {kg: 1.232, kind: brutto, source: "https://www.kanlux.com/storage/products/technicznaErp/pl/33393.pdf", note: "netto 1.026 kg"}
+  33390/KAN: {kg: 2.3, kind: karton/szt, source: "https://www.kanlux.com/storage/products/technicznaErp/pl/33390.pdf", note: "netto 1.76 kg"}
+  39240/KAN: {kg: 1.908, kind: brutto, source: "https://www.kanlux.com/storage/products/technicznaErp/pl/39240.pdf", note: "netto 1.604 kg"}
+  39239/KAN: {kg: 1.902, kind: brutto, source: "https://www.kanlux.com/storage/products/technicznaErp/pl/39239.pdf", note: "netto 1.606 kg"}
+  39238/KAN: {kg: 0.974, kind: brutto, source: "https://www.kanlux.com/storage/products/technicznaErp/pl/39238.pdf", note: "netto 0.81 kg"}
+  37278/KAN: {kg: 2.062, kind: brutto, source: "https://www.kanlux.com/storage/products/technicznaErp/pl/37278.pdf", note: "netto 1.678 kg"}
+  37173/KAN: {kg: 2.026, kind: karton/szt, source: "https://www.kanlux.com/storage/products/technicznaErp/pl/37173.pdf", note: "netto 1.594 kg"}
+  39172/KAN: {kg: 2.044, kind: brutto, source: "https://www.kanlux.com/storage/products/technicznaErp/pl/39172.pdf", note: "netto 1.716 kg"}
+  37179/KAN: {kg: 2.254, kind: karton/szt, source: "https://www.kanlux.com/storage/products/technicznaErp/pl/37179.pdf", note: "netto 1.82 kg"}
+  37268/KAN: {kg: 0.18, kind: brutto, source: "https://www.kanlux.com/storage/products/technicznaErp/pl/37268.pdf", note: "netto 0.158 kg"}
+  37267/KAN: {kg: 0.194, kind: brutto, source: "https://www.kanlux.com/storage/products/technicznaErp/pl/37267.pdf", note: "netto 0.174 kg"}
+  37270/KAN: {kg: 0.12, kind: brutto, source: "https://www.kanlux.com/storage/products/technicznaErp/pl/37270.pdf", note: "netto 0.106 kg"}
+  28515/KAN: {kg: 0.184, kind: brutto, source: "https://www.kanlux.com/storage/products/technicznaErp/pl/28515.pdf", note: "netto 0.174 kg"}
+  33174/KAN: {kg: 2.038, kind: karton/szt, source: "https://www.kanlux.com/storage/products/technicznaErp/pl/33174.pdf", note: "netto 1.55 kg"}
+  37170/KAN: {kg: 1.742, kind: karton/szt, source: "https://www.kanlux.com/storage/products/technicznaErp/pl/37170.pdf", note: "netto 1.3 kg"}
+  37269/KAN: {kg: 0.122, kind: brutto, source: "https://www.kanlux.com/storage/products/technicznaErp/pl/37269.pdf", note: "netto 0.106 kg"}
+  37262/KAN: {kg: 0.092, kind: brutto, source: "https://www.kanlux.com/storage/products/technicznaErp/pl/37262.pdf", note: "netto 0.076 kg"}
+  39170/KAN: {kg: 1.738, kind: brutto, source: "https://www.kanlux.com/storage/products/technicznaErp/pl/39170.pdf", note: "netto 1.454 kg"}
+  37279/KAN: {kg: 2.132, kind: karton/szt, source: "https://www.kanlux.com/storage/products/technicznaErp/pl/37279.pdf", note: "netto 1.52 kg"}
+  33179/KAN: {kg: 2.266, kind: karton/szt, source: "https://www.kanlux.com/storage/products/technicznaErp/pl/33179.pdf", note: "netto 1.79 kg"}
+  33177/KAN: {kg: 2.006, kind: karton/szt, source: "https://www.kanlux.com/storage/products/technicznaErp/pl/33177.pdf", note: "netto 1.53 kg"}
+  31176/KAN: {kg: 1.199, kind: karton/szt, source: "https://www.kanlux.com/storage/products/technicznaErp/pl/31176.pdf", note: "netto 1.06 kg"}
+  27617/KAN: {kg: 1.49, kind: karton/szt, source: "https://www.kanlux.com/storage/products/technicznaErp/pl/27617.pdf", note: "netto 1.124 kg"}
+  27616/KAN: {kg: 1.22, kind: karton/szt, source: "https://www.kanlux.com/storage/products/technicznaErp/pl/27616.pdf", note: "netto 0.884 kg"}
+  39232/KAN: {kg: 2.056, kind: brutto, source: "https://www.kanlux.com/storage/products/technicznaErp/pl/39232.pdf", note: "netto 1.694 kg"}
+  39230/KAN: {kg: 2.124, kind: brutto, source: "https://www.kanlux.com/storage/products/technicznaErp/pl/39230.pdf", note: "netto 1.804 kg"}
+  39236/KAN: {kg: 1.718, kind: brutto, source: "https://www.kanlux.com/storage/products/technicznaErp/pl/39236.pdf", note: "netto 1.348 kg"}
+  39234/KAN: {kg: 1.676, kind: brutto, source: "https://www.kanlux.com/storage/products/technicznaErp/pl/39234.pdf", note: "netto 1.358 kg"}
+  27610/KAN: {kg: 1.58, kind: karton/szt, source: "https://www.kanlux.com/storage/products/technicznaErp/pl/27610.pdf", note: "netto 1.15 kg"}
+  27615/KAN: {kg: 1.58, kind: karton/szt, source: "https://www.kanlux.com/storage/products/technicznaErp/pl/27615.pdf", note: "netto 1.15 kg"}
+  29841/KAN: {kg: 2.2, kind: karton/szt, source: "https://www.kanlux.com/storage/products/technicznaErp/pl/29841.pdf", note: "netto 1.788 kg"}
+  29842/KAN: {kg: 2.2, kind: karton/szt, source: "https://www.kanlux.com/storage/products/technicznaErp/pl/29842.pdf", note: "netto 1.788 kg"}
+  27612/KAN: {kg: 1.87, kind: karton/szt, source: "https://www.kanlux.com/storage/products/technicznaErp/pl/27612.pdf", note: "netto 1.46 kg"}
+  27614/KAN: {kg: 1.87, kind: karton/szt, source: "https://www.kanlux.com/storage/products/technicznaErp/pl/27614.pdf", note: "netto 1.46 kg"}
+  39755/KAN: {kg: 1.282, kind: brutto, source: "https://www.kanlux.com/storage/products/technicznaErp/pl/39755.pdf", note: "netto 0.946 kg"}
+  27609/KAN: {kg: 1.37, kind: karton/szt, source: "https://www.kanlux.com/storage/products/technicznaErp/pl/27609.pdf", note: "netto 0.95 kg"}
+  27608/KAN: {kg: 1.37, kind: karton/szt, source: "https://www.kanlux.com/storage/products/technicznaErp/pl/27608.pdf", note: "netto 0.95 kg"}
+  27618/KAN: {kg: 1.51, kind: karton/szt, source: "https://www.kanlux.com/storage/products/technicznaErp/pl/27618.pdf", note: "netto 1.154 kg"}
+  27613/KAN: {kg: 1.58, kind: karton/szt, source: "https://www.kanlux.com/storage/products/technicznaErp/pl/27613.pdf", note: "netto 1.15 kg"}
+  29840/KAN: {kg: 2.2, kind: karton/szt, source: "https://www.kanlux.com/storage/products/technicznaErp/pl/29840.pdf", note: "netto 1.788 kg"}
+  27611/KAN: {kg: 1.87, kind: karton/szt, source: "https://www.kanlux.com/storage/products/technicznaErp/pl/27611.pdf", note: "netto 1.46 kg"}
+  25591/KAN: {kg: 0.036, kind: karton/szt, source: "https://www.kanlux.com/storage/products/technicznaErp/pl/25591.pdf", note: "netto 0.03 kg; brutto wg karty 0.019 kg < netto - pominiete"}
+  37335/KAN: {kg: 0.107, kind: karton/szt, source: "https://www.kanlux.com/storage/products/technicznaErp/pl/37335.pdf", note: "netto 0.102 kg; brutto wg karty 0.0994 kg < netto - pominiete"}
+  37336/KAN: {kg: 0.159, kind: karton/szt, source: "https://www.kanlux.com/storage/products/technicznaErp/pl/37336.pdf", note: "netto 0.152 kg; brutto wg karty 0.148 kg < netto - pominiete"}
+  28504/KAN: {kg: 0.168, kind: brutto, source: "https://www.kanlux.com/storage/products/technicznaErp/pl/28504.pdf", note: "netto 0.166 kg"}
+  28505/KAN: {kg: 0.172, kind: karton/szt, source: "https://www.kanlux.com/storage/products/technicznaErp/pl/28505.pdf", note: "netto 0.166 kg; brutto wg karty 0.152 kg < netto - pominiete"}
+  28502/KAN: {kg: 0.086, kind: karton/szt, source: "https://www.kanlux.com/storage/products/technicznaErp/pl/28502.pdf", note: "netto 0.08 kg; brutto wg karty 0.064 kg < netto - pominiete"}
+  28503/KAN: {kg: 0.096, kind: brutto, source: "https://www.kanlux.com/storage/products/technicznaErp/pl/28503.pdf", note: "netto 0.08 kg"}
+  37338/KAN: {kg: 0.101, kind: karton/szt, source: "https://www.kanlux.com/storage/products/technicznaErp/pl/37338.pdf", note: "netto 0.094 kg; brutto wg karty 0.092 kg < netto - pominiete"}
+  37337/KAN: {kg: 0.063, kind: brutto, source: "https://www.kanlux.com/storage/products/technicznaErp/pl/37337.pdf", note: "netto 0.06 kg"}
+  28501/KAN: {kg: 0.138, kind: brutto, source: "https://www.kanlux.com/storage/products/technicznaErp/pl/28501.pdf", note: "netto 0.088 kg"}
+  28010/KAN: {kg: 2.793, kind: karton/szt, source: "https://www.kanlux.com/storage/products/technicznaErp/pl/28010.pdf", note: "netto 2.36 kg"}
+  28022/KAN: {kg: 2.793, kind: karton/szt, source: "https://www.kanlux.com/storage/products/technicznaErp/pl/28022.pdf", note: "netto 2.36 kg"}
+  28026/KAN: {kg: 0.159, kind: karton/szt, source: "https://www.kanlux.com/storage/products/technicznaErp/pl/28026.pdf", note: "netto 0.13 kg; brutto wg karty 0.102 kg < netto - pominiete"}
+  26785/KAN: {kg: 0.784, kind: brutto, source: "https://www.kanlux.com/storage/products/technicznaErp/pl/26785.pdf", note: "netto 0.46 kg"}
+  46070/KAN: {kg: 1.442, kind: brutto, source: "https://www.kanlux.com/storage/products/technicznaErp/pl/46070.pdf", note: "netto 1.136 kg"}
+  26779/KAN: {kg: 0.764, kind: brutto, source: "https://www.kanlux.com/storage/products/technicznaErp/pl/26779.pdf", note: "netto 0.44 kg"}
+  26778/KAN: {kg: 0.818, kind: brutto, source: "https://www.kanlux.com/storage/products/technicznaErp/pl/26778.pdf", note: "netto 0.494 kg"}
+  26789/KAN: {kg: 0.746, kind: brutto, source: "https://www.kanlux.com/storage/products/technicznaErp/pl/26789.pdf", note: "netto 0.426 kg"}
+  26788/KAN: {kg: 0.746, kind: brutto, source: "https://www.kanlux.com/storage/products/technicznaErp/pl/26788.pdf", note: "netto 0.426 kg"}
+  734/VTC: {kg: 0.416, kind: brutto, source: "https://cdn.shopify.com/s/files/1/0606/7005/0487/files/SKU-734.pdf"}
+  6294/VTC: {kg: 0.14, kind: brutto, source: "https://cdn.shopify.com/s/files/1/0606/7005/0487/files/SKU-6294.pdf"}
+  708/VTC: {kg: 0.217, kind: brutto, source: "https://cdn.shopify.com/s/files/1/0606/7005/0487/files/SKU-708.pdf"}
+  714/VTC: {kg: 0.305, kind: brutto, source: "https://cdn.shopify.com/s/files/1/0606/7005/0487/files/SKU-714.pdf"}
+  6276/VTC: {kg: 0.348, kind: brutto, source: "https://cdn.shopify.com/s/files/1/0606/7005/0487/files/SKU-6276.pdf"}
+  6404/VTC: {kg: 0.523, kind: brutto, source: "https://cdn.shopify.com/s/files/1/0606/7005/0487/files/SKU-6404.pdf"}
+  6297/VTC: {kg: 0.155, kind: brutto, source: "https://cdn.shopify.com/s/files/1/0606/7005/0487/files/SKU-6297.pdf"}
+  715/VTC: {kg: 0.554, kind: brutto, source: "https://cdn.shopify.com/s/files/1/0606/7005/0487/files/SKU-715.pdf"}
+  716/VTC: {kg: 0.554, kind: brutto, source: "https://cdn.shopify.com/s/files/1/0606/7005/0487/files/SKU-716.pdf"}
+  4946/VTC: {kg: 0.4, kind: brutto, source: "https://cdn.shopify.com/s/files/1/0606/7005/0487/files/SKU-4946.pdf"}
+  871869979180399/FAR: {kg: 1.45, kind: netto, source: "https://assets.signify.com/is/content/Signify/911401885080_EU.en_AA.PROF.FP"}
+  871951495997299/FAR: {kg: 1.25, kind: netto, source: "https://assets.signify.com/is/content/Signify/911401879584_EU.en_AA.PROF.FP"}
+  872016951661899/FAR: {kg: 1.35, kind: netto, source: "https://assets.signify.com/is/content/Signify/911401876185_EU.en_AA.PROF.FP"}
+  001559/KOB: {kg: 1.45, kind: netto, source: "https://b2b.kobi.pl/pl/file/download/11090", note: "strona produktu podaje mniej (1,35/1,42 kg) - przyjeta karta katalogowa"}
+  001560/KOB: {kg: 1.45, kind: netto, source: "https://b2b.kobi.pl/pl/file/download/11090"}
+  001561/KOB: {kg: 1.54, kind: netto, source: "https://b2b.kobi.pl/pl/file/download/11090", note: "strona produktu podaje mniej (1,35/1,42 kg) - przyjeta karta katalogowa"}
+  001562/KOB: {kg: 1.54, kind: netto, source: "https://b2b.kobi.pl/pl/file/download/11090"}
+  003826/KOB: {kg: 1.15, kind: netto, source: "https://b2b.kobi.pl/pl/file/download/9111"}
+  003825/KOB: {kg: 1.42, kind: netto, source: "https://b2b.kobi.pl/pl/file/download/6779"}
+  003822/KOB: {kg: 1.42, kind: netto, source: "https://b2b.kobi.pl/pl/file/download/7199"}
+  003821/KOB: {kg: 1.25, kind: netto, source: "https://b2b.kobi.pl/pl/file/download/7197"}
+  001783/KOB: {kg: 0.65, kind: netto, source: "https://b2b.kobi.pl/pl/file/download/9550"}
+  001782/KOB: {kg: 0.79, kind: netto, source: "https://b2b.kobi.pl/pl/file/download/9547"}
+  GT-RM60X60-00/GTV: {kg: 0.55, kind: netto, source: "https://assets.gtv.com.pl/assets/attachments/karta_produktowa/GT-RMXXXXX-00_rama%20mont%20natynk%20KP_NEW.pdf", note: "karta podaje 550 g bez okreslenia netto/brutto"}
+  4058075402843/LDV: {kg: 1.276, kind: brutto, source: "https://www.ledvance.com/en/product-datasheet/8626/138217"}
+  # Brak danych: V-TAC 4872/4887/6430/4913/4914/4923, Philips EAN 8721103047687, Bemko BLS/BLO, GTV RM-KNG60X60-00, Ledvance 4099854705052
+  # Kable YDYp (2026-10-13): wagi konfekcji w sklepie byly ~10x za niskie (ponizej masy samej miedzi).
+  172153012C0100/NKT: {kg: 0.097, kind: netto, source: "https://el12.com/cavi-e-fili/cavo-ydyp-2x25-450750-bianco-172153012c0100,i104414", note: "97 kg/km, odcinek 1 m"}
+  172153012C0100/NKT/100m: {kg: 9.7, kind: netto, source: "https://el12.com/cavi-e-fili/cavo-ydyp-2x25-450750-bianco-172153012c0100,i104414", note: "97 kg/km x 100 m"}
+  5907702810102/EKB: {kg: 0.076, kind: brutto, source: "https://www.obi.pl/przewody-w-izolacji-z-tworzyw-sztucznych/aks-zielonka-przewod-ydyp-2x1-5-mm2-450-750-v-25-m/p/5537535", note: "YDYp 2x1,5 innego producenta: krazek 25 m = 1,90 kg; Elektrokabel nie podaje masy"}
+  5907702810102/EKB/100m: {kg: 7.6, kind: brutto, source: "https://www.obi.pl/przewody-w-izolacji-z-tworzyw-sztucznych/aks-zielonka-przewod-ydyp-2x1-5-mm2-450-750-v-25-m/p/5537535", note: "0,076 kg/m x 100 m"}
+  172153016C0100/NKT: {kg: 0.269, kind: netto, source: "https://el12.com/en/cables-and-wires/ydyp-3x6-cable-450750v-white-172153016c0100,i104418", note: "269 kg/km (TIM 13029013: 258 kg/km); sklep mial 6,5 kg / 100 m"}
+  172153017C0100/NKT: {kg: 0.133, kind: netto, source: "https://el12.com/en/cables-and-wires/lighting-installation-cable-ydyp-4x15-450750v-172153017c0100,i240968", note: "133 kg/km; sklep mial 9 kg / 100 m"}
+  5907702810553/EKB: {kg: 0.143, kind: netto, source: "https://sklep.ke.pl/amfile/file/download/file/882764/product/126728", note: "karta ELPAR YDY(zo) 450/750V 5x1: 143 kg/km; sklep mial 37 kg / 100 m"}
+  5907702810935/EKB: {kg: 0.048, kind: netto, note: "H03VV-F OMY 4x0,5 - waga wlasnego produktu 8POMY4005/EKB; sklep mial 0,64 kg / 100 m"}
+  5907702817040/EKB: {kg: 0.156, kind: netto, note: "jak bialy 5907702811031/EKB (15,6 kg / 100 m); sklep mial 9,3 kg / 100 m"}
+  713531/HLK: {kg: 0.115, kind: brutto, source: "https://www.aceflex.de/?p=38496", note: "SOLARFLEX-X H1Z2Z2-K 6 mm2, beben 500 m = 57,6 kg"}
+  713569/HLK: {kg: 0.115, kind: brutto, source: "https://www.aceflex.de/?p=38496", note: "jak 713531/HLK, kolor czerwony"}
+  18048682/HLK: {kg: 0.011, kind: netto, source: "https://solar-distribution.baywa-re.pl/en/mc4-plug-pv-kst4-6ii-ur-5-5-9-mm.html"}
+  18048683/HLK: {kg: 0.011, kind: netto, note: "gniazdo PV-KBT4/6II-UR - jak wtyk PV-KST4/6II-UR"}
+  PZ-2510003-2001000/ANT: {kg: 1.6, kind: netto, note: "wyliczona: 0,2 m x 100 m x 0,08 mm folii PE"}
+  # Brak danych: mufy Radpol WMEJA0I050E000C1, WMEJA0I030AB00D1, WMEJA0I050CD00D1

@@ -1,0 +1,23 @@
+# Ile paneli LED (klasa Gabaryt) miesci jedna paczka kurierska. Czyta src/fill_product_weights.py.
+# Flexible Shipping liczy paczki progami 30/60/90 kg (waga i waga gabarytowa), wiec liczbe sztuk
+# w paczce ustawia sie waga wysylkowa 1 szt.: waga = fill_kg / per_package
+# (per_package szt. = 28,8 kg < 30 kg, kolejna sztuka przekracza 30 kg -> druga paczka).
+# Decyzja uzytkownika 2026-10-06: paczka = 2 kartony zbiorcze producenta.
+package_limit_kg: 30
+fill_kg: 28.8
+# Waga gabarytowa tez musi zmiescic per_package szt. ponizej 30 kg. Dzielniki metod:
+# GLS 5000, DPD 6000, DHL 4000 (DHL anuluje panele w klasie Gabaryt) -> sprawdzamy GLS.
+dim_weight_ratio: 5000
+default: {per_package: 10, note: "pozostali producenci - decyzja 2026-10-06"}
+brands:
+  philips:
+    per_package: 8
+    carton_qty: 4
+    match: [Philips, Signify, PILA]
+    note: "karton zbiorczy Philips/Signify/PILA = 4 szt., paczka = 2 kartony"
+  ledvance:
+    per_package: 12
+    carton_qty: 6
+    match: [Ledvance]
+    sku_suffixes: [LDV]
+    note: "karton zbiorczy Ledvance = 6 szt., paczka = 2 kartony"

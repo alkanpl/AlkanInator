@@ -1,0 +1,45 @@
+# Wymiary produktow (bez opakowania) potwierdzone w kartach producentow.
+# Czyta je src/fill_panel_dimensions.py jako zrodlo nadrzedne (obok Parametrow Kanlux).
+# footprint = [dluzszy, krotszy] w mm, diameter = srednica w mm, height = wysokosc w mm.
+# status: OK albo WARNING (z uwaga w note). Sprawdzone 2026-10-05.
+products:
+  # --- V-TAC (karty SKU-<n>.pdf V-TAC) ---
+  734/VTC: {diameter: 170, height: 32, source: "https://cdn.shopify.com/s/files/1/0606/7005/0487/files/SKU-734.pdf", note: "otwor montazowy 75-100 mm (regulowany)"}
+  6294/VTC: {diameter: 84, height: 12, source: "https://cdn.shopify.com/s/files/1/0606/7005/0487/files/SKU-6294.pdf"}
+  708/VTC: {diameter: 120, height: 12, source: "https://cdn.shopify.com/s/files/1/0606/7005/0487/files/SKU-708.pdf"}
+  714/VTC: {diameter: 170, height: 12, source: "https://cdn.shopify.com/s/files/1/0606/7005/0487/files/SKU-714.pdf"}
+  6276/VTC: {footprint: [100, 100], height: 35, source: "https://cdn.shopify.com/s/files/1/0606/7005/0487/files/SKU-6276.pdf"}
+  6404/VTC: {footprint: [290, 45], height: 65, source: "https://cdn.shopify.com/s/files/1/0606/7005/0487/files/SKU-6404.pdf"}
+  6297/VTC: {footprint: [84, 84], height: 12, source: "https://cdn.shopify.com/s/files/1/0606/7005/0487/files/SKU-6297.pdf"}
+  715/VTC: {footprint: [225, 225], height: 12, source: "https://cdn.shopify.com/s/files/1/0606/7005/0487/files/SKU-715.pdf"}
+  716/VTC: {footprint: [225, 225], height: 12, source: "https://cdn.shopify.com/s/files/1/0606/7005/0487/files/SKU-716.pdf"}
+  4913/VTC: {footprint: [140, 140], height: 24, source: "https://cdn.shopify.com/s/files/1/0606/7005/0487/files/SKU-4913.pdf", note: "panel natynkowy wg karty"}
+  4914/VTC: {footprint: [140, 140], height: 24, source: "https://cdn.shopify.com/s/files/1/0606/7005/0487/files/SKU-4914.pdf", status: WARNING, note: "panel natynkowy; karta podaje 4500K, nazwa 4000K"}
+  4946/VTC: {footprint: [146, 146], height: 8, source: "https://cdn.shopify.com/s/files/1/0606/7005/0487/files/SKU-4946.pdf", note: "panel bezramkowy, otwor 130x130"}
+  4923/VTC: {footprint: [142, 142], height: 40, source: "https://cdn.shopify.com/s/files/1/0606/7005/0487/files/SKU-4924.pdf", status: WARNING, note: "wysokosc 40 mm zgodna w obu kartach; karta 4923 podaje 150x150, nowsza karta blizniaka 4924 142x142 (jak w nazwie)"}
+  # 4872 VT-2407RD, 4887 VT-2407SQ, 6430 VT-3107SQ - karty sprzeczne (25 vs 12 mm, zle wymiary) - celowo pominiete
+  # --- Kobi (b2b.kobi.pl, wymiary produktu) ---
+  001559/KOB: {footprint: [595, 595], height: 39, source: "https://b2b.kobi.pl/pl/product/9896,panel-led-brisbane-36w-60x60-4000k-bialy-kobi-premium"}
+  001560/KOB: {footprint: [595, 595], height: 39, source: "https://b2b.kobi.pl/pl/product/9897,panel-led-brisbane-36w-60x60-4000k-czarny-kobi-premium"}
+  001561/KOB: {footprint: [1195, 295], height: 39, source: "https://b2b.kobi.pl/pl/product/9898,panel-led-brisbane-36w-30x120-4000k-bialy-kobi-premium"}
+  001562/KOB: {footprint: [1195, 295], height: 39, source: "https://b2b.kobi.pl/pl/product/9899,panel-led-brisbane-36w-30x120-4000k-czarny-kobi-premium"}
+  003826/KOB: {footprint: [595, 595], height: 32, source: "https://b2b.kobi.pl/pl/product/12269,panel-led-davro-40w-60x60-4000k-kobi"}
+  003825/KOB: {footprint: [595, 595], height: 32, source: "https://b2b.kobi.pl/pl/product/12268,panel-led-capri-g3-25-36-40w-60x60-3cct-ip44-ugr-19-kobi-pro"}
+  003822/KOB: {footprint: [595, 595], height: 32, source: "https://b2b.kobi.pl/pl/product/12265,panel-led-capri-g2-25-36-40w-60x60-3cct-ip44-ugr-19-kobi-pro"}
+  003821/KOB: {footprint: [595, 595], height: 32, source: "https://b2b.kobi.pl/pl/product/12264,panel-led-capri-g2-25-36-40w-60x60-3cct-ip44-kobi-pro"}
+  001783/KOB: {footprint: [600, 600], height: 63, source: "https://b2b.kobi.pl/pl/product/10120,ramka-63mm-do-panelu-led-60x60-klik-biala-kobi", note: "Kobi podaje 60x60 cm (prawdopodobnie nominalnie)"}
+  001782/KOB: {footprint: [1200, 300], height: 63, source: "https://b2b.kobi.pl/pl/product/10119,ramka-63mm-do-panelu-led-30x120-klik-bialy-kobi", note: "Kobi podaje 30x120 cm (prawdopodobnie nominalnie)"}
+  # --- Philips / Signify (karty 12NC) ---
+  871869979180399/FAR: {footprint: [595, 595], height: 34, source: "https://assets.signify.com/is/content/Signify/911401885080_EU.en_AA.PROF.FP"}
+  871951495997299/FAR: {footprint: [595, 595], height: 34, source: "https://assets.signify.com/is/content/Signify/911401879584_EU.en_AA.PROF.FP"}
+  872016951661899/FAR: {footprint: [595, 595], height: 59, source: "https://assets.signify.com/is/content/Signify/911401876185_EU.en_AA.PROF.FP", note: "Gen5 - grubszy niz starsze RC065B"}
+  # 872110304768700/FAR - brak karty z tym EAN (najblizszy 12NC 911401875485: 595x595x59) - celowo pominiete
+  # --- Bemko ---
+  C72BLS0662604KWHU19/BMK: {footprint: [595, 595], height: 35, source: "https://bemko.pl/en/product/panel-backlight-superior-bls-26w-4000k-4000lm-ip44-ugr19-60x60-10032/pdf"}
+  C72BLS0663404KWHU19/BMK: {footprint: [595, 595], height: 35, source: "https://bemko.pl/en/product/panel-backlight-superior-bls-34w-4000k-5000lm-ip44-ugr19-60x60-10034/pdf"}
+  C72-BLO-066-340-4K-BL/BMK: {diameter: 600, height: 38, source: "https://bemko.pl/en/product/panel-backlight-blo-nt-round-34w-4400lm-4000k-ip40-o60-black-11918/pdf"}
+  # --- GTV ---
+  GT-RM60X60-00/GTV: {footprint: [600, 600], height: 43, source: "https://gtv.com.pl/en/produkt/GT-RM60X60-00", note: "wysokosc h-43 mm z nazwy producenta"}
+  # RM-KNG60X60-00/GTV - GTV podaje tylko 600x600, bez wysokosci
+  # --- Ledvance ---
+  4058075402843/LDV: {footprint: [613, 613], height: 70, source: "https://www.ledvance.com/en/product-datasheet/8626/138217"}

@@ -1,0 +1,19 @@
+# Rury karbowane dwuwarstwowe (AROT) - dane producentow, sprawdzone 2026-10-05.
+# outer/inner = srednica zewnetrzna/wewnetrzna [mm]; inner wg strony produktu
+# (nominalna, jak w oznaczeniu "50/41"), minimalna z karty KOPOS w inner_min.
+# coil = krazek [cm]: [srednica, wysokosc] (karta KOPOFLEX podaje "64x31"),
+# coil_kg = masa krazka. Czyta src/fill_corrugated_pipe_dimensions.py.
+kopos_datasheet: &kopos "https://www.kopos.pl/sites/default/files/product_attachments/2026/06/kopoflex_pl.pdf"
+qsys_datasheet: &qsys "https://qsystems.pl/wp-content/uploads/2022/01/2024_7-QRK-FLEX.pdf"
+products:
+  5903760236441/QSY: {outer: 32, inner: 25, source: *qsys, note: "Q-Systems QRK 32/25 FLEX 25 m; wymiarow krazka producent nie publikuje"}
+  5903760236434/QSY: {outer: 32, inner: 25, source: *qsys, note: "Q-Systems QRK 32/50 FLEX 50 m; wymiarow krazka producent nie publikuje"}
+  KF 09040_CA/KOP: {outer: 40, inner: 32, inner_min: 30, coil: [64, 31], coil_kg: 5.5, source: *kopos}
+  KF 09040_CB/KOP: {outer: 40, inner: 32, inner_min: 30, coil: [50, 27], coil_kg: 2.8, source: *kopos}
+  KF 09050_CA/KOP: {outer: 50, inner: 41, inner_min: 37, coil: [77, 33], coil_kg: 8.0, source: *kopos}
+  KF 09050_CB/KOP: {outer: 50, inner: 41, inner_min: 37, coil: [60, 33], coil_kg: 4.0, source: *kopos}
+  KF 09075_CA/KOP: {outer: 75, inner: 61, inner_min: 56, coil: [94, 50], coil_kg: 15.5, source: *kopos}
+  KF 09075_CB/KOP: {outer: 75, inner: 61, inner_min: 56, coil: [81, 38], coil_kg: 7.8, source: *kopos}
+  KF 09110_CA/KOP: {outer: 110, inner: 94, inner_min: 82, coil: [124, 60], coil_kg: 26.0, source: *kopos}
+  KF 09110_CB/KOP: {outer: 110, inner: 94, inner_min: 82, coil: [100, 46], coil_kg: 13.0, source: *kopos}
+  KF 09160_CB/KOP: {outer: 160, inner: 136, inner_min: 120, coil: [145, 50], coil_kg: 23.0, source: *kopos}
