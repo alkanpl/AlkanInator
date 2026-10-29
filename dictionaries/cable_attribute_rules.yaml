@@ -1,0 +1,49 @@
+# Atrybuty kabli ustalane z referencji (src/fill_cable_attributes_from_references.py).
+# Kolejnosc: wartosc produktu > rodzenstwo (ten sam SKU bazowy, konfekcje /1m /100m ...)
+# > tytul (napiecie, "żo") > wartosc typowa dla typu ponizej. Istniejace wartosci nie sa
+# nadpisywane - roznice ida do raportu. Wszystkie wartosci sa terminami sklepu (zrzut 2026-10-12).
+
+# Typ rozpoznawany z tytulu, gdy atrybut "Typ" jest pusty. Kolejnosc ma znaczenie (YDYp przed YDY).
+type_patterns:
+  - {type: YDYp, pattern: '\bYDYp'}
+  - {type: YDY, pattern: '\bYDY'}
+  - {type: YKY, pattern: '\bYKY'}
+  - {type: OMYP, pattern: '\bOMYp\b'}
+  - {type: OMY, pattern: '\bOMY'}
+  - {type: OWY, pattern: '\bOWY'}
+  - {type: LGY, pattern: '\bLGY'}
+  - {type: H07V-U, pattern: '\bH07V-U\b'}
+
+# Kolor z tytulu, gdy atrybut Kolor jest pusty (terminy sklepu).
+color_patterns:
+  - {color: Biały, pattern: 'biał'}
+  - {color: Czarny, pattern: 'czarn'}
+  - {color: Czerwony, pattern: 'czerwon'}
+  - {color: Niebieski, pattern: 'niebiesk'}
+  - {color: Brązowy, pattern: 'brąz'}
+
+# Wartosci typowe dla typu (budowa wg normy). napiecie = U z pary U0/U.
+types:
+  YDY:    {Typ izolacji: PVC, Ekranowany: Nie, "Napięcie [V]": "750"}    # 450/750 V
+  YDYp:   {Typ izolacji: PVC, Ekranowany: Nie, "Napięcie [V]": "750"}    # 450/750 V
+  YKY:    {Typ izolacji: PVC, Ekranowany: Nie, "Napięcie [V]": "1000"}   # 0,6/1 kV
+  OWY:    {Typ izolacji: PVC, Ekranowany: Nie, "Napięcie [V]": "500"}    # H05VV-F 300/500 V
+  OMY:    {Typ izolacji: PVC, Ekranowany: Nie, "Napięcie [V]": "300"}    # H03VV-F 300/300 V
+  OMYP:   {Typ izolacji: PVC, Ekranowany: Nie, "Napięcie [V]": "300"}    # H03VVH2-F 300/300 V
+  LGY:    {Typ izolacji: PVC, Ekranowany: Nie}                         # H05V-K 500 V / H07V-K 750 V - z tytulu albo przekroju
+  H07V-U: {Typ izolacji: PVC, Ekranowany: Nie, "Napięcie [V]": "750"}
+  H07RN-F: {Typ izolacji: G - guma, Ekranowany: Nie, "Napięcie [V]": "750"}
+  Bezhalogenowe N2XH-J: {Typ izolacji: "2X– polietylen sieciowany", Ekranowany: Nie, "Napięcie [V]": "1000"}
+  Ognioodporny HDGSżo: {Typ izolacji: "Gs– Guma silikonowa", Ekranowany: Nie, "Napięcie [V]": "500"}
+  Przeciwpożarowy YnTKSYekw: {Ekranowany: Tak}
+  Fotowoltaiczne: {Ekranowany: Nie}
+
+# LGY: do 1 mm2 to H05V-K 300/500 V, od 1,5 mm2 H07V-K 450/750 V.
+lgy_voltage: {max_h05_mm2: 1.0, h05: "500", h07: "750"}
+
+# Producent kabli to zawsze "Polski Producent" (decyzja uzytkownika 2026-10-07) - dotyczy typow z listy.
+polish_producer_types: [YDY, YDYp, YKY, OWY, OMY, OMYP, LGY, H07V-U, H07RN-F, Bezhalogenowe N2XH-J, Ognioodporny HDGSżo, Przeciwpożarowy YnTKSYekw]
+polish_producer: Polski Producent
+
+# Atrybuty kopiowane z rodzenstwa, gdy u produktu sa puste.
+sibling_attributes: [Typ, Kolor, Liczba żył, "Przekrój żyły [mm]", Dane producenta, "Napięcie [V]", Typ izolacji, Ekranowany, Żyła ochronna, Materiał powłoki, Budowa żyły]
