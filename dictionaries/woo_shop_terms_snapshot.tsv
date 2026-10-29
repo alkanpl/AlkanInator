@@ -1,0 +1,1750 @@
+# Klasy wysylkowe, terminy 'Wysylka w ciagu' i tagi Woo z API sklepu alkanlocal.test:8443, zrzut 2026-10-21.
+# Generuje: py src/woo_api_cli.py knowledge - nie edytowac recznie.
+taxonomy	term_id	name	slug	count
+product_shipping_class	3213	Długie	dlugie	212
+product_shipping_class	2126	Gabaryt	gabaryt	258
+product_shipping_class	5897	Kable i przewody do 15 kg	kable-i-przewody	254
+product_shipping_class	3214	Odbiór osobisty	odbior-osobisty	56
+product_shipping_class	6216	Paleta 150zł	paleta	3
+product_shipping_class	7601	Przesyłka kurierska	kurierska	1
+product_shipping_class	3212	Standard	standard	9533
+shipping_within	8526	Dostępność po 12 maja	dostepnosc-po-12-maja	6
+shipping_within	8525	Na zamówienie - zapytaj o czas realizacji	na-zamowienie-zapytaj-o-czas-realizacji	264
+shipping_within	3216	Niedostępne	niedostepne	341
+shipping_within	7298	Od 7 do 14 dni	od-7-do-14-dni	60
+shipping_within	6206	Termin realizacji do potwierdzenia (około 14 dni)	do-14-dni	1655
+shipping_within	7956	Termin realizacji do potwierdzenia (około 21 dni)	termin-realizacji-do-potwierdzenia-okolo-21-dni	603
+shipping_within	7597	Termin realizacji do potwierdzenia (około 3 dni)	na-magazynie-wysylka-do-3-dni	141
+shipping_within	2183	Termin realizacji do potwierdzenia (około 5 dni)	do-5-dni	139
+shipping_within	2184	Termin realizacji do potwierdzenia (około 7 dni)	do-7-dni	9290
+shipping_within	5395	Wysyłka w ciągu 2 dni roboczych	wysylka-w-ciagu-2-dni-roboczych	4
+product_tag	4950	10x Żarówka Edo Fari GU10	10x-zarowka-edo-fari-gu10	5
+product_tag	5082	6x Żarówka EDO MARI E27	6x-zarowka-edo-mari-e27	0
+product_tag	6157	9W GU10 Osram	9w-gu10-osram	2
+product_tag	8314	Adapter podtynkowy system Ospel45 do serii As Ospel Antybakteryjny	adapter-podtynkowy-system-ospel45-do-serii-as-ospel-antybakteryjny	1
+product_tag	4668	Adapter podtynkowy systemu 45 Ospel Aria	adapter-podtynkowy-systemu-45-ospel-aria	5
+product_tag	8416	Adapter podtynkowy systemu OSPEL 45 do serii Sonata Ospel	adapter-podtynkowy-systemu-ospel-45-do-serii-sonata-ospel	9
+product_tag	6329	Adapter przejściówka na osprzęt 55 simon	adapter-przejsciowka-na-osprzet-55-simon	6
+product_tag	6723	Adapter Simon 54	adapter-simon-54	2
+product_tag	5345	Akumulator GP AAA	akumulator-gp-aaa	0
+product_tag	5350	Akumulator GP R6	akumulator-gp-r6	0
+product_tag	478	ans	ans	0
+product_tag	479	ansmann	ansmann	0
+product_tag	7624	Arot50+	arot50	3
+product_tag	5960	Automat schodowy natynkowy FF	automat-schodowy-natynkowy-ff	4
+product_tag	5961	Automat zmierzchowy AWZ natynkowy FF	automat-zmierzchowy-awz-natynkowy-ff	2
+product_tag	5751	Bank energii POWERBOX Kobi	bank-energii-powerbox-kobi	0
+product_tag	7179	Bari EDO E14	bari-edo-e14	6
+product_tag	7639	Baterie Alkaliczne AA Energizer	baterie-alkaliczne-aa-energizer	2
+product_tag	7640	Baterie Alkaliczne AAA Energizer	baterie-alkaliczne-aaa-energizer	2
+product_tag	7683	Bednarka cynkmal	bednarka-cynkmal	4
+product_tag	5289	Belka led CYNIDECO Brolux	belka-led-cynideco-brolux	1
+product_tag	430	białe	biale	0
+product_tag	425	biały	bialy	0
+product_tag	6086	black-week-2023	black-week-2023	15
+product_tag	7631	BLINGO prostokatny montaz	blingo-prostokatny-montaz	2
+product_tag	6718	Bluetooth Simon 54	bluetooth-simon-54	2
+product_tag	6626	C5T.01 Simon 10	c5t-01-simon-10	2
+product_tag	6637	C6T.01 Simon 10	c6t-01-simon-10	2
+product_tag	6605	CAD.01 Simon 10	cad-01-simon-10	2
+product_tag	6608	CAD1.01 Simon 10	cad1-01-simon-10	2
+product_tag	6607	CADSATF.01 Simon 10	cadsatf-01-simon-10	2
+product_tag	6763	CAK.01 Simon 10	cak-01-simon-10	2
+product_tag	6764	CAK1.01 Simon 10	cak1-01-simon-10	2
+product_tag	6604	CAK2F.01 Simon 10	cak2f-01-simon-10	2
+product_tag	6765	CAP10.01 Simon 10	cap10-01-simon-10	2
+product_tag	6566	CASFRJ455.01 Simon 10	casfrj455-01-simon-10	2
+product_tag	6768	CASK2F.01 Simon 10	cask2f-01-simon-10	2
+product_tag	6569	CASP.01 Simon 10	casp-01-simon-10	2
+product_tag	6606	CAZ.01 Simon 10	caz-01-simon-10	2
+product_tag	6647	CD1C.01 Simon 10	cd1c-01-simon-10	2
+product_tag	7309	Ceownik BAKS	ceownik-baks	5
+product_tag	6572	CG1.01 Simon 10	cg1-01-simon-10	2
+product_tag	6634	CG2 Simon 10	cg2-simon-10	2
+product_tag	6573	CG2M.01 Simon 10	cg2m-01-simon-10	2
+product_tag	6574	CGD1.01 Simon 10	cgd1-01-simon-10	3
+product_tag	6623	CGL2.01 Simon 10	cgl2-01-simon-10	2
+product_tag	6621	CGSZ1.01 Simon 10	cgsz1-01-simon-10	2
+product_tag	6620	CGSZ1B.01 Simon 10	cgsz1b-01-simon-10	2
+product_tag	6631	CGSZ1BZ.01 Simon 10	cgsz1bz-01-simon-10	2
+product_tag	6628	CGSZ1Z.01 Simon 10	cgsz1z-01-simon-10	2
+product_tag	6630	CGSZ2 Simon 10	cgsz2-simon-10	2
+product_tag	6576	CGZ1B.01 Simon 10	cgz1b-01-simon-10	2
+product_tag	6609	CGZ1BC.01 Simon 10	cgz1bc-01-simon-10	2
+product_tag	6632	CGZ1BCU.01 Simon 10	cgz1bcu-01-simon-10	2
+product_tag	6633	CGZ1BCUZ.01 Simon 10	cgz1bcuz-01-simon-10	2
+product_tag	6618	CGZ1BCZ.01 Simon 10	cgz1bcz-01-simon-10	2
+product_tag	6616	CGZ1C.01 Simon 10	cgz1c-01-simon-10	2
+product_tag	6661	CGZ1CZ.01 Simon 10	cgz1cz-01-simon-10	2
+product_tag	6662	CGZ2 Simon 10	cgz2-simon-10	2
+product_tag	6578	CGZ2M.01 Simon 10	cgz2m-01-simon-10	2
+product_tag	6615	CGZ2MZ.01 Simon 10	cgz2mz-01-simon-10	2
+product_tag	6664	CGZ2T Simon 10	cgz2t-simon-10	2
+product_tag	6663	CGZ2TZ Simon 10	cgz2tz-simon-10	2
+product_tag	6579	CKP2.01 Simon 10	ckp2-01-simon-10	2
+product_tag	6659	CKW1L Simon 10	ckw1l-simon-10	0
+product_tag	6658	CKW5 Simon 10	ckw5-simon-10	0
+product_tag	6645	CP1C.01 Simon 10	cp1c-01-simon-10	2
+product_tag	6614	CPK1.01 Simon 10	cpk1-01-simon-10	2
+product_tag	6583	CPS.01 Simon 10	cps-01-simon-10	2
+product_tag	6646	CS1C.01 Simon 10	cs1c-01-simon-10	2
+product_tag	6649	CS9LA.01 Simon 10	cs9la-01-simon-10	2
+product_tag	6613	CSC Simon 10	csc-simon-10	2
+product_tag	6612	CSH Simon 10	csh-simon-10	2
+product_tag	6648	CW1C.01 Simon 10	cw1c-01-simon-10	2
+product_tag	6601	CZP1.01 Simon 10	czp1-01-simon-10	2
+product_tag	6061	Czujnik czadu Zamel	czujnik-czadu-zamel	5
+product_tag	6058	Czujnik dymu Zamel	czujnik-dymu-zamel	1
+product_tag	6059	Czujnik gazu Zamel	czujnik-gazu-zamel	2
+product_tag	7565	Czujnik ruchu 1200W 180° Bemko	czujnik-ruchu-1200w-180-bemko	2
+product_tag	7566	Czujnik ruchu 800W 180° Bemko	czujnik-ruchu-800w-180-bemko	2
+product_tag	5963	Czujnik ruchu FF	czujnik-ruchu-ff	4
+product_tag	7476	Czujnik ruchu Kanlux	czujnik-ruchu-kanlux	5
+product_tag	5095	Czujnik ruchu Karlik Deco	czujnik-ruchu-karlik-deco	6
+product_tag	4670	Czujnik ruchu Ospel Aria	czujnik-ruchu-ospel-aria	0
+product_tag	4671	Czujnik ruchu Ospel Impresja	czujnik-ruchu-ospel-impresja	0
+product_tag	6328	Czujnik ruchu z przekaźnikiem 55 simon	czujnik-ruchu-z-przekaznikiem-55-simon	6
+product_tag	5314	czujniki czadu gazu Zamel	czujniki-czadu-gazu-zamel	0
+product_tag	7801	czujniki czadu i gazu	czujniki-czadu-i-gazu	3
+product_tag	6602	CZW1.01 Simon 10	czw1-01-simon-10	2
+product_tag	7500	debug	debug	0
+product_tag	4768	DORYT	doryt	0
+product_tag	7304	Drabinka kablowa cynkowana Baks	drabinka-kablowa-cynkowana-baks	7
+product_tag	5959	Dwukanałowy sterownik FF	dwukanalowy-sterownik-ff	2
+product_tag	6877	Dzwonek 2 Simon 54	dzwonek-2-simon-54	2
+product_tag	6072	Dzwonek BIM-BAM GONG ZAMEL	dzwonek-bim-bam-gong-zamel	2
+product_tag	6725	Dzwonek Simon 54	dzwonek-simon-54	2
+product_tag	4377	EDO Osmin	edo-osmin	2
+product_tag	7110	edo osmin RIM	edo-osmin-rim	5
+product_tag	5469	edo przedłużacz	edo-przedluzacz	0
+product_tag	8252	Elektroniczny czujnik ruchu nano srebro Ospel As Antybakteryjny	elektroniczny-czujnik-ruchu-nano-srebro-ospel-as-antybakteryjny	1
+product_tag	8171	Elektroniczny czujnik ruchu Ospel Aria	elektroniczny-czujnik-ruchu-ospel-aria	5
+product_tag	8071	Elektroniczny czujnik ruchu Ospel As	elektroniczny-czujnik-ruchu-ospel-as	6
+product_tag	7965	Elektroniczny czujnik ruchu Ospel Impresja	elektroniczny-czujnik-ruchu-ospel-impresja	6
+product_tag	8468	Elektroniczny czujnik ruchu Ospel Sonata	elektroniczny-czujnik-ruchu-ospel-sonata	9
+product_tag	6727	Elektroniczny łącznik Simon 54	elektroniczny-lacznik-simon-54	2
+product_tag	7651	Energizer CR	energizer-cr	7
+product_tag	7641	Energizer MAX AA	energizer-max-aa	2
+product_tag	7642	Energizer MAX AAA	energizer-max-aaa	2
+product_tag	4918	falaga lampa	falaga-lampa	0
+product_tag	5761	Falownik trójfazowy FoxESS	falownik-trojfazowy-foxess	0
+product_tag	5900	ff zegary tmp	ff-zegary-tmp	0
+product_tag	431	ghe-1	ghe-1	0
+product_tag	4866	Girlanda ogrodowa EDO	girlanda-ogrodowa-edo	3
+product_tag	4869	Girlanda ogrodowa zestaw EDO	girlanda-ogrodowa-zestaw-edo	0
+product_tag	4849	girlandy	girlandy	4
+product_tag	428	gniazdko	gniazdko	0
+product_tag	6327	Gniazdko wtyczkowe bez uziemienia z przesłonami 55 simon	gniazdko-wtyczkowe-bez-uziemienia-z-przeslonami-55-simon	6
+product_tag	427	gniazdo	gniazdo	0
+product_tag	6872	Gniazdo antenowe F + RJ45 Simon 54	gniazdo-antenowe-f-rj45-simon-54	2
+product_tag	6766	Gniazdo antenowe F Simon 10	gniazdo-antenowe-f-simon-10	4
+product_tag	6789	Gniazdo antenowe F Simon 54	gniazdo-antenowe-f-simon-54	6
+product_tag	5102	Gniazdo antenowe Karlik DECO	gniazdo-antenowe-karlik-deco	56
+product_tag	5108	Gniazdo antenowe Karlik MINI	gniazdo-antenowe-karlik-mini	3
+product_tag	4673	Gniazdo antenowe Ospel Aria	gniazdo-antenowe-ospel-aria	0
+product_tag	4674	Gniazdo antenowe Ospel As	gniazdo-antenowe-ospel-as	0
+product_tag	4675	Gniazdo antenowe Ospel Impresja	gniazdo-antenowe-ospel-impresja	0
+product_tag	6326	Gniazdo antenowe R-TV końcowe separowane 55 simon	gniazdo-antenowe-r-tv-koncowe-separowane-55-simon	6
+product_tag	6802	Gniazdo antenowe R-TV końcowe separowane Simon 54	gniazdo-antenowe-r-tv-koncowe-separowane-simon-54	2
+product_tag	6325	Gniazdo antenowe R-TV przelotowe 10 dB simon 55	gniazdo-antenowe-r-tv-przelotowe-10-db-simon-55	6
+product_tag	6804	Gniazdo antenowe R-TV przelotowe Simon 54	gniazdo-antenowe-r-tv-przelotowe-simon-54	2
+product_tag	6324	Gniazdo antenowe R-TV zakończeniowe 10 dB simon 55	gniazdo-antenowe-r-tv-zakonczeniowe-10-db-simon-55	6
+product_tag	6869	Gniazdo antenowe R-TV zakończeniowe Simon 54	gniazdo-antenowe-r-tv-zakonczeniowe-simon-54	2
+product_tag	6800	Gniazdo antenowe R-TV-DATA Simon 54	gniazdo-antenowe-r-tv-data-simon-54	2
+product_tag	6323	Gniazdo antenowe R-TV-SAT końcowe simon 55	gniazdo-antenowe-r-tv-sat-koncowe-simon-55	6
+product_tag	6322	Gniazdo antenowe R-TV-SAT przelotowe 7 dB simon 55	gniazdo-antenowe-r-tv-sat-przelotowe-7-db-simon-55	6
+product_tag	6832	Gniazdo antenowe R-TV-SAT przelotowe Simon 54	gniazdo-antenowe-r-tv-sat-przelotowe-simon-54	2
+product_tag	6767	Gniazdo antenowe R-TV-SAT Simon 10	gniazdo-antenowe-r-tv-sat-simon-10	4
+product_tag	6788	Gniazdo antenowe R-TV-SAT Simon 54	gniazdo-antenowe-r-tv-sat-simon-54	13
+product_tag	7971	Gniazdo antenowe RTV końcowe Ospel Impresja	gniazdo-antenowe-rtv-koncowe-ospel-impresja	6
+product_tag	6779	Gniazdo antenowe RTV Simon 54	gniazdo-antenowe-rtv-simon-54	6
+product_tag	8055	Gniazdo antenowe RTV2xSAT Ospel As	gniazdo-antenowe-rtv2xsat-ospel-as	6
+product_tag	7972	Gniazdo antenowe RTVSAT końcowe Ospel Impresja	gniazdo-antenowe-rtvsat-koncowe-ospel-impresja	6
+product_tag	7973	Gniazdo antenowe RTVSAT przelotowe Ospel Impresja	gniazdo-antenowe-rtvsat-przelotowe-ospel-impresja	6
+product_tag	7970	Gniazdo antenowe RTVSAT z dwoma wyjściami SAT Ospel Impresja	gniazdo-antenowe-rtvsat-z-dwoma-wyjsciami-sat-ospel-impresja	6
+product_tag	6348	Gniazdo antenowe satelitarne podwójne SAT-SAT-RTV 55 simon	gniazdo-antenowe-satelitarne-podwojne-sat-sat-rtv-55-simon	5
+product_tag	6743	Gniazdo antenowe Simon 10	gniazdo-antenowe-simon-10	0
+product_tag	6347	Gniazdo antenowe TV pojedyncze 55 simon	gniazdo-antenowe-tv-pojedyncze-55-simon	6
+product_tag	6790	Gniazdo antenowe TV-DATA Simon 54	gniazdo-antenowe-tv-data-simon-54	1
+product_tag	6346	Gniazdo antenowe typu F + RJ45 55 simon	gniazdo-antenowe-typu-f-rj45-55-simon	6
+product_tag	6345	Gniazdo antenowe typu F podwójne 55 simon	gniazdo-antenowe-typu-f-podwojne-55-simon	6
+product_tag	8283	Gniazdo antenowe typu F podwójne nano srebro Ospel As Antybakteryjny	gniazdo-antenowe-typu-f-podwojne-nano-srebro-ospel-as-antybakteryjny	1
+product_tag	8144	Gniazdo antenowe typu F podwójne Ospel Aria	gniazdo-antenowe-typu-f-podwojne-ospel-aria	5
+product_tag	8054	Gniazdo antenowe typu F podwójne Ospel As	gniazdo-antenowe-typu-f-podwojne-ospel-as	6
+product_tag	7969	Gniazdo antenowe typu F podwójne Ospel Impresja	gniazdo-antenowe-typu-f-podwojne-ospel-impresja	6
+product_tag	8398	Gniazdo antenowe typu F podwójne Ospel Sonata	gniazdo-antenowe-typu-f-podwojne-ospel-sonata	11
+product_tag	6344	Gniazdo antenowe typu F pojedyncze 55 simon	gniazdo-antenowe-typu-f-pojedyncze-55-simon	6
+product_tag	8284	Gniazdo antenowe typu F pojedyncze nano srebro Ospel As Antybakteryjny	gniazdo-antenowe-typu-f-pojedyncze-nano-srebro-ospel-as-antybakteryjny	1
+product_tag	8143	Gniazdo antenowe typu F pojedyncze Ospel Aria	gniazdo-antenowe-typu-f-pojedyncze-ospel-aria	5
+product_tag	8053	Gniazdo antenowe typu F pojedyncze Ospel As	gniazdo-antenowe-typu-f-pojedyncze-ospel-as	6
+product_tag	7968	Gniazdo antenowe typu F pojedyncze Ospel Impresja	gniazdo-antenowe-typu-f-pojedyncze-ospel-impresja	6
+product_tag	8440	Gniazdo antenowe typu F pojedyncze Ospel Sonata	gniazdo-antenowe-typu-f-pojedyncze-ospel-sonata	9
+product_tag	7628	Gniazdo cedar	gniazdo-cedar	2
+product_tag	8111	Gniazdo czerwone DATA Ospel As	gniazdo-czerwone-data-ospel-as	2
+product_tag	6343	Gniazdo DATA z kluczem uprawniającym 55 simon	gniazdo-data-z-kluczem-uprawniajacym-55-simon	7
+product_tag	6807	Gniazdo DATA z kluczem uprawniającym Simon 54	gniazdo-data-z-kluczem-uprawniajacym-simon-54	2
+product_tag	4701	Gniazdo ekwipotencjalne Ospel Aria	gniazdo-ekwipotencjalne-ospel-aria	0
+product_tag	6342	Gniazdo ekwipotencjalne podwójne 55 simon	gniazdo-ekwipotencjalne-podwojne-55-simon	6
+product_tag	8276	Gniazdo ekwipotencjalne podwójne nano srebro Ospel As Antybakteryjny	gniazdo-ekwipotencjalne-podwojne-nano-srebro-ospel-as-antybakteryjny	1
+product_tag	8151	Gniazdo ekwipotencjalne podwójne Ospel Aria	gniazdo-ekwipotencjalne-podwojne-ospel-aria	5
+product_tag	8218	Gniazdo ekwipotencjalne podwójne Ospel As	gniazdo-ekwipotencjalne-podwojne-ospel-as	6
+product_tag	8451	Gniazdo ekwipotencjalne podwójne Ospel Sonata	gniazdo-ekwipotencjalne-podwojne-ospel-sonata	9
+product_tag	6341	Gniazdo ekwipotencjalne pojedyncze 55 simon	gniazdo-ekwipotencjalne-pojedyncze-55-simon	6
+product_tag	8277	Gniazdo ekwipotencjalne pojedyncze nano srebro Ospel As Antybakteryjny	gniazdo-ekwipotencjalne-pojedyncze-nano-srebro-ospel-as-antybakteryjny	1
+product_tag	8150	Gniazdo ekwipotencjalne pojedyncze Ospel Aria	gniazdo-ekwipotencjalne-pojedyncze-ospel-aria	5
+product_tag	8219	Gniazdo ekwipotencjalne pojedyncze Ospel As	gniazdo-ekwipotencjalne-pojedyncze-ospel-as	6
+product_tag	8436	Gniazdo ekwipotencjalne pojedyncze Ospel Sonata	gniazdo-ekwipotencjalne-pojedyncze-ospel-sonata	9
+product_tag	6758	Gniazdo ekwipotencyjne Simon 10	gniazdo-ekwipotencyjne-simon-10	4
+product_tag	6713	Gniazdo ekwipotencyjne Simon 54	gniazdo-ekwipotencyjne-simon-54	4
+product_tag	6340	Gniazdo głośnikowe 1-krotne 55 simon	gniazdo-glosnikowe-1-krotne-55-simon	6
+product_tag	6339	Gniazdo głośnikowe 2-krotne 55 simon	gniazdo-glosnikowe-2-krotne-55-simon	6
+product_tag	6338	Gniazdo głośnikowe 4-krotne 55 simon	gniazdo-glosnikowe-4-krotne-55-simon	6
+product_tag	5112	Gniazdo głośnikowe Karlik DECO	gniazdo-glosnikowe-karlik-deco	21
+product_tag	6816	Gniazdo głośnikowe moduł Simon 54	gniazdo-glosnikowe-modul-simon-54	2
+product_tag	4703	Gniazdo głośnikowe Ospel Aria	gniazdo-glosnikowe-ospel-aria	0
+product_tag	4599	Gniazdo głośnikowe Ospel As	gniazdo-glosnikowe-ospel-as	0
+product_tag	4704	Gniazdo głośnikowe Ospel Impresja	gniazdo-glosnikowe-ospel-impresja	0
+product_tag	8313	Gniazdo głośnikowe podwójne nano srebro Ospel As Antybakteryjny	gniazdo-glosnikowe-podwojne-nano-srebro-ospel-as-antybakteryjny	1
+product_tag	8116	Gniazdo głośnikowe podwójne Ospel Aria	gniazdo-glosnikowe-podwojne-ospel-aria	5
+product_tag	8043	Gniazdo głośnikowe podwójne Ospel As	gniazdo-glosnikowe-podwojne-ospel-as	6
+product_tag	7958	Gniazdo głośnikowe podwójne Ospel Impresja	gniazdo-glosnikowe-podwojne-ospel-impresja	6
+product_tag	8415	Gniazdo głośnikowe podwójne Ospel Sonata	gniazdo-glosnikowe-podwojne-ospel-sonata	9
+product_tag	6337	Gniazdo głośnikowe pojedyncze 55 simon	gniazdo-glosnikowe-pojedyncze-55-simon	6
+product_tag	8117	Gniazdo głośnikowe pojedyncze 6mm2 Ospel Aria	gniazdo-glosnikowe-pojedyncze-6mm2-ospel-aria	5
+product_tag	8312	Gniazdo głośnikowe pojedyncze nano srebro Ospel As Antybakteryjny	gniazdo-glosnikowe-pojedyncze-nano-srebro-ospel-as-antybakteryjny	2
+product_tag	8115	Gniazdo głośnikowe pojedyncze Ospel Aria	gniazdo-glosnikowe-pojedyncze-ospel-aria	5
+product_tag	8042	Gniazdo głośnikowe pojedyncze Ospel As	gniazdo-glosnikowe-pojedyncze-ospel-as	12
+product_tag	7957	Gniazdo głośnikowe pojedyncze Ospel Impresja	gniazdo-glosnikowe-pojedyncze-ospel-impresja	6
+product_tag	8414	Gniazdo głośnikowe pojedyncze Ospel Sonata	gniazdo-glosnikowe-pojedyncze-ospel-sonata	18
+product_tag	6706	Gniazdo głośnikowe Simon 54	gniazdo-glosnikowe-simon-54	7
+product_tag	6335	Gniazdo HDMI + RJ45 55 simon	gniazdo-hdmi-rj45-55-simon	6
+product_tag	6815	Gniazdo HDMI + RJ45 Simon 54	gniazdo-hdmi-rj45-simon-54	2
+product_tag	6336	Gniazdo HDMI 55 simon	gniazdo-hdmi-55-simon	6
+product_tag	6334	Gniazdo HDMI podwójne 55 simon	gniazdo-hdmi-podwojne-55-simon	6
+product_tag	7845	Gniazdo HDMI podwójne Simon55	gniazdo-hdmi-podwojne-simon55	6
+product_tag	7846	Gniazdo HDMI pojedyncze Simon55	gniazdo-hdmi-pojedyncze-simon55	6
+product_tag	7844	Gniazdo HDMI RJ45 Simon55	gniazdo-hdmi-rj45-simon55	6
+product_tag	6757	Gniazdo HDMI Simon 10	gniazdo-hdmi-simon-10	4
+product_tag	6719	Gniazdo HDMI Simon 54	gniazdo-hdmi-simon-54	4
+product_tag	8230	Gniazdo hermet z uziem DATA z kluczem IP44 wieczko przezr As	gniazdo-hermet-z-uziem-data-z-kluczem-ip44-wieczko-przezr-as	2
+product_tag	8272	Gniazdo hermet z uziem IP44 z przesł wieczko kolor As Antybakt	gniazdo-hermet-z-uziem-ip44-z-przesl-wieczko-kolor-as-antybakt	1
+product_tag	8446	Gniazdo hermet z uziem IP44 z przesł wieczko kolor Sonata	gniazdo-hermet-z-uziem-ip44-z-przesl-wieczko-kolor-sonata	2
+product_tag	8445	Gniazdo hermet z uziem IP44 z przesł wieczko przezr Sonata	gniazdo-hermet-z-uziem-ip44-z-przesl-wieczko-przezr-sonata	9
+product_tag	8275	Gniazdo hermet z uziem schuko IP44 wieczko kolor As Antybakt	gniazdo-hermet-z-uziem-schuko-ip44-wieczko-kolor-as-antybakt	2
+product_tag	8215	Gniazdo hermet z uziem schuko IP44 z przesł wieczko przezr As	gniazdo-hermet-z-uziem-schuko-ip44-z-przesl-wieczko-przezr-as	5
+product_tag	8449	Gniazdo hermet z uziem schuko IP44 z przesł wieczko przezr Sonata	gniazdo-hermet-z-uziem-schuko-ip44-z-przesl-wieczko-przezr-sonata	9
+product_tag	8154	Gniazdo hermetyczne IP44 klapka dymna Ospel Aria	gniazdo-hermetyczne-ip44-klapka-dymna-ospel-aria	5
+product_tag	7974	Gniazdo hermetyczne IP44 klapka dymna Ospel Impresja	gniazdo-hermetyczne-ip44-klapka-dymna-ospel-impresja	6
+product_tag	8155	Gniazdo hermetyczne IP44 klapka Ospel Aria	gniazdo-hermetyczne-ip44-klapka-ospel-aria	2
+product_tag	7975	Gniazdo hermetyczne IP44 klapka Ospel Impresja	gniazdo-hermetyczne-ip44-klapka-ospel-impresja	2
+product_tag	8106	Gniazdo hermetyczne IP44 ZU Ospel As	gniazdo-hermetyczne-ip44-zu-ospel-as	2
+product_tag	5109	Gniazdo hermetyczne Karlik DECO	gniazdo-hermetyczne-karlik-deco	9
+product_tag	5085	Gniazdo hermetyczne Karlik JUNIOR	gniazdo-hermetyczne-karlik-junior	18
+product_tag	5110	Gniazdo hermetyczne Karlik MINI	gniazdo-hermetyczne-karlik-mini	3
+product_tag	5087	Gniazdo hermetyczne Karlik SENIOR	gniazdo-hermetyczne-karlik-senior	2
+product_tag	4687	Gniazdo hermetyczne Ospel Aria	gniazdo-hermetyczne-ospel-aria	0
+product_tag	4693	Gniazdo hermetyczne Ospel As	gniazdo-hermetyczne-ospel-as	1
+product_tag	4695	Gniazdo hermetyczne Ospel Impresja	gniazdo-hermetyczne-ospel-impresja	0
+product_tag	8156	Gniazdo hermetyczne z przesłonami IP44 klapka dymna Ospel Aria	gniazdo-hermetyczne-z-przeslonami-ip44-klapka-dymna-ospel-aria	5
+product_tag	7976	Gniazdo hermetyczne z przesłonami IP44 klapka dymna Ospel Impresja	gniazdo-hermetyczne-z-przeslonami-ip44-klapka-dymna-ospel-impresja	6
+product_tag	7977	Gniazdo hermetyczne z przesłonami IP44 klapka Ospel Impresja	gniazdo-hermetyczne-z-przeslonami-ip44-klapka-ospel-impresja	2
+product_tag	8273	Gniazdo hermetyczne z uziemieniem DATA IP44 wieczko kolor As Antybakt	gniazdo-hermetyczne-z-uziemieniem-data-ip44-wieczko-kolor-as-antybakt	7
+product_tag	8231	Gniazdo hermetyczne z uziemieniem DATA IP44 wieczko kolor Ospel As	gniazdo-hermetyczne-z-uziemieniem-data-ip44-wieczko-kolor-ospel-as	2
+product_tag	8232	Gniazdo hermetyczne z uziemieniem DATA IP44 wieczko przezr Ospel As	gniazdo-hermetyczne-z-uziemieniem-data-ip44-wieczko-przezr-ospel-as	2
+product_tag	8229	Gniazdo hermetyczne z uziemieniem DATA z kluczem IP44 wieczko kolor As	gniazdo-hermetyczne-z-uziemieniem-data-z-kluczem-ip44-wieczko-kolor-as	2
+product_tag	8274	Gniazdo hermetyczne z uziemieniem IP44 wieczko kolor As Antybakt	gniazdo-hermetyczne-z-uziemieniem-ip44-wieczko-kolor-as-antybakt	1
+product_tag	8448	Gniazdo hermetyczne z uziemieniem IP44 wieczko kolor Ospel Sonata	gniazdo-hermetyczne-z-uziemieniem-ip44-wieczko-kolor-ospel-sonata	2
+product_tag	8447	Gniazdo hermetyczne z uziemieniem IP44 wieczko przezr Ospel Sonata	gniazdo-hermetyczne-z-uziemieniem-ip44-wieczko-przezr-ospel-sonata	9
+product_tag	8233	Gniazdo hermetyczne z uziemieniem IP44 wieczko przezroczyste Ospel As	gniazdo-hermetyczne-z-uziemieniem-ip44-wieczko-przezroczyste-ospel-as	5
+product_tag	8227	Gniazdo hermetyczne z uziemieniem IP44 z przesłonami wieczko dymne As	gniazdo-hermetyczne-z-uziemieniem-ip44-z-przeslonami-wieczko-dymne-as	1
+product_tag	8228	Gniazdo hermetyczne z uziemieniem IP44 z przesłonami wieczko kolor As	gniazdo-hermetyczne-z-uziemieniem-ip44-z-przeslonami-wieczko-kolor-as	2
+product_tag	8226	Gniazdo hermetyczne z uziemieniem IP44 z przesłonami wieczko przezr As	gniazdo-hermetyczne-z-uziemieniem-ip44-z-przeslonami-wieczko-przezr-as	5
+product_tag	8153	Gniazdo hermetyczne z uziemieniem Schuko i przesłonami IP44 Ospel Aria	gniazdo-hermetyczne-z-uziemieniem-schuko-i-przeslonami-ip44-ospel-aria	5
+product_tag	8152	Gniazdo hermetyczne z uziemieniem Schuko IP44 Ospel Aria	gniazdo-hermetyczne-z-uziemieniem-schuko-ip44-ospel-aria	5
+product_tag	8354	Gniazdo hermetyczne z uziemieniem schuko IP44 wieczko kolor Ospel Aria	gniazdo-hermetyczne-z-uziemieniem-schuko-ip44-wieczko-kolor-ospel-aria	1
+product_tag	8217	Gniazdo hermetyczne z uziemieniem schuko IP44 wieczko kolor Ospel As	gniazdo-hermetyczne-z-uziemieniem-schuko-ip44-wieczko-kolor-ospel-as	1
+product_tag	8216	Gniazdo hermetyczne z uziemieniem schuko IP44 wieczko przezr Ospel As	gniazdo-hermetyczne-z-uziemieniem-schuko-ip44-wieczko-przezr-ospel-as	6
+product_tag	8450	Gniazdo hermetyczne z uziemieniem schuko IP44 wieczko przezr Sonata	gniazdo-hermetyczne-z-uziemieniem-schuko-ip44-wieczko-przezr-sonata	9
+product_tag	6813	Gniazdo komputerowe 5e Simon 54	gniazdo-komputerowe-5e-simon-54	2
+product_tag	6814	Gniazdo komputerowe ekranowane Simon 54	gniazdo-komputerowe-ekranowane-simon-54	4
+product_tag	6762	Gniazdo komputerowe kategoria 5e Simon 10	gniazdo-komputerowe-kategoria-5e-simon-10	4
+product_tag	6769	Gniazdo komputerowe kategoria 6 Simon 10	gniazdo-komputerowe-kategoria-6-simon-10	4
+product_tag	6770	Gniazdo komputerowe kategoria 6e Simon 10Simon 10	gniazdo-komputerowe-kategoria-6e-simon-10simon-10	4
+product_tag	7995	Gniazdo komputerowe podwójne 2xRJ45 kat 5e MMC Ospel Impresja	gniazdo-komputerowe-podwojne-2xrj45-kat-5e-mmc-ospel-impresja	6
+product_tag	8395	Gniazdo komputerowe podwójne kat 5e MMC Ospel Sonata	gniazdo-komputerowe-podwojne-kat-5e-mmc-ospel-sonata	11
+product_tag	8160	Gniazdo komputerowe podwójne kat 5e Ospel Aria	gniazdo-komputerowe-podwojne-kat-5e-ospel-aria	5
+product_tag	8059	Gniazdo komputerowe podwójne kat 5e Ospel As	gniazdo-komputerowe-podwojne-kat-5e-ospel-as	6
+product_tag	8460	Gniazdo komputerowe podwójne kat 6 MMC Ospel Sonata	gniazdo-komputerowe-podwojne-kat-6-mmc-ospel-sonata	9
+product_tag	8267	Gniazdo komputerowe podwójne kat5 MMC As Antybakt	gniazdo-komputerowe-podwojne-kat5-mmc-as-antybakt	1
+product_tag	6332	Gniazdo komputerowe podwójne RJ45 ekranowane 55 simon	gniazdo-komputerowe-podwojne-rj45-ekranowane-55-simon	3
+product_tag	6333	Gniazdo komputerowe podwójne RJ45 kategoria 6 55 simon	gniazdo-komputerowe-podwojne-rj45-kategoria-6-55-simon	6
+product_tag	6365	Gniazdo komputerowe podwójne RJ45 kategoria 6 ekranowane 55 simon	gniazdo-komputerowe-podwojne-rj45-kategoria-6-ekranowane-55-simon	3
+product_tag	8444	Gniazdo komputerowe pojedyncze kat 5e MMC Ospel Sonata	gniazdo-komputerowe-pojedyncze-kat-5e-mmc-ospel-sonata	9
+product_tag	8157	Gniazdo komputerowe pojedyncze kat 5e Ospel Aria	gniazdo-komputerowe-pojedyncze-kat-5e-ospel-aria	5
+product_tag	8057	Gniazdo komputerowe pojedyncze kat 5e Ospel As	gniazdo-komputerowe-pojedyncze-kat-5e-ospel-as	6
+product_tag	8443	Gniazdo komputerowe pojedyncze kat 6 MMC Ospel Sonata	gniazdo-komputerowe-pojedyncze-kat-6-mmc-ospel-sonata	9
+product_tag	8271	Gniazdo komputerowe pojedyncze kat5e MMC As Antybakt	gniazdo-komputerowe-pojedyncze-kat5e-mmc-as-antybakt	1
+product_tag	7993	Gniazdo komputerowe pojedyncze RJ45 kat 5e MMC Ospel Impresja	gniazdo-komputerowe-pojedyncze-rj45-kat-5e-mmc-ospel-impresja	6
+product_tag	6364	Gniazdo komputerowe pojedyncze RJ45 kategoria 6 55 simon	gniazdo-komputerowe-pojedyncze-rj45-kategoria-6-55-simon	6
+product_tag	6363	Gniazdo komputerowe pojedyncze RJ45 kategoria 6 ekranowane 55 simon	gniazdo-komputerowe-pojedyncze-rj45-kategoria-6-ekranowane-55-simon	6
+product_tag	6362	Gniazdo komputerowe RJ45 kategoria 5e + telefoniczne RJ12 55 simon	gniazdo-komputerowe-rj45-kategoria-5e-telefoniczne-rj12-55-simon	6
+product_tag	6741	Gniazdo komputerowe Simon 10	gniazdo-komputerowe-simon-10	0
+product_tag	6707	Gniazdo komputerowe Simon 54	gniazdo-komputerowe-simon-54	9
+product_tag	7635	Gniazdo meblowe z uziemieniem simon 400	gniazdo-meblowe-z-uziemieniem-simon-400	2
+product_tag	4606	Gniazdo natynkowe Ospel Bis	gniazdo-natynkowe-ospel-bis	0
+product_tag	6862	Gniazdo poczwórne Schuko sr Simon 54	gniazdo-poczworne-schuko-sr-simon-54	2
+product_tag	6863	Gniazdo poczwórne Schuko sz Simon 54	gniazdo-poczworne-schuko-sz-simon-54	2
+product_tag	8292	Gniazdo podw z uziem schuko z przesł z ramką As Antybakt	gniazdo-podw-z-uziem-schuko-z-przesl-z-ramka-as-antybakt	1
+product_tag	8128	Gniazdo podwójne bez uziemienia kompletne Ospel Aria	gniazdo-podwojne-bez-uziemienia-kompletne-ospel-aria	5
+product_tag	7978	Gniazdo podwójne bez uziemienia kompletne Ospel Impresja	gniazdo-podwojne-bez-uziemienia-kompletne-ospel-impresja	6
+product_tag	8130	Gniazdo podwójne bez uziemienia Ospel Aria	gniazdo-podwojne-bez-uziemienia-ospel-aria	5
+product_tag	7979	Gniazdo podwójne bez uziemienia Ospel Impresja	gniazdo-podwojne-bez-uziemienia-ospel-impresja	6
+product_tag	8048	Gniazdo podwójne bez uziemienia z przesłonami Ospel As	gniazdo-podwojne-bez-uziemienia-z-przeslonami-ospel-as	6
+product_tag	7980	Gniazdo podwójne bez uziemienia z przesłonami Ospel Impresja	gniazdo-podwojne-bez-uziemienia-z-przeslonami-ospel-impresja	6
+product_tag	8046	Gniazdo podwójne bez uziemienia z przesłonami z ramką Ospel As	gniazdo-podwojne-bez-uziemienia-z-przeslonami-z-ramka-ospel-as	6
+product_tag	7742	Gniazdo podwójne hermes	gniazdo-podwojne-hermes	3
+product_tag	8420	Gniazdo podwójne kompletne z ramką Ospel Sonata	gniazdo-podwojne-kompletne-z-ramka-ospel-sonata	9
+product_tag	8297	Gniazdo podwójne nanocząsteczki srebra Ospel As Antybakteryjny	gniazdo-podwojne-nanoczasteczki-srebra-ospel-as-antybakteryjny	1
+product_tag	7734	Gniazdo podwójne natynkowe AQUANT	gniazdo-podwojne-natynkowe-aquant	4
+product_tag	8047	Gniazdo podwójne Ospel As	gniazdo-podwojne-ospel-as	6
+product_tag	8417	Gniazdo podwójne Ospel Sonata	gniazdo-podwojne-ospel-sonata	9
+product_tag	6856	Gniazdo podwójne Schuko natynkowe 2 Simon 54	gniazdo-podwojne-schuko-natynkowe-2-simon-54	2
+product_tag	6843	Gniazdo podwójne Schuko natynkowe 3 Simon 54	gniazdo-podwojne-schuko-natynkowe-3-simon-54	2
+product_tag	6859	Gniazdo podwójne Schuko natynkowe Simon 54	gniazdo-podwojne-schuko-natynkowe-simon-54	2
+product_tag	6858	Gniazdo podwójne Schuko podtynkowe 2 Simon 54	gniazdo-podwojne-schuko-podtynkowe-2-simon-54	2
+product_tag	6860	Gniazdo podwójne Schuko podtynkowe Simon 54	gniazdo-podwojne-schuko-podtynkowe-simon-54	2
+product_tag	7847	Gniazdo podwójne skośne przesłony Simon55	gniazdo-podwojne-skosne-przeslony-simon55	6
+product_tag	7848	Gniazdo podwójne skośne Simon55	gniazdo-podwojne-skosne-simon55	6
+product_tag	7919	Gniazdo podwójne USB 30 Simon55	gniazdo-podwojne-usb-30-simon55	6
+product_tag	8296	Gniazdo podwójne z przesłonami nano srebro Ospel As Antybakteryjny	gniazdo-podwojne-z-przeslonami-nano-srebro-ospel-as-antybakteryjny	1
+product_tag	8433	Gniazdo podwójne z przesłonami torów prądowych Ospel Sonata	gniazdo-podwojne-z-przeslonami-torow-pradowych-ospel-sonata	9
+product_tag	8298	Gniazdo podwójne z przesłonami z ramką As Antybakt	gniazdo-podwojne-z-przeslonami-z-ramka-as-antybakt	1
+product_tag	8418	Gniazdo podwójne z przesłonami z ramką Ospel Sonata	gniazdo-podwojne-z-przeslonami-z-ramka-ospel-sonata	9
+product_tag	8300	Gniazdo podwójne z ramką nano srebro Ospel As Antybakteryjny	gniazdo-podwojne-z-ramka-nano-srebro-ospel-as-antybakteryjny	1
+product_tag	8045	Gniazdo podwójne z ramką Ospel As	gniazdo-podwojne-z-ramka-ospel-as	12
+product_tag	8435	Gniazdo podwójne z uziemieniem do ramek 4mm Ospel Sonata	gniazdo-podwojne-z-uziemieniem-do-ramek-4mm-ospel-sonata	9
+product_tag	8132	Gniazdo podwójne z uziemieniem i przesłonami Ospel Aria	gniazdo-podwojne-z-uziemieniem-i-przeslonami-ospel-aria	5
+product_tag	7982	Gniazdo podwójne z uziemieniem i przesłonami Ospel Impresja	gniazdo-podwojne-z-uziemieniem-i-przeslonami-ospel-impresja	6
+product_tag	8135	Gniazdo podwójne z uziemieniem kompletne Ospel Aria	gniazdo-podwojne-z-uziemieniem-kompletne-ospel-aria	5
+product_tag	7984	Gniazdo podwójne z uziemieniem kompletne Ospel Impresja	gniazdo-podwojne-z-uziemieniem-kompletne-ospel-impresja	6
+product_tag	8429	Gniazdo podwójne z uziemieniem kompletne z ramką Ospel Sonata	gniazdo-podwojne-z-uziemieniem-kompletne-z-ramka-ospel-sonata	9
+product_tag	8295	Gniazdo podwójne z uziemieniem nano srebro Ospel As Antybakteryjny	gniazdo-podwojne-z-uziemieniem-nano-srebro-ospel-as-antybakteryjny	1
+product_tag	8209	Gniazdo podwójne z uziemieniem natynkowe Ospel BIS	gniazdo-podwojne-z-uziemieniem-natynkowe-ospel-bis	1
+product_tag	8129	Gniazdo podwójne z uziemieniem niezamienność faz kompletne Ospel Aria	gniazdo-podwojne-z-uziemieniem-niezamiennosc-faz-kompletne-ospel-aria	5
+product_tag	8299	Gniazdo podwójne z uziemieniem niezamienność faz z ramką As Antybakt	gniazdo-podwojne-z-uziemieniem-niezamiennosc-faz-z-ramka-as-antybakt	1
+product_tag	8243	Gniazdo podwójne z uziemieniem niezamienność faz z ramką Ospel As	gniazdo-podwojne-z-uziemieniem-niezamiennosc-faz-z-ramka-ospel-as	6
+product_tag	8419	Gniazdo podwójne z uziemieniem niezamienność faz z ramką Ospel Sonata	gniazdo-podwojne-z-uziemieniem-niezamiennosc-faz-z-ramka-ospel-sonata	9
+product_tag	8131	Gniazdo podwójne z uziemieniem Ospel Aria	gniazdo-podwojne-z-uziemieniem-ospel-aria	10
+product_tag	8098	Gniazdo podwójne z uziemieniem Ospel As	gniazdo-podwojne-z-uziemieniem-ospel-as	6
+product_tag	7981	Gniazdo podwójne z uziemieniem Ospel Impresja	gniazdo-podwojne-z-uziemieniem-ospel-impresja	6
+product_tag	8411	Gniazdo podwójne z uziemieniem Ospel Sonata	gniazdo-podwojne-z-uziemieniem-ospel-sonata	9
+product_tag	8134	Gniazdo podwójne z uziemieniem schuko i przesłonami kompletne Aria	gniazdo-podwojne-z-uziemieniem-schuko-i-przeslonami-kompletne-aria	5
+product_tag	8133	Gniazdo podwójne z uziemieniem schuko kompletne Ospel Aria	gniazdo-podwojne-z-uziemieniem-schuko-kompletne-ospel-aria	5
+product_tag	7983	Gniazdo podwójne z uziemieniem Schuko kompletne Ospel Impresja	gniazdo-podwojne-z-uziemieniem-schuko-kompletne-ospel-impresja	6
+product_tag	8431	Gniazdo podwójne z uziemieniem schuko kompletne z ramką Ospel Sonata	gniazdo-podwojne-z-uziemieniem-schuko-kompletne-z-ramka-ospel-sonata	9
+product_tag	8241	Gniazdo podwójne z uziemieniem schuko z przesłonami z ramką Ospel As	gniazdo-podwojne-z-uziemieniem-schuko-z-przeslonami-z-ramka-ospel-as	6
+product_tag	8430	Gniazdo podwójne z uziemieniem schuko z przesłonami z ramką Sonata	gniazdo-podwojne-z-uziemieniem-schuko-z-przeslonami-z-ramka-sonata	9
+product_tag	8293	Gniazdo podwójne z uziemieniem schuko z ramką As Antybakt	gniazdo-podwojne-z-uziemieniem-schuko-z-ramka-as-antybakt	1
+product_tag	8294	Gniazdo podwójne z uziemieniem z przesłonami As Antybakt	gniazdo-podwojne-z-uziemieniem-z-przeslonami-as-antybakt	1
+product_tag	8434	Gniazdo podwójne z uziemieniem z przesłonami do ramek 4mm Ospel Sonata	gniazdo-podwojne-z-uziemieniem-z-przeslonami-do-ramek-4mm-ospel-sonata	9
+product_tag	8136	Gniazdo podwójne z uziemieniem z przesłonami kompletne Ospel Aria	gniazdo-podwojne-z-uziemieniem-z-przeslonami-kompletne-ospel-aria	5
+product_tag	8355	Gniazdo podwójne z uziemieniem z przesłonami Ospel Aria	gniazdo-podwojne-z-uziemieniem-z-przeslonami-ospel-aria	5
+product_tag	8432	Gniazdo podwójne z uziemieniem z przesłonami Ospel Sonata	gniazdo-podwojne-z-uziemieniem-z-przeslonami-ospel-sonata	9
+product_tag	8242	Gniazdo podwójne z uziemieniem z przesłonami torów prądowych Ospel As	gniazdo-podwojne-z-uziemieniem-z-przeslonami-torow-pradowych-ospel-as	6
+product_tag	8290	Gniazdo podwójne z uziemieniem z przesłonami z ramką As Antybakt	gniazdo-podwojne-z-uziemieniem-z-przeslonami-z-ramka-as-antybakt	1
+product_tag	8050	Gniazdo podwójne z uziemieniem z przesłonami z ramką Ospel As	gniazdo-podwojne-z-uziemieniem-z-przeslonami-z-ramka-ospel-as	6
+product_tag	8428	Gniazdo podwójne z uziemieniem z przesłonami z ramką Ospel Sonata	gniazdo-podwojne-z-uziemieniem-z-przeslonami-z-ramka-ospel-sonata	9
+product_tag	8291	Gniazdo podwójne z uziemieniem z ramką As Antybakt	gniazdo-podwojne-z-uziemieniem-z-ramka-as-antybakt	1
+product_tag	8049	Gniazdo podwójne z uziemieniem z ramką Ospel As	gniazdo-podwojne-z-uziemieniem-z-ramka-ospel-as	6
+product_tag	8118	Gniazdo pojedyncze bez uziemienia Ospel Aria	gniazdo-pojedyncze-bez-uziemienia-ospel-aria	5
+product_tag	7985	Gniazdo pojedyncze bez uziemienia Ospel Impresja	gniazdo-pojedyncze-bez-uziemienia-ospel-impresja	6
+product_tag	8119	Gniazdo pojedyncze bez uziemienia z przesłonami Ospel Aria	gniazdo-pojedyncze-bez-uziemienia-z-przeslonami-ospel-aria	5
+product_tag	8044	Gniazdo pojedyncze bez uziemienia z przesłonami Ospel As	gniazdo-pojedyncze-bez-uziemienia-z-przeslonami-ospel-as	6
+product_tag	7986	Gniazdo pojedyncze bez uziemienia z przesłonami Ospel Impresja	gniazdo-pojedyncze-bez-uziemienia-z-przeslonami-ospel-impresja	6
+product_tag	7741	Gniazdo pojedyncze hermes	gniazdo-pojedyncze-hermes	3
+product_tag	8311	Gniazdo pojedyncze nanocząsteczki srebra Ospel As Antybakteryjny	gniazdo-pojedyncze-nanoczasteczki-srebra-ospel-as-antybakteryjny	1
+product_tag	7733	Gniazdo pojedyncze natynkowe AQUANT	gniazdo-pojedyncze-natynkowe-aquant	4
+product_tag	8112	Gniazdo pojedyncze Ospel As	gniazdo-pojedyncze-ospel-as	6
+product_tag	8409	Gniazdo pojedyncze Ospel Sonata	gniazdo-pojedyncze-ospel-sonata	11
+product_tag	7737	Gniazdo pojedyncze podtynkowe AQUANT	gniazdo-pojedyncze-podtynkowe-aquant	2
+product_tag	8110	Gniazdo pojedyncze Schuko Ospel As	gniazdo-pojedyncze-schuko-ospel-as	6
+product_tag	8410	Gniazdo pojedyncze schuko Ospel Sonata	gniazdo-pojedyncze-schuko-ospel-sonata	1
+product_tag	8310	Gniazdo pojedyncze z przesłonami nano srebro Ospel As Antybakteryjny	gniazdo-pojedyncze-z-przeslonami-nano-srebro-ospel-as-antybakteryjny	1
+product_tag	8408	Gniazdo pojedyncze z przesłonami torów prądowych Ospel Sonata	gniazdo-pojedyncze-z-przeslonami-torow-pradowych-ospel-sonata	11
+product_tag	8306	Gniazdo pojedyncze z uziemieniem DATA As Antybakt	gniazdo-pojedyncze-z-uziemieniem-data-as-antybakt	2
+product_tag	8124	Gniazdo pojedyncze z uziemieniem DATA i przesłonami Ospel Aria	gniazdo-pojedyncze-z-uziemieniem-data-i-przeslonami-ospel-aria	1
+product_tag	8123	Gniazdo pojedyncze z uziemieniem DATA Ospel Aria	gniazdo-pojedyncze-z-uziemieniem-data-ospel-aria	1
+product_tag	7989	Gniazdo pojedyncze z uziemieniem DATA Ospel Impresja	gniazdo-pojedyncze-z-uziemieniem-data-ospel-impresja	1
+product_tag	8406	Gniazdo pojedyncze z uziemieniem DATA Ospel Sonata	gniazdo-pojedyncze-z-uziemieniem-data-ospel-sonata	3
+product_tag	8304	Gniazdo pojedyncze z uziemieniem DATA z kluczem As Antybakt	gniazdo-pojedyncze-z-uziemieniem-data-z-kluczem-as-antybakt	2
+product_tag	8125	Gniazdo pojedyncze z uziemieniem DATA z kluczem Ospel Aria	gniazdo-pojedyncze-z-uziemieniem-data-z-kluczem-ospel-aria	1
+product_tag	7990	Gniazdo pojedyncze z uziemieniem DATA z kluczem Ospel Impresja	gniazdo-pojedyncze-z-uziemieniem-data-z-kluczem-ospel-impresja	1
+product_tag	8404	Gniazdo pojedyncze z uziemieniem DATA z kluczem Ospel Sonata	gniazdo-pojedyncze-z-uziemieniem-data-z-kluczem-ospel-sonata	3
+product_tag	8246	Gniazdo pojedyncze z uziemieniem DATA z kluczem uprawniającym Ospel As	gniazdo-pojedyncze-z-uziemieniem-data-z-kluczem-uprawniajacym-ospel-as	2
+product_tag	8305	Gniazdo pojedyncze z uziemieniem DATA z przesłonami As Antybakt	gniazdo-pojedyncze-z-uziemieniem-data-z-przeslonami-as-antybakt	1
+product_tag	8247	Gniazdo pojedyncze z uziemieniem DATA z przesłonami Ospel As	gniazdo-pojedyncze-z-uziemieniem-data-z-przeslonami-ospel-as	2
+product_tag	8405	Gniazdo pojedyncze z uziemieniem DATA z przesłonami Ospel Sonata	gniazdo-pojedyncze-z-uziemieniem-data-z-przeslonami-ospel-sonata	3
+product_tag	8126	Gniazdo pojedyncze z uziemieniem i przesłonami Ospel Aria	gniazdo-pojedyncze-z-uziemieniem-i-przeslonami-ospel-aria	5
+product_tag	7991	Gniazdo pojedyncze z uziemieniem i przesłonami Ospel Impresja	gniazdo-pojedyncze-z-uziemieniem-i-przeslonami-ospel-impresja	6
+product_tag	8307	Gniazdo pojedyncze z uziemieniem nano srebro Ospel As Antybakteryjny	gniazdo-pojedyncze-z-uziemieniem-nano-srebro-ospel-as-antybakteryjny	1
+product_tag	8208	Gniazdo pojedyncze z uziemieniem natynkowe Ospel BIS	gniazdo-pojedyncze-z-uziemieniem-natynkowe-ospel-bis	1
+product_tag	8122	Gniazdo pojedyncze z uziemieniem Ospel Aria	gniazdo-pojedyncze-z-uziemieniem-ospel-aria	5
+product_tag	8107	Gniazdo pojedyncze z uziemieniem Ospel As	gniazdo-pojedyncze-z-uziemieniem-ospel-as	6
+product_tag	7988	Gniazdo pojedyncze z uziemieniem Ospel Impresja	gniazdo-pojedyncze-z-uziemieniem-ospel-impresja	6
+product_tag	8407	Gniazdo pojedyncze z uziemieniem Ospel Sonata	gniazdo-pojedyncze-z-uziemieniem-ospel-sonata	11
+product_tag	8309	Gniazdo pojedyncze z uziemieniem schuko As Antybakt	gniazdo-pojedyncze-z-uziemieniem-schuko-as-antybakt	1
+product_tag	8121	Gniazdo pojedyncze z uziemieniem Schuko i przesłonami Ospel Aria	gniazdo-pojedyncze-z-uziemieniem-schuko-i-przeslonami-ospel-aria	5
+product_tag	8120	Gniazdo pojedyncze z uziemieniem Schuko Ospel Aria	gniazdo-pojedyncze-z-uziemieniem-schuko-ospel-aria	5
+product_tag	7987	Gniazdo pojedyncze z uziemieniem Schuko Ospel Impresja	gniazdo-pojedyncze-z-uziemieniem-schuko-ospel-impresja	6
+product_tag	8413	Gniazdo pojedyncze z uziemieniem schuko Ospel Sonata	gniazdo-pojedyncze-z-uziemieniem-schuko-ospel-sonata	9
+product_tag	8308	Gniazdo pojedyncze z uziemieniem schuko z przesłonami As Antybakt	gniazdo-pojedyncze-z-uziemieniem-schuko-z-przeslonami-as-antybakt	1
+product_tag	8238	Gniazdo pojedyncze z uziemieniem schuko z przesłonami Ospel As	gniazdo-pojedyncze-z-uziemieniem-schuko-z-przeslonami-ospel-as	6
+product_tag	8425	Gniazdo pojedyncze z uziemieniem schuko z przesłonami Ospel Sonata	gniazdo-pojedyncze-z-uziemieniem-schuko-z-przeslonami-ospel-sonata	9
+product_tag	8423	Gniazdo pojedyncze z uziemieniem schuko z przesłonami USB AC Sonata	gniazdo-pojedyncze-z-uziemieniem-schuko-z-przeslonami-usb-ac-sonata	9
+product_tag	8424	Gniazdo pojedyncze z uziemieniem schuko z przesłonami USB Ospel Sonata	gniazdo-pojedyncze-z-uziemieniem-schuko-z-przeslonami-usb-ospel-sonata	9
+product_tag	8303	Gniazdo pojedyncze z uziemieniem z przesłonami As Antybakt	gniazdo-pojedyncze-z-uziemieniem-z-przeslonami-as-antybakt	1
+product_tag	8113	Gniazdo pojedyncze z uziemieniem z przesłonami Ospel As	gniazdo-pojedyncze-z-uziemieniem-z-przeslonami-ospel-as	6
+product_tag	8403	Gniazdo pojedyncze z uziemieniem z przesłonami Ospel Sonata	gniazdo-pojedyncze-z-uziemieniem-z-przeslonami-ospel-sonata	11
+product_tag	8301	Gniazdo pojedyncze z uziemieniem z przesłonami USB AC As Antybakt	gniazdo-pojedyncze-z-uziemieniem-z-przeslonami-usb-ac-as-antybakt	1
+product_tag	8356	Gniazdo pojedyncze z uziemieniem z przesłonami USB AC Ospel Aria	gniazdo-pojedyncze-z-uziemieniem-z-przeslonami-usb-ac-ospel-aria	5
+product_tag	8244	Gniazdo pojedyncze z uziemieniem z przesłonami USB AC Ospel As	gniazdo-pojedyncze-z-uziemieniem-z-przeslonami-usb-ac-ospel-as	6
+product_tag	8421	Gniazdo pojedyncze z uziemieniem z przesłonami USB AC Ospel Sonata	gniazdo-pojedyncze-z-uziemieniem-z-przeslonami-usb-ac-ospel-sonata	9
+product_tag	8302	Gniazdo pojedyncze z uziemieniem z przesłonami USB As Antybakt	gniazdo-pojedyncze-z-uziemieniem-z-przeslonami-usb-as-antybakt	1
+product_tag	8245	Gniazdo pojedyncze z uziemieniem z przesłonami USB Ospel As	gniazdo-pojedyncze-z-uziemieniem-z-przeslonami-usb-ospel-as	6
+product_tag	8422	Gniazdo pojedyncze z uziemieniem z przesłonami USB Ospel Sonata	gniazdo-pojedyncze-z-uziemieniem-z-przeslonami-usb-ospel-sonata	9
+product_tag	8127	Gniazdo pojedyncze z uziemieniem z ładowarką USB Ospel Aria	gniazdo-pojedyncze-z-uziemieniem-z-ladowarka-usb-ospel-aria	5
+product_tag	8138	Gniazdo potrójne EURO i przesłonami Ospel Aria	gniazdo-potrojne-euro-i-przeslonami-ospel-aria	5
+product_tag	8289	Gniazdo potrójne EURO nanocząsteczki srebra Ospel As Antybakteryjny	gniazdo-potrojne-euro-nanoczasteczki-srebra-ospel-as-antybakteryjny	1
+product_tag	8137	Gniazdo potrójne EURO Ospel Aria	gniazdo-potrojne-euro-ospel-aria	5
+product_tag	8051	Gniazdo potrójne EURO Ospel As	gniazdo-potrojne-euro-ospel-as	6
+product_tag	7992	Gniazdo potrójne EURO Ospel Impresja	gniazdo-potrojne-euro-ospel-impresja	6
+product_tag	8427	Gniazdo potrójne EURO Ospel Sonata	gniazdo-potrojne-euro-ospel-sonata	9
+product_tag	8426	Gniazdo potrójne EURO z przesłonami torów prądowych Ospel Sonata	gniazdo-potrojne-euro-z-przeslonami-torow-pradowych-ospel-sonata	9
+product_tag	7743	Gniazdo potrójne hermes	gniazdo-potrojne-hermes	3
+product_tag	7735	Gniazdo potrójne natynkowe AQUANT	gniazdo-potrojne-natynkowe-aquant	2
+product_tag	5437	Gniazdo przenośne 16A PCE	gniazdo-przenosne-16a-pce	3
+product_tag	5438	Gniazdo przenośne 32A/63A PCE	gniazdo-przenosne-32a-63a-pce	2
+product_tag	8146	Gniazdo RTV DATA Ospel Aria	gniazdo-rtv-data-ospel-aria	5
+product_tag	8280	Gniazdo RTV końcowe nanocząsteczki srebra Ospel As Antybakteryjny	gniazdo-rtv-koncowe-nanoczasteczki-srebra-ospel-as-antybakteryjny	1
+product_tag	8147	Gniazdo RTV końcowe Ospel Aria	gniazdo-rtv-koncowe-ospel-aria	5
+product_tag	8056	Gniazdo RTV końcowe Ospel As	gniazdo-rtv-koncowe-ospel-as	6
+product_tag	8397	Gniazdo RTV końcowe Ospel Sonata	gniazdo-rtv-koncowe-ospel-sonata	11
+product_tag	8288	Gniazdo RTV przelotowe 10dB nano srebro Ospel As Antybakteryjny	gniazdo-rtv-przelotowe-10db-nano-srebro-ospel-as-antybakteryjny	1
+product_tag	8139	Gniazdo RTV przelotowe 10dB Ospel Aria	gniazdo-rtv-przelotowe-10db-ospel-aria	5
+product_tag	8052	Gniazdo RTV przelotowe 10dB Ospel As	gniazdo-rtv-przelotowe-10db-ospel-as	6
+product_tag	8402	Gniazdo RTV przelotowe 10dB Ospel Sonata	gniazdo-rtv-przelotowe-10db-ospel-sonata	11
+product_tag	8286	Gniazdo RTV przelotowe 14dB nano srebro Ospel As Antybakteryjny	gniazdo-rtv-przelotowe-14db-nano-srebro-ospel-as-antybakteryjny	1
+product_tag	8141	Gniazdo RTV przelotowe 14dB Ospel Aria	gniazdo-rtv-przelotowe-14db-ospel-aria	5
+product_tag	8249	Gniazdo RTV przelotowe 14dB Ospel As	gniazdo-rtv-przelotowe-14db-ospel-as	6
+product_tag	8400	Gniazdo RTV przelotowe 14dB Ospel Sonata	gniazdo-rtv-przelotowe-14db-ospel-sonata	11
+product_tag	8285	Gniazdo RTV przelotowe 16dB nano srebro Ospel As Antybakteryjny	gniazdo-rtv-przelotowe-16db-nano-srebro-ospel-as-antybakteryjny	1
+product_tag	8142	Gniazdo RTV przelotowe 16dB Ospel Aria	gniazdo-rtv-przelotowe-16db-ospel-aria	5
+product_tag	8248	Gniazdo RTV przelotowe 16dB Ospel As	gniazdo-rtv-przelotowe-16db-ospel-as	6
+product_tag	8399	Gniazdo RTV przelotowe 16dB Ospel Sonata	gniazdo-rtv-przelotowe-16db-ospel-sonata	11
+product_tag	7966	Gniazdo RTV przelotowe Ospel Impresja	gniazdo-rtv-przelotowe-ospel-impresja	6
+product_tag	8287	Gniazdo RTV zakończeniowe 10dB nano srebro Ospel As Antybakteryjny	gniazdo-rtv-zakonczeniowe-10db-nano-srebro-ospel-as-antybakteryjny	1
+product_tag	8140	Gniazdo RTV zakończeniowe 10dB Ospel Aria	gniazdo-rtv-zakonczeniowe-10db-ospel-aria	5
+product_tag	8239	Gniazdo RTV zakończeniowe 10dB Ospel As	gniazdo-rtv-zakonczeniowe-10db-ospel-as	6
+product_tag	7967	Gniazdo RTV zakończeniowe Ospel Impresja	gniazdo-rtv-zakonczeniowe-ospel-impresja	6
+product_tag	8401	Gniazdo RTV zakończeniowe Ospel Sonata	gniazdo-rtv-zakonczeniowe-ospel-sonata	11
+product_tag	8281	Gniazdo RTVDATA nanocząsteczki srebra Ospel As Antybakteryjny	gniazdo-rtvdata-nanoczasteczki-srebra-ospel-as-antybakteryjny	1
+product_tag	8220	Gniazdo RTVDATA Ospel As	gniazdo-rtvdata-ospel-as	6
+product_tag	8438	Gniazdo RTVDATA Ospel Sonata	gniazdo-rtvdata-ospel-sonata	9
+product_tag	8279	Gniazdo RTVSAT końcowe nanocząsteczki srebra Ospel As Antybakteryjny	gniazdo-rtvsat-koncowe-nanoczasteczki-srebra-ospel-as-antybakteryjny	1
+product_tag	8148	Gniazdo RTVSAT końcowe Ospel Aria	gniazdo-rtvsat-koncowe-ospel-aria	5
+product_tag	8214	Gniazdo RTVSAT końcowe Ospel As	gniazdo-rtvsat-koncowe-ospel-as	6
+product_tag	8396	Gniazdo RTVSAT końcowe Ospel Sonata	gniazdo-rtvsat-koncowe-ospel-sonata	11
+product_tag	8278	Gniazdo RTVSAT przelotowe nano srebro Ospel As Antybakteryjny	gniazdo-rtvsat-przelotowe-nano-srebro-ospel-as-antybakteryjny	1
+product_tag	8149	Gniazdo RTVSAT przelotowe Ospel Aria	gniazdo-rtvsat-przelotowe-ospel-aria	5
+product_tag	8114	Gniazdo RTVSAT przelotowe Ospel As	gniazdo-rtvsat-przelotowe-ospel-as	6
+product_tag	8437	Gniazdo RTVSAT przelotowe Ospel Sonata	gniazdo-rtvsat-przelotowe-ospel-sonata	9
+product_tag	8145	Gniazdo RTVSAT z dwoma wyjściami Ospel Aria	gniazdo-rtvsat-z-dwoma-wyjsciami-ospel-aria	5
+product_tag	8282	Gniazdo RTVSAT z dwoma wyjściami SAT As Antybakt	gniazdo-rtvsat-z-dwoma-wyjsciami-sat-as-antybakt	1
+product_tag	8439	Gniazdo RTVSAT z dwoma wyjściami SAT Ospel Sonata	gniazdo-rtvsat-z-dwoma-wyjsciami-sat-ospel-sonata	9
+product_tag	6808	Gniazdo Schuko do wersji IP44 Simon 54	gniazdo-schuko-do-wersji-ip44-simon-54	2
+product_tag	6361	Gniazdo Schuko do wersji IP44 z przesłonami z uszczelką ramki 55 simon	gniazdo-schuko-do-wersji-ip44-z-przeslonami-z-uszczelka-ramki-55-simon	6
+product_tag	6360	Gniazdo Schuko do wersji IP44 z przesłonami z uszczelką trans 55 simon	gniazdo-schuko-do-wersji-ip44-z-przeslonami-z-uszczelka-trans-55-simon	6
+product_tag	6809	Gniazdo Schuko sz Simon 54	gniazdo-schuko-sz-simon-54	2
+product_tag	6359	Gniazdo Schuko z przesłonami 55 simon	gniazdo-schuko-z-przeslonami-55-simon	7
+product_tag	6358	Gniazdo Schuko z przesłonami podwójne 55 simon	gniazdo-schuko-z-przeslonami-podwojne-55-simon	6
+product_tag	6357	Gniazdo schuko z zintegrowaną ładowarką 55 simon	gniazdo-schuko-z-zintegrowana-ladowarka-55-simon	6
+product_tag	6810	Gniazdo Schuko zs Simon 54	gniazdo-schuko-zs-simon-54	6
+product_tag	7783	Gniazdo Simon Connect k22	gniazdo-simon-connect-k22	2
+product_tag	7849	Gniazdo SOCKET Schuko Simon55	gniazdo-socket-schuko-simon55	6
+product_tag	7920	Gniazdo SOCKET Simon55	gniazdo-socket-simon55	6
+product_tag	5440	Gniazdo stałe niebieskie PCE	gniazdo-stale-niebieskie-pce	2
+product_tag	5439	Gniazdo stałe PCE	gniazdo-stale-pce	4
+product_tag	5441	Gniazdo tablicowe skośne PCE	gniazdo-tablicowe-skosne-pce	2
+product_tag	8261	Gniazdo telefoniczne podwójne niezależne As Antybakt	gniazdo-telefoniczne-podwojne-niezalezne-as-antybakt	1
+product_tag	8164	Gniazdo telefoniczne podwójne niezależne Ospel Aria	gniazdo-telefoniczne-podwojne-niezalezne-ospel-aria	5
+product_tag	8063	Gniazdo telefoniczne podwójne niezależne Ospel As	gniazdo-telefoniczne-podwojne-niezalezne-ospel-as	6
+product_tag	7998	Gniazdo telefoniczne podwójne niezależne Ospel Impresja	gniazdo-telefoniczne-podwojne-niezalezne-ospel-impresja	6
+product_tag	8393	Gniazdo telefoniczne podwójne niezależne Ospel Sonata	gniazdo-telefoniczne-podwojne-niezalezne-ospel-sonata	11
+product_tag	6354	Gniazdo telefoniczne podwójne RJ12 55 simon	gniazdo-telefoniczne-podwojne-rj12-55-simon	6
+product_tag	8260	Gniazdo telefoniczne podwójne równoległe As Antybakt	gniazdo-telefoniczne-podwojne-rownolegle-as-antybakt	1
+product_tag	8165	Gniazdo telefoniczne podwójne równoległe Ospel Aria	gniazdo-telefoniczne-podwojne-rownolegle-ospel-aria	5
+product_tag	8064	Gniazdo telefoniczne podwójne równoległe Ospel As	gniazdo-telefoniczne-podwojne-rownolegle-ospel-as	6
+product_tag	7999	Gniazdo telefoniczne podwójne równoległe Ospel Impresja	gniazdo-telefoniczne-podwojne-rownolegle-ospel-impresja	6
+product_tag	8456	Gniazdo telefoniczne podwójne równoległe Ospel Sonata	gniazdo-telefoniczne-podwojne-rownolegle-ospel-sonata	9
+product_tag	8262	Gniazdo telefoniczne pojedyncze nano srebro Ospel As Antybakteryjny	gniazdo-telefoniczne-pojedyncze-nano-srebro-ospel-as-antybakteryjny	1
+product_tag	8163	Gniazdo telefoniczne pojedyncze Ospel Aria	gniazdo-telefoniczne-pojedyncze-ospel-aria	5
+product_tag	8062	Gniazdo telefoniczne pojedyncze Ospel As	gniazdo-telefoniczne-pojedyncze-ospel-as	6
+product_tag	7997	Gniazdo telefoniczne pojedyncze Ospel Impresja	gniazdo-telefoniczne-pojedyncze-ospel-impresja	6
+product_tag	8457	Gniazdo telefoniczne pojedyncze Ospel Sonata	gniazdo-telefoniczne-pojedyncze-ospel-sonata	9
+product_tag	6353	Gniazdo telefoniczne pojedyncze RJ12 55 simon	gniazdo-telefoniczne-pojedyncze-rj12-55-simon	6
+product_tag	6750	Gniazdo telefoniczne Simon 10	gniazdo-telefoniczne-simon-10	4
+product_tag	6721	Gniazdo telefoniczne Simon 54	gniazdo-telefoniczne-simon-54	4
+product_tag	5115	Gniazdo teleinformatyczne Karlik DECO	gniazdo-teleinformatyczne-karlik-deco	49
+product_tag	5117	Gniazdo teleinformatyczne Karlik MINI	gniazdo-teleinformatyczne-karlik-mini	3
+product_tag	4706	Gniazdo teleinformatyczne Ospel Aria	gniazdo-teleinformatyczne-ospel-aria	0
+product_tag	4602	Gniazdo teleinformatyczne Ospel As	gniazdo-teleinformatyczne-ospel-as	0
+product_tag	4707	Gniazdo teleinformatyczne Ospel Impresja	gniazdo-teleinformatyczne-ospel-impresja	0
+product_tag	7630	gniazdo TGZ1ZUSB2CA01	gniazdo-tgz1zusb2ca01	3
+product_tag	7918	Gniazdo USB 30 Simon55	gniazdo-usb-30-simon55	6
+product_tag	6798	Gniazdo USB CA Simon 54	gniazdo-usb-ca-simon-54	4
+product_tag	7850	Gniazdo USB CA Simon55	gniazdo-usb-ca-simon55	6
+product_tag	6841	Gniazdo USB moduł Simon 54	gniazdo-usb-modul-simon-54	2
+product_tag	6754	Gniazdo USB Simon 10	gniazdo-usb-simon-10	2
+product_tag	6712	Gniazdo USB Simon 54	gniazdo-usb-simon-54	2
+product_tag	4843	Gniazdo wpuszczane GTV	gniazdo-wpuszczane-gtv	0
+product_tag	4644	Gniazdo wtyczkowe DATA Ospel Aria	gniazdo-wtyczkowe-data-ospel-aria	0
+product_tag	4645	Gniazdo wtyczkowe DATA Ospel Impresja	gniazdo-wtyczkowe-data-ospel-impresja	0
+product_tag	6352	Gniazdo wtyczkowe do wersji IP44 bez uszczelki 55 simon	gniazdo-wtyczkowe-do-wersji-ip44-bez-uszczelki-55-simon	6
+product_tag	6351	Gniazdo wtyczkowe do wersji IP44 bez uszczelki transp 55 simon	gniazdo-wtyczkowe-do-wersji-ip44-bez-uszczelki-transp-55-simon	6
+product_tag	6350	Gniazdo wtyczkowe do wersji IP44 z uszczelką 55 simon	gniazdo-wtyczkowe-do-wersji-ip44-z-uszczelka-55-simon	6
+product_tag	6349	Gniazdo wtyczkowe do wersji IP44 z uszczelką transp 55 simon	gniazdo-wtyczkowe-do-wersji-ip44-z-uszczelka-transp-55-simon	5
+product_tag	6775	Gniazdo wtyczkowe IP44 bez uszczelki Simon 10	gniazdo-wtyczkowe-ip44-bez-uszczelki-simon-10	2
+product_tag	6774	Gniazdo wtyczkowe IP44 Simon 10	gniazdo-wtyczkowe-ip44-simon-10	2
+product_tag	6820	Gniazdo wtyczkowe IP44 Z USZCZELKĄ Simon 54	gniazdo-wtyczkowe-ip44-z-uszczelka-simon-54	2
+product_tag	6776	Gniazdo wtyczkowe IP44 z uszczelką z przesłonami Simon 10	gniazdo-wtyczkowe-ip44-z-uszczelka-z-przeslonami-simon-10	2
+product_tag	5119	Gniazdo wtyczkowe Karlik DECO	gniazdo-wtyczkowe-karlik-deco	28
+product_tag	5120	Gniazdo wtyczkowe Karlik MINI	gniazdo-wtyczkowe-karlik-mini	6
+product_tag	6818	Gniazdo wtyczkowe klapka transparentna Simon 54	gniazdo-wtyczkowe-klapka-transparentna-simon-54	2
+product_tag	6827	Gniazdo wtyczkowe klapka transparentna ZU Simon 54	gniazdo-wtyczkowe-klapka-transparentna-zu-simon-54	2
+product_tag	4745	Gniazdo wtyczkowe Ospel Aria	gniazdo-wtyczkowe-ospel-aria	0
+product_tag	4614	Gniazdo wtyczkowe Ospel As	gniazdo-wtyczkowe-ospel-as	0
+product_tag	4746	Gniazdo wtyczkowe Ospel Impresja	gniazdo-wtyczkowe-ospel-impresja	0
+product_tag	6381	Gniazdo wtyczkowe podwójne bez uziemienia z przesłonami 55 simon	gniazdo-wtyczkowe-podwojne-bez-uziemienia-z-przeslonami-55-simon	6
+product_tag	6380	Gniazdo wtyczkowe podwójne do wersji IP44 z uszczelką 55 simon	gniazdo-wtyczkowe-podwojne-do-wersji-ip44-z-uszczelka-55-simon	6
+product_tag	6379	Gniazdo wtyczkowe podwójne do wersji IP44 z uszczelką transp 55 simon	gniazdo-wtyczkowe-podwojne-do-wersji-ip44-z-uszczelka-transp-55-simon	6
+product_tag	6378	Gniazdo wtyczkowe podwójne z uziemieniem z przesłonami 55 simon	gniazdo-wtyczkowe-podwojne-z-uziemieniem-z-przeslonami-55-simon	6
+product_tag	6330	Gniazdo wtyczkowe pojedyncze z uziemieniem i przesłonami 55 simon	gniazdo-wtyczkowe-pojedyncze-z-uziemieniem-i-przeslonami-55-simon	7
+product_tag	6772	Gniazdo wtyczkowe Schuko do wersji IP44 Simon 10	gniazdo-wtyczkowe-schuko-do-wersji-ip44-simon-10	2
+product_tag	6771	Gniazdo wtyczkowe Schuko Simon 10	gniazdo-wtyczkowe-schuko-simon-10	2
+product_tag	6746	Gniazdo wtyczkowe Simon 10	gniazdo-wtyczkowe-simon-10	0
+product_tag	6705	Gniazdo wtyczkowe Simon 54	gniazdo-wtyczkowe-simon-54	19
+product_tag	6842	Gniazdo wtyczkowe z funkcją niezmienności faz 2 Simon 54	gniazdo-wtyczkowe-z-funkcja-niezmiennosci-faz-2-simon-54	2
+product_tag	6830	Gniazdo wtyczkowe z funkcją niezmienności faz Simon 54	gniazdo-wtyczkowe-z-funkcja-niezmiennosci-faz-simon-54	2
+product_tag	6799	Gniazdo wtyczkowe z przesłonami Simon 54	gniazdo-wtyczkowe-z-przeslonami-simon-54	6
+product_tag	6777	Gniazdo wtyczkowe z uziemieniem do wersji IP44 Simon 10	gniazdo-wtyczkowe-z-uziemieniem-do-wersji-ip44-simon-10	1
+product_tag	6778	Gniazdo wtyczkowe z uziemieniem do wersji IP44 z uszczelką Simon 10	gniazdo-wtyczkowe-z-uziemieniem-do-wersji-ip44-z-uszczelka-simon-10	1
+product_tag	6773	Gniazdo wtyczkowe z uziemieniem Simon 10	gniazdo-wtyczkowe-z-uziemieniem-simon-10	2
+product_tag	6377	Gniazdo wtyczkowe z zintegrowaną ładowarką 55 simon	gniazdo-wtyczkowe-z-zintegrowana-ladowarka-55-simon	0
+product_tag	6356	Gniazdo światłowodowe optyczne podwójne 55 simon	gniazdo-swiatlowodowe-optyczne-podwojne-55-simon	6
+product_tag	6355	Gniazdo światłowodowe optyczne pojedyncze 55 simon	gniazdo-swiatlowodowe-optyczne-pojedyncze-55-simon	6
+product_tag	6755	Gniazdo światłowodowe Simon 10	gniazdo-swiatlowodowe-simon-10	4
+product_tag	6722	Gniazdo światłowodowe Simon 54	gniazdo-swiatlowodowe-simon-54	4
+product_tag	6376	Grupowy sterownik roletowy 55 simon	grupowy-sterownik-roletowy-55-simon	6
+product_tag	6728	Grupowy sterownik roletowy Simon 54	grupowy-sterownik-roletowy-simon-54	2
+product_tag	6716	Głośnik Simon 54	glosnik-simon-54	2
+product_tag	5831	hager ogranicznik	hager-ogranicznik	1
+product_tag	5829	hager różnicowoprądowy	hager-roznicowopradowy	12
+product_tag	5834	hager różnicowoprądowy z członem	hager-roznicowopradowy-z-czlonem	3
+product_tag	5830	hager stycznik	hager-stycznik	2
+product_tag	5405	High Bay PRO Linear Lowbays 110 VTAC	high-bay-pro-linear-lowbays-110-vtac	0
+product_tag	5434	High Bay PRO Linear Lowbays 120 VTAC	high-bay-pro-linear-lowbays-120-vtac	0
+product_tag	5491	High Bay PRO UFO Series 90 VTAC	high-bay-pro-ufo-series-90-vtac	0
+product_tag	5500	High Bay PRO UFO Series MW 120 NEW VTAC	high-bay-pro-ufo-series-mw-120-new-vtac	0
+product_tag	5497	High Bay PRO UFO Series MW 120 VTAC	high-bay-pro-ufo-series-mw-120-vtac	2
+product_tag	5503	High Bay PRO UFO Series MW 90 VTAC	high-bay-pro-ufo-series-mw-90-vtac	0
+product_tag	5504	High Bay Reflector Highbay MW 120 LM VTAC	high-bay-reflector-highbay-mw-120-lm-vtac	0
+product_tag	5505	High Bay Reflector Highbay MW 180 LM VTAC	high-bay-reflector-highbay-mw-180-lm-vtac	1
+product_tag	5506	High Bay Reflector Highbay SM 120 LM VTAC	high-bay-reflector-highbay-sm-120-lm-vtac	0
+product_tag	5507	High Bay Reflector Highbay SM 160 LM VTAC	high-bay-reflector-highbay-sm-160-lm-vtac	1
+product_tag	5508	High Bay Reflector Highbay SM 180 LM VTAC	high-bay-reflector-highbay-sm-180-lm-vtac	0
+product_tag	7616	HIGHBAY VOYAGER Bemko	highbay-voyager-bemko	3
+product_tag	562	ip44	ip44	0
+product_tag	426	ip54	ip54	0
+product_tag	565	ip67	ip67	0
+product_tag	421	junior	junior	0
+product_tag	7585	Kabel bezhalogenowy N2XH J	kabel-bezhalogenowy-n2xh-j	7
+product_tag	4789	Kabel energetyczny ziemny YKY	kabel-energetyczny-ziemny-yky	15
+product_tag	7431	Kabel energetyczny ziemny YKY 100m	kabel-energetyczny-ziemny-yky-100m	2
+product_tag	7584	Kabel LGY H07V K 500V	kabel-lgy-h07v-k-500v	11
+product_tag	7424	Kabel LGY H07V‑K 750V	kabel-lgy-h07v-k-750v	24
+product_tag	6671	Kabel przeciwpożarowy YnTKSYekw	kabel-przeciwpozarowy-yntksyekw	2
+product_tag	7810	kampania pozostałe przewody	kampania-pozostale-przewody	215
+product_tag	7809	kampania wybrane produkty	kampania-wybrane-produkty	87
+product_tag	423	karlik	karlik	0
+product_tag	7774	Kaseta do wylewki kontakt simon	kaseta-do-wylewki-kontakt-simon	5
+product_tag	482	kinkiet	kinkiet	0
+product_tag	4469	Kinkiet EDO ANGA	kinkiet-edo-anga	0
+product_tag	4450	Kinkiet EDO FLEVO	kinkiet-edo-flevo	1
+product_tag	4470	Kinkiet EDO VIRA	kinkiet-edo-vira	3
+product_tag	4934	Kinkiet EDO VIRA Bundle	kinkiet-edo-vira-bundle	0
+product_tag	4839	kinkiet ogrodowy	kinkiet-ogrodowy	20
+product_tag	4943	Kinkiet ogrodowy ZAMBA GORI	kinkiet-ogrodowy-zamba-gori	2
+product_tag	5735	Kinkiet ścienny EDO MIKI-MAKA	kinkiet-scienny-edo-miki-maka	1
+product_tag	5739	Kinkiet ścienny EDO MILI	kinkiet-scienny-edo-mili	2
+product_tag	6375	Klawisz 1/4 bez piktogramu 55 simon	klawisz-1-4-bez-piktogramu-55-simon	0
+product_tag	6374	Klawisz 1/4 personalizowany 55 simon	klawisz-1-4-personalizowany-55-simon	0
+product_tag	6370	Klawisz podwójny do 2 55 simon	klawisz-podwojny-do-2-55-simon	0
+product_tag	6371	Klawisz podwójny do SW6 SW7 55 simon	klawisz-podwojny-do-sw6-sw7-55-simon	0
+product_tag	6373	Klawisz podwójny do łącznika i przycisku roletowego 55 simon	klawisz-podwojny-do-lacznika-i-przycisku-roletowego-55-simon	0
+product_tag	6372	Klawisz podwójny do: SW5M SP2M 55 simon	klawisz-podwojny-do-sw5m-sp2m-55-simon	0
+product_tag	6369	Klawisz podwójny z oczkami do 3 55 simon	klawisz-podwojny-z-oczkami-do-3-55-simon	0
+product_tag	6368	Klawisz podwójny z oczkami do SW6/2L2M 55 simon	klawisz-podwojny-z-oczkami-do-sw6-2l2m-55-simon	0
+product_tag	6367	Klawisz podwójny z oczkami z piktogramami krzyżowymi 55 simon	klawisz-podwojny-z-oczkami-z-piktogramami-krzyzowymi-55-simon	0
+product_tag	6401	Klawisz podwójny z piktogramami krzyżowymi do 2s 55 simon	klawisz-podwojny-z-piktogramami-krzyzowymi-do-2s-55-simon	0
+product_tag	6366	Klawisz podwójny z piktogramami schody do:SW6/2WM 55 simon	klawisz-podwojny-z-piktogramami-schody-dosw6-2wm-55-simon	0
+product_tag	6400	Klawisz pojedynczy bez piktogramu do produktów 55 simon	klawisz-pojedynczy-bez-piktogramu-do-produktow-55-simon	0
+product_tag	6398	Klawisz pojedynczy do 4s 55 simon	klawisz-pojedynczy-do-4s-55-simon	0
+product_tag	6399	Klawisz pojedynczy do łącznika i przycisku roletowego 2 55 simon	klawisz-pojedynczy-do-lacznika-i-przycisku-roletowego-2-55-simon	0
+product_tag	6393	Klawisz pojedynczy personalizowany z możliwością nadruku simon 56	klawisz-pojedynczy-personalizowany-z-mozliwoscia-nadruku-simon-56	0
+product_tag	6394	Klawisz pojedynczy personalizowany z możliwością nadruku simon 57	klawisz-pojedynczy-personalizowany-z-mozliwoscia-nadruku-simon-57	0
+product_tag	6395	Klawisz pojedynczy personalizowany z możliwością nadruku simon 58	klawisz-pojedynczy-personalizowany-z-mozliwoscia-nadruku-simon-58	0
+product_tag	6396	Klawisz pojedynczy personalizowany z możliwością nadruku simon 59	klawisz-pojedynczy-personalizowany-z-mozliwoscia-nadruku-simon-59	0
+product_tag	6397	Klawisz pojedynczy personalizowany z możliwością nadruku simon 60	klawisz-pojedynczy-personalizowany-z-mozliwoscia-nadruku-simon-60	0
+product_tag	6391	Klawisz pojedynczy z oczkiem do 4 55 simon	klawisz-pojedynczy-z-oczkiem-do-4-55-simon	0
+product_tag	6491	Klawisz pojedynczy z oczkiem z piktogramem dzwonek do SP1M 55 simon	klawisz-pojedynczy-z-oczkiem-z-piktogramem-dzwonek-do-sp1m-55-simon	0
+product_tag	6389	Klawisz pojedynczy z oczkiem z piktogramem krzyżowym do SW7M 55 simon	klawisz-pojedynczy-z-oczkiem-z-piktogramem-krzyzowym-do-sw7m-55-simon	0
+product_tag	6390	Klawisz pojedynczy z oczkiem z piktogramem schody do SW6M 55 simon	klawisz-pojedynczy-z-oczkiem-z-piktogramem-schody-do-sw6m-55-simon	0
+product_tag	6388	Klawisz pojedynczy z oczkiem z piktogramem światło do SP1M 55 simon	klawisz-pojedynczy-z-oczkiem-z-piktogramem-swiatlo-do-sp1m-55-simon	0
+product_tag	6387	Klawisz pojedynczy z oczkiem z piktogramem światło SP1M 55 simon	klawisz-pojedynczy-z-oczkiem-z-piktogramem-swiatlo-sp1m-55-simon	0
+product_tag	6386	Klawisz pojedynczy z piktogramem dzwonek do SP1M 55 simon	klawisz-pojedynczy-z-piktogramem-dzwonek-do-sp1m-55-simon	0
+product_tag	6383	Klawisz pojedynczy z piktogramem grupy rolet 55 simon	klawisz-pojedynczy-z-piktogramem-grupy-rolet-55-simon	0
+product_tag	6416	Klawisz pojedynczy z piktogramem klucz 55 simon	klawisz-pojedynczy-z-piktogramem-klucz-55-simon	0
+product_tag	6382	Klawisz pojedynczy z piktogramem krzyżowym do SW7M 55 simon	klawisz-pojedynczy-z-piktogramem-krzyzowym-do-sw7m-55-simon	0
+product_tag	6417	Klawisz pojedynczy z piktogramem rolety pojedynczej 55 simon	klawisz-pojedynczy-z-piktogramem-rolety-pojedynczej-55-simon	0
+product_tag	6385	Klawisz pojedynczy z piktogramem schody do SW6M 55 simon	klawisz-pojedynczy-z-piktogramem-schody-do-sw6m-55-simon	0
+product_tag	6384	Klawisz pojedynczy z piktogramem światło do SP1M 55 simon	klawisz-pojedynczy-z-piktogramem-swiatlo-do-sp1m-55-simon	0
+product_tag	6415	Klawisz połówkowy bez piktogramu do produktów 55 simon	klawisz-polowkowy-bez-piktogramu-do-produktow-55-simon	0
+product_tag	6414	Klawisz połówkowy lewostronny z piktogramem 55 simon	klawisz-polowkowy-lewostronny-z-piktogramem-55-simon	0
+product_tag	6413	Klawisz połówkowy personalizowany z możliwością nadruku 55 simon	klawisz-polowkowy-personalizowany-z-mozliwoscia-nadruku-55-simon	0
+product_tag	6412	Klawisz połówkowy prawostronny z piktogramem 55 simon	klawisz-polowkowy-prawostronny-z-piktogramem-55-simon	0
+product_tag	6411	Klawisz połówkowy z piktogramem grupy rolet 55 simon	klawisz-polowkowy-z-piktogramem-grupy-rolet-55-simon	0
+product_tag	6410	Klawisz połówkowy z piktogramem pojedynczej rolety 55 simon	klawisz-polowkowy-z-piktogramem-pojedynczej-rolety-55-simon	0
+product_tag	6759	Klawisz Simon 10	klawisz-simon-10	0
+product_tag	6791	Klawisze SW1M SW6M SW7M SP1M Simon 54	klawisze-sw1m-sw6m-sw7m-sp1m-simon-54	0
+product_tag	6793	Klawisze SW5M SP2M Simon 54	klawisze-sw5m-sp2m-simon-54	0
+product_tag	6833	Klawisze SW6/2M Simon 54	klawisze-sw6-2m-simon-54	0
+product_tag	6834	Klawisze SW6/2XLM SW7/2XM SW6P1M Simon 54	klawisze-sw6-2xlm-sw7-2xm-sw6p1m-simon-54	0
+product_tag	6839	Klawisze SZP1M Simon 54	klawisze-szp1m-simon-54	0
+product_tag	6840	Klawisze SZP1WM Simon 54	klawisze-szp1wm-simon-54	0
+product_tag	6844	Klawisze SZW1KM Simon 54	klawisze-szw1km-simon-54	0
+product_tag	6794	Klawisze z oczkiem do mechanizmów SW5M SP2M Simon 54	klawisze-z-oczkiem-do-mechanizmow-sw5m-sp2m-simon-54	0
+product_tag	6838	Klawisze z piktogramem klucza Simon 54	klawisze-z-piktogramem-klucza-simon-54	0
+product_tag	6792	Klawisze zo SW1M SW6M SW7M SP1M Simon 54	klawisze-zo-sw1m-sw6m-sw7m-sp1m-simon-54	0
+product_tag	6836	Klawisze zo SW6/2XLM SW7/2XM SW6P1M Simon 54	klawisze-zo-sw6-2xlm-sw7-2xm-sw6p1m-simon-54	0
+product_tag	7308	Kolanko korytka Baks	kolanko-korytka-baks	7
+product_tag	6282	kontroler przyciskowy simon 55 go	kontroler-przyciskowy-simon-55-go	6
+product_tag	7299	Korytko kablowe Baks	korytko-kablowe-baks	7
+product_tag	7302	Kotwa	kotwa	2
+product_tag	4850	Kula ogrodowa GARDEN BALL Kobi	kula-ogrodowa-garden-ball-kobi	3
+product_tag	4845	kula świetlna	kula-swietlna	5
+product_tag	5327	Kurtyna LED NANO EMOS	kurtyna-led-nano-emos	1
+product_tag	6080	kurtyny i girlandy	kurtyny-i-girlandy	7
+product_tag	5328	Lamki kolor RUM-LUX	lamki-kolor-rum-lux	0
+product_tag	4453	Lampa EDO ARANEA	lampa-edo-aranea	3
+product_tag	4478	Lampa EDO VESPER	lampa-edo-vesper	1
+product_tag	4451	Lampa EDO ZOFIN	lampa-edo-zofin	2
+product_tag	4819	Lampa kempingowa	lampa-kempingowa	2
+product_tag	5732	Lampa kinkiet nad lustro EDO ROA	lampa-kinkiet-nad-lustro-edo-roa	0
+product_tag	6195	Lampa Neli	lampa-neli	3
+product_tag	4842	lampa ogrodowa	lampa-ogrodowa	1
+product_tag	4460	Lampa ogrodowa EDO ATEA	lampa-ogrodowa-edo-atea	1
+product_tag	4463	Lampa ogrodowa EDO GAIA	lampa-ogrodowa-edo-gaia	1
+product_tag	4449	Lampa ogrodowa EDO PANAM	lampa-ogrodowa-edo-panam	1
+product_tag	4935	Lampa ogrodowa EDO PANAM Bundle	lampa-ogrodowa-edo-panam-bundle	0
+product_tag	7590	Lampa przemysłowa HIGH BAY E	lampa-przemyslowa-high-bay-e	4
+product_tag	7555	Lampa przemysłowa LED HIGH-BAY VOYAGER	lampa-przemyslowa-led-high-bay-voyager	0
+product_tag	4820	Lampa rowerowa	lampa-rowerowa	0
+product_tag	5409	Lampa uliczna LED 110 Lumens Grey Streetlights VTAC	lampa-uliczna-led-110-lumens-grey-streetlights-vtac	4
+product_tag	5509	Lampa uliczna LED 120 Lumens Grey Streetlights VTAC	lampa-uliczna-led-120-lumens-grey-streetlights-vtac	2
+product_tag	5514	Lampa uliczna LED 130 Lumens Streetlight VTAC	lampa-uliczna-led-130-lumens-streetlight-vtac	1
+product_tag	5519	Lampa uliczna LED 140 Lumens Streetlights VTAC	lampa-uliczna-led-140-lumens-streetlights-vtac	0
+product_tag	5524	Lampa uliczna LED 3 Years Streetlights VTAC	lampa-uliczna-led-3-years-streetlights-vtac	1
+product_tag	5528	Lampa uliczna LED Class I Inventronics Streetlights VTAC	lampa-uliczna-led-class-i-inventronics-streetlights-vtac	1
+product_tag	7516	Lampa uliczna LED CYOTO	lampa-uliczna-led-cyoto	2
+product_tag	5529	Lampa uliczna LED Garden Lights VTAC	lampa-uliczna-led-garden-lights-vtac	0
+product_tag	7544	Lampa uliczna LED JAZMIN	lampa-uliczna-led-jazmin	3
+product_tag	5532	Lampa uliczna LED Light Sensor Pro VTAC	lampa-uliczna-led-light-sensor-pro-vtac	2
+product_tag	5533	Lampa uliczna LED Slim Streetlights VTAC	lampa-uliczna-led-slim-streetlights-vtac	1
+product_tag	5410	Lampa uliczna LED solarna Solar Streetlights VTAC	lampa-uliczna-led-solarna-solar-streetlights-vtac	2
+product_tag	5537	Lampa uliczna LED Suspended Streetlights VTAC	lampa-uliczna-led-suspended-streetlights-vtac	1
+product_tag	5762	Lampa uliczna VESPA Kobi	lampa-uliczna-vespa-kobi	4
+product_tag	4822	Lampa warsztatowa	lampa-warsztatowa	3
+product_tag	4969	Lampa wisząca	lampa-wiszaca	15
+product_tag	5733	Lampa wisząca EDO MEA	lampa-wiszaca-edo-mea	3
+product_tag	4479	Lampa wisząca EDO pozłacana	lampa-wiszaca-edo-pozlacana	2
+product_tag	4968	Lampa wisząca, żyrandol	lampa-wiszaca-zyrandol	0
+product_tag	5329	Lampki 100 timer EMOS	lampki-100-timer-emos	1
+product_tag	5330	Lampki choinkowe LED Classic 200 EMOS	lampki-choinkowe-led-classic-200-emos	1
+product_tag	5331	Lampki LED sople 100 EMOS	lampki-led-sople-100-emos	1
+product_tag	5332	Lampki LED standard kurtyna EMOS	lampki-led-standard-kurtyna-emos	2
+product_tag	5335	Lampki LED standard siatka EMOS	lampki-led-standard-siatka-emos	2
+product_tag	5333	Lampki LED standard łańcuch EMOS	lampki-led-standard-lancuch-emos	1
+product_tag	4826	Latarka czołowa	latarka-czolowa	8
+product_tag	4825	Latarka led	latarka-led	2
+product_tag	4830	Latarka metalowa	latarka-metalowa	6
+product_tag	483	led	led	0
+product_tag	480	lighting	lighting	0
+product_tag	7337	Listwa instalacyjna AKS	listwa-instalacyjna-aks	4
+product_tag	7336	Listwa instalacyjna EPS	listwa-instalacyjna-eps	17
+product_tag	6714	Lokalny sterownik roletowy Simon 54	lokalny-sterownik-roletowy-simon-54	2
+product_tag	6409	Lokalny sterownik roletowy z automatyczną kalibracją 55 simon	lokalny-sterownik-roletowy-z-automatyczna-kalibracja-55-simon	6
+product_tag	7178	Masa uszczelniająca	masa-uszczelniajaca	2
+product_tag	5264	meva pro	meva-pro	0
+product_tag	5765	Mini alarm ZAMEL	mini-alarm-zamel	3
+product_tag	5094	MIX pionowy poziomy Karlik JUNIOR	mix-pionowy-poziomy-karlik-junior	3
+product_tag	7489	Moduł LED Kanlux	modul-led-kanlux	2
+product_tag	4956	Multi Żarówka LED COREPRO Philips bańka E27	multi-zarowka-led-corepro-philips-banka-e27	0
+product_tag	7339	Narożnik wewnętrzny	naroznik-wewnetrzny	0
+product_tag	7375	Narożnik wewnętrzny AKS	naroznik-wewnetrzny-aks	10
+product_tag	7341	Narożnik zewnętrzny	naroznik-zewnetrzny	0
+product_tag	7377	Narożnik zewnętrzny AKS	naroznik-zewnetrzny-aks	9
+product_tag	429	natynkowe	natynkowe	0
+product_tag	424	natynkowy	natynkowy	0
+product_tag	4466	Naświetlacz EDO MODAN	naswietlacz-edo-modan	2
+product_tag	5412	Naświetlacz LED 120lm Black Slimline Pro VTAC	naswietlacz-led-120lm-black-slimline-pro-vtac	0
+product_tag	5542	Naświetlacz LED 120lm Grey Slimline Pro VTAC	naswietlacz-led-120lm-grey-slimline-pro-vtac	0
+product_tag	5544	Naświetlacz LED 120lm Slimline Pro VTAC	naswietlacz-led-120lm-slimline-pro-vtac	0
+product_tag	5546	Naświetlacz LED 120lm White Slimline Pro VTAC	naswietlacz-led-120lm-white-slimline-pro-vtac	0
+product_tag	5547	Naświetlacz LED 137lm Black Slimline Pro VTAC	naswietlacz-led-137lm-black-slimline-pro-vtac	0
+product_tag	5549	Naświetlacz LED 160lm Slimline Series VTAC	naswietlacz-led-160lm-slimline-series-vtac	0
+product_tag	5551	Naświetlacz LED 185lm Black Slimline Pro VTAC	naswietlacz-led-185lm-black-slimline-pro-vtac	0
+product_tag	4586	Naświetlacz LED ALCINDA Brennenstuhl	naswietlacz-led-alcinda-brennenstuhl	0
+product_tag	5557	Naświetlacz LED Black Slimline E Series VTAC	naswietlacz-led-black-slimline-e-series-vtac	2
+product_tag	5566	Naświetlacz LED Black Slimline Pro VTAC	naswietlacz-led-black-slimline-pro-vtac	3
+product_tag	4591	Naświetlacz LED DARGO Brennenstuhl	naswietlacz-led-dargo-brennenstuhl	0
+product_tag	4593	Naświetlacz LED FLOOD PFM Ledvance	naswietlacz-led-flood-pfm-ledvance	1
+product_tag	4774	Naświetlacz LED FLOOD PFM PIR Ledvance	naswietlacz-led-flood-pfm-pir-ledvance	0
+product_tag	4775	Naświetlacz LED FLOOD PFM strong Ledvance	naswietlacz-led-flood-pfm-strong-ledvance	0
+product_tag	7408	Naświetlacz LED FLOODLIGHT	naswietlacz-led-floodlight	42
+product_tag	5569	Naświetlacz LED Floodlights with H Stand VTAC	naswietlacz-led-floodlights-with-h-stand-vtac	0
+product_tag	5570	Naświetlacz LED Grey Slimline Pro VTAC	naswietlacz-led-grey-slimline-pro-vtac	0
+product_tag	4594	Naświetlacz LED HELDER SLIVA	naswietlacz-led-helder-sliva	0
+product_tag	5571	Naświetlacz LED High Power Series VTAC	naswietlacz-led-high-power-series-vtac	0
+product_tag	5316	Naświetlacz LED IDEO Emos	naswietlacz-led-ideo-emos	0
+product_tag	4590	Naświetlacz LED JARO Brennenstuhl	naswietlacz-led-jaro-brennenstuhl	0
+product_tag	4589	Naświetlacz LED Kastel BEMKO	naswietlacz-led-kastel-bemko	0
+product_tag	7556	Naświetlacz LED LFX Bemko	naswietlacz-led-lfx-bemko	16
+product_tag	5572	Naświetlacz LED Light Sensor Pro VTAC	naswietlacz-led-light-sensor-pro-vtac	0
+product_tag	5574	Naświetlacz LED PIR Sensor Pro VTAC	naswietlacz-led-pir-sensor-pro-vtac	3
+product_tag	5575	Naświetlacz LED PRO Rechargeable Floodlights VTAC	naswietlacz-led-pro-rechargeable-floodlights-vtac	0
+product_tag	5577	Naświetlacz LED Rotatable PIR Sensor PRO VTAC	naswietlacz-led-rotatable-pir-sensor-pro-vtac	0
+product_tag	5578	Naświetlacz LED Smart Floodlights VTAC	naswietlacz-led-smart-floodlights-vtac	0
+product_tag	5579	Naświetlacz LED Sports Lights VTAC	naswietlacz-led-sports-lights-vtac	0
+product_tag	5485	Naświetlacz LED Super Pro Series VTAC	naswietlacz-led-super-pro-series-vtac	1
+product_tag	4587	Naświetlacz LED Tambo Emos	naswietlacz-led-tambo-emos	0
+product_tag	5582	Naświetlacz LED White Slimline E Series VTAC	naswietlacz-led-white-slimline-e-series-vtac	1
+product_tag	5583	Naświetlacz LED White Slimline Pro VTAC	naswietlacz-led-white-slimline-pro-vtac	0
+product_tag	5584	Naświetlacz LED WIFI Floodlight VTAC	naswietlacz-led-wifi-floodlight-vtac	0
+product_tag	5587	Naświetlacz LED Work Light VTAC	naswietlacz-led-work-light-vtac	0
+product_tag	7409	Naświetlacz LED z czujnikiem FLOODLIGHT	naswietlacz-led-z-czujnikiem-floodlight	12
+product_tag	4592	Naświetlacz LED ZEDER SLIVA	naswietlacz-led-zeder-sliva	0
+product_tag	6212	naświetlacz ledinaire philips	naswietlacz-ledinaire-philips	3
+product_tag	6552	Naświetlacz projektor LED BVP167 Philips z czujnikiem	naswietlacz-projektor-led-bvp167-philips-z-czujnikiem	3
+product_tag	6553	Naświetlacz projektor LED BVP169 Philips	naswietlacz-projektor-led-bvp169-philips	3
+product_tag	4516	Naświetlacz projektor LED Philips	naswietlacz-projektor-led-philips	1
+product_tag	4776	Naświetlacz projektor LED PIR Philips	naswietlacz-projektor-led-pir-philips	0
+product_tag	4777	Naświetlacz projektor LED strong Philips	naswietlacz-projektor-led-strong-philips	0
+product_tag	5315	Naświetlacz solarny NCS Kobi	naswietlacz-solarny-ncs-kobi	2
+product_tag	5258	neva	neva	3
+product_tag	5941	NKT	nkt	0
+product_tag	8060	Obudowa gniazda komputerowego podwójna Ospel As	obudowa-gniazda-komputerowego-podwojna-ospel-as	6
+product_tag	8058	Obudowa gniazda komputerowego pojedyncza Ospel As	obudowa-gniazda-komputerowego-pojedyncza-ospel-as	6
+product_tag	8265	Obudowa gniazda podwójnego Keystone prosta As Antybakt	obudowa-gniazda-podwojnego-keystone-prosta-as-antybakt	1
+product_tag	8161	Obudowa gniazda podwójnego Keystone prosta Ospel Aria	obudowa-gniazda-podwojnego-keystone-prosta-ospel-aria	5
+product_tag	7996	Obudowa gniazda podwójnego Keystone prosta Ospel Impresja	obudowa-gniazda-podwojnego-keystone-prosta-ospel-impresja	6
+product_tag	8162	Obudowa gniazda podwójnego Keystone skośna Ospel Aria	obudowa-gniazda-podwojnego-keystone-skosna-ospel-aria	5
+product_tag	8266	Obudowa gniazda podwójnego typu Keystone prosta As Antybakt	obudowa-gniazda-podwojnego-typu-keystone-prosta-as-antybakt	1
+product_tag	8394	Obudowa gniazda podwójnego typu Keystone prosta Ospel Sonata	obudowa-gniazda-podwojnego-typu-keystone-prosta-ospel-sonata	11
+product_tag	8264	Obudowa gniazda podwójnego typu Keystone skośna As Antybakt	obudowa-gniazda-podwojnego-typu-keystone-skosna-as-antybakt	1
+product_tag	8222	Obudowa gniazda podwójnego typu Keystone skośna Ospel As	obudowa-gniazda-podwojnego-typu-keystone-skosna-ospel-as	6
+product_tag	8459	Obudowa gniazda podwójnego typu Keystone skośna Ospel Sonata	obudowa-gniazda-podwojnego-typu-keystone-skosna-ospel-sonata	9
+product_tag	8359	Obudowa gniazda podwójnego z przesłoną typu Keystone prosta Ospel Aria	obudowa-gniazda-podwojnego-z-przeslona-typu-keystone-prosta-ospel-aria	5
+product_tag	8223	Obudowa gniazda podwójnego z przesłoną typu Keystone prosta Ospel As	obudowa-gniazda-podwojnego-z-przeslona-typu-keystone-prosta-ospel-as	1
+product_tag	8269	Obudowa gniazda pojedynczego Keystone prosta As Antybakt	obudowa-gniazda-pojedynczego-keystone-prosta-as-antybakt	1
+product_tag	8158	Obudowa gniazda pojedynczego Keystone prosta Ospel Aria	obudowa-gniazda-pojedynczego-keystone-prosta-ospel-aria	5
+product_tag	7994	Obudowa gniazda pojedynczego Keystone prosta Ospel Impresja	obudowa-gniazda-pojedynczego-keystone-prosta-ospel-impresja	6
+product_tag	8159	Obudowa gniazda pojedynczego Keystone skośna Ospel Aria	obudowa-gniazda-pojedynczego-keystone-skosna-ospel-aria	5
+product_tag	8270	Obudowa gniazda pojedynczego typu Keystone prosta As Antybakt	obudowa-gniazda-pojedynczego-typu-keystone-prosta-as-antybakt	1
+product_tag	8442	Obudowa gniazda pojedynczego typu Keystone prosta Ospel Sonata	obudowa-gniazda-pojedynczego-typu-keystone-prosta-ospel-sonata	9
+product_tag	8268	Obudowa gniazda pojedynczego typu Keystone skośna As Antybakt	obudowa-gniazda-pojedynczego-typu-keystone-skosna-as-antybakt	1
+product_tag	8224	Obudowa gniazda pojedynczego typu Keystone skośna Ospel As	obudowa-gniazda-pojedynczego-typu-keystone-skosna-ospel-as	6
+product_tag	8441	Obudowa gniazda pojedynczego typu Keystone skośna Ospel Sonata	obudowa-gniazda-pojedynczego-typu-keystone-skosna-ospel-sonata	9
+product_tag	8360	Obudowa gniazda pojedynczego z przesłoną typu Keystone prosta Aria	obudowa-gniazda-pojedynczego-z-przeslona-typu-keystone-prosta-aria	5
+product_tag	8225	Obudowa gniazda pojedynczego z przesłoną typu Keystone prosta Ospel As	obudowa-gniazda-pojedynczego-z-przeslona-typu-keystone-prosta-ospel-as	1
+product_tag	481	ogrodowe	ogrodowe	0
+product_tag	7553	Oprawa awaryjna SKALER	oprawa-awaryjna-skaler	2
+product_tag	7550	Oprawa awaryjna TOLER	oprawa-awaryjna-toler	0
+product_tag	6551	Oprawa belka LED KOLINE K1 Kobi	oprawa-belka-led-koline-k1-kobi	2
+product_tag	4518	Oprawa belka LED Philips	oprawa-belka-led-philips	0
+product_tag	4848	Oprawa downlight Kobi	oprawa-downlight-kobi	3
+product_tag	4519	Oprawa Downlight LED Philips	oprawa-downlight-led-philips	0
+product_tag	7483	Oprawa downlight TAVO Kanlux	oprawa-downlight-tavo-kanlux	8
+product_tag	4441	Oprawa EDO AKTYN	oprawa-edo-aktyn	3
+product_tag	4933	Oprawa EDO AKTYN Bundle	oprawa-edo-aktyn-bundle	0
+product_tag	4444	Oprawa EDO CERI	oprawa-edo-ceri	3
+product_tag	4921	Oprawa EDO CERI 2	oprawa-edo-ceri-2	0
+product_tag	4936	Oprawa EDO CERI Bundle	oprawa-edo-ceri-bundle	0
+product_tag	4442	Oprawa EDO CRYSTAL	oprawa-edo-crystal	1
+product_tag	4482	Oprawa EDO FALGA	oprawa-edo-falga	2
+product_tag	4452	Oprawa EDO FESTRA	oprawa-edo-festra	2
+product_tag	4480	Oprawa EDO HALIS	oprawa-edo-halis	4
+product_tag	4937	Oprawa EDO HALIS Bundle	oprawa-edo-halis-bundle	0
+product_tag	4443	Oprawa EDO IRID	oprawa-edo-irid	1
+product_tag	4465	Oprawa EDO KLARS	oprawa-edo-klars	2
+product_tag	5730	Oprawa EDO MALDA	oprawa-edo-malda	1
+product_tag	4462	Oprawa EDO MALGA	oprawa-edo-malga	7
+product_tag	4938	Oprawa EDO MALGA Bundle	oprawa-edo-malga-bundle	0
+product_tag	4464	Oprawa EDO OPIL	oprawa-edo-opil	1
+product_tag	4939	Oprawa EDO OPIL Bundle	oprawa-edo-opil-bundle	0
+product_tag	5731	Oprawa EDO OVO	oprawa-edo-ovo	10
+product_tag	5737	Oprawa EDO OVO T	oprawa-edo-ovo-t	2
+product_tag	4510	Oprawa EDO PALLAD SKAND	oprawa-edo-pallad-skand	14
+product_tag	4940	Oprawa EDO PALLAD SKAND Bundle	oprawa-edo-pallad-skand-bundle	0
+product_tag	5736	Oprawa EDO RUTEN	oprawa-edo-ruten	2
+product_tag	5729	Oprawa EDO SKAND MICRO	oprawa-edo-skand-micro	1
+product_tag	4468	Oprawa EDO TULID	oprawa-edo-tulid	3
+product_tag	4941	Oprawa EDO TULID Bundle	oprawa-edo-tulid-bundle	0
+product_tag	5728	Oprawa EDO TULID SQ 2 kolory	oprawa-edo-tulid-sq-2-kolory	2
+product_tag	4477	Oprawa EDO VIERA	oprawa-edo-viera	2
+product_tag	4483	Oprawa EDO ZALDA	oprawa-edo-zalda	1
+product_tag	4511	Oprawa EDO ZAMA	oprawa-edo-zama	3
+product_tag	5484	Oprawa Edo ZIVA	oprawa-edo-ziva	4
+product_tag	4920	Oprawa elewacyjna Santa Bowi	oprawa-elewacyjna-santa-bowi	4
+product_tag	4952	Oprawa Fara Brolux	oprawa-fara-brolux	2
+product_tag	5213	Oprawa hermetyczna do świetlówek Kobi	oprawa-hermetyczna-do-swietlowek-kobi	2
+product_tag	5215	Oprawa hermetyczna GTV	oprawa-hermetyczna-gtv	3
+product_tag	7514	Oprawa hermetyczna LED CORTEZ	oprawa-hermetyczna-led-cortez	3
+product_tag	4521	Oprawa hermetyczna LED Philips	oprawa-hermetyczna-led-philips	7
+product_tag	7513	Oprawa hermetyczna liniowa LED NEXFORCE	oprawa-hermetyczna-liniowa-led-nexforce	2
+product_tag	5218	Oprawa hermetyczna Piła	oprawa-hermetyczna-pila	0
+product_tag	6550	oprawa high bay rio pro kobi	oprawa-high-bay-rio-pro-kobi	3
+product_tag	4770	Oprawa Kanlux Solca	oprawa-kanlux-solca	0
+product_tag	4771	Oprawa Kanlux Ubos	oprawa-kanlux-ubos	0
+product_tag	4769	oprawa kula Stono	oprawa-kula-stono	5
+product_tag	7542	Oprawa liniowa LORIEN	oprawa-liniowa-lorien	3
+product_tag	4851	oprawa najazdowa	oprawa-najazdowa	5
+product_tag	4767	Oprawa najazdowa Doryt	oprawa-najazdowa-doryt	2
+product_tag	5286	Oprawa najazdowa Gawra	oprawa-najazdowa-gawra	2
+product_tag	4763	Oprawa ogrodowa wbijana	oprawa-ogrodowa-wbijana	2
+product_tag	6821	Oprawa oświetleniowa 3k1 bz Simon 54	oprawa-oswietleniowa-3k1-bz-simon-54	2
+product_tag	6819	Oprawa oświetleniowa 3k1 Simon 54	oprawa-oswietleniowa-3k1-simon-54	2
+product_tag	6824	Oprawa oświetleniowa 4k bz Simon 54	oprawa-oswietleniowa-4k-bz-simon-54	2
+product_tag	6828	Oprawa oświetleniowa 4k Simon 54	oprawa-oswietleniowa-4k-simon-54	2
+product_tag	6822	Oprawa oświetleniowa 5k9 bz Simon 54	oprawa-oswietleniowa-5k9-bz-simon-54	2
+product_tag	6826	Oprawa oświetleniowa 5k9 Simon 54	oprawa-oswietleniowa-5k9-simon-54	2
+product_tag	6472	Oprawa oświetleniowa LED 14 V 042 W 55 simon	oprawa-oswietleniowa-led-14-v-042-w-55-simon	6
+product_tag	6471	Oprawa oświetleniowa LED 14 V 056 W 55 simon	oprawa-oswietleniowa-led-14-v-056-w-55-simon	6
+product_tag	6435	Oprawa oświetleniowa LED 14 V 55 simon	oprawa-oswietleniowa-led-14-v-55-simon	6
+product_tag	6469	Oprawa oświetleniowa LED 14 V z czujnikiem ruchu 062 W 55 simon	oprawa-oswietleniowa-led-14-v-z-czujnikiem-ruchu-062-w-55-simon	6
+product_tag	6470	Oprawa oświetleniowa LED 14 V z czujnikiem ruchu 064 W 55 simon	oprawa-oswietleniowa-led-14-v-z-czujnikiem-ruchu-064-w-55-simon	6
+product_tag	6468	Oprawa oświetleniowa LED 14 V z czujnikiem ruchu 078 W 55 simon	oprawa-oswietleniowa-led-14-v-z-czujnikiem-ruchu-078-w-55-simon	6
+product_tag	6467	Oprawa oświetleniowa LED 230 V 09 W 55 simon	oprawa-oswietleniowa-led-230-v-09-w-55-simon	6
+product_tag	6466	Oprawa oświetleniowa LED 230 V 093 W 55 simon	oprawa-oswietleniowa-led-230-v-093-w-55-simon	6
+product_tag	6465	Oprawa oświetleniowa LED 230 V 11 W 55 simon	oprawa-oswietleniowa-led-230-v-11-w-55-simon	6
+product_tag	6464	Oprawa oświetleniowa LED 230 V z czujnikiem ruchu 123 W 55 simon	oprawa-oswietleniowa-led-230-v-z-czujnikiem-ruchu-123-w-55-simon	6
+product_tag	6455	Oprawa oświetleniowa LED 230 V z czujnikiem ruchu 55 simon	oprawa-oswietleniowa-led-230-v-z-czujnikiem-ruchu-55-simon	5
+product_tag	6456	Oprawa oświetleniowa LED z czujnikiem ruchu 12 W 55 simon	oprawa-oswietleniowa-led-z-czujnikiem-ruchu-12-w-55-simon	6
+product_tag	6852	Oprawa oświetleniowa z czujnikiem ruchu 3k1 bz Simon 54	oprawa-oswietleniowa-z-czujnikiem-ruchu-3k1-bz-simon-54	2
+product_tag	6837	Oprawa oświetleniowa z czujnikiem ruchu 3k1 Simon 54	oprawa-oswietleniowa-z-czujnikiem-ruchu-3k1-simon-54	2
+product_tag	6854	Oprawa oświetleniowa z czujnikiem ruchu 4k bz Simon 54	oprawa-oswietleniowa-z-czujnikiem-ruchu-4k-bz-simon-54	2
+product_tag	6879	Oprawa oświetleniowa z czujnikiem ruchu 4k Simon 54	oprawa-oswietleniowa-z-czujnikiem-ruchu-4k-simon-54	2
+product_tag	6853	Oprawa oświetleniowa z czujnikiem ruchu 5k9 bz Simon 54	oprawa-oswietleniowa-z-czujnikiem-ruchu-5k9-bz-simon-54	2
+product_tag	6878	Oprawa oświetleniowa z czujnikiem ruchu 5k9 Simon 54	oprawa-oswietleniowa-z-czujnikiem-ruchu-5k9-simon-54	2
+product_tag	5287	Oprawa przemysłowa high-bay NINA Philips	oprawa-przemyslowa-high-bay-nina-philips	0
+product_tag	4835	Oprawa przemysłowa high-bay Philips	oprawa-przemyslowa-high-bay-philips	2
+product_tag	5288	Oprawa przemysłowa high-bay RIO Philips	oprawa-przemyslowa-high-bay-rio-philips	0
+product_tag	5738	Oprawa punktowa EDO UMA	oprawa-punktowa-edo-uma	3
+product_tag	4900	Oprawa sufitowa Corona	oprawa-sufitowa-corona	2
+product_tag	4902	Oprawa sufitowa Karadon BOWI	oprawa-sufitowa-karadon-bowi	0
+product_tag	4907	Oprawa sufitowa Karadon do sufitu BOWI	oprawa-sufitowa-karadon-do-sufitu-bowi	0
+product_tag	7479	Oprawa sufitowa MARIN Kanlux	oprawa-sufitowa-marin-kanlux	4
+product_tag	4908	Oprawa sufitowa Sara BOWI	oprawa-sufitowa-sara-bowi	2
+product_tag	4894	Oprawa sufitowa Silva BOWI	oprawa-sufitowa-silva-bowi	1
+product_tag	4896	Oprawa sufitowa VALDA BOWI	oprawa-sufitowa-valda-bowi	2
+product_tag	4905	Oprawa sufitowa Valda złota bowi	oprawa-sufitowa-valda-zlota-bowi	2
+product_tag	4524	Oprawa uliczna LED Philips	oprawa-uliczna-led-philips	0
+product_tag	5318	Oprawa uliczna LED VTAC	oprawa-uliczna-led-vtac	0
+product_tag	4528	Oprawa uliczna Malaga LED Philips	oprawa-uliczna-malaga-led-philips	1
+product_tag	4540	Oprawa wisząca zwis Bowi	oprawa-wiszaca-zwis-bowi	4
+product_tag	4844	Oprawa wpuszczana PORTO GTV	oprawa-wpuszczana-porto-gtv	1
+product_tag	4922	Oprawy EDO Osmin Bundle	oprawy-edo-osmin-bundle	0
+product_tag	4764	OPrawy Kanlux Gori	oprawy-kanlux-gori	0
+product_tag	4765	Oprawy Kanlux Reka	oprawy-kanlux-reka	2
+product_tag	4766	Oprawy Kanlux Vadra	oprawy-kanlux-vadra	0
+product_tag	5307	Oprawy LED dla firm	oprawy-led-dla-firm	25
+product_tag	4852	osprzęt ogrodowy	osprzet-ogrodowy	2
+product_tag	4911	oswietlenie solarne volteno	oswietlenie-solarne-volteno	1
+product_tag	4846	oświetlenie solarne	oswietlenie-solarne	2
+product_tag	4913	oświetlenie solarne kobi	oswietlenie-solarne-kobi	0
+product_tag	4914	oświetlenie solarne kula	oswietlenie-solarne-kula	1
+product_tag	4912	oświetlenie solarne polux	oswietlenie-solarne-polux	0
+product_tag	5414	Panel LED 120x30 Panels VTAC	panel-led-120x30-panels-vtac	0
+product_tag	5594	Panel LED 150Lumen 60x60 VTAC	panel-led-150lumen-60x60-vtac	0
+product_tag	5598	Panel LED 160Lumen 60x60 VTAC	panel-led-160lumen-60x60-vtac	0
+product_tag	5599	Panel LED 2 IN 1 Panels VTAC	panel-led-2-in-1-panels-vtac	0
+product_tag	5601	Panel LED 3 IN 1 Panels VTAC	panel-led-3-in-1-panels-vtac	0
+product_tag	5603	Panel LED 60x60 Panels VTAC	panel-led-60x60-panels-vtac	0
+product_tag	5628	Panel LED 60x60 Panels VTAC 6237	panel-led-60x60-panels-vtac-6237	0
+product_tag	5629	Panel LED 60x60 Panels VTAC-6060	panel-led-60x60-panels-vtac-6060	0
+product_tag	7587	Panel LED BLACKLIGHT	panel-led-blacklight	2
+product_tag	7586	Panel LED Blingo	panel-led-blingo	2
+product_tag	5609	Panel LED CRI>95 60x60 VTAC	panel-led-cri95-60x60-vtac	0
+product_tag	5610	Panel LED High Lumen 120x30 VTAC	panel-led-high-lumen-120x30-vtac	0
+product_tag	5613	Panel LED High Lumen 120x60 VTAC	panel-led-high-lumen-120x60-vtac	0
+product_tag	5615	Panel LED High Lumen 60x60 VTAC	panel-led-high-lumen-60x60-vtac	0
+product_tag	5631	Panel LED High Lumen 60x60 VTAC new	panel-led-high-lumen-60x60-vtac-new	0
+product_tag	5616	Panel LED High Lumen 62x62 VTAC	panel-led-high-lumen-62x62-vtac	0
+product_tag	5620	Panel LED IP65 60x60 VTAC	panel-led-ip65-60x60-vtac	0
+product_tag	7588	Panel LED LEDINAIRE	panel-led-ledinaire	2
+product_tag	5634	Panel LED MINI Adjustable Panels-Round VTAC	panel-led-mini-adjustable-panels-round-vtac	2
+product_tag	5419	Panel LED MINI Adjustable Panels-Square VTAC	panel-led-mini-adjustable-panels-square-vtac	0
+product_tag	5423	Panel LED MINI Glass Series Round VTAC	panel-led-mini-glass-series-round-vtac	0
+product_tag	5644	Panel LED MINI Glass Series Square VTAC	panel-led-mini-glass-series-square-vtac	1
+product_tag	5425	Panel LED MINI Linear Lights Flat VTAC	panel-led-mini-linear-lights-flat-vtac	2
+product_tag	5655	Panel LED MINI Premium Series Round VTAC	panel-led-mini-premium-series-round-vtac	2
+product_tag	5660	Panel LED MINI Premium Series Square VTAC	panel-led-mini-premium-series-square-vtac	2
+product_tag	5702	Panel LED MINI Premium Series Square VTAC SQ	panel-led-mini-premium-series-square-vtac-sq	1
+product_tag	5667	Panel LED MINI PRO Premium Series Round VTAC	panel-led-mini-pro-premium-series-round-vtac	2
+product_tag	5668	Panel LED MINI PRO Premium Series Square VTAC	panel-led-mini-pro-premium-series-square-vtac	3
+product_tag	5669	Panel LED MINI Slim Surface Round VTAC	panel-led-mini-slim-surface-round-vtac	0
+product_tag	5673	Panel LED MINI Slim Surface Square VTAC	panel-led-mini-slim-surface-square-vtac	2
+product_tag	5680	Panel LED MINI Surface Series Square VTAC	panel-led-mini-surface-series-square-vtac	0
+product_tag	5684	Panel LED MINI Trimless Panel Round VTAC	panel-led-mini-trimless-panel-round-vtac	0
+product_tag	5687	Panel LED MINI Trimless Panel Square VTAC	panel-led-mini-trimless-panel-square-vtac	1
+product_tag	5692	Panel LED MINI Twin LED Round VTAC	panel-led-mini-twin-led-round-vtac	0
+product_tag	5695	Panel LED MINI Twin LED Square VTAC	panel-led-mini-twin-led-square-vtac	1
+product_tag	5621	Panel LED PRO 60x60 VTAC	panel-led-pro-60x60-vtac	0
+product_tag	5627	Panel LED PRO UGR<19 60x61 VTAC	panel-led-pro-ugr19-60x61-vtac	0
+product_tag	5623	Panel LED Transparent Panels VTAC	panel-led-transparent-panels-vtac	0
+product_tag	5633	Panel LED UGR-19 60x60 VTAC	panel-led-ugr-19-60x60-vtac	0
+product_tag	5632	Panel LED UGR-19 60x60 VTAC 6068-6	panel-led-ugr-19-60x60-vtac-6068-6	0
+product_tag	5624	Panel LED UGR<19 60x60 VTAC	panel-led-ugr19-60x60-vtac	0
+product_tag	5625	Panel LED UGR<19 62x62 VTAC	panel-led-ugr19-62x62-vtac	0
+product_tag	7064	Peszel bezhalogenowy	peszel-bezhalogenowy	9
+product_tag	7100	Peszel bezhalogenowy Peszel UV	peszel-bezhalogenowy-peszel-uv	9
+product_tag	7096	Peszel foto	peszel-foto	16
+product_tag	7090	Peszel samogasnący	peszel-samogasnacy	88
+product_tag	7030	Peszel transparentny	peszel-transparentny	21
+product_tag	7073	Peszel UV	peszel-uv	44
+product_tag	6735	Pierścień dekoracyjny Simon 54	pierscien-dekoracyjny-simon-54	2
+product_tag	4467	Plafon EDO ANELL	plafon-edo-anell	0
+product_tag	7459	Plafon LED BENO ECO KANLUX	plafon-led-beno-eco-kanlux	6
+product_tag	7547	Plafon LED KATIA	plafon-led-katia	4
+product_tag	7619	Plafon LED LINA Bemko	plafon-led-lina-bemko	1
+product_tag	7618	Plafon LED LINA naklejki	plafon-led-lina-naklejki	0
+product_tag	7517	Plafon LED NAIROS	plafon-led-nairos	2
+product_tag	7488	Plafon LED STIVI Kanlux	plafon-led-stivi-kanlux	6
+product_tag	7481	Plafon LED VARSO Kanlux	plafon-led-varso-kanlux	5
+product_tag	4533	PLAFON LED WL060V Philips	plafon-led-wl060v-philips	0
+product_tag	7518	Plafon LED z czujnikiem ruchu NAIROS	plafon-led-z-czujnikiem-ruchu-nairos	2
+product_tag	7548	Plafon PLATO	plafon-plato	3
+product_tag	6459	Podstawka na telefon simon 56	podstawka-na-telefon-simon-56	1
+product_tag	6460	Podstawka na telefon simon 57	podstawka-na-telefon-simon-57	1
+product_tag	6461	Podstawka na telefon simon 58	podstawka-na-telefon-simon-58	1
+product_tag	6462	Podstawka na telefon simon 59	podstawka-na-telefon-simon-59	1
+product_tag	6463	Podstawka na telefon simon 60	podstawka-na-telefon-simon-60	1
+product_tag	4847	podświetlenie wody	podswietlenie-wody	1
+product_tag	6805	Pokrywa do gniazda DGD1P Simon 54	pokrywa-do-gniazda-dgd1p-simon-54	0
+product_tag	6845	Pokrywa do gniazda DGZ1BUZP Simon 54	pokrywa-do-gniazda-dgz1buzp-simon-54	0
+product_tag	6846	Pokrywa do gniazda DGZ1BUZP trans Simon 54	pokrywa-do-gniazda-dgz1buzp-trans-simon-54	0
+product_tag	6848	Pokrywa do gniazda DGZ1ZP Simon 54	pokrywa-do-gniazda-dgz1zp-simon-54	0
+product_tag	6849	Pokrywa do gniazda DGZ2MZNP Simon 54	pokrywa-do-gniazda-dgz2mznp-simon-54	0
+product_tag	6850	Pokrywa do gniazda DGZ2MZP Simon 54	pokrywa-do-gniazda-dgz2mzp-simon-54	0
+product_tag	6851	Pokrywa do gniazda DKP1S.01 Simon 54	pokrywa-do-gniazda-dkp1s-01-simon-54	2
+product_tag	6855	Pokrywa do gniazda DKP2.01 Simon 54	pokrywa-do-gniazda-dkp2-01-simon-54	2
+product_tag	6864	Pokrywa do gniazda DKP2B.01 trans Simon 54	pokrywa-do-gniazda-dkp2b-01-trans-simon-54	2
+product_tag	6865	Pokrywa do gniazda DKP2S.01 Simon 54	pokrywa-do-gniazda-dkp2s-01-simon-54	2
+product_tag	6454	Pokrywa gniazd teleinformatycznych na Keystone 55 simon	pokrywa-gniazd-teleinformatycznych-na-keystone-55-simon	5
+product_tag	6457	Pokrywa gniazd teleinformatycznych na Keystone płaska podwójna 55 simon	pokrywa-gniazd-teleinformatycznych-na-keystone-plaska-podwojna-55-simon	6
+product_tag	6453	Pokrywa gniazda wtyczkowego podwójnego do SGZ2CM 55 simon	pokrywa-gniazda-wtyczkowego-podwojnego-do-sgz2cm-55-simon	0
+product_tag	6452	Pokrywa gniazda wtyczkowego pojedynczego do 2 55 simon	pokrywa-gniazda-wtyczkowego-pojedynczego-do-2-55-simon	0
+product_tag	6485	Pokrywa gniazda wtyczkowego pojedynczego kolor 55 simon	pokrywa-gniazda-wtyczkowego-pojedynczego-kolor-55-simon	0
+product_tag	6486	Pokrywa gniazda wtyczkowego pojedynczego trans 55 simon	pokrywa-gniazda-wtyczkowego-pojedynczego-trans-55-simon	0
+product_tag	6484	Pokrywa gniazda wtyczkowego pojedynczego z kluczem 55 simon	pokrywa-gniazda-wtyczkowego-pojedynczego-z-kluczem-55-simon	0
+product_tag	7305	Pokrywa korytka Baks	pokrywa-korytka-baks	5
+product_tag	7638	Pokrywa magnetyczna do gniazda simon 400	pokrywa-magnetyczna-do-gniazda-simon-400	2
+product_tag	7637	Pokrywa magnetyczna do ładowarki USB simon 400	pokrywa-magnetyczna-do-ladowarki-usb-simon-400	2
+product_tag	7596	PopUpDlugie	popupdlugie	24
+product_tag	7572	PopUpGabaryt	popupgabaryt	47
+product_tag	7573	PopUpKabel	popupkabel	16
+product_tag	7595	PopUpKablePaczkomat	popupkablepaczkomat	241
+product_tag	7571	PopUpNormalne	popupnormalne	155
+product_tag	7583	PopUpOsobisty	popuposobisty	24
+product_tag	5871	promocja hager	promocja-hager	4
+product_tag	7589	PromoWAGO	promowago	3
+product_tag	7720	przedluzacz heavy line	przedluzacz-heavy-line	2
+product_tag	7718	przedluzacz professional 315	przedluzacz-professional-315	6
+product_tag	7719	przedluzacz professional 325	przedluzacz-professional-325	0
+product_tag	4808	Przedłużacz domowy bez uziemienia Elgotech	przedluzacz-domowy-bez-uziemienia-elgotech	3
+product_tag	5470	Przedłużacz domowy przenośny LOGAN EDO	przedluzacz-domowy-przenosny-logan-edo	5
+product_tag	4809	Przedłużacz domowy z uziemieniem Elgotech	przedluzacz-domowy-z-uziemieniem-elgotech	24
+product_tag	5204	Przedłużacz domowy z uziemieniem ELGOTECH czarny	przedluzacz-domowy-z-uziemieniem-elgotech-czarny	3
+product_tag	5205	Przedłużacz domowy z uziemieniem ELGOTECH PSF2	przedluzacz-domowy-z-uziemieniem-elgotech-psf2	3
+product_tag	5206	Przedłużacz domowy z uziemieniem ELGOTECH PSF3	przedluzacz-domowy-z-uziemieniem-elgotech-psf3	3
+product_tag	4811	Przedłużacz ogrodowy Elgotech	przedluzacz-ogrodowy-elgotech	5
+product_tag	4892	Przedłużacz ogrodowy Plastrol	przedluzacz-ogrodowy-plastrol	5
+product_tag	5964	Przekaźnik czasowy awersyjny jednofunkcyjny PCA-512 FF	przekaznik-czasowy-awersyjny-jednofunkcyjny-pca-512-ff	2
+product_tag	5965	Przekaźnik czasowy rewersyjny jednofunkcyjny FF	przekaznik-czasowy-rewersyjny-jednofunkcyjny-ff	2
+product_tag	5966	Przekaźnik czasowy wielofunkcyjny PCS-516 FF	przekaznik-czasowy-wielofunkcyjny-pcs-516-ff	2
+product_tag	5968	Przekaźnik czasowy wielofunkcyjny PCU-520 FF	przekaznik-czasowy-wielofunkcyjny-pcu-520-ff	1
+product_tag	5969	Przekaźnik elektromagnetyczny PK-1P FF	przekaznik-elektromagnetyczny-pk-1p-ff	3
+product_tag	5970	Przekaźnik elektromagnetyczny PP-1P FF	przekaznik-elektromagnetyczny-pp-1p-ff	2
+product_tag	6483	Przesłonki do czujnika ruchu TECR1 55 simon	przeslonki-do-czujnika-ruchu-tecr1-55-simon	6
+product_tag	7426	Przewód elektryczny H03VV-F OMY	przewod-elektryczny-h03vv-f-omy	17
+product_tag	7429	Przewód elektryczny ONPD H07RN-F	przewod-elektryczny-onpd-h07rn-f	1
+product_tag	4779	Przewód H03VVH2-F OMYP płaski	przewod-h03vvh2-f-omyp-plaski	7
+product_tag	4780	Przewód H05VV F OWY	przewod-h05vv-f-owy	66
+product_tag	6667	Przewód ognioodporny HDGSżo	przewod-ognioodporny-hdgszo	2
+product_tag	4783	Przewód YDY	przewod-ydy	21
+product_tag	7423	Przewód YDYp 500V płaski	przewod-ydyp-500v-plaski	0
+product_tag	4785	Przewód YDYp 750V płaski	przewod-ydyp-750v-plaski	26
+product_tag	5886	Przewód YDYp 750V płaski krążek 100 m	przewod-ydyp-750v-plaski-krazek-100-m	0
+product_tag	7527	Przewód YDYpżo	przewod-ydypzo	16
+product_tag	7427	Przewód YDYżo	przewod-ydyzo	22
+product_tag	5971	Przełącznik sieć agregat FF	przelacznik-siec-agregat-ff	2
+product_tag	6745	"Przycisk ""dzwonek"" Simon 10"	przycisk-dzwonek-simon-10	2
+product_tag	6676	"Przycisk ""dzwonek"" Simon 54"	przycisk-dzwonek-simon-54	8
+product_tag	6749	"Przycisk ""światło"" Simon 10"	przycisk-swiatlo-simon-10	3
+product_tag	6679	"Przycisk ""światło"" Simon 54"	przycisk-swiatlo-simon-54	5
+product_tag	6781	Przycisk A Simon 54	przycisk-a-simon-54	5
+product_tag	8520	Przycisk dotykowy jednobiegunowy zwierny z podświetleniem Sonata Touch	przycisk-dotykowy-jednobiegunowy-zwierny-z-podswietleniem-sonata-touch	4
+product_tag	6331	przycisk dzwonek 55 simon	przycisk-dzwonek-55-simon	6
+product_tag	6866	Przycisk dzwonek moduł Simon 54	przycisk-dzwonek-modul-simon-54	4
+product_tag	6310	przycisk dzwonek z podświetleniem simon 55	przycisk-dzwonek-z-podswietleniem-simon-55	6
+product_tag	8341	Przycisk dzwonek zwierny nanocząsteczki srebra Ospel As Antybakteryjny	przycisk-dzwonek-zwierny-nanoczasteczki-srebra-ospel-as-antybakteryjny	1
+product_tag	8213	Przycisk dzwonek zwierny natynkowy Ospel BIS	przycisk-dzwonek-zwierny-natynkowy-ospel-bis	1
+product_tag	8179	Przycisk dzwonek zwierny Ospel Aria	przycisk-dzwonek-zwierny-ospel-aria	5
+product_tag	8080	Przycisk dzwonek zwierny Ospel As	przycisk-dzwonek-zwierny-ospel-as	12
+product_tag	8009	Przycisk dzwonek zwierny Ospel Impresja	przycisk-dzwonek-zwierny-ospel-impresja	6
+product_tag	8476	Przycisk dzwonek zwierny Ospel Sonata	przycisk-dzwonek-zwierny-ospel-sonata	9
+product_tag	8340	Przycisk dzwonek zwierny z podświetleniem niebieskim As Antybakt	przycisk-dzwonek-zwierny-z-podswietleniem-niebieskim-as-antybakt	1
+product_tag	8385	Przycisk dzwonek zwierny z podświetleniem niebieskim Ospel Sonata	przycisk-dzwonek-zwierny-z-podswietleniem-niebieskim-ospel-sonata	2
+product_tag	8020	Przycisk dzwonek zwierny z podświetleniem Ospel Impresja	przycisk-dzwonek-zwierny-z-podswietleniem-ospel-impresja	6
+product_tag	8475	Przycisk dzwonek zwierny z podświetleniem Ospel Sonata	przycisk-dzwonek-zwierny-z-podswietleniem-ospel-sonata	9
+product_tag	6482	Przycisk poczwórny 55 simon	przycisk-poczworny-55-simon	6
+product_tag	8522	Przycisk podwójny dotykowy zwierny z podświetleniem Ospel Sonata Touch	przycisk-podwojny-dotykowy-zwierny-z-podswietleniem-ospel-sonata-touch	4
+product_tag	6481	Przycisk podwójny zwierny bez piktogramu 55 simon	przycisk-podwojny-zwierny-bez-piktogramu-55-simon	6
+product_tag	6480	Przycisk podwójny zwierny bez piktogramu osobne 55 simon	przycisk-podwojny-zwierny-bez-piktogramu-osobne-55-simon	6
+product_tag	8251	Przycisk podwójny zwierny nano srebro Ospel As Antybakteryjny	przycisk-podwojny-zwierny-nano-srebro-ospel-as-antybakteryjny	1
+product_tag	8172	Przycisk podwójny zwierny Ospel Aria	przycisk-podwojny-zwierny-ospel-aria	5
+product_tag	8072	Przycisk podwójny zwierny Ospel As	przycisk-podwojny-zwierny-ospel-as	6
+product_tag	8003	Przycisk podwójny zwierny Ospel Impresja	przycisk-podwojny-zwierny-ospel-impresja	6
+product_tag	8467	Przycisk podwójny zwierny Ospel Sonata	przycisk-podwojny-zwierny-ospel-sonata	9
+product_tag	6479	Przycisk pojedynczy rozwierny bez piktogramu 55 simon	przycisk-pojedynczy-rozwierny-bez-piktogramu-55-simon	6
+product_tag	6478	Przycisk pojedynczy zwierny bez piktogramu 55 simon	przycisk-pojedynczy-zwierny-bez-piktogramu-55-simon	6
+product_tag	6477	Przycisk pojedynczy zwierny z podświetleniem LED 55 simon	przycisk-pojedynczy-zwierny-z-podswietleniem-led-55-simon	6
+product_tag	6476	Przycisk potrójny 55 simon	przycisk-potrojny-55-simon	6
+product_tag	6475	Przycisk potrójny z podświetleniem LED 55 simon	przycisk-potrojny-z-podswietleniem-led-55-simon	6
+product_tag	8350	Przycisk potrójny zwierny nano srebro Ospel As Antybakteryjny	przycisk-potrojny-zwierny-nano-srebro-ospel-as-antybakteryjny	1
+product_tag	8358	Przycisk potrójny zwierny Ospel Aria	przycisk-potrojny-zwierny-ospel-aria	5
+product_tag	8234	Przycisk potrójny zwierny Ospel As	przycisk-potrojny-zwierny-ospel-as	6
+product_tag	8463	Przycisk potrójny zwierny Ospel Sonata	przycisk-potrojny-zwierny-ospel-sonata	9
+product_tag	6861	Przycisk rozwierny Simon 54	przycisk-rozwierny-simon-54	2
+product_tag	6747	Przycisk Simon 10	przycisk-simon-10	5
+product_tag	6780	Przycisk Simon 54	przycisk-simon-54	18
+product_tag	8351	Przycisk zwierny nanocząsteczki srebra Ospel As Antybakteryjny	przycisk-zwierny-nanoczasteczki-srebra-ospel-as-antybakteryjny	1
+product_tag	8174	Przycisk zwierny Ospel Aria	przycisk-zwierny-ospel-aria	5
+product_tag	8235	Przycisk zwierny Ospel As	przycisk-zwierny-ospel-as	6
+product_tag	8464	Przycisk zwierny Ospel Sonata	przycisk-zwierny-ospel-sonata	9
+product_tag	6876	Przycisk światło moduł Simon 54	przycisk-swiatlo-modul-simon-54	4
+product_tag	6311	przycisk światło simon 55	przycisk-swiatlo-simon-55	6
+product_tag	6312	przycisk światło z podświetleniem simon 55	przycisk-swiatlo-z-podswietleniem-simon-55	6
+product_tag	8343	Przycisk światło zwierny nanocząsteczki srebra Ospel As Antybakteryjny	przycisk-swiatlo-zwierny-nanoczasteczki-srebra-ospel-as-antybakteryjny	1
+product_tag	8178	Przycisk światło zwierny Ospel Aria	przycisk-swiatlo-zwierny-ospel-aria	5
+product_tag	8079	Przycisk światło zwierny Ospel As	przycisk-swiatlo-zwierny-ospel-as	12
+product_tag	8008	Przycisk światło zwierny Ospel Impresja	przycisk-swiatlo-zwierny-ospel-impresja	6
+product_tag	8478	Przycisk światło zwierny Ospel Sonata	przycisk-swiatlo-zwierny-ospel-sonata	9
+product_tag	8342	Przycisk światło zwierny z podświetleniem niebieskim As Antybakt	przycisk-swiatlo-zwierny-z-podswietleniem-niebieskim-as-antybakt	1
+product_tag	8386	Przycisk światło zwierny z podświetleniem niebieskim Ospel Sonata	przycisk-swiatlo-zwierny-z-podswietleniem-niebieskim-ospel-sonata	2
+product_tag	8019	Przycisk światło zwierny z podświetleniem Ospel Impresja	przycisk-swiatlo-zwierny-z-podswietleniem-ospel-impresja	6
+product_tag	8477	Przycisk światło zwierny z podświetleniem Ospel Sonata	przycisk-swiatlo-zwierny-z-podswietleniem-ospel-sonata	9
+product_tag	6796	Przycisk żaluzjowy moduł Simon 54	przycisk-zaluzjowy-modul-simon-54	2
+product_tag	8010	Przycisk żaluzjowy Ospel Impresja	przycisk-zaluzjowy-ospel-impresja	6
+product_tag	6473	Przycisk żaluzjowy podwójny trójpozycyjny 55 simon	przycisk-zaluzjowy-podwojny-trojpozycyjny-55-simon	6
+product_tag	6474	Przycisk żaluzjowy pojedynczy 55 simon	przycisk-zaluzjowy-pojedynczy-55-simon	6
+product_tag	6711	Przycisk żaluzjowy Simon 54	przycisk-zaluzjowy-simon-54	4
+product_tag	8021	Przycisk żaluzjowy z podświetleniem Ospel Impresja	przycisk-zaluzjowy-z-podswietleniem-ospel-impresja	6
+product_tag	6857	Przycisk żaluzjowy z wielu miejsc Simon 54	przycisk-zaluzjowy-z-wielu-miejsc-simon-54	2
+product_tag	8339	Przycisk żaluzjowy zwierny nano srebro Ospel As Antybakteryjny	przycisk-zaluzjowy-zwierny-nano-srebro-ospel-as-antybakteryjny	1
+product_tag	8474	Przycisk żaluzjowy zwierny Ospel Sonata	przycisk-zaluzjowy-zwierny-ospel-sonata	9
+product_tag	8336	Przycisk żaluzjowy zwierny z podświetleniem niebieskim As Antybakt	przycisk-zaluzjowy-zwierny-z-podswietleniem-niebieskim-as-antybakt	1
+product_tag	8383	Przycisk żaluzjowy zwierny z podświetleniem niebieskim Ospel Sonata	przycisk-zaluzjowy-zwierny-z-podswietleniem-niebieskim-ospel-sonata	2
+product_tag	8491	Przycisk żaluzjowy zwierny z podświetleniem Ospel Sonata	przycisk-zaluzjowy-zwierny-z-podswietleniem-ospel-sonata	9
+product_tag	8263	Przyłącz kablowy nanocząsteczki srebra Ospel Antybakteryjny	przylacz-kablowy-nanoczasteczki-srebra-ospel-antybakteryjny	1
+product_tag	4629	Przyłącz kablowy Ospel Aria	przylacz-kablowy-ospel-aria	5
+product_tag	8061	Przyłącz kablowy Ospel As	przylacz-kablowy-ospel-as	6
+product_tag	4630	Przyłącz kablowy Ospel Impresja	przylacz-kablowy-ospel-impresja	6
+product_tag	8458	Przyłącz kablowy Ospel Sonata	przylacz-kablowy-ospel-sonata	9
+product_tag	6734	Przyłącze kabla Simon 54	przylacze-kabla-simon-54	2
+product_tag	7310	Pręt gwintowany Baks	pret-gwintowany-baks	4
+product_tag	4873	pusty opis fb	pusty-opis-fb	682
+product_tag	7959	Puszka 1krotna Ospel Impresja	puszka-1krotna-ospel-impresja	6
+product_tag	7960	Puszka 2krotna Ospel Impresja	puszka-2krotna-ospel-impresja	6
+product_tag	7961	Puszka 3krotna Ospel Impresja	puszka-3krotna-ospel-impresja	6
+product_tag	7962	Puszka 4krotna Ospel Impresja	puszka-4krotna-ospel-impresja	6
+product_tag	7963	Puszka 5krotna Ospel Impresja	puszka-5krotna-ospel-impresja	6
+product_tag	4803	Puszka do G/K z wkrętami Pawbol	puszka-do-g-k-z-wkretami-pawbol	5
+product_tag	4801	Puszka głeboka Pawbol	puszka-gleboka-pawbol	2
+product_tag	4632	Puszka instalacyjna Ospel As	puszka-instalacyjna-ospel-as	0
+product_tag	4753	Puszka instalacyjna Ospel Impresja	puszka-instalacyjna-ospel-impresja	0
+product_tag	4800	Puszka instalacyjna podtynkowa Elektroplast	puszka-instalacyjna-podtynkowa-elektroplast	9
+product_tag	8487	Puszka narożna do serii SONATA podwójna wyposażona w ramkę Sonata	puszka-narozna-do-serii-sonata-podwojna-wyposazona-w-ramke-sonata	9
+product_tag	6313	puszka natynkowa 1-krotna simon 55	puszka-natynkowa-1-krotna-simon-55	6
+product_tag	6314	puszka natynkowa 2-krotna simon 55	puszka-natynkowa-2-krotna-simon-55	6
+product_tag	6315	puszka natynkowa 3-krotna simon 55	puszka-natynkowa-3-krotna-simon-55	6
+product_tag	8328	Puszka natynkowa do serii As pięciokrotna Ospel Antybakteryjny	puszka-natynkowa-do-serii-as-pieciokrotna-ospel-antybakteryjny	1
+product_tag	8329	Puszka natynkowa do serii As poczwórna Ospel Antybakteryjny	puszka-natynkowa-do-serii-as-poczworna-ospel-antybakteryjny	1
+product_tag	8331	Puszka natynkowa do serii As podwójna nano srebro Ospel Antybakteryjny	puszka-natynkowa-do-serii-as-podwojna-nano-srebro-ospel-antybakteryjny	1
+product_tag	8332	Puszka natynkowa do serii As pojedyncza Ospel Antybakteryjny	puszka-natynkowa-do-serii-as-pojedyncza-ospel-antybakteryjny	1
+product_tag	8330	Puszka natynkowa do serii As potrójna nano srebro Ospel Antybakteryjny	puszka-natynkowa-do-serii-as-potrojna-nano-srebro-ospel-antybakteryjny	1
+product_tag	8488	Puszka natynkowa do serii SONATA podwójna Ospel Sonata	puszka-natynkowa-do-serii-sonata-podwojna-ospel-sonata	9
+product_tag	8489	Puszka natynkowa do serii SONATA pojedyncza Ospel Sonata	puszka-natynkowa-do-serii-sonata-pojedyncza-ospel-sonata	9
+product_tag	8486	Puszka natynkowa do serii SONATA potrójna Ospel Sonata	puszka-natynkowa-do-serii-sonata-potrojna-ospel-sonata	9
+product_tag	6316	puszka natynkowa line/duo simon 55	puszka-natynkowa-line-duo-simon-55	6
+product_tag	6317	puszka natynkowa narożna 2-krotna simon 55	puszka-natynkowa-narozna-2-krotna-simon-55	6
+product_tag	8373	Puszka natynkowa pięciokrotna Ospel Aria	puszka-natynkowa-pieciokrotna-ospel-aria	5
+product_tag	8091	Puszka natynkowa pięciokrotna Ospel As	puszka-natynkowa-pieciokrotna-ospel-as	1
+product_tag	8374	Puszka natynkowa poczwórna Ospel Aria	puszka-natynkowa-poczworna-ospel-aria	5
+product_tag	8090	Puszka natynkowa poczwórna Ospel As	puszka-natynkowa-poczworna-ospel-as	1
+product_tag	8376	Puszka natynkowa podwójna Ospel Aria	puszka-natynkowa-podwojna-ospel-aria	5
+product_tag	8088	Puszka natynkowa podwójna Ospel As	puszka-natynkowa-podwojna-ospel-as	1
+product_tag	8357	Puszka natynkowa pojedyncza Ospel Aria	puszka-natynkowa-pojedyncza-ospel-aria	5
+product_tag	8087	Puszka natynkowa pojedyncza Ospel As	puszka-natynkowa-pojedyncza-ospel-as	1
+product_tag	8375	Puszka natynkowa potrójna Ospel Aria	puszka-natynkowa-potrojna-ospel-aria	5
+product_tag	8089	Puszka natynkowa potrójna Ospel As	puszka-natynkowa-potrojna-ospel-as	1
+product_tag	6318	puszka natynkowa składana simon 55	puszka-natynkowa-skladana-simon-55	6
+product_tag	7169	Puszka Pawbol A.0001BLP	puszka-pawbol-a-0001blp	2
+product_tag	7168	Puszka Pawbol A.0001LDP	puszka-pawbol-a-0001ldp	2
+product_tag	7164	Puszka Pawbol A.0002P	puszka-pawbol-a-0002p	2
+product_tag	7165	Puszka Pawbol A.0005P	puszka-pawbol-a-0005p	2
+product_tag	7167	Puszka Pawbol A.0006BLP	puszka-pawbol-a-0006blp	2
+product_tag	7166	Puszka Pawbol A.0006LP	puszka-pawbol-a-0006lp	2
+product_tag	7160	Puszka Pawbol A.0010PG	puszka-pawbol-a-0010pg	2
+product_tag	7159	Puszka Pawbol A.0041PG	puszka-pawbol-a-0041pg	2
+product_tag	7162	Puszka Pawbol A.0047PG	puszka-pawbol-a-0047pg	2
+product_tag	7161	Puszka Pawbol A.0048PG	puszka-pawbol-a-0048pg	2
+product_tag	7163	Puszka Pawbol A.0050	puszka-pawbol-a-0050	0
+product_tag	7156	Puszka Pawbol A.0061	puszka-pawbol-a-0061	2
+product_tag	7158	Puszka Pawbol A.0062	puszka-pawbol-a-0062	2
+product_tag	7767	Puszka podłogowa 2x K45	puszka-podlogowa-2x-k45	0
+product_tag	7768	Puszka podłogowa KONTAKT SIMON	puszka-podlogowa-kontakt-simon	10
+product_tag	4799	Puszka Simet	puszka-simet	4
+product_tag	7152	Puszka Simet P60DF	puszka-simet-p60df	2
+product_tag	7153	Puszka Simet P60KF	puszka-simet-p60kf	2
+product_tag	7157	Puszka Simet PS60	puszka-simet-ps60	2
+product_tag	7154	Puszka Simet S60DF	puszka-simet-s60df	2
+product_tag	7155	Puszka Simet Z60DF	puszka-simet-z60df	2
+product_tag	4802	Puszka łączona Pawbol	puszka-laczona-pawbol	4
+product_tag	7784	Płytka kontakt simon K076	plytka-kontakt-simon-k076	2
+product_tag	7786	Płytka kontakt simon K080	plytka-kontakt-simon-k080	2
+product_tag	7785	Płytka kontakt simon K100	plytka-kontakt-simon-k100	2
+product_tag	7788	Płytka kontakt simon K128B	plytka-kontakt-simon-k128b	2
+product_tag	7787	Płytka kontakt simon K129B	plytka-kontakt-simon-k129b	2
+product_tag	7790	Płytka kontakt simon K76	plytka-kontakt-simon-k76	2
+product_tag	7789	Płytka kontakt simon KA76	plytka-kontakt-simon-ka76	2
+product_tag	7791	Płytka kontakt simon KB076	plytka-kontakt-simon-kb076	2
+product_tag	7793	Płytka kontakt simon KB080	plytka-kontakt-simon-kb080	2
+product_tag	7792	Płytka kontakt simon KB76	plytka-kontakt-simon-kb76	2
+product_tag	7794	Płytka kontakt simon KB80	plytka-kontakt-simon-kb80	2
+product_tag	6686	Ramka 1- krotna Simon 54	ramka-1-krotna-simon-54	22
+product_tag	6526	ramka 1-krotna duo 55 simon	ramka-1-krotna-duo-55-simon	6
+product_tag	6525	ramka 1-krotna inox 55 simon	ramka-1-krotna-inox-55-simon	3
+product_tag	6488	Ramka 1-krotna LINE 55 simon	ramka-1-krotna-line-55-simon	7
+product_tag	6524	ramka 1-krotna nature drewno 55 simon	ramka-1-krotna-nature-drewno-55-simon	3
+product_tag	6520	ramka 1-krotna nature szkło 55 simon	ramka-1-krotna-nature-szklo-55-simon	8
+product_tag	6692	Ramka 2- krotna Simon 54	ramka-2-krotna-simon-54	19
+product_tag	6513	ramka 2-krotna duo 55 simon	ramka-2-krotna-duo-55-simon	6
+product_tag	6507	ramka 2-krotna inox 55 simon	ramka-2-krotna-inox-55-simon	3
+product_tag	6487	Ramka 2-krotna LINE 55 simon	ramka-2-krotna-line-55-simon	4
+product_tag	6505	ramka 2-krotna nature drewno 55 simon	ramka-2-krotna-nature-drewno-55-simon	3
+product_tag	6303	ramka 2-krotna szkło NATURE SIMON 55	ramka-2-krotna-szklo-nature-simon-55	8
+product_tag	6693	Ramka 3- krotna Simon 54	ramka-3-krotna-simon-54	17
+product_tag	6304	ramka 3-krotna DUO simon 55	ramka-3-krotna-duo-simon-55	6
+product_tag	6305	ramka 3-krotna line simon 55	ramka-3-krotna-line-simon-55	6
+product_tag	6535	ramka 3-krotna nature drewno 55 simon	ramka-3-krotna-nature-drewno-55-simon	3
+product_tag	6536	ramka 3-krotna nature inox 55 simon	ramka-3-krotna-nature-inox-55-simon	3
+product_tag	6501	ramka 3-krotna nature szkło 55 simon	ramka-3-krotna-nature-szklo-55-simon	8
+product_tag	6694	Ramka 4- krotna Simon 54	ramka-4-krotna-simon-54	15
+product_tag	6534	ramka 4-krotna duo 55 simon	ramka-4-krotna-duo-55-simon	6
+product_tag	6306	ramka 4-krotna line simon 55	ramka-4-krotna-line-simon-55	6
+product_tag	6532	ramka 4-krotna nature drewno 55 simon	ramka-4-krotna-nature-drewno-55-simon	3
+product_tag	6533	ramka 4-krotna nature inox 55 simon	ramka-4-krotna-nature-inox-55-simon	3
+product_tag	6531	ramka 4-krotna nature szkło 55 simon	ramka-4-krotna-nature-szklo-55-simon	8
+product_tag	6695	Ramka 5- krotna Simon 54	ramka-5-krotna-simon-54	9
+product_tag	6530	ramka 5-krotna duo 55 simon	ramka-5-krotna-duo-55-simon	5
+product_tag	6307	ramka 5-krotna line simon 55	ramka-5-krotna-line-simon-55	6
+product_tag	6528	ramka 5-krotna nature drewno 55 simon	ramka-5-krotna-nature-drewno-55-simon	3
+product_tag	6529	ramka 5-krotna nature inox 55 simon	ramka-5-krotna-nature-inox-55-simon	3
+product_tag	6527	ramka 5-krotna nature szkło 55 simon	ramka-5-krotna-nature-szklo-55-simon	8
+product_tag	4651	Ramka do IP-44 Ospel Aria	ramka-do-ip-44-ospel-aria	0
+product_tag	4652	Ramka do IP-44 Ospel As	ramka-do-ip-44-ospel-as	0
+product_tag	4653	Ramka do IP-44 Ospel Impresja	ramka-do-ip-44-ospel-impresja	0
+product_tag	7446	Ramka GK 1 Simon 54	ramka-gk-1-simon-54	3
+product_tag	7447	Ramka GK 2 Simon 54	ramka-gk-2-simon-54	3
+product_tag	7448	Ramka GK 3 Simon 54	ramka-gk-3-simon-54	5
+product_tag	7449	Ramka GK 4 Simon 54	ramka-gk-4-simon-54	2
+product_tag	5130	Ramka Karlik DECO	ramka-karlik-deco	144
+product_tag	5136	Ramka Karlik DECO PASTEL MATT	ramka-karlik-deco-pastel-matt	51
+product_tag	5133	Ramka Karlik MINI	ramka-karlik-mini	15
+product_tag	4647	Ramka Ospel Aria	ramka-ospel-aria	0
+product_tag	4648	Ramka Ospel As	ramka-ospel-as	0
+product_tag	4649	Ramka Ospel Impresja	ramka-ospel-impresja	0
+product_tag	8207	Ramka ozdobna do gniazd podwójnych do ramki Ospel Aria	ramka-ozdobna-do-gniazd-podwojnych-do-ramki-ospel-aria	7
+product_tag	8205	Ramka ozdobna do gniazd poj bez klapek teleinf ściemn Ospel Aria	ramka-ozdobna-do-gniazd-poj-bez-klapek-teleinf-sciemn-ospel-aria	7
+product_tag	8206	Ramka ozdobna do gniazda podwójnych kompletnych Ospel Aria	ramka-ozdobna-do-gniazda-podwojnych-kompletnych-ospel-aria	7
+product_tag	8372	Ramka ozdobna do łączników podwójnych krzyżowych Ospel Aria	ramka-ozdobna-do-lacznikow-podwojnych-krzyzowych-ospel-aria	7
+product_tag	8204	Ramka ozdobna mocująca do łączników Ospel Aria	ramka-ozdobna-mocujaca-do-lacznikow-ospel-aria	7
+product_tag	8203	Ramka ozdobna mocująca do łączników potrójnych Ospel Aria	ramka-ozdobna-mocujaca-do-lacznikow-potrojnych-ospel-aria	7
+product_tag	8202	Ramka pięciokrotna do zestawów IP44 Ospel Aria	ramka-pieciokrotna-do-zestawow-ip44-ospel-aria	5
+product_tag	8039	Ramka pięciokrotna do zestawów IP44 Ospel Impresja	ramka-pieciokrotna-do-zestawow-ip44-ospel-impresja	6
+product_tag	8318	Ramka pięciokrotna do łączników IP44 As Antybakt	ramka-pieciokrotna-do-lacznikow-ip44-as-antybakt	1
+product_tag	8510	Ramka pięciokrotna do łączników IP44 Ospel Sonata	ramka-pieciokrotna-do-lacznikow-ip44-ospel-sonata	9
+product_tag	8097	Ramka pięciokrotna IP44 Ospel As	ramka-pieciokrotna-ip44-ospel-as	6
+product_tag	8323	Ramka pięciokrotna nanocząsteczki srebra Ospel As Antybakteryjny	ramka-pieciokrotna-nanoczasteczki-srebra-ospel-as-antybakteryjny	1
+product_tag	8197	Ramka pięciokrotna Ospel Aria	ramka-pieciokrotna-ospel-aria	5
+product_tag	8094	Ramka pięciokrotna Ospel As	ramka-pieciokrotna-ospel-as	6
+product_tag	8034	Ramka pięciokrotna Ospel Impresja	ramka-pieciokrotna-ospel-impresja	6
+product_tag	8496	Ramka pięciokrotna Ospel Sonata	ramka-pieciokrotna-ospel-sonata	9
+product_tag	8495	Ramka pięciokrotna szczotkowana Ospel Sonata	ramka-pieciokrotna-szczotkowana-ospel-sonata	3
+product_tag	8494	Ramka pięciokrotna szkło Ospel Sonata	ramka-pieciokrotna-szklo-ospel-sonata	8
+product_tag	8499	Ramka poczwórna aluminium aluminium Ospel Sonata	ramka-poczworna-aluminium-aluminium-ospel-sonata	1
+product_tag	8201	Ramka poczwórna do zestawów IP44 Ospel Aria	ramka-poczworna-do-zestawow-ip44-ospel-aria	5
+product_tag	8038	Ramka poczwórna do zestawów IP44 Ospel Impresja	ramka-poczworna-do-zestawow-ip44-ospel-impresja	6
+product_tag	8319	Ramka poczwórna do łączników IP44 nano srebro Ospel As Antybakteryjny	ramka-poczworna-do-lacznikow-ip44-nano-srebro-ospel-as-antybakteryjny	1
+product_tag	8511	Ramka poczwórna do łączników IP44 Ospel Sonata	ramka-poczworna-do-lacznikow-ip44-ospel-sonata	9
+product_tag	8096	Ramka poczwórna IP44 Ospel As	ramka-poczworna-ip44-ospel-as	6
+product_tag	8324	Ramka poczwórna nanocząsteczki srebra Ospel As Antybakteryjny	ramka-poczworna-nanoczasteczki-srebra-ospel-as-antybakteryjny	1
+product_tag	8194	Ramka poczwórna Ospel Aria	ramka-poczworna-ospel-aria	5
+product_tag	8093	Ramka poczwórna Ospel As	ramka-poczworna-ospel-as	6
+product_tag	8031	Ramka poczwórna Ospel Impresja	ramka-poczworna-ospel-impresja	6
+product_tag	8377	Ramka poczwórna Ospel Sonata	ramka-poczworna-ospel-sonata	13
+product_tag	8033	Ramka poczwórna prestige Ospel Impresja	ramka-poczworna-prestige-ospel-impresja	5
+product_tag	8195	Ramka poczwórna szczotkowana Ospel Aria	ramka-poczworna-szczotkowana-ospel-aria	2
+product_tag	8032	Ramka poczwórna szczotkowana Ospel Impresja	ramka-poczworna-szczotkowana-ospel-impresja	3
+product_tag	8498	Ramka poczwórna szczotkowana Ospel Sonata	ramka-poczworna-szczotkowana-ospel-sonata	3
+product_tag	8196	Ramka poczwórna szkło Ospel Aria	ramka-poczworna-szklo-ospel-aria	3
+product_tag	8497	Ramka poczwórna szkło Ospel Sonata	ramka-poczworna-szklo-ospel-sonata	8
+product_tag	8505	Ramka podwójna aluminium Ospel Sonata	ramka-podwojna-aluminium-ospel-sonata	1
+product_tag	8199	Ramka podwójna do zestawów IP44 Ospel Aria	ramka-podwojna-do-zestawow-ip44-ospel-aria	5
+product_tag	8036	Ramka podwójna do zestawów IP44 Ospel Impresja	ramka-podwojna-do-zestawow-ip44-ospel-impresja	6
+product_tag	8321	Ramka podwójna do łączników IP44 nano srebro Ospel As Antybakteryjny	ramka-podwojna-do-lacznikow-ip44-nano-srebro-ospel-as-antybakteryjny	1
+product_tag	8492	Ramka podwójna do łączników IP44 Ospel Sonata	ramka-podwojna-do-lacznikow-ip44-ospel-sonata	9
+product_tag	8103	Ramka podwójna IP44 Ospel As	ramka-podwojna-ip44-ospel-as	6
+product_tag	8326	Ramka podwójna nanocząsteczki srebra Ospel As Antybakteryjny	ramka-podwojna-nanoczasteczki-srebra-ospel-as-antybakteryjny	1
+product_tag	8188	Ramka podwójna Ospel Aria	ramka-podwojna-ospel-aria	5
+product_tag	8102	Ramka podwójna Ospel As	ramka-podwojna-ospel-as	6
+product_tag	8025	Ramka podwójna Ospel Impresja	ramka-podwojna-ospel-impresja	6
+product_tag	8379	Ramka podwójna Ospel Sonata	ramka-podwojna-ospel-sonata	13
+product_tag	8027	Ramka podwójna prestige Ospel Impresja	ramka-podwojna-prestige-ospel-impresja	5
+product_tag	8189	Ramka podwójna szczotkowana Ospel Aria	ramka-podwojna-szczotkowana-ospel-aria	2
+product_tag	8026	Ramka podwójna szczotkowana Ospel Impresja	ramka-podwojna-szczotkowana-ospel-impresja	3
+product_tag	8504	Ramka podwójna szczotkowana Ospel Sonata	ramka-podwojna-szczotkowana-ospel-sonata	3
+product_tag	8190	Ramka podwójna szkło Ospel Aria	ramka-podwojna-szklo-ospel-aria	3
+product_tag	8503	Ramka podwójna szkło Ospel Sonata	ramka-podwojna-szklo-ospel-sonata	8
+product_tag	8485	Ramka pojedyncza aluminium Ospel Sonata	ramka-pojedyncza-aluminium-ospel-sonata	1
+product_tag	8198	Ramka pojedyncza do zestawów IP44 Ospel Aria	ramka-pojedyncza-do-zestawow-ip44-ospel-aria	5
+product_tag	8035	Ramka pojedyncza do zestawów IP44 Ospel Impresja	ramka-pojedyncza-do-zestawow-ip44-ospel-impresja	6
+product_tag	8322	Ramka pojedyncza do łączników IP44 nano srebro Ospel As Antybakteryjny	ramka-pojedyncza-do-lacznikow-ip44-nano-srebro-ospel-as-antybakteryjny	1
+product_tag	8493	Ramka pojedyncza do łączników IP44 Ospel Sonata	ramka-pojedyncza-do-lacznikow-ip44-ospel-sonata	9
+product_tag	8105	Ramka pojedyncza IP44 Ospel As	ramka-pojedyncza-ip44-ospel-as	6
+product_tag	8327	Ramka pojedyncza nanocząsteczki srebra Ospel As Antybakteryjny	ramka-pojedyncza-nanoczasteczki-srebra-ospel-as-antybakteryjny	1
+product_tag	8185	Ramka pojedyncza Ospel Aria	ramka-pojedyncza-ospel-aria	5
+product_tag	8101	Ramka pojedyncza Ospel As	ramka-pojedyncza-ospel-as	6
+product_tag	8022	Ramka pojedyncza Ospel Impresja	ramka-pojedyncza-ospel-impresja	6
+product_tag	8380	Ramka pojedyncza Ospel Sonata	ramka-pojedyncza-ospel-sonata	13
+product_tag	8024	Ramka pojedyncza prestige Ospel Impresja	ramka-pojedyncza-prestige-ospel-impresja	5
+product_tag	8186	Ramka pojedyncza szczotkowana Ospel Aria	ramka-pojedyncza-szczotkowana-ospel-aria	2
+product_tag	8023	Ramka pojedyncza szczotkowana Ospel Impresja	ramka-pojedyncza-szczotkowana-ospel-impresja	3
+product_tag	8484	Ramka pojedyncza szczotkowana Ospel Sonata	ramka-pojedyncza-szczotkowana-ospel-sonata	3
+product_tag	8187	Ramka pojedyncza szkło Ospel Aria	ramka-pojedyncza-szklo-ospel-aria	3
+product_tag	8483	Ramka pojedyncza szkło Ospel Sonata	ramka-pojedyncza-szklo-ospel-sonata	8
+product_tag	8502	Ramka potrójna aluminium Ospel Sonata	ramka-potrojna-aluminium-ospel-sonata	1
+product_tag	8200	Ramka potrójna do zestawów IP44 Ospel Aria	ramka-potrojna-do-zestawow-ip44-ospel-aria	5
+product_tag	8037	Ramka potrójna do zestawów IP44 Ospel Impresja	ramka-potrojna-do-zestawow-ip44-ospel-impresja	6
+product_tag	8320	Ramka potrójna do łączników IP44 nano srebro Ospel As Antybakteryjny	ramka-potrojna-do-lacznikow-ip44-nano-srebro-ospel-as-antybakteryjny	1
+product_tag	8512	Ramka potrójna do łączników IP44 Ospel Sonata	ramka-potrojna-do-lacznikow-ip44-ospel-sonata	9
+product_tag	8095	Ramka potrójna IP44 Ospel As	ramka-potrojna-ip44-ospel-as	6
+product_tag	8191	Ramka potrójna Ospel Aria	ramka-potrojna-ospel-aria	5
+product_tag	8092	Ramka potrójna Ospel As	ramka-potrojna-ospel-as	6
+product_tag	8028	Ramka potrójna Ospel Impresja	ramka-potrojna-ospel-impresja	6
+product_tag	8378	Ramka potrójna Ospel Sonata	ramka-potrojna-ospel-sonata	13
+product_tag	8030	Ramka potrójna prestige Ospel Impresja	ramka-potrojna-prestige-ospel-impresja	5
+product_tag	8192	Ramka potrójna szczotkowana Ospel Aria	ramka-potrojna-szczotkowana-ospel-aria	2
+product_tag	8029	Ramka potrójna szczotkowana Ospel Impresja	ramka-potrojna-szczotkowana-ospel-impresja	3
+product_tag	8501	Ramka potrójna szczotkowana Ospel Sonata	ramka-potrojna-szczotkowana-ospel-sonata	3
+product_tag	8193	Ramka potrójna szkło Ospel Aria	ramka-potrojna-szklo-ospel-aria	3
+product_tag	8500	Ramka potrójna szkło Ospel Sonata	ramka-potrojna-szklo-ospel-sonata	8
+product_tag	8325	Ramka potrójna zawiera nanocząsteczki srebra Ospel As Antybakteryjny	ramka-potrojna-zawiera-nanoczasteczki-srebra-ospel-as-antybakteryjny	1
+product_tag	4655	Ramka Prestige Ospel Impresja	ramka-prestige-ospel-impresja	0
+product_tag	6748	Ramka Simon 10	ramka-simon-10	10
+product_tag	4755	Ramki ozdobne Ospel Aria	ramki-ozdobne-ospel-aria	0
+product_tag	4472	Reflektor MALGA T	reflektor-malga-t	10
+product_tag	4840	reflektor ogrodowy	reflektor-ogrodowy	2
+product_tag	6875	Regulator temperatury 1–10 V Simon 54	regulator-temperatury-1-10-v-simon-54	2
+product_tag	8109	Regulator temperatury napowietrzny Ospel As	regulator-temperatury-napowietrzny-ospel-as	6
+product_tag	4638	Regulator temperatury Ospel As	regulator-temperatury-ospel-as	6
+product_tag	6731	Regulator temperatury Simon 54	regulator-temperatury-simon-54	2
+product_tag	6871	Regulator temperatury sonda Simon 54	regulator-temperatury-sonda-simon-54	2
+product_tag	6874	Regulator temperatury sonda2 Simon 54	regulator-temperatury-sonda2-simon-54	2
+product_tag	8316	Regulator temperatury z czujnikiem napowietrznym As Antybakt	regulator-temperatury-z-czujnikiem-napowietrznym-as-antybakt	1
+product_tag	8370	Regulator temperatury z czujnikiem napowietrznym Ospel Aria	regulator-temperatury-z-czujnikiem-napowietrznym-ospel-aria	5
+product_tag	8508	Regulator temperatury z czujnikiem napowietrznym Ospel Sonata	regulator-temperatury-z-czujnikiem-napowietrznym-ospel-sonata	9
+product_tag	8317	Regulator temperatury z czujnikiem podpodłogowym As Antybakt	regulator-temperatury-z-czujnikiem-podpodlogowym-as-antybakt	1
+product_tag	8371	Regulator temperatury z czujnikiem podpodłogowym Ospel Aria	regulator-temperatury-z-czujnikiem-podpodlogowym-ospel-aria	5
+product_tag	8509	Regulator temperatury z czujnikiem podpodłogowym Ospel Sonata	regulator-temperatury-z-czujnikiem-podpodlogowym-ospel-sonata	9
+product_tag	6873	Regulator temperatury z wyświetlaczem Simon 54	regulator-temperatury-z-wyswietlaczem-simon-54	2
+product_tag	4854	Rodzielnica KLV Eaton	rodzielnica-klv-eaton	4
+product_tag	7484	Rozdzielnica Kanlux	rozdzielnica-kanlux	14
+product_tag	5832	rozdzielnica natynkowa hager	rozdzielnica-natynkowa-hager	1
+product_tag	5821	Rozdzielnica natynkowa z zaciskami HAGER	rozdzielnica-natynkowa-z-zaciskami-hager	3
+product_tag	5805	Rozdzielnica podtynkowa golf HAGER	rozdzielnica-podtynkowa-golf-hager	2
+product_tag	5782	Rozdzielnica podtynkowa volta HAGER	rozdzielnica-podtynkowa-volta-hager	6
+product_tag	5791	Rozdzielnica podtynkowa volta hybrydowa HAGER	rozdzielnica-podtynkowa-volta-hybrydowa-hager	2
+product_tag	5794	Rozdzielnica podtynkowa volta QC HAGER	rozdzielnica-podtynkowa-volta-qc-hager	2
+product_tag	5785	Rozdzielnica podtynkowa volta VDI HAGER	rozdzielnica-podtynkowa-volta-vdi-hager	4
+product_tag	5815	Rozdzielnica podtynkowa z zaciskami HAGER	rozdzielnica-podtynkowa-z-zaciskami-hager	4
+product_tag	7478	Rozłącznik izolacyjny Kanlux	rozlacznik-izolacyjny-kanlux	7
+product_tag	4895	Rura karmowana niebieska AROT KOPOFLEX Kopos	rura-karmowana-niebieska-arot-kopoflex-kopos	0
+product_tag	4878	Rura karmowana niebieska AROT TT Plast	rura-karmowana-niebieska-arot-tt-plast	11
+product_tag	4459	Seria EDO LOFT	seria-edo-loft	6
+product_tag	5749	Seria ENTERA Kobi	seria-entera-kobi	2
+product_tag	5750	Seria INDUO Kobi	seria-induo-kobi	0
+product_tag	4461	Seria ogrodowa EDO IMMA	seria-ogrodowa-edo-imma	5
+product_tag	5317	seva	seva	0
+product_tag	6281	simon go nadajnik bateryjny	simon-go-nadajnik-bateryjny	6
+product_tag	561	siłowe	silowe	0
+product_tag	6035	Sterownik bramy SUPLA ZAMEL	sterownik-bramy-supla-zamel	2
+product_tag	6290	sterownik do rolet simon go	sterownik-do-rolet-simon-go	6
+product_tag	6286	sterownik przyciskowy do rolet simon go	sterownik-przyciskowy-do-rolet-simon-go	6
+product_tag	6289	sterownik przyciskowy oświetleniowy 1 wyjście simon go	sterownik-przyciskowy-oswietleniowy-1-wyjscie-simon-go	6
+product_tag	6287	sterownik przyciskowy oświetleniowy 2 wyjścia	sterownik-przyciskowy-oswietleniowy-2-wyjscia	6
+product_tag	6288	sterownik przyciskowy oświetleniowy 2 wyjścia simon go	sterownik-przyciskowy-oswietleniowy-2-wyjscia-simon-go	6
+product_tag	5972	Sterownik rolet na szynę FF	sterownik-rolet-na-szyne-ff	2
+product_tag	6041	Sterownik urządzeń SUPLA ZAMEL	sterownik-urzadzen-supla-zamel	2
+product_tag	7490	Stycznik modułowy Kanlux	stycznik-modulowy-kanlux	8
+product_tag	7559	Stycznik modułowy Schelinger	stycznik-modulowy-schelinger	6
+product_tag	6308	sygnalizator czerwony simon 55	sygnalizator-czerwony-simon-55	6
+product_tag	6309	sygnalizator zielony simon 55	sygnalizator-zielony-simon-55	6
+product_tag	6870	Sygnalizator świetlny LED białe Simon 54	sygnalizator-swietlny-led-biale-simon-54	2
+product_tag	6868	Sygnalizator świetlny LED czerwone Simon 54	sygnalizator-swietlny-led-czerwone-simon-54	2
+product_tag	6867	Sygnalizator świetlny LED zielone Simon 54	sygnalizator-swietlny-led-zielone-simon-54	2
+product_tag	7068	Systemy prowadzenia kabli>Peszle>Rury bezhalogenowe	systemy-prowadzenia-kablipeszlerury-bezhalogenowe	0
+product_tag	7069	Systemy prowadzenia kabli>Peszle>Rury odporne na UV	systemy-prowadzenia-kablipeszlerury-odporne-na-uv	0
+product_tag	7575	Szyna grzebieniowa Hager	szyna-grzebieniowa-hager	3
+product_tag	4915	szyna oświetleniowa bowi	szyna-oswietleniowa-bowi	0
+product_tag	7577	Szyna łączeniowa Eti	szyna-laczeniowa-eti	2
+product_tag	4473	Szynoprzewód EDO SEVA	szynoprzewod-edo-seva	6
+product_tag	5259	szynoprzewód meva pro	szynoprzewod-meva-pro	15
+product_tag	4917	szynoprzewód zwis	szynoprzewod-zwis	0
+product_tag	4471	Słupek EDO TULIS	slupek-edo-tulis	11
+product_tag	4942	Słupek EDO TULIS Bundle	slupek-edo-tulis-bundle	0
+product_tag	4841	słupek ogrodowy	slupek-ogrodowy	17
+product_tag	4945	Słupek ogrodowy ZAMBA GORI	slupek-ogrodowy-zamba-gori	2
+product_tag	7564	słupki ogrodowe RUM-LUX	slupki-ogrodowe-rum-lux	4
+product_tag	5463	Taśma izolacyjna Anticor	tasma-izolacyjna-anticor	6
+product_tag	5459	Taśma izolacyjna kauczukowa Anticor	tasma-izolacyjna-kauczukowa-anticor	3
+product_tag	5456	Taśma izolacyjna komplety mix Anticor Radpol	tasma-izolacyjna-komplety-mix-anticor-radpol	3
+product_tag	5462	Taśma izolacyjna PREMIUM Anticor	tasma-izolacyjna-premium-anticor	5
+product_tag	4791	Taśma LED Nextec	tasma-led-nextec	10
+product_tag	4790	Taśma LED Nextec Premium	tasma-led-nextec-premium	5
+product_tag	4794	Taśma LED Nextec RGB + Barwa	tasma-led-nextec-rgb-barwa	1
+product_tag	6292	termostat programowalny simon 55	termostat-programowalny-simon-55	6
+product_tag	6726	Termostat z oprogramowaniem Simon 54	termostat-z-oprogramowaniem-simon-54	2
+product_tag	5098	Termostaty Karlik DECO	termostaty-karlik-deco	7
+product_tag	6081	timer	timer	4
+product_tag	5388	Tornado	tornado	0
+product_tag	7303	Tuleja Baks	tuleja-baks	6
+product_tag	7301	Uchwyt kablowy Baks	uchwyt-kablowy-baks	9
+product_tag	7174	Volteno VO0813	volteno-vo0813	3
+product_tag	7175	Volteno VO2214	volteno-vo2214	2
+product_tag	4965	vtac led	vtac-led	4
+product_tag	6145	WAGO 221	wago-221	7
+product_tag	6154	WAGO 221-2411	wago-221-2411	2
+product_tag	6148	WAGO 221-6	wago-221-6	5
+product_tag	6147	WAGO 224	wago-224	6
+product_tag	6146	WAGO 2273	wago-2273	15
+product_tag	6153	WAGO 2773-2401	wago-2773-2401	3
+product_tag	6155	WAGO 773-173	wago-773-173	2
+product_tag	6095	WALENTYNKI	walentynki	0
+product_tag	432	whe-1	whe-1	0
+product_tag	7191	Wielopak EDO777639	wielopak-edo777639	2
+product_tag	7192	Wielopak EDO777640	wielopak-edo777640	2
+product_tag	7193	Wielopak KAIS5WCBML	wielopak-kais5wcbml	2
+product_tag	7194	Wielopak KAIS5WNBML	wielopak-kais5wnbml	2
+product_tag	7195	Wielopak KAIS5WZBML	wielopak-kais5wzbml	2
+product_tag	7196	Wielopak KAIS7WCBML	wielopak-kais7wcbml	2
+product_tag	7197	Wielopak KAIS7WNBML	wielopak-kais7wnbml	2
+product_tag	7198	Wielopak KAIS7WZBML	wielopak-kais7wzbml	2
+product_tag	6293	wieszak pojedynczy simon 55	wieszak-pojedynczy-simon-55	6
+product_tag	4554	Wkład LED INSERT MILKY Kobi	wklad-led-insert-milky-kobi	6
+product_tag	7306	Wspornik Baks	wspornik-baks	7
+product_tag	5442	Wtyczka odbiornikowa PCE	wtyczka-odbiornikowa-pce	2
+product_tag	5443	Wtyczka przenośna PCE	wtyczka-przenosna-pce	6
+product_tag	6490	wyjście kablowe 6 55 simon	wyjscie-kablowe-6-55-simon	6
+product_tag	5707	Wyklucz paczkomat	wyklucz-paczkomat	182
+product_tag	7604	Wyklucz wysyłkę	wyklucz-wysylke	1
+product_tag	7307	Wysięgnik Baks	wysiegnik-baks	5
+product_tag	7486	Wyzwalacz wzrostowy Kanlux	wyzwalacz-wzrostowy-kanlux	2
+product_tag	7482	Wyłącznik kompaktowy Kanlux	wylacznik-kompaktowy-kanlux	4
+product_tag	5040	Wyłącznik nadprądowy ETI	wylacznik-nadpradowy-eti	19
+product_tag	5039	Wyłącznik nadprądowy HAGER	wylacznik-nadpradowy-hager	49
+product_tag	6102	Wyłącznik nadprądowy HAGER B1	wylacznik-nadpradowy-hager-b1	10
+product_tag	6103	Wyłącznik nadprądowy HAGER B3	wylacznik-nadpradowy-hager-b3	9
+product_tag	6105	Wyłącznik nadprądowy HAGER C1	wylacznik-nadpradowy-hager-c1	14
+product_tag	6104	Wyłącznik nadprądowy HAGER C3	wylacznik-nadpradowy-hager-c3	14
+product_tag	6106	Wyłącznik nadprądowy HAGER D1	wylacznik-nadpradowy-hager-d1	0
+product_tag	6107	Wyłącznik nadprądowy HAGER D3	wylacznik-nadpradowy-hager-d3	2
+product_tag	7503	Wyłącznik nadprądowy kanluk 3p c	wylacznik-nadpradowy-kanluk-3p-c	5
+product_tag	5041	Wyłącznik nadprądowy KANLUX	wylacznik-nadpradowy-kanlux	0
+product_tag	7501	Wyłącznik nadprądowy kanlux 1P B	wylacznik-nadpradowy-kanlux-1p-b	6
+product_tag	7504	Wyłącznik nadprądowy kanlux 1p c	wylacznik-nadpradowy-kanlux-1p-c	3
+product_tag	7502	Wyłącznik nadprądowy kanlux 3p b	wylacznik-nadpradowy-kanlux-3p-b	4
+product_tag	7629	Wyłącznik nadprądowy Schneider	wylacznik-nadpradowy-schneider	2
+product_tag	7477	Wyłącznik różnicowoprądowy KANLUX	wylacznik-roznicowopradowy-kanlux	0
+product_tag	7507	wyłącznik różnicowoprądowy kanlux 2P	wylacznik-roznicowopradowy-kanlux-2p	2
+product_tag	7506	wyłącznik różnicowoprądowy kanlux 4P	wylacznik-roznicowopradowy-kanlux-4p	5
+product_tag	7338	Zakończenie kanału	zakonczenie-kanalu	0
+product_tag	7374	Zakończenie kanału AKS	zakonczenie-kanalu-aks	8
+product_tag	5984	zamel-nowe	zamel-nowe	86
+product_tag	6880	Zaślepka bez mostka Simon 54	zaslepka-bez-mostka-simon-54	2
+product_tag	6881	Zaślepka do gniazd głośnikowych Simon 54	zaslepka-do-gniazd-glosnikowych-simon-54	2
+product_tag	8315	Zaślepka nanocząsteczki srebra Ospel As Antybakteryjny	zaslepka-nanoczasteczki-srebra-ospel-as-antybakteryjny	1
+product_tag	8369	Zaślepka Ospel Aria	zaslepka-ospel-aria	5
+product_tag	8108	Zaślepka Ospel As	zaslepka-ospel-as	6
+product_tag	4643	Zaślepka Ospel Impresja	zaslepka-ospel-impresja	6
+product_tag	8507	Zaślepka Ospel Sonata	zaslepka-ospel-sonata	9
+product_tag	6297	zaślepka otworu wtyku rj45 simon 55	zaslepka-otworu-wtyku-rj45-simon-55	6
+product_tag	6489	zaślepka ramki bez mostka 55 simon	zaslepka-ramki-bez-mostka-55-simon	6
+product_tag	6300	zaślepka ramki łapki simon 55	zaslepka-ramki-lapki-simon-55	7
+product_tag	6732	Zaślepka Simon 54	zaslepka-simon-54	2
+product_tag	5924	Zegar sterujący astronomiczny z przewą nocną FF	zegar-sterujacy-astronomiczny-z-przewa-nocna-ff	2
+product_tag	5917	Zegar sterujący tygodniowy FF	zegar-sterujacy-tygodniowy-ff	0
+product_tag	8361	Zespół podświetlenia led do łączników potrójnych Ospel Aria	zespol-podswietlenia-led-do-lacznikow-potrojnych-ospel-aria	4
+product_tag	8362	Zespół podświetlenia led niebieski do łączników potrójnych Ospel Aria	zespol-podswietlenia-led-niebieski-do-lacznikow-potrojnych-ospel-aria	1
+product_tag	8366	Zespół podświetlenia led niebieski Ospel Aria	zespol-podswietlenia-led-niebieski-ospel-aria	1
+product_tag	8365	Zespół podświetlenia led Ospel Aria	zespol-podswietlenia-led-ospel-aria	4
+product_tag	8364	Zespół podświetlenia niebieski do łączników potrójnych Ospel Aria	zespol-podswietlenia-niebieski-do-lacznikow-potrojnych-ospel-aria	1
+product_tag	8368	Zespół podświetlenia niebieski Ospel Aria	zespol-podswietlenia-niebieski-ospel-aria	1
+product_tag	8363	Zespół podświetlenia pomarańczowy do łączników potrójnych Ospel Aria	zespol-podswietlenia-pomaranczowy-do-lacznikow-potrojnych-ospel-aria	1
+product_tag	8367	Zespół podświetlenia pomarańczowy Ospel Aria	zespol-podswietlenia-pomaranczowy-ospel-aria	1
+product_tag	5382	Zestaw 2x A60 filament 4W E27 Osram	zestaw-2x-a60-filament-4w-e27-osram	2
+product_tag	5383	Zestaw 3x A60 13W E27 Osram	zestaw-3x-a60-13w-e27-osram	2
+product_tag	7214	Zestaw 3x A60 filament 6	zestaw-3x-a60-filament-6	2
+product_tag	5384	Zestaw 3x A60 filament 6,5W E27 Osram	zestaw-3x-a60-filament-65w-e27-osram	0
+product_tag	6156	Zestaw 3x LED VALUE 6	zestaw-3x-led-value-6	2
+product_tag	5392	Zestaw 3x LED VALUE 6,9W GU10 Osram	zestaw-3x-led-value-69w-gu10-osram	0
+product_tag	5385	Zestaw 3x świeczka filament 4W Osram	zestaw-3x-swieczka-filament-4w-osram	1
+product_tag	5386	Zestaw 4x świeczka 4,9W E14 Osram	zestaw-4x-swieczka-49w-e14-osram	2
+product_tag	7217	Zestaw BARI E14 6 5 W	zestaw-bari-e14-6-5-w	6
+product_tag	7218	Zestaw BARI E14 8 5 W	zestaw-bari-e14-8-5-w	6
+product_tag	7200	Zestaw BARI E14 W	zestaw-bari-e14-w	0
+product_tag	7132	Zestaw Falga szynoprzewody	zestaw-falga-szynoprzewody	21
+product_tag	7128	Zestaw Gavino szynoprzewody	zestaw-gavino-szynoprzewody	14
+product_tag	7134	Zestaw Karadon szynoprzewody	zestaw-karadon-szynoprzewody	8
+product_tag	7131	Zestaw Malga szynoprzewody	zestaw-malga-szynoprzewody	22
+product_tag	5321	Zestaw meva pro + neva tc	zestaw-meva-pro-neva-tc	0
+product_tag	5322	Zestaw meva pro + neva tc podwieszany	zestaw-meva-pro-neva-tc-podwieszany	0
+product_tag	7135	Zestaw Nalga szynoprzewody	zestaw-nalga-szynoprzewody	38
+product_tag	7133	Zestaw Neva szynoprzewody	zestaw-neva-szynoprzewody	26
+product_tag	7136	Zestaw Neva szynoprzewody wiszące	zestaw-neva-szynoprzewody-wiszace	12
+product_tag	7130	Zestaw Nilso szynoprzewody	zestaw-nilso-szynoprzewody	14
+product_tag	7129	Zestaw Ovo szynoprzewody	zestaw-ovo-szynoprzewody	17
+product_tag	8104	Zestaw uszczelniający do łączników IP44 Ospel As	zestaw-uszczelniajacy-do-lacznikow-ip44-ospel-as	1
+product_tag	8506	Zestaw uszczelniający do łączników IP44 Ospel Sonata	zestaw-uszczelniajacy-do-lacznikow-ip44-ospel-sonata	1
+product_tag	7964	Zestaw uszczelniający IP44 Ospel Impresja	zestaw-uszczelniajacy-ip44-ospel-impresja	1
+product_tag	7223	Zestaw żarówek FARI 10 W	zestaw-zarowek-fari-10-w	4
+product_tag	7224	Zestaw żarówek FARI 3 5 W	zestaw-zarowek-fari-3-5-w	3
+product_tag	7225	Zestaw żarówek FARI 5 5 W	zestaw-zarowek-fari-5-5-w	4
+product_tag	7227	Zestaw żarówek FARI 5 5W	zestaw-zarowek-fari-5-5w	0
+product_tag	7226	Zestaw żarówek FARI 7 5 W	zestaw-zarowek-fari-7-5-w	4
+product_tag	7228	Zestaw żarówek FARI 7 5W	zestaw-zarowek-fari-7-5w	0
+product_tag	7207	Zestaw żarówek FARI W	zestaw-zarowek-fari-w	0
+product_tag	7204	Zestaw żarówek KARI E14 7W	zestaw-zarowek-kari-e14-7w	4
+product_tag	7219	Zestaw żarówek MARI E27 11 W	zestaw-zarowek-mari-e27-11-w	6
+product_tag	7220	Zestaw żarówek MARI E27 13 W	zestaw-zarowek-mari-e27-13-w	6
+product_tag	7221	Zestaw żarówek MARI E27 7 W	zestaw-zarowek-mari-e27-7-w	6
+product_tag	7222	Zestaw żarówek MARI E27 8 5 W	zestaw-zarowek-mari-e27-8-5-w	6
+product_tag	7206	Zestaw żarówek MARI E27 W	zestaw-zarowek-mari-e27-w	0
+product_tag	7211	Zestaw żarówek OSRAM 4 5 W	zestaw-zarowek-osram-4-5-w	3
+product_tag	7216	Zestaw żarówek OSRAM 6 9 W	zestaw-zarowek-osram-6-9-w	3
+product_tag	7202	Zestaw żarówek OSRAM W	zestaw-zarowek-osram-w	0
+product_tag	7209	Zestaw żarówek Philips 4 9 W	zestaw-zarowek-philips-4-9-w	3
+product_tag	7212	Zestaw żarówka OSRAM 6 9 W	zestaw-zarowka-osram-6-9-w	0
+product_tag	4795	Złączka taśm LED	zlaczka-tasm-led	2
+product_tag	4798	Złączka WAGO seria 221	zlaczka-wago-seria-221	0
+product_tag	4797	Złączka WAGO seria 2273	zlaczka-wago-seria-2273	0
+product_tag	7636	Ładowarka meblowa typu USB 2 simon 400	ladowarka-meblowa-typu-usb-2-simon-400	2
+product_tag	7634	Ładowarka meblowa typu USB simon 400	ladowarka-meblowa-typu-usb-simon-400	2
+product_tag	6301	ładowarka USB C+A simon 55	ladowarka-usb-ca-simon-55	6
+product_tag	6408	Ładowarka USB typu C+A Quick Charge 55 simon	ladowarka-usb-typu-ca-quick-charge-55-simon	0
+product_tag	5336	Łezki LED NANO EMOS	lezki-led-nano-emos	1
+product_tag	422	łącznik	lacznik	0
+product_tag	8521	Łącznik dotykowy jednobiegunowy z podświetleniem Ospel Sonata Touch	lacznik-dotykowy-jednobiegunowy-z-podswietleniem-ospel-sonata-touch	4
+product_tag	8515	Łącznik dotykowy jednobiegunowy z podświetleniem wifi Sonata Touch	lacznik-dotykowy-jednobiegunowy-z-podswietleniem-wifi-sonata-touch	4
+product_tag	8518	Łącznik dotykowy podwójny schodowy krzyżowy podśw Sonata Touch	lacznik-dotykowy-podwojny-schodowy-krzyzowy-podsw-sonata-touch	4
+product_tag	8519	Łącznik dotykowy schodowykrzyżowy z podświetleniem Ospel Sonata Touch	lacznik-dotykowy-schodowykrzyzowy-z-podswietleniem-ospel-sonata-touch	4
+product_tag	6407	Łącznik dwubiegunowy 10 AX 55 simon	lacznik-dwubiegunowy-10-ax-55-simon	6
+product_tag	8258	Łącznik dwubiegunowy nanocząsteczki srebra Ospel As Antybakteryjny	lacznik-dwubiegunowy-nanoczasteczki-srebra-ospel-as-antybakteryjny	1
+product_tag	8167	Łącznik dwubiegunowy Ospel Aria	lacznik-dwubiegunowy-ospel-aria	5
+product_tag	8066	Łącznik dwubiegunowy Ospel As	lacznik-dwubiegunowy-ospel-as	6
+product_tag	8001	Łącznik dwubiegunowy Ospel Impresja	lacznik-dwubiegunowy-ospel-impresja	6
+product_tag	8454	Łącznik dwubiegunowy Ospel Sonata	lacznik-dwubiegunowy-ospel-sonata	9
+product_tag	6406	Łącznik dwubiegunowy podwójny 16 AX 55 simon	lacznik-dwubiegunowy-podwojny-16-ax-55-simon	6
+product_tag	8067	Łącznik dwubiegunowy podświetlany Ospel As	lacznik-dwubiegunowy-podswietlany-ospel-as	6
+product_tag	6405	Łącznik dwubiegunowy z podświetleniem LED 10 AX 55 simon	lacznik-dwubiegunowy-z-podswietleniem-led-10-ax-55-simon	6
+product_tag	8257	Łącznik dwubiegunowy z podświetleniem niebieskim As Antybakt	lacznik-dwubiegunowy-z-podswietleniem-niebieskim-as-antybakt	1
+product_tag	8392	Łącznik dwubiegunowy z podświetleniem niebieskim Ospel Sonata	lacznik-dwubiegunowy-z-podswietleniem-niebieskim-ospel-sonata	2
+product_tag	8013	Łącznik dwubiegunowy z podświetleniem Ospel Impresja	lacznik-dwubiegunowy-z-podswietleniem-ospel-impresja	6
+product_tag	8453	Łącznik dwubiegunowy z podświetleniem Ospel Sonata	lacznik-dwubiegunowy-z-podswietleniem-ospel-sonata	9
+product_tag	7748	Łącznik dzwonek hermes	lacznik-dzwonek-hermes	2
+product_tag	7732	Łącznik dzwonek natynkowy AQUANT	lacznik-dzwonek-natynkowy-aquant	2
+product_tag	6404	Łącznik elektroniczny 4-krotny z funkcją przycisku 55 simon	lacznik-elektroniczny-4-krotny-z-funkcja-przycisku-55-simon	6
+product_tag	6403	Łącznik elektroniczny podwójny z funcją przycisku 55 simon	lacznik-elektroniczny-podwojny-z-funcja-przycisku-55-simon	6
+product_tag	6402	Łącznik elektroniczny pojedynczy z funcją przycisku 55 simon	lacznik-elektroniczny-pojedynczy-z-funcja-przycisku-55-simon	6
+product_tag	7749	Łącznik hermes dzwonek	lacznik-hermes-dzwonek	0
+product_tag	6434	Łącznik hotelowy elektroniczny z podświetleniem LED 55 simon	lacznik-hotelowy-elektroniczny-z-podswietleniem-led-55-simon	5
+product_tag	8070	Łącznik hotelowy podświetlany Ospel As	lacznik-hotelowy-podswietlany-ospel-as	6
+product_tag	6709	Łącznik hotelowy Simon 54	lacznik-hotelowy-simon-54	4
+product_tag	8170	Łącznik hotelowy z podświetleniem Ospel Aria	lacznik-hotelowy-z-podswietleniem-ospel-aria	5
+product_tag	8014	Łącznik hotelowy z podświetleniem Ospel Impresja	lacznik-hotelowy-z-podswietleniem-ospel-impresja	6
+product_tag	8253	Łącznik hotelowy z podświetleniem pomarańczowym As Antybakt	lacznik-hotelowy-z-podswietleniem-pomaranczowym-as-antybakt	1
+product_tag	8469	Łącznik hotelowy z podświetleniem pomarańczowym Ospel Sonata	lacznik-hotelowy-z-podswietleniem-pomaranczowym-ospel-sonata	9
+product_tag	6431	Łącznik jednobiegunowy + przycisk zwierny 2 klawisze 55 simon	lacznik-jednobiegunowy-przycisk-zwierny-2-klawisze-55-simon	6
+product_tag	6432	Łącznik jednobiegunowy + łacznik dwubiegunowy 2 klawisze 55 simon	lacznik-jednobiegunowy-lacznik-dwubiegunowy-2-klawisze-55-simon	6
+product_tag	6433	Łącznik jednobiegunowy 55 simon	lacznik-jednobiegunowy-55-simon	6
+product_tag	8250	Łącznik jednobiegunowy nanocząsteczki srebra Ospel As Antybakteryjny	lacznik-jednobiegunowy-nanoczasteczki-srebra-ospel-as-antybakteryjny	1
+product_tag	8210	Łącznik jednobiegunowy natynkowy Ospel BIS	lacznik-jednobiegunowy-natynkowy-ospel-bis	1
+product_tag	8173	Łącznik jednobiegunowy Ospel Aria	lacznik-jednobiegunowy-ospel-aria	5
+product_tag	8004	Łącznik jednobiegunowy Ospel Impresja	lacznik-jednobiegunowy-ospel-impresja	6
+product_tag	8412	Łącznik jednobiegunowy Ospel Sonata	lacznik-jednobiegunowy-ospel-sonata	9
+product_tag	6438	Łącznik jednobiegunowy podwójny 55 simon	lacznik-jednobiegunowy-podwojny-55-simon	6
+product_tag	6430	Łącznik jednobiegunowy z podświetleniem LED 55 simon	lacznik-jednobiegunowy-z-podswietleniem-led-55-simon	6
+product_tag	8352	Łącznik jednobiegunowy z podświetleniem niebieskim As Antybakt	lacznik-jednobiegunowy-z-podswietleniem-niebieskim-as-antybakt	1
+product_tag	8390	Łącznik jednobiegunowy z podświetleniem niebieskim Ospel Sonata	lacznik-jednobiegunowy-z-podswietleniem-niebieskim-ospel-sonata	2
+product_tag	8015	Łącznik jednobiegunowy z podświetleniem Ospel Impresja	lacznik-jednobiegunowy-z-podswietleniem-ospel-impresja	6
+product_tag	8465	Łącznik jednobiegunowy z podświetleniem Ospel Sonata	lacznik-jednobiegunowy-z-podswietleniem-ospel-sonata	9
+product_tag	6795	Łącznik jednobiegunowy z sygnalizacją Simon 54	lacznik-jednobiegunowy-z-sygnalizacja-simon-54	2
+product_tag	6429	Łącznik jednobiegunowy z sygnalizacją załączenia 55 simon	lacznik-jednobiegunowy-z-sygnalizacja-zalaczenia-55-simon	6
+product_tag	5090	Łącznik Karlik DECO	lacznik-karlik-deco	98
+product_tag	5092	Łącznik Karlik JUNIOR	lacznik-karlik-junior	37
+product_tag	5128	Łącznik Karlik MINI	lacznik-karlik-mini	21
+product_tag	5093	Łącznik Karlik SENIOR	lacznik-karlik-senior	3
+product_tag	8256	Łącznik kontrolny z podświetleniem niebieskim As Antybakt	lacznik-kontrolny-z-podswietleniem-niebieskim-as-antybakt	1
+product_tag	8391	Łącznik kontrolny z podświetleniem niebieskim Ospel Sonata	lacznik-kontrolny-z-podswietleniem-niebieskim-ospel-sonata	2
+product_tag	8168	Łącznik kontrolny z podświetleniem Ospel Aria	lacznik-kontrolny-z-podswietleniem-ospel-aria	5
+product_tag	8221	Łącznik kontrolny z podświetleniem Ospel As	lacznik-kontrolny-z-podswietleniem-ospel-as	6
+product_tag	8452	Łącznik kontrolny z podświetleniem Ospel Sonata	lacznik-kontrolny-z-podswietleniem-ospel-sonata	9
+product_tag	6428	Łącznik krzyżowy 55 simon	lacznik-krzyzowy-55-simon	6
+product_tag	6427	Łącznik krzyżowy bez piktogramu 55 simon	lacznik-krzyzowy-bez-piktogramu-55-simon	6
+product_tag	6785	Łącznik krzyżowy moduł Simon 54	lacznik-krzyzowy-modul-simon-54	5
+product_tag	8345	Łącznik krzyżowy nanocząsteczki srebra Ospel As Antybakteryjny	lacznik-krzyzowy-nanoczasteczki-srebra-ospel-as-antybakteryjny	1
+product_tag	8177	Łącznik krzyżowy Ospel Aria	lacznik-krzyzowy-ospel-aria	5
+product_tag	8077	Łącznik krzyżowy Ospel As	lacznik-krzyzowy-ospel-as	6
+product_tag	8007	Łącznik krzyżowy Ospel Impresja	lacznik-krzyzowy-ospel-impresja	6
+product_tag	8480	Łącznik krzyżowy Ospel Sonata	lacznik-krzyzowy-ospel-sonata	9
+product_tag	6426	Łącznik krzyżowy podwójny 55 simon	lacznik-krzyzowy-podwojny-55-simon	6
+product_tag	6425	Łącznik krzyżowy podwójny bez piktogramu 55 simon	lacznik-krzyzowy-podwojny-bez-piktogramu-55-simon	6
+product_tag	8353	Łącznik krzyżowy podwójny Ospel Aria	lacznik-krzyzowy-podwojny-ospel-aria	5
+product_tag	8236	Łącznik krzyżowy podwójny Ospel As	lacznik-krzyzowy-podwojny-ospel-as	6
+product_tag	8466	Łącznik krzyżowy podwójny Ospel Sonata	lacznik-krzyzowy-podwojny-ospel-sonata	9
+product_tag	6424	Łącznik krzyżowy podwójny z podświetleniem 55 simon	lacznik-krzyzowy-podwojny-z-podswietleniem-55-simon	6
+product_tag	6423	Łącznik krzyżowy podwójny z podświetleniem bez piktogramu 55 simon	lacznik-krzyzowy-podwojny-z-podswietleniem-bez-piktogramu-55-simon	6
+product_tag	8078	Łącznik krzyżowy podświetlany Ospel As	lacznik-krzyzowy-podswietlany-ospel-as	6
+product_tag	6753	Łącznik krzyżowy Simon 10	lacznik-krzyzowy-simon-10	8
+product_tag	6685	Łącznik krzyżowy Simon 54	lacznik-krzyzowy-simon-54	22
+product_tag	6421	Łącznik krzyżowy z podświetleniem LED 55 simon	lacznik-krzyzowy-z-podswietleniem-led-55-simon	6
+product_tag	6422	Łącznik krzyżowy z podświetleniem LED schody 55 simon	lacznik-krzyzowy-z-podswietleniem-led-schody-55-simon	6
+product_tag	8344	Łącznik krzyżowy z podświetleniem niebieskim As Antybakt	lacznik-krzyzowy-z-podswietleniem-niebieskim-as-antybakt	1
+product_tag	8387	Łącznik krzyżowy z podświetleniem niebieskim Ospel Sonata	lacznik-krzyzowy-z-podswietleniem-niebieskim-ospel-sonata	2
+product_tag	8018	Łącznik krzyżowy z podświetleniem Ospel Impresja	lacznik-krzyzowy-z-podswietleniem-ospel-impresja	6
+product_tag	8479	Łącznik krzyżowy z podświetleniem Ospel Sonata	lacznik-krzyzowy-z-podswietleniem-ospel-sonata	9
+product_tag	7340	Łącznik kątowy	lacznik-katowy	0
+product_tag	7376	Łącznik kątowy AKS	lacznik-katowy-aks	10
+product_tag	6783	Łącznik moduł Simon 54	lacznik-modul-simon-54	16
+product_tag	6803	Łącznik na kluczyk 3 pozycyjny Simon 54	lacznik-na-kluczyk-3-pozycyjny-simon-54	2
+product_tag	6420	Łącznik na kluczyk chwilowy przycisk 2 pozycyjny 55 simon	lacznik-na-kluczyk-chwilowy-przycisk-2-pozycyjny-55-simon	6
+product_tag	6806	Łącznik na kluczyk chwilowy Simon 54	lacznik-na-kluczyk-chwilowy-simon-54	2
+product_tag	6419	Łącznik na kluczyk jednobiegunowy 2 pozycyjny 55 simon	lacznik-na-kluczyk-jednobiegunowy-2-pozycyjny-55-simon	6
+product_tag	6418	Łącznik na kluczyk roletowy chwilowy przycisk 3 pozycyjny 55 simon	lacznik-na-kluczyk-roletowy-chwilowy-przycisk-3-pozycyjny-55-simon	6
+product_tag	6801	Łącznik na kluczyk roletowy chwilowy Simon 54	lacznik-na-kluczyk-roletowy-chwilowy-simon-54	2
+product_tag	6451	Łącznik na kluczyk roletowy jednobiegunowy 55 simon	lacznik-na-kluczyk-roletowy-jednobiegunowy-55-simon	6
+product_tag	6715	Łącznik na kluczyk Simon 54	lacznik-na-kluczyk-simon-54	2
+product_tag	4612	Łącznik natynkowy Ospel Bis	lacznik-natynkowy-ospel-bis	0
+product_tag	4710	Łącznik Ospel Aria	lacznik-ospel-aria	0
+product_tag	4711	Łącznik Ospel As	lacznik-ospel-as	0
+product_tag	4712	Łącznik Ospel Impresja	lacznik-ospel-impresja	0
+product_tag	8100	Łącznik podwójny Ospel As	lacznik-podwojny-ospel-as	7
+product_tag	8074	Łącznik podwójny podświetlany Ospel As	lacznik-podwojny-podswietlany-ospel-as	6
+product_tag	8099	Łącznik pojedynczy Ospel As	lacznik-pojedynczy-ospel-as	6
+product_tag	8073	Łącznik pojedynczy podświetlany Ospel As	lacznik-pojedynczy-podswietlany-ospel-as	6
+product_tag	6450	Łącznik potrójny 55 simon	lacznik-potrojny-55-simon	6
+product_tag	8523	Łącznik potrójny dotykowy z podświetleniem Ospel Sonata Touch	lacznik-potrojny-dotykowy-z-podswietleniem-ospel-sonata-touch	4
+product_tag	8255	Łącznik potrójny nanocząsteczki srebra Ospel As Antybakteryjny	lacznik-potrojny-nanoczasteczki-srebra-ospel-as-antybakteryjny	1
+product_tag	8169	Łącznik potrójny Ospel Aria	lacznik-potrojny-ospel-aria	5
+product_tag	8068	Łącznik potrójny Ospel As	lacznik-potrojny-ospel-as	6
+product_tag	8002	Łącznik potrójny Ospel Impresja	lacznik-potrojny-ospel-impresja	6
+product_tag	8471	Łącznik potrójny Ospel Sonata	lacznik-potrojny-ospel-sonata	9
+product_tag	8069	Łącznik potrójny podświetlany Ospel As	lacznik-potrojny-podswietlany-ospel-as	6
+product_tag	6449	Łącznik potrójny z podświetleniem LED 55 simon	lacznik-potrojny-z-podswietleniem-led-55-simon	6
+product_tag	8254	Łącznik potrójny z podświetleniem niebieskim As Antybakt	lacznik-potrojny-z-podswietleniem-niebieskim-as-antybakt	1
+product_tag	8470	Łącznik potrójny z podświetleniem Ospel Sonata	lacznik-potrojny-z-podswietleniem-ospel-sonata	9
+product_tag	6445	Łącznik schodowy bez piktogramu 55 simon	lacznik-schodowy-bez-piktogramu-55-simon	6
+product_tag	7747	Łącznik schodowy hermes	lacznik-schodowy-hermes	2
+product_tag	8333	Łącznik schodowy jednobiegunowy nano srebro Ospel As Antybakteryjny	lacznik-schodowy-jednobiegunowy-nano-srebro-ospel-as-antybakteryjny	1
+product_tag	8184	Łącznik schodowy jednobiegunowy Ospel Aria	lacznik-schodowy-jednobiegunowy-ospel-aria	5
+product_tag	8086	Łącznik schodowy jednobiegunowy Ospel As	lacznik-schodowy-jednobiegunowy-ospel-as	6
+product_tag	8012	Łącznik schodowy jednobiegunowy Ospel Impresja	lacznik-schodowy-jednobiegunowy-ospel-impresja	6
+product_tag	8490	Łącznik schodowy jednobiegunowy Ospel Sonata	lacznik-schodowy-jednobiegunowy-ospel-sonata	9
+product_tag	6784	Łącznik schodowy moduł Simon 54	lacznik-schodowy-modul-simon-54	12
+product_tag	8347	Łącznik schodowy nanocząsteczki srebra Ospel As Antybakteryjny	lacznik-schodowy-nanoczasteczki-srebra-ospel-as-antybakteryjny	1
+product_tag	7729	Łącznik schodowy natynkowy AQUANT	lacznik-schodowy-natynkowy-aquant	2
+product_tag	8212	Łącznik schodowy natynkowy Ospel BIS	lacznik-schodowy-natynkowy-ospel-bis	1
+product_tag	8176	Łącznik schodowy Ospel Aria	lacznik-schodowy-ospel-aria	5
+product_tag	8075	Łącznik schodowy Ospel As	lacznik-schodowy-ospel-as	6
+product_tag	8006	Łącznik schodowy Ospel Impresja	lacznik-schodowy-ospel-impresja	6
+product_tag	8482	Łącznik schodowy Ospel Sonata	lacznik-schodowy-ospel-sonata	9
+product_tag	7736	Łącznik schodowy podtynkowy AQUANT	lacznik-schodowy-podtynkowy-aquant	2
+product_tag	6444	Łącznik schodowy podwójny 55 simon	lacznik-schodowy-podwojny-55-simon	6
+product_tag	6443	Łącznik schodowy podwójny bez piktogramu 55 simon	lacznik-schodowy-podwojny-bez-piktogramu-55-simon	6
+product_tag	8259	Łącznik schodowy podwójny nano srebro Ospel As Antybakteryjny	lacznik-schodowy-podwojny-nano-srebro-ospel-as-antybakteryjny	1
+product_tag	8166	Łącznik schodowy podwójny Ospel Aria	lacznik-schodowy-podwojny-ospel-aria	5
+product_tag	8065	Łącznik schodowy podwójny Ospel As	lacznik-schodowy-podwojny-ospel-as	6
+product_tag	8000	Łącznik schodowy podwójny Ospel Impresja	lacznik-schodowy-podwojny-ospel-impresja	6
+product_tag	8455	Łącznik schodowy podwójny Ospel Sonata	lacznik-schodowy-podwojny-ospel-sonata	9
+product_tag	6442	Łącznik schodowy podwójny z podświetleniem 55 simon	lacznik-schodowy-podwojny-z-podswietleniem-55-simon	6
+product_tag	6441	Łącznik schodowy podwójny z podświetleniem bez piktogramu 55 simon	lacznik-schodowy-podwojny-z-podswietleniem-bez-piktogramu-55-simon	6
+product_tag	8076	Łącznik schodowy podświetlany Ospel As	lacznik-schodowy-podswietlany-ospel-as	6
+product_tag	6446	Łącznik schodowy pojedynczy 10 A 55 simon	lacznik-schodowy-pojedynczy-10-a-55-simon	6
+product_tag	6752	Łącznik schodowy Simon 10	lacznik-schodowy-simon-10	14
+product_tag	6684	Łącznik schodowy Simon 54	lacznik-schodowy-simon-54	25
+product_tag	6439	Łącznik schodowy z podświetleniem bez pi LED 55 simon	lacznik-schodowy-z-podswietleniem-bez-pi-led-55-simon	6
+product_tag	6440	Łącznik schodowy z podświetleniem LED 55 simon	lacznik-schodowy-z-podswietleniem-led-55-simon	6
+product_tag	8346	Łącznik schodowy z podświetleniem niebieskim As Antybakt	lacznik-schodowy-z-podswietleniem-niebieskim-as-antybakt	1
+product_tag	8388	Łącznik schodowy z podświetleniem niebieskim Ospel Sonata	lacznik-schodowy-z-podswietleniem-niebieskim-ospel-sonata	2
+product_tag	8017	Łącznik schodowy z podświetleniem Ospel Impresja	lacznik-schodowy-z-podswietleniem-ospel-impresja	6
+product_tag	8481	Łącznik schodowy z podświetleniem Ospel Sonata	lacznik-schodowy-z-podswietleniem-ospel-sonata	9
+product_tag	6751	Łącznik Simon 10	lacznik-simon-10	10
+product_tag	6782	Łącznik Simon 54	lacznik-simon-54	33
+product_tag	4474	Łącznik szynoprzewód EDO SEVA	lacznik-szynoprzewod-edo-seva	9
+product_tag	6724	Łącznik z czujnikiem Simon 54	lacznik-z-czujnikiem-simon-54	2
+product_tag	6812	Łącznik z czujnikiem z przekaźnikiem Simon 54	lacznik-z-czujnikiem-z-przekaznikiem-simon-54	2
+product_tag	6835	Łącznik z czujnikiem z przekaźnikiem z zabezpieczeniem Simon 54	lacznik-z-czujnikiem-z-przekaznikiem-z-zabezpieczeniem-simon-54	2
+product_tag	6738	Łącznik z opóźnieniem wyłaczenia Simon 54	lacznik-z-opoznieniem-wylaczenia-simon-54	2
+product_tag	6831	Łącznik z opóźnieniem wyłaczenia z przekaźnikiem Simon 54	lacznik-z-opoznieniem-wylaczenia-z-przekaznikiem-simon-54	2
+product_tag	6739	Łącznik zdalnie sterowany z przekaźnikiem (moduł) Simon 54	lacznik-zdalnie-sterowany-z-przekaznikiem-modul-simon-54	2
+product_tag	7731	Łącznik światło natynkowy AQUANT	lacznik-swiatlo-natynkowy-aquant	2
+product_tag	8517	Łącznik świecznikowy dotykowy z podświetleniem Ospel Sonata Touch	lacznik-swiecznikowy-dotykowy-z-podswietleniem-ospel-sonata-touch	4
+product_tag	8514	Łącznik świecznikowy dotykowy z podświetleniem wifi Ospel Sonata Touch	lacznik-swiecznikowy-dotykowy-z-podswietleniem-wifi-ospel-sonata-touch	4
+product_tag	7746	Łącznik świecznikowy hermes	lacznik-swiecznikowy-hermes	2
+product_tag	8349	Łącznik świecznikowy nanocząsteczki srebra Ospel As Antybakteryjny	lacznik-swiecznikowy-nanoczasteczki-srebra-ospel-as-antybakteryjny	1
+product_tag	7730	Łącznik świecznikowy natynkowy AQUANT	lacznik-swiecznikowy-natynkowy-aquant	2
+product_tag	8211	Łącznik świecznikowy natynkowy Ospel BIS	lacznik-swiecznikowy-natynkowy-ospel-bis	1
+product_tag	8175	Łącznik świecznikowy Ospel Aria	lacznik-swiecznikowy-ospel-aria	5
+product_tag	8005	Łącznik świecznikowy Ospel Impresja	lacznik-swiecznikowy-ospel-impresja	6
+product_tag	8462	Łącznik świecznikowy Ospel Sonata	lacznik-swiecznikowy-ospel-sonata	9
+product_tag	8016	Łącznik świecznikowy podwójny z podświetleniem Ospel Impresja	lacznik-swiecznikowy-podwojny-z-podswietleniem-ospel-impresja	6
+product_tag	6437	Łącznik świecznikowy z podświetleniem LED 55 simon	lacznik-swiecznikowy-z-podswietleniem-led-55-simon	6
+product_tag	8348	Łącznik świecznikowy z podświetleniem niebieskim As Antybakt	lacznik-swiecznikowy-z-podswietleniem-niebieskim-as-antybakt	1
+product_tag	8389	Łącznik świecznikowy z podświetleniem niebieskim Ospel Sonata	lacznik-swiecznikowy-z-podswietleniem-niebieskim-ospel-sonata	2
+product_tag	8461	Łącznik świecznikowy z podświetleniem Ospel Sonata	lacznik-swiecznikowy-z-podswietleniem-ospel-sonata	9
+product_tag	8516	Łącznik żaluzjowy dotykowy z podświetleniem Ospel Sonata Touch	lacznik-zaluzjowy-dotykowy-z-podswietleniem-ospel-sonata-touch	4
+product_tag	8513	Łącznik żaluzjowy dotykowy z podświetleniem wifi Ospel Sonata Touch	lacznik-zaluzjowy-dotykowy-z-podswietleniem-wifi-ospel-sonata-touch	4
+product_tag	8180	Łącznik żaluzjowy Ospel Aria	lacznik-zaluzjowy-ospel-aria	5
+product_tag	8081	Łącznik żaluzjowy Ospel As	lacznik-zaluzjowy-ospel-as	6
+product_tag	6448	Łącznik żaluzjowy podwójny trójpozycyjny 55 simon	lacznik-zaluzjowy-podwojny-trojpozycyjny-55-simon	6
+product_tag	8083	Łącznik żaluzjowy podświetlany Ospel As	lacznik-zaluzjowy-podswietlany-ospel-as	6
+product_tag	6447	Łącznik żaluzjowy pojedynczy trójpozycyjny 55 simon	lacznik-zaluzjowy-pojedynczy-trojpozycyjny-55-simon	6
+product_tag	6710	Łącznik żaluzjowy Simon 54	lacznik-zaluzjowy-simon-54	2
+product_tag	8338	Łącznik żaluzjowy z blokadą mechaniczną As Antybakt	lacznik-zaluzjowy-z-blokada-mechaniczna-as-antybakt	1
+product_tag	8011	Łącznik żaluzjowy z blokadą mechaniczną Ospel Impresja	lacznik-zaluzjowy-z-blokada-mechaniczna-ospel-impresja	6
+product_tag	8473	Łącznik żaluzjowy z blokadą mechaniczną Ospel Sonata	lacznik-zaluzjowy-z-blokada-mechaniczna-ospel-sonata	9
+product_tag	8181	Łącznik żaluzjowy z blokadą Ospel Aria	lacznik-zaluzjowy-z-blokada-ospel-aria	5
+product_tag	8082	Łącznik żaluzjowy z blokadą Ospel As	lacznik-zaluzjowy-z-blokada-ospel-as	6
+product_tag	8337	Łącznik żaluzjowy z podśw niebieskim z blok mech As Antybakt	lacznik-zaluzjowy-z-podsw-niebieskim-z-blok-mech-as-antybakt	1
+product_tag	8384	Łącznik żaluzjowy z podśw niebieskim z blok mech Sonata	lacznik-zaluzjowy-z-podsw-niebieskim-z-blok-mech-sonata	2
+product_tag	8237	Łącznik żaluzjowy z podświetleniem z blokadą mechaniczną Ospel As	lacznik-zaluzjowy-z-podswietleniem-z-blokada-mechaniczna-ospel-as	6
+product_tag	8472	Łącznik żaluzjowy z podświetleniem z blokadą mechaniczną Ospel Sonata	lacznik-zaluzjowy-z-podswietleniem-z-blokada-mechaniczna-ospel-sonata	9
+product_tag	6436	Łącznik/przycisk roletowy podwójny 55 simon	lacznik-przycisk-roletowy-podwojny-55-simon	6
+product_tag	6882	Ściemniacz do LED Simon 54	sciemniacz-do-led-simon-54	2
+product_tag	6291	ściemniacz do led ściemnialnych simon 55	sciemniacz-do-led-sciemnialnych-simon-55	6
+product_tag	6285	ściemniacz do LED ściemnialnych simon go	sciemniacz-do-led-sciemnialnych-simon-go	6
+product_tag	6284	ściemniacz do pasków LED-owych simon go	sciemniacz-do-paskow-led-owych-simon-go	6
+product_tag	6283	ściemniacz do pasków RGBW simon go	sciemniacz-do-paskow-rgbw-simon-go	6
+product_tag	5096	Ściemniacz Karlik DECO	sciemniacz-karlik-deco	14
+product_tag	6302	ściemniacz obrotowy do LED ściemnialnych simon 55	sciemniacz-obrotowy-do-led-sciemnialnych-simon-55	6
+product_tag	8382	Ściemniacz obrotowy przystosowany żarowe halogenowego Sonata	sciemniacz-obrotowy-przystosowany-zarowe-halogenowego-sonata	11
+product_tag	4760	Ściemniacz Ospel Aria	sciemniacz-ospel-aria	0
+product_tag	4640	Ściemniacz Ospel As	sciemniacz-ospel-as	0
+product_tag	4761	Ściemniacz Ospel Impresja	sciemniacz-ospel-impresja	0
+product_tag	8084	Ściemniacz przyciskowo obrotowy Ospel As	sciemniacz-przyciskowo-obrotowy-ospel-as	6
+product_tag	8040	Ściemniacz przyciskowo obrotowy Ospel Impresja	sciemniacz-przyciskowo-obrotowy-ospel-impresja	6
+product_tag	8182	Ściemniacz przyciskowoobrotowy Ospel Aria	sciemniacz-przyciskowoobrotowy-ospel-aria	5
+product_tag	8335	Ściemniacz przyciskowoobrotowy żarowe halogen As Antybakt	sciemniacz-przyciskowoobrotowy-zarowe-halogen-as-antybakt	1
+product_tag	6730	Ściemniacz Simon 54	sciemniacz-simon-54	2
+product_tag	8183	Ściemniacz uniwersalny do LED Ospel Aria	sciemniacz-uniwersalny-do-led-ospel-aria	5
+product_tag	8041	Ściemniacz uniwersalny do LED Ospel Impresja	sciemniacz-uniwersalny-do-led-ospel-impresja	6
+product_tag	8334	Ściemniacz uniwersalny do obc żarowego halogen oraz LED As Antybakt	sciemniacz-uniwersalny-do-obc-zarowego-halogen-oraz-led-as-antybakt	1
+product_tag	5962	Ściemniacz uniwersalny FF	sciemniacz-uniwersalny-ff	2
+product_tag	8085	Ściemniacz uniwersalny LED Ospel As	sciemniacz-uniwersalny-led-ospel-as	6
+product_tag	8381	Ściemniacz uniwersalny żarowy halogen LED Sonata	sciemniacz-uniwersalny-zarowy-halogen-led-sonata	11
+product_tag	6847	Ściemniacz zdalnie sterowany Simon 54	sciemniacz-zdalnie-sterowany-simon-54	2
+product_tag	7300	Śruba Baks	sruba-baks	2
+product_tag	5290	Świeczka cmentarna EMOS	swieczka-cmentarna-emos	1
+product_tag	7485	Świetlówka Kanlux	swietlowka-kanlux	6
+product_tag	4534	Świetlówka LED Philips Ecofit	swietlowka-led-philips-ecofit	2
+product_tag	4457	Żarówka EDO BARI E14	zarowka-edo-bari-e14	3
+product_tag	4437	Żarówka Edo Fari GU10	zarowka-edo-fari-gu10	12
+product_tag	4456	Żarówka EDO KARI E14	zarowka-edo-kari-e14	2
+product_tag	4455	Żarówka EDO MARI E27	zarowka-edo-mari-e27	15
+product_tag	4475	Żarówka EDO MARI E27 PIR	zarowka-edo-mari-e27-pir	1
+product_tag	4458	Żarówka EDO RUVA SMART	zarowka-edo-ruva-smart	1
+product_tag	4595	Żarówka GU10 Philips DIM	zarowka-gu10-philips-dim	2
+product_tag	5742	Żarówka GX53 Kanlux + V-TAC	zarowka-gx53-kanlux-v-tac	2
+product_tag	4557	Żarówka LED balon EMOS E27	zarowka-led-balon-emos-e27	0
+product_tag	4549	Żarówka LED balon GTV E27	zarowka-led-balon-gtv-e27	0
+product_tag	4556	Żarówka LED bańka EMOS E27	zarowka-led-banka-emos-e27	1
+product_tag	5064	Żarówka LED COREPRO 120ST Philips GU10	zarowka-led-corepro-120st-philips-gu10	3
+product_tag	5065	Żarówka LED COREPRO 36ST Philips GU10	zarowka-led-corepro-36st-philips-gu10	9
+product_tag	4535	Żarówka LED COREPRO Philips bańka E27	zarowka-led-corepro-philips-banka-e27	5
+product_tag	4513	Żarówka LED COREPRO Philips GU10	zarowka-led-corepro-philips-gu10	0
+product_tag	4514	Żarówka LED COREPRO Philips LUSTRE E14	zarowka-led-corepro-philips-lustre-e14	4
+product_tag	4515	Żarówka LED COREPRO Philips LUSTRE E27	zarowka-led-corepro-philips-lustre-e27	4
+product_tag	4536	Żarówka LED COREPRO Philips świeczka E14	zarowka-led-corepro-philips-swieczka-e14	5
+product_tag	4562	Żarówka LED duża kula EMOS E27	zarowka-led-duza-kula-emos-e27	0
+product_tag	4563	Żarówka LED EMOS G4	zarowka-led-emos-g4	2
+product_tag	4564	Żarówka LED EMOS G9	zarowka-led-emos-g9	0
+product_tag	5723	Żarówka LED EMOS G9 NEW	zarowka-led-emos-g9-new	5
+product_tag	4565	Żarówka LED EMOS GU10	zarowka-led-emos-gu10	1
+product_tag	4560	Żarówka LED filament bańka Osram E27	zarowka-led-filament-banka-osram-e27	0
+product_tag	4561	Żarówka LED filament EMOS E27	zarowka-led-filament-emos-e27	1
+product_tag	4550	Żarówka LED filament Kobi E27	zarowka-led-filament-kobi-e27	0
+product_tag	4568	Żarówka LED filament mix Osram	zarowka-led-filament-mix-osram	0
+product_tag	4570	Żarówka LED grzybek EMOS E14	zarowka-led-grzybek-emos-e14	0
+product_tag	4566	Żarówka LED kulka EMOS E14	zarowka-led-kulka-emos-e14	1
+product_tag	4567	Żarówka LED kulka EMOS E27	zarowka-led-kulka-emos-e27	0
+product_tag	4548	Żarówka LED kulka GTV E14	zarowka-led-kulka-gtv-e14	0
+product_tag	4555	Żarówka LED lulka kolor GE E27	zarowka-led-lulka-kolor-ge-e27	1
+product_tag	5398	Żarówka LED LVPAR16 60ST Osram GU10	zarowka-led-lvpar16-60st-osram-gu10	5
+product_tag	5380	Żarówka LED Osram czarna GU10	zarowka-led-osram-czarna-gu10	6
+product_tag	4551	Żarówka LED Par16 Osram GU10	zarowka-led-par16-osram-gu10	6
+product_tag	4580	Żarówka LED PARATHOM Osram GU10	zarowka-led-parathom-osram-gu10	0
+product_tag	4559	Żarówka LED SMART Ledvance	zarowka-led-smart-ledvance	3
+product_tag	4544	Żarówka LED SMD GTV GU10	zarowka-led-smd-gtv-gu10	0
+product_tag	4571	Żarówka LED STAR Osram GU10	zarowka-led-star-osram-gu10	0
+product_tag	4574	Żarówka LED T EMOS E14	zarowka-led-t-emos-e14	2
+product_tag	7480	Żarówka LED TOMI Kanlux	zarowka-led-tomi-kanlux	4
+product_tag	4577	Żarówka LED VALUE CLA Osram E27	zarowka-led-value-cla-osram-e27	5
+product_tag	4578	Żarówka LED Value Classic Osram E14	zarowka-led-value-classic-osram-e14	2
+product_tag	4579	Żarówka LED Value Classic Osram E27	zarowka-led-value-classic-osram-e27	6
+product_tag	4576	Żarówka LED Vintage EMOS	zarowka-led-vintage-emos	2
+product_tag	4575	Żarówka LED VINTAGE Osram E27	zarowka-led-vintage-osram-e27	2
+product_tag	4572	Żarówka LED świeczka EMOS E14	zarowka-led-swieczka-emos-e14	2
+product_tag	4573	Żarówka LED świeczka EMOS E27	zarowka-led-swieczka-emos-e27	1
+product_tag	5303	Żarówka Philips LED Master	zarowka-philips-led-master	5
+product_tag	4838	żarówki LED intensive Helios	zarowki-led-intensive-helios	0
+product_tag	4970	żyrandol	zyrandol	15
