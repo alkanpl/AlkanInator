@@ -6,6 +6,12 @@ w sklepie), a gdy rodzenstwa nie ma - reguly po nazwie. Skrypt rusza tylko
 atrybuty z listy ``managed_attributes``; reszta cech (wymiary, GPSR, ETIM)
 zostaje nietknieta. Plik wejsciowy nie jest nadpisywany.
 
+Na koniec kazda wartosc jest sprawdzana wzgledem terminow sklepu
+(``src/shop_attribute_values.py``): wartosc, ktora utworzylaby w Woo nowy termin,
+jest przepinana na istniejacy termin albo usuwana i raportowana (arkusze
+"Nowe wartosci" i "Kontrola wartosci", JSON ``kontrola_wartosci``).
+Kilka terminow jednego atrybutu rozdziela ``|`` (np. ``Antenowe|Komputerowe``).
+
 Uzycie:
     py src/fix_simon_attributes_to_shop_model.py \
         --input output/Simon_54_55_kaszmir_98_Baselinker.csv \
@@ -26,13 +32,25 @@ from typing import Any
 
 import yaml
 
+from shop_attribute_values import (
+    DEFAULT_RULES as DEFAULT_VALUE_RULES,
+    DEFAULT_SNAPSHOT,
+    ShopVocabulary,
+    ValueCheck,
+    check_features,
+    load_rules as load_value_rules,
+    load_vocabulary,
+    summary_dict as value_summary,
+    write_check_sheets,
+)
+
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_DICTIONARY = ROOT / "dictionaries" / "kontakt_simon_shop_structure.yaml"
 
 TYP = "Typ produktu"
 PODTYP = "Podtyp produktu"
 KROTNOSC = "Krotność"
-MULTI_SEPARATOR = ", "
+MULTI_SEPARATOR = "|"  # kilka terminow jednego atrybutu (", " tworzy w Woo jeden nowy termin)
 
 
 @dataclass
@@ -44,6 +62,7 @@ class FixResult:
     after: dict[str, str]
     changes: dict[str, tuple[str | None, str | None]] = field(default_factory=dict)
     problems: list[str] = field(default_factory=list)
+    value_checks: list[ValueCheck] = field(default_factory=list)
 
 
 def load_dictionary(path: Path = DEFAULT_DICTIONARY) -> dict[str, Any]:
@@ -251,8 +270,42 @@ def strip_unknown_attributes(
     result.after = kept
 
 
+def sibling_features(sku: str, config: dict[str, Any]) -> list[dict[str, str]]:
+    """Cechy rodzenstwa ze ``symbol_map`` (seria + jednoznaczne atrybuty) - zrodlo zastepczej wartosci."""
+    entry = (config.get("symbol_map") or {}).get(symbol_base(sku, config))
+    if not entry:
+        return []
+    features = {key: str(value) for key, value in (entry.get("atrybuty") or {}).items() if not isinstance(value, dict)}
+    series = entry.get("seria") or []
+    if len(series) == 1:
+        features["Seria"] = str(series[0])
+    return [features] * int(entry.get("rodzenstwo") or 1)
+
+
+def apply_value_check(
+    result: FixResult, vocabulary: ShopVocabulary, value_rules: dict[str, Any], keep_new_values: bool = False,
+    config: dict[str, Any] | None = None,
+) -> None:
+    """Przepina wartosci na terminy sklepu; nowe wartosci bez odpowiednika usuwa (albo zostawia) i raportuje."""
+    siblings = sibling_features(result.sku, config) if config else None
+    fixed, checks = check_features(result.sku, result.name, result.after, vocabulary, value_rules,
+                                   siblings=siblings, keep_new=keep_new_values)
+    for key in set(result.after) | set(fixed):
+        old, new = result.after.get(key), fixed.get(key)
+        if old != new:
+            previous = result.changes.get(key, (result.before.get(key, old), None))[0]
+            result.changes[key] = (previous, new)
+    result.after = fixed
+    result.value_checks = checks
+
+
 def process_rows(
-    rows: list[dict[str, str]], config: dict[str, Any], keep_unknown: bool = False
+    rows: list[dict[str, str]],
+    config: dict[str, Any],
+    keep_unknown: bool = False,
+    vocabulary: ShopVocabulary | None = None,
+    value_rules: dict[str, Any] | None = None,
+    keep_new_values: bool = False,
 ) -> tuple[list[FixResult], dict[str, dict[str, Any]]]:
     results: list[FixResult] = []
     unknown: dict[str, dict[str, Any]] = {}
@@ -262,6 +315,8 @@ def process_rows(
         result = fix_features(row.get("sku", ""), row.get("name", ""), features, config)
         if not keep_unknown:
             strip_unknown_attributes(result, allowed, unknown)
+        if vocabulary is not None:
+            apply_value_check(result, vocabulary, value_rules or {}, keep_new_values, config)
         row["features"] = json.dumps(result.after, ensure_ascii=False)
         results.append(result)
     for key, entry in unknown.items():
@@ -278,6 +333,9 @@ def write_control_workbook(
     workbook = Workbook()
     sheet = workbook.active
     sheet.title = "Kontrola"
+    value_checks = [check for result in results for check in result.value_checks]
+    if value_checks:
+        write_check_sheets(workbook, value_checks)
     if unknown:
         approval = workbook.create_sheet("Atrybuty do zatwierdzenia")
         approval.append(["Decyzja (TAK/NIE)", "Atrybut z katalogu", "Produktow", "Sugerowany atrybut Woo", "Przyklady wartosci", "SKU"])
@@ -334,6 +392,13 @@ def build_report(
             for key, entry in sorted((unknown or {}).items(), key=lambda item: -item[1]["produktow"])
         },
         "changes_by_attribute": dict(sorted(change_counts.items(), key=lambda item: -item[1])),
+        "kontrola_wartosci": value_summary([check for result in results for check in result.value_checks]),
+        "wartosci_wielokrotne_w_baselinkerze": [
+            {"sku": result.sku, "atrybut": key, "wartosc": value}
+            for result in results
+            for key, value in result.after.items()
+            if MULTI_SEPARATOR in str(value)
+        ],
         "sources": {
             source: sum(1 for result in results if result.source == source)
             for source in sorted({result.source for result in results})
@@ -363,6 +428,10 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--control", type=Path, help="Skoroszyt kontrolny przed/po.")
     parser.add_argument("--report", type=Path, help="Raport JSON.")
     parser.add_argument("--dictionary", type=Path, default=DEFAULT_DICTIONARY)
+    parser.add_argument("--shop-terms", type=Path, default=DEFAULT_SNAPSHOT, help="Zrzut terminow Woo (scripts/dump_woo_attribute_terms.py).")
+    parser.add_argument("--value-rules", type=Path, default=DEFAULT_VALUE_RULES)
+    parser.add_argument("--keep-new-values", action="store_true", help="Nowe wartosci spoza sklepu zostaja (domyslnie usuwane i raportowane).")
+    parser.add_argument("--skip-value-check", action="store_true", help="Bez kontroli wartosci wzgledem terminow sklepu.")
     parser.add_argument(
         "--keep-unknown-attributes",
         action="store_true",
@@ -375,7 +444,11 @@ def main(argv: list[str] | None = None) -> int:
 
     config = load_dictionary(args.dictionary)
     fieldnames, rows = read_baselinker_csv(args.input)
-    results, unknown = process_rows(rows, config, keep_unknown=args.keep_unknown_attributes)
+    vocabulary = None if args.skip_value_check else load_vocabulary(args.shop_terms)
+    results, unknown = process_rows(
+        rows, config, keep_unknown=args.keep_unknown_attributes, vocabulary=vocabulary,
+        value_rules=load_value_rules(args.value_rules), keep_new_values=args.keep_new_values,
+    )
     write_baselinker_csv(args.output, fieldnames, rows)
     report = build_report(results, args.input, args.output, unknown)
     if args.control:
@@ -383,10 +456,18 @@ def main(argv: list[str] | None = None) -> int:
     if args.report:
         args.report.parent.mkdir(parents=True, exist_ok=True)
         args.report.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
+    values = report["kontrola_wartosci"]
     print(
         f"Wiersze: {report['rows']}, zmienione: {report['rows_changed']}, "
-        f"z problemami: {report['rows_with_problems']}, atrybutow spoza Woo do zatwierdzenia: {len(unknown)} -> {args.output}"
+        f"z problemami: {report['rows_with_problems']}, atrybutow spoza Woo do zatwierdzenia: {len(unknown)}, "
+        f"nowe wartosci bez odpowiednika: {values['nowe_wartosci_bez_odpowiednika']}, "
+        f"Typ/Podtyp niezgodne z filtrem: {values['niezgodnosci_typ_podtyp']} -> {args.output}"
     )
+    if report["wartosci_wielokrotne_w_baselinkerze"]:
+        print(
+            f"UWAGA: {len(report['wartosci_wielokrotne_w_baselinkerze'])} wartosci z kilkoma terminami ('|') - "
+            "po imporcie Baselinkera sprawdz w eksporcie Woo, czy powstaly osobne terminy (pewniej: WP All Import)."
+        )
     return 1 if report["rows_with_problems"] else 0
 
 

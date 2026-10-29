@@ -41,6 +41,16 @@ from openpyxl.utils import get_column_letter
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+from shop_attribute_values import (  # noqa: E402
+    DEFAULT_RULES as DEFAULT_VALUE_RULES,
+    DEFAULT_SNAPSHOT,
+    ValueCheck,
+    check_features,
+    load_rules as load_value_rules,
+    load_vocabulary,
+    summary_dict as value_summary,
+    write_check_sheets,
+)
 from simon_api import (  # noqa: E402
     SimonApiClient,
     flatten_category_tree,
@@ -303,6 +313,42 @@ def process_row(row: dict[str, Any], product: dict | None, paths: list[list[str]
     )
 
 
+# --------------------------------------------------------------------------- terminy sklepu
+def approved_subseries_values(rules: dict[str, Any]) -> dict[str, set[str]]:
+    """Seria/Podseria wynikajace z regul podserii (decyzja 2026-09-28) - nowe terminy zatwierdzone."""
+    approved: dict[str, set[str]] = {"Seria": set(), "Podseria": set()}
+
+    def walk(node: Any) -> None:
+        if isinstance(node, dict):
+            if node.get("series") and node.get("subseries"):
+                parts = node["subseries"] if isinstance(node["subseries"], list) else [node["subseries"]]
+                for part in map(str, parts):
+                    approved["Podseria"].add(part)
+                    if node.get("series_full", True):
+                        approved["Seria"].add(f"{node['series']} {part}")
+            for value in node.values():
+                walk(value)
+        elif isinstance(node, list):
+            for value in node:
+                walk(value)
+
+    walk(rules)
+    return approved
+
+
+def check_shop_values(results: list[RowResult], vocabulary: Any, value_rules: dict[str, Any],
+                      rules: dict[str, Any]) -> list[ValueCheck]:
+    """Raport (bez zmian): czy Seria/Podseria po zmianie tworza w Woo nowe terminy."""
+    approved = approved_subseries_values(rules)
+    checks: list[ValueCheck] = []
+    for result in results:
+        features = {key: value for key, value in (("Seria", result.series_after), ("Podseria", result.subseries)) if value}
+        _, found = check_features(result.sku, result.title_after, features, vocabulary, value_rules,
+                                  keep_new=True, extra_approved=approved)
+        checks.extend(found)
+    return checks
+
+
 # --------------------------------------------------------------------------- I/O
 def read_export(path: Path) -> tuple[list[str], list[dict[str, Any]]]:
     workbook = load_workbook(path, read_only=True, data_only=True)
@@ -386,11 +432,14 @@ def _write_sheet(workbook: Workbook, title: str, rows: list[RowResult]) -> None:
     sheet.freeze_panes = "A2"
 
 
-def write_control(path: Path, results: list[RowResult], summary: dict[str, Any]) -> None:
+def write_control(path: Path, results: list[RowResult], summary: dict[str, Any],
+                  value_checks: list[ValueCheck] | None = None) -> None:
     workbook = Workbook()
     overview = workbook.active
     overview.title = "Podsumowanie"
     for key, value in summary.items():
+        if key == "kontrola_wartosci":
+            value = {k: v for k, v in value.items() if not isinstance(v, (list, dict))}
         if isinstance(value, dict):
             overview.append([key])
             for sub_key, sub_value in value.items():
@@ -405,6 +454,8 @@ def write_control(path: Path, results: list[RowResult], summary: dict[str, Any])
     _write_sheet(workbook, "Korekty serii", [r for r in results if "Seria" in r.changes and not r.subseries])
     _write_sheet(workbook, "Do sprawdzenia", [r for r in results if r.status == "DO_SPRAWDZENIA"])
     _write_sheet(workbook, "Wszystkie", results)
+    if value_checks:
+        write_check_sheets(workbook, value_checks)
     path.parent.mkdir(parents=True, exist_ok=True)
     workbook.save(path)
 
@@ -445,6 +496,9 @@ def main() -> None:
     parser.add_argument("--offline", action="store_true", help="Tylko cache API (cache/simon_api), bez sieci")
     parser.add_argument("--refresh", action="store_true", help="Pobierz artykuly z API na nowo (ignoruj cache)")
     parser.add_argument("--api-key", default=None)
+    parser.add_argument("--shop-terms", type=Path, default=DEFAULT_SNAPSHOT,
+                        help="Zrzut terminow Woo (scripts/dump_woo_attribute_terms.py)")
+    parser.add_argument("--value-rules", type=Path, default=DEFAULT_VALUE_RULES)
     args = parser.parse_args()
 
     if args.input.resolve() == args.output.resolve():
@@ -479,15 +533,19 @@ def main() -> None:
     duplicates = sorted(s for s, n in seen.items() if n > 1)
 
     write_output(args.input, args.output, results)
+    value_checks = check_shop_values(results, load_vocabulary(args.shop_terms), load_value_rules(args.value_rules), rules)
     summary = build_summary(results, {
         "plik_wejsciowy": str(args.input), "plik_wyjsciowy": str(args.output),
         "kontrola": str(args.control), "duplikaty_sku": duplicates,
         "zapytania_api": client.requests_made, "keep_woo_series": args.keep_woo_series,
+        "kontrola_wartosci": value_summary(value_checks),
     })
-    write_control(args.control, results, summary)
+    write_control(args.control, results, summary, value_checks)
     args.report.parent.mkdir(parents=True, exist_ok=True)
     args.report.write_text(json.dumps(summary, ensure_ascii=False, indent=2), encoding="utf-8")
-    print(json.dumps({k: v for k, v in summary.items() if k not in ("podserie",)}, ensure_ascii=False, indent=1))
+    print(json.dumps({k: v for k, v in summary.items() if k not in ("podserie", "kontrola_wartosci")}, ensure_ascii=False, indent=1))
+    values = summary["kontrola_wartosci"]
+    print(f"Kontrola wartosci: nowe bez odpowiednika {values['nowe_wartosci_bez_odpowiednika']}, decyzje {values['wedlug_decyzji']}")
     print("Podserie:", json.dumps(summary["podserie"], ensure_ascii=False))
 
 

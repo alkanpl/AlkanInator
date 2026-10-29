@@ -14,6 +14,7 @@ from fix_simon_attributes_to_shop_model import (  # noqa: E402
     symbol_base,
     validate_features,
 )
+from shop_attribute_values import ShopVocabulary, load_rules as load_value_rules  # noqa: E402
 
 
 class SymbolBaseTest(unittest.TestCase):
@@ -99,6 +100,67 @@ class FixFeaturesTest(unittest.TestCase):
         self.assertEqual(result.after["Klasa ETIM"], "EC000125")
 
 
+class MultiTermSubtypeTest(unittest.TestCase):
+    def test_sibling_multi_subtype_uses_woo_separator(self) -> None:
+        config = load_dictionary()
+        features = {"Typ produktu": "Gniazda", "Podtyp produktu": "Antenowe, Komputerowe", "Seria": "Simon 55"}
+        result = fix_features("TASFRJ45.01/142/KON", "Gniazdo antenowe F + RJ45 kaszmirowe", features, config)
+        self.assertEqual(result.after["Podtyp produktu"], "Antenowe|Komputerowe")
+        self.assertEqual(result.problems, [])
+
+
+class ShopValueCheckTest(unittest.TestCase):
+    def setUp(self) -> None:
+        self.config = load_dictionary()
+        self.vocabulary = ShopVocabulary()
+        for attribute, terms in {
+            "Typ produktu": ["Gniazda", "Łączniki"],
+            "Podtyp produktu": ["Komputerowe", "Pojedyncze"],
+            "Seria": ["Simon 55"],
+            "Materiał": ["Tworzywo sztuczne"],
+            "Kolor producenta": ["Kaszmir"],
+            "Typ zacisków": ["Gwintowe", "Bezgwintowe"],
+            "Klasa energetyczna": ["A"],
+            "Stopień ochrony [IP]": ["IP 20"],
+        }.items():
+            for term in terms:
+                self.vocabulary.add(attribute, term)
+        self.vocabulary.add("Podtyp produktu", "Komputerowe", parent="Gniazda")
+        self.vocabulary.add("Podtyp produktu", "Pojedyncze", parent="Łączniki")
+        self.rules = load_value_rules()
+
+    def test_new_values_are_mapped_to_shop_terms_or_removed(self) -> None:
+        rows = [{
+            "sku": "TW1.01/142/KON",
+            "name": "Łącznik jednobiegunowy pojedynczy kaszmirowy",
+            "features": json.dumps({
+                "Typ produktu": "Łączniki", "Podtyp produktu": "Pojedyncze", "Seria": "Simon 55",
+                "Materiał": "tworzywo sztuczne, PC, bezhalogenowe", "Kolor producenta": "Kaszmirowy",
+                "Typ zacisków": "szybkozłącza", "Klasa energetyczna": "nie podlega",
+            }),
+        }]
+        results, _ = process_rows(rows, self.config, vocabulary=self.vocabulary, value_rules=self.rules)
+        after = json.loads(rows[0]["features"])
+        self.assertEqual(after["Materiał"], "Tworzywo sztuczne")
+        self.assertEqual(after["Kolor producenta"], "Kaszmir")
+        self.assertEqual(after["Typ zacisków"], "Bezgwintowe")
+        self.assertNotIn("Klasa energetyczna", after)
+        self.assertEqual(results[0].changes["Klasa energetyczna"], ("nie podlega", None))
+        kinds = {check.attribute: check.kind for check in results[0].value_checks}
+        self.assertEqual(kinds["Klasa energetyczna"], "usunieta (brak odpowiednika)")
+
+    def test_unknown_new_value_is_removed_unless_kept(self) -> None:
+        features = {"Typ produktu": "Gniazda", "Podtyp produktu": "Komputerowe", "Seria": "Simon 55", "Typ zacisków": "magnetyczne"}
+        rows = [{"sku": "T61.01/142/KON", "name": "Gniazdo komputerowe", "features": json.dumps(features)}]
+        results, _ = process_rows(rows, self.config, vocabulary=self.vocabulary, value_rules=self.rules)
+        self.assertNotIn("Typ zacisków", json.loads(rows[0]["features"]))
+        check = next(check for check in results[0].value_checks if check.attribute == "Typ zacisków")
+        self.assertEqual(check.status, "DO_SPRAWDZENIA")
+        rows = [{"sku": "T61.01/142/KON", "name": "Gniazdo komputerowe", "features": json.dumps(features)}]
+        process_rows(rows, self.config, vocabulary=self.vocabulary, value_rules=self.rules, keep_new_values=True)
+        self.assertEqual(json.loads(rows[0]["features"])["Typ zacisków"], "magnetyczne")
+
+
 class UnknownAttributesTest(unittest.TestCase):
     def setUp(self) -> None:
         self.config = load_dictionary()
@@ -142,8 +204,13 @@ class ValidateFeaturesTest(unittest.TestCase):
         self.assertIn("Typ spoza slownika sklepu: Gniazdka", validate_features({"Typ produktu": "Gniazdka"}, self.config))
 
     def test_reports_subtype_outside_dictionary(self) -> None:
-        problems = validate_features({"Typ produktu": "Gniazda", "Podtyp produktu": "Antenowe, Foo"}, self.config)
+        problems = validate_features({"Typ produktu": "Gniazda", "Podtyp produktu": "Antenowe|Foo"}, self.config)
         self.assertEqual(problems, ["Podtyp spoza slownika dla Gniazda: Foo"])
+
+    def test_comma_joined_subtypes_are_one_unknown_term(self) -> None:
+        # Kaszmir 2026-09-15: "Antenowe, Komputerowe" utworzylo w Woo jeden nowy termin.
+        problems = validate_features({"Typ produktu": "Gniazda", "Podtyp produktu": "Antenowe, Komputerowe"}, self.config)
+        self.assertEqual(problems, ["Podtyp spoza slownika dla Gniazda: Antenowe, Komputerowe"])
 
     def test_frame_requires_krotnosc(self) -> None:
         self.assertIn("Ramka bez poprawnej Krotnosci", validate_features({"Typ produktu": "Ramki"}, self.config))

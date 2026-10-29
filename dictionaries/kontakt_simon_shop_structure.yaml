@@ -26,7 +26,8 @@ filter_model:
       podtypy: [Wtyczkowe, Antenowe, Komputerowe, Telefoniczne, USB, HDMI, Głośnikowe, Ekwipotencjalne, Światłowodowe]
       dodatkowe_atrybuty: [Rodzaj gniazda, Liczba gniazd, Uziemienie, Przesłony torów prądowych, Kategoria kabli sieciowych, Podświetlenie]
       uwagi:
-        - Kilka funkcji w jednym module = kilka podtypow rozdzielonych ", " (np. "Antenowe, Komputerowe", "Wtyczkowe, USB").
+        - Kilka funkcji w jednym module = kilka TERMINOW podtypu rozdzielonych "|" (np. "Antenowe|Komputerowe", "Wtyczkowe|USB").
+          Przecinek tworzy w Woo jeden nowy termin "Antenowe, Komputerowe" bez powiazania z typem (blad partii kaszmir 2026-09-15).
         - Ladowarki USB (TEC2CAQ, DEC2CAQ, DC2USB) to Gniazda / USB, a nie osobny typ.
     Łączniki:
       podtypy: [Pojedyncze, Podwójne, Potrójne, Schodowe, Krzyżowe, Żaluzjowe, Pozostałe łączniki]
@@ -318,13 +319,13 @@ name_rules:
     podtyp: Sygnalizatory i oprawy LED
   - match: "^gniazdo wtyczkowe z zintegrowaną ładowarką"
     typ: Gniazda
-    podtyp: "Wtyczkowe, USB"
+    podtyp: "Wtyczkowe|USB"
   - match: "^(ładowarka|gniazdo usb)"
     typ: Gniazda
     podtyp: USB
   - match: "^gniazdo antenowe.*rj45"
     typ: Gniazda
-    podtyp: "Antenowe, Komputerowe"
+    podtyp: "Antenowe|Komputerowe"
   - match: "^gniazdo (wtyczkowe|schuko|z uziemieniem)"
     typ: Gniazda
     podtyp: Wtyczkowe
@@ -333,7 +334,7 @@ name_rules:
     podtyp: Antenowe
   - match: "^gniazdo komputerowe.*telefoniczne"
     typ: Gniazda
-    podtyp: "Komputerowe, Telefoniczne"
+    podtyp: "Komputerowe|Telefoniczne"
   - match: "^gniazdo komputerowe|^gniazdo rj45"
     typ: Gniazda
     podtyp: Komputerowe
@@ -431,7 +432,7 @@ symbol_map:
     rodzenstwo: 2
     atrybuty:
       Typ produktu: Gniazda
-      Podtyp produktu: Komputerowe, Telefoniczne
+      Podtyp produktu: Komputerowe|Telefoniczne
       Stopień ochrony [IP]: IP 20
       Sposób montażu: Podtynkowy
   D61.01:
@@ -583,7 +584,7 @@ symbol_map:
     rodzenstwo: 2
     atrybuty:
       Typ produktu: Gniazda
-      Podtyp produktu: Antenowe, Komputerowe
+      Podtyp produktu: Antenowe|Komputerowe
       Stopień ochrony [IP]: IP 20
       Sposób montażu: Podtynkowy
   DASK.01:
@@ -678,7 +679,7 @@ symbol_map:
       Rodzaj łącznika:
         niejednoznaczne:
         - Dzwonek
-        - Pojedynczy, Zwierny
+        - Pojedynczy|Zwierny
       Podświetlenie: Nie
       Stopień ochrony [IP]: IP20/IP44
       Sposób montażu: Podtynkowy
@@ -878,7 +879,7 @@ symbol_map:
     rodzenstwo: 2
     atrybuty:
       Typ produktu: Gniazda
-      Podtyp produktu: Komputerowe, HDMI
+      Podtyp produktu: Komputerowe|HDMI
       Stopień ochrony [IP]: IP 20
       Sposób montażu: Podtynkowy
   DGL2.01:
@@ -1125,7 +1126,7 @@ symbol_map:
     rodzenstwo: 2
     atrybuty:
       Typ produktu: Gniazda
-      Podtyp produktu: Wtyczkowe, USB
+      Podtyp produktu: Wtyczkowe|USB
       Stopień ochrony [IP]: IP 20
       Sposób montażu: Podtynkowy
   DGZ2MZ.01:
@@ -2679,7 +2680,7 @@ symbol_map:
     rodzenstwo: 6
     atrybuty:
       Typ produktu: Gniazda
-      Podtyp produktu: Komputerowe, Telefoniczne
+      Podtyp produktu: Komputerowe|Telefoniczne
       Stopień ochrony [IP]: IP 20
       Sposób montażu: Podtynkowy
   T61.01:
@@ -2777,7 +2778,7 @@ symbol_map:
     rodzenstwo: 6
     atrybuty:
       Typ produktu: Gniazda
-      Podtyp produktu: Antenowe, Komputerowe
+      Podtyp produktu: Antenowe|Komputerowe
       Stopień ochrony [IP]: IP 20
       Sposób montażu: Podtynkowy
   TASK.01:
@@ -3158,7 +3159,7 @@ symbol_map:
     rodzenstwo: 6
     atrybuty:
       Typ produktu: Gniazda
-      Podtyp produktu: Komputerowe, HDMI
+      Podtyp produktu: Komputerowe|HDMI
       Stopień ochrony [IP]: IP 20
       Sposób montażu: Podtynkowy
   TGHDMI.01:
@@ -3203,7 +3204,7 @@ symbol_map:
     rodzenstwo: 6
     atrybuty:
       Typ produktu: Gniazda
-      Podtyp produktu: Komputerowe, HDMI
+      Podtyp produktu: Komputerowe|HDMI
       Stopień ochrony [IP]: IP 20
       Sposób montażu: Podtynkowy
   TGL.01:
@@ -3347,7 +3348,7 @@ symbol_map:
     rodzenstwo: 6
     atrybuty:
       Typ produktu: Gniazda
-      Podtyp produktu: Wtyczkowe, USB
+      Podtyp produktu: Wtyczkowe|USB
       Stopień ochrony [IP]: IP 20
       Sposób montażu: Podtynkowy
   TGSZ1ZUSB2CA.01:
@@ -3622,7 +3623,7 @@ symbol_map:
       Typ produktu: Gniazda
       Podtyp produktu:
         niejednoznaczne:
-        - Wtyczkowe, USB
+        - Wtyczkowe|USB
         - USB
       Uziemienie: Tak
       Stopień ochrony [IP]: IP 20

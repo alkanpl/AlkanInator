@@ -1,0 +1,264 @@
+# Kategorie produktow Woo z API sklepu alkanlocal.test:8443, zrzut 2026-10-21.
+# Generuje: py src/woo_api_cli.py knowledge - nie edytowac recznie.
+term_id	parent_id	name	slug	count
+321	0	Aparatura modułowa	aparatura-modulowa	313
+4396	0	Baterie i akumulatory	baterie-i-akumulatory	22
+339	0	Bezpieczniki topikowe	bezpieczniki-topikowe	20
+3906	0	Elektronarzędzia	elektronarzedzia	8
+5713	0	Fotowoltaika	fotowoltaika	7
+323	0	Gniazdka i Łączniki	gniazdka-i-laczniki	7351
+3293	0	Kable i przewody	kable-i-przewody	265
+557	0	Narzędzia dla elektryka	narzedzia	145
+7653	0	Ochrona odgromowa	ochrona-odgromowa	17
+3164	0	Odzież robocza BHP	odziez-robocza-bhp	1
+368	0	Osprzęt siłowy	osprzet-silowy	50
+5947	0	Outlet	outlet	109
+372	0	Oświetlenie	oswietlenie	814
+473	0	Promocje	promocje	5
+485	0	Przedłużacze i akcesoria	przedluzacze-akcesoria	108
+489	0	Puszki i złączki	puszki-i-zlaczki	180
+384	0	Rozdzielnice elektryczne	rozdzielnice-obudowy-skrzynki	98
+388	0	Sterowanie i automatyka domowa 2071257 120.123.574.134 12:32 213	sterowanie-i-automatyka-domowa	260
+2037	0	Systemy prowadzenia kabli	systemy-prowadzenia-kabli	377
+414	0	Taśmy i paski LED	tasmy-paski-led	76
+2180	0	Uncategorized	uncategorized	7
+499	0	Uziomy	uziomy	0
+552	0	Wentylatory	wentylatory	20
+5982	0	Wirtualna	wirtualna	0
+611	0	Wyprzedaż	wyprzedaz	159
+7610	0	Wyrzedaż	wyrzedaz	2
+4386	0	Zestawy akcesoriów elektrycznych	zestawy	303
+406	0	Żarówki	zrodla-swiatla	278
+390	321	Automaty schodowe	automaty-schodowe	10
+389	321	Automaty zmierzchowe	automaty-zmierzchowe	15
+5906	321	Czujniki zaniku fazy / przełączniki fazy	czujniki-zaniku-fazy-przelaczniki-fazy	9
+338	321	Lampki sygnalizacyjne	lampki-sygnalizacyjne-i-dzwonki	2
+335	321	Liczniki i wskaźniki energii	liczniki-i-wskazniki-energii	9
+334	321	Ochronniki przepięciowe	ochronniki	8
+5907	321	Ograniczniki mocy	ograniczniki-mocy	5
+5901	321	Przekaźniki bistabilne	przekazniki-bistabilne	17
+5903	321	Przekaźniki czasowe	przekazniki-czasowe	14
+5902	321	Przekaźniki elektromagnetyczne	przekazniki-elektromagnetyczne	7
+5908	321	Przełączniki Sieć-Agregat	przelaczniki-siec-agregat	2
+331	321	Rozłączniki izolacyjne	rozlaczniki	36
+5904	321	Sterowanie roletami	sterowanie-roletami-aparatura-modulowa	7
+3574	321	Styczniki	styczniki	23
+484	321	Szyny łączeniowe	aparatura-modulowa-szyny-laczeniowe	8
+322	321	Wyłączniki nadprądowe	wylaczniki-nadpradowe	90
+330	321	Wyłączniki różnicowoprądowe	wylaczniki-roznicowopradowe	26
+5899	321	Zegary sterujące	zegary-sterujace	14
+4949	323	Akcesoria do gniazdek	akcesoria-do-gniazdek	0
+468	323	Berker K.1	berker-k1-old	45
+6273	323	Elektro-Plast Nasielsk	elektro-plast-nasielsk	43
+615	323	Gniazda wpuszczane w blat	gniazda-wpuszczane	0
+3452	323	Gniazdka Berker	berker	1618
+3450	323	Gniazdka Hager	hager	248
+3996	323	Gniazdka Karlik	karlik	603
+509	323	Gniazdka Kontakt Simon	kontakt-simon	1854
+3448	323	Gniazdka Kos	kos	35
+327	323	Gniazdka natynkowe	natynkowe	63
+3328	323	Gniazdka Ospel	ospel	2880
+5706	323	Schneider Electric	schneider-electric	2
+344	339	Wkładki topikowe	wkladki-topikowe	20
+369	368	Gniazda siłowe	gniazda-silowe	17
+371	368	Rozdzielnie elektryczne	rozdzielnie-elektryczne	23
+370	368	Wtyczki siłowe	wtyczki-silowe	10
+600	372	Czujniki ruchu	czujniki-ruchu-oswietlenie	0
+3027	372	Latarki	latarki	26
+2039	372	Oprawy oświetleniowe	oprawy-oswietleniowe	2
+4953	372	Ozdoby świąteczne	ozdoby-swiateczne	33
+599	372	Oświetlenie przemysłowe wewnętrzne	oprawy-przemyslowe	93
+2117	372	Oświetlenie wewnętrzne	oswietlenie-wewnetrzne	414
+2118	372	Oświetlenie zewnętrzne	oswietlenie-zewnetrzne	241
+2033	372	Stateczniki	stateczniki	0
+4278	382	Kinkiety zewnętrzne	lampy-elewacyjne-kinkiety	29
+4282	382	Lampy najazdowe	oprawy-najazdowe	6
+4283	382	Lampy ogrodowe solarne	lampy-solarne	9
+4281	382	Lampy ogrodowe wiszące	lampy-wiszace	1
+4279	382	Reflektory ogrodowe	reflektory-ogrodowe-wbijane	4
+4280	382	Słupki ogrodowe	slupki-ogrodowe	24
+2076	384	Fundamenty do skrzynki elektrycznej	zlacza-i-fundamenty	4
+385	384	Rozdzielnice natynkowe	natynkowe-rozdzielnice-elektryczne	39
+386	384	Rozdzielnice podtynkowe	podtynkowe-rozdzielnice-elektryczne	43
+495	384	Skrzynki rozdzielcze	obudowy-skrzynki-rozdzielcze	12
+3145	388	Czujniki czadu, gazu i dymu	czujniki-czadu-i-gazu-dymu	19
+404	388	Czujniki ruchu	czujniki-ruchu	45
+5986	388	Dzwonki, gongi, przyciski dzwonkowe	dzwonki-gongi-przyciski-dzwonkowe	12
+610	388	F&Home Radio	fhome-radio	16
+602	388	F&Wave	fwave	37
+5985	388	System EXTA - Automatyka budynkowa	system-exta-automatyka-budynkowa	33
+5987	388	System EXTA FREE - Sterowanie bezprzewodowe	system-exta-free-sterowanie-bezprzewodowe	28
+5988	388	System EXTA LIFE - Inteligentny dom	system-exta-life-inteligentny-dom	24
+5989	388	System SUPLA - sterowanie WiFi	system-supla-sterowanie-wifi	25
+5764	388	Systemy bezpieczeństwa	systemy-bezpieczenstwa	4
+408	406	Świetlówki LED	swietlowki-led	14
+407	406	Żarówki LED	zarowki-led	254
+4284	406	Żarówki Smart	zarowki-led-smart	5
+4353	406	Żarówki żarowe	zarowki-tradycyjne	4
+4926	407	Wkłady LED do lamp	wklady-led	24
+5740	407	Żarówki LED - pozostałe	zarowki-led-pozostale	6
+4925	407	Żarówki LED E14	zarowki-led-e14	49
+4923	407	Żarówki LED E27	zarowki-led-e27	86
+4927	407	Żarówki LED G4/G9	zarowki-led-g4-g9	7
+4924	407	Żarówki LED GU10	zarowki-led-gu10-mr16	81
+2040	414	Akcesoria	akcesoria	2
+4288	414	Profile LED	profile-led	1
+4200	414	Sterowniki i ściemniacze do taśm LED	sterowniki-i-sciemniacze-do-tasm-led	13
+415	414	Taśmy LED	tasmy-led	29
+416	414	Zasilacze LED	zasilacze	19
+4199	414	Złączki do taśm LED	zlaczki-do-tasm-led	11
+551	434	Czujniki ruchu	czujniki-ruchu-deco	0
+535	434	Gniazda antenowe i telewizyjne	gniazda-antenowe-telewizyjne-deco	0
+550	434	Gniazda głośnikowe	gniazda-glosnikowe-deco	0
+536	434	Gniazda teleinformatyczne	gniazda-teleinformatyczne-deco	0
+531	434	Gniazda wtyczkowe	gniazda-wtykowe	0
+544	434	Ramki	ramki-deco	0
+541	434	Regulatory temperatury	regulatory-temperatury-deco	0
+543	434	Sterowanie roletami	sterowanie-roletami-deco	0
+537	434	Łączniki i przyciski	laczniki-przyciski-deco	0
+462	461	Gniazda antenowe	berker-gniazda-antenowe	4
+569	461	Gniazda głośnikowe	gniazda-glosnikowe-mechanizmy-one-platform	4
+463	461	Gniazda teleinformatyczne	berker-gniazda-teleinformatyczne	5
+460	461	Gniazda wtyczkowe	berker-gniazda-wtyczkowe	5
+568	461	Regulatory oświetlenia (ściemniacze)	regulatory-oswietlenia-sciemniacze-mechanizmy-one-platform	0
+459	461	Łączniki	berker-laczniki	17
+470	464	Klawisze Berker B Kwadrat	berker-b-kwadrat-klawisze	27
+469	464	Płytki czołowe	berker-b-kwadrat-plytki	21
+471	464	Ramki	berker-b-kwadrat-ramki	20
+507	465	Klawisze	klawisze	10
+506	465	Ramki	ramki-berker-b3	50
+583	466	Klawisze	klawisze-berker-r1-r3	14
+582	466	Płytki czołowe	plytki-czolowe-berker-r1-r3	14
+580	466	Ramki R.1	ramki-r1	82
+581	466	Ramki R.3	ramki-r3	39
+576	467	Klawisze	klawisze-berker-q1-q3-q7	24
+579	467	Płytki czołowe	plytki-czolowe-berker-q1-q3-q7	20
+577	467	Ramki Q.1	ramki-q1	15
+578	467	Ramki Q.3	ramki-q3	15
+570	468	Klawisze	klawisze-berker-k1	16
+572	468	Płytki czołowe	plytki-czolowe	10
+571	468	Ramki	ramki-berker-k1	18
+2119	473	BRENNENSTUHL	brennenstuhl	0
+3108	473	Czujniki czadu i gazu	czujniki-czadu-i-gazu	0
+616	485	Gniazda wpuszczane	gniazda-wpuszczane-przedluzacze-rozgalezniki-akcesoria	0
+487	485	Listwy elektryczne i gniazdka	gniazda-przenosne-listwy	8
+367	485	Przedłużacze domowe	przedluzacze-domowe	45
+488	485	Przedłużacze na bębnie i zwijaki	przedluzacze-bebnowe-zwijaki	16
+486	485	Przedłużacze ogrodowe	przedluzacze-ogrodowe	14
+366	485	Rozgałęźniki i adaptery	rozgalezniki-adaptery	2
+365	485	Wtyczki elektryczne	wtyczki	8
+496	489	Bloki rozdzielcze	bloki-rozdzielcze	5
+503	489	Dławiki PG	dlawiki-pg-metryczne	6
+493	489	Listwy zaciskowe na szynę	listwy-zasikowe-na-szyne	6
+491	489	Puszka hermetyczna natynkowa	puszki-natynkowe-hermetyczne	6
+490	489	Puszki podtynkowe	puszki-podtynkowe	63
+1974	489	Tulejki izolowane	tulejki-izolowane	22
+494	489	Złączki skręcane	zlaczki-skrecane	15
+492	489	Złączki Wago	zlaczki-samozaciskowe	41
+508	504	Ramki	b7-ramki	50
+574	505	Klawisze	klawisze-berker-k5	16
+575	505	Płytki czołowe	plytki-czolowe-berker-k5	10
+573	505	Ramki	ramki-berker-k5	18
+511	509	Kontakt Simon 10	simon-10	207
+510	509	Kontakt Simon 54	simon-54	525
+7633	509	Simon 400	simon-400	10
+6261	509	Simon 55	simon-55	1005
+6219	509	Simon 55 GO	simon-55-go	61
+512	509	Simon Basic	simon-basic	0
+7802	509	Simon Connect	simon_connect	45
+514	510	Gniazda wtyczkowe	gniazda-wtyczkowe	0
+517	510	Ramki	ramki-simon-54	0
+515	510	Sterowanie roletami	sterowanie-roletami	0
+513	510	Łączniki i przyciski	laczniki-przyciski	0
+516	510	Ściemniacze	sciemniacze-simon-54	0
+378	599	Lampy hermetyczne	oprawy-hermetyczne	25
+380	599	Oprawy Downlight	downlight	8
+5400	599	Oprawy High-bay LED	oprawy-high-bay-led	19
+5401	599	Oprawy liniowe, belki LED	oprawy-belki-led	9
+379	599	Panele LED sufitowe	panele-led	32
+617	613	Moduły awaryjne	moduly-awaryjne	0
+618	613	Oprawy awaryjne	oprawy-awaryjne	3
+7231	2037	Akcesoria do kanałów	akcesoria-do-kanalow	37
+7233	2037	Akcesoria do koryt	akcesoria-do-koryt	65
+7230	2037	Kanały elektroinstalacyjne	kanaly-elektroinstalacyjne	21
+7232	2037	Koryta kablowe	koryta-kablowe	7
+6947	2037	Peszle	peszle	187
+4773	2037	Rury karbowane	rury-karbowane	12
+609	2037	Uchwyty kablowe	uchwyty-kablowe	48
+5402	2117	Kinkiety ścienne	kinkiety-scienne	6
+614	2117	Lampki na biurko	lampy-biurkowe	4
+587	2117	Lampy podszafkowe LED	oprawy-meblowe	0
+4512	2117	Lampy wiszące i żyrandole	lampy-wiszace-zyrandole	28
+642	2117	Oprawy dekoracyjne	oprawy-dekoracyjne	1
+376	2117	Oprawy natynkowe	oprawy-natynkowe	68
+375	2117	Oprawy podtynkowe	oprawy-podtynkowe	41
+613	2117	Oświetlenie awaryjne	oswietlenie-awaryjne	11
+641	2117	Plafony LED	plafony-led	36
+4539	2117	Szynoprzewody	systemy-szynowe-szynoprzewody	217
+4853	2118	Girlandy ogrodowe	girlandy-ogrodowe	5
+382	2118	Lampy ogrodowe	oprawy-ogrodowe	86
+4967	2118	Lampy uliczne	lampy-uliczne	40
+585	2118	Naświetlacze LED	naswietlacze-led	109
+6665	3293	Bezhalogenowe i ognioodporne	bezhalogenowe-i-ognioodporne	11
+5860	3293	Fotowoltaiczne	fotowoltaiczne	2
+5858	3293	Instalacyjne	instalacyjne	212
+7657	3293	Telekomunikacyjne	kable_telekomunikacyjne	19
+5859	3293	Ziemne	ziemne	20
+3302	3328	Gniazdka Ospel Aria	ospel-aria	547
+2042	3328	Gniazdka Ospel As	ospelas	591
+442	3328	Gniazdka Ospel Impresja	ospel-impresja	483
+7921	3328	Ospel As Antybakteryjny	as-antybakteryjny	113
+6277	3328	Ospel BIS	ospel-bis	6
+7823	3328	Ospel Sonata	ospel-sonata	1029
+7922	3328	Ospel Sonata Nowe Srebro	ospel-sonata-nowe-srebro	33
+7923	3328	Ospel Sonata Stal Inox	ospel-sonata-stal-inox	34
+7949	3328	Ospel Sonata Touch	ospel-sonata-touch	44
+2123	3448	Gniazdka podtynkowe Kos Vena	kos-vena	0
+4220	3448	Gniazdka podtynkowe Kos Vena 2	vena-2	0
+4931	3448	Kos 66	kos-66	35
+3296	3450	Gniazdka Lumina	lumina	247
+4286	3452	Berker S.1	berker-s	169
+4287	3452	Berker Serie 1930/Glas	berker-serie-1930-glas	0
+504	3452	Gniazdka Berker B.7	berker-b7	323
+464	3452	Gniazdka Berker B.Kwadrat	berker-b-kwadrat	150
+4431	3452	Gniazdka Berker Glasserie	berker-glasserie	127
+4427	3452	Gniazdka Berker Integro Flow	berker-integro-flow	11
+4423	3452	Gniazdka Berker K.1	berker-k1	117
+505	3452	Gniazdka Berker K.5	berker-k5	158
+467	3452	Gniazdka Berker Q.	berker-q1-q3-q7	81
+4420	3452	Gniazdka Berker Q.1	berker-q1	165
+4421	3452	Gniazdka Berker Q.3	berker-q3	161
+4422	3452	Gniazdka Berker Q.7	berker-q7	52
+466	3452	Gniazdka Berker R.	berker-r1-r3	152
+4424	3452	Gniazdka Berker R.1	berker-r1	84
+4425	3452	Gniazdka Berker R.3	berker-r3	87
+4426	3452	Gniazdka Berker R.8	berker-r8	4
+4430	3452	Gniazdka Berker R.classic	berker-rclassic	85
+4428	3452	Gniazdka Berker Serie 1930	berker-serie-1930	91
+4429	3452	Gniazdka Berker W.1	berker-w1	12
+465	3452	Gniazdko Berker B.3	berker-b3	262
+4432	3452	Mechanizmy - one.platform	mechanizmy-one-platform-berker	73
+461	3452	Mechanizmy - one.platform	mechanizmy-one-platform	35
+434	3996	Gniazdka Karlik Deco	karlik-deco	487
+3984	3996	Gniazdka Karlik Mini	karlik-mini	53
+6275	3996	Karlik Junior	karlik-junior	58
+6276	3996	Karlik Senior	karlik-senior	5
+4930	4284	Żarówki Smart E14	zarowki-led-smart-e14	1
+4928	4284	Żarówki Smart E27	zarowki-led-smart-e27	3
+4929	4284	Żarówki Smart GU10	zarowki-led-smart-gu10	1
+4954	4953	Akcesoria do lampek choinkowych	akcesoria-ozdoby-swiateczne	2
+4955	4953	Dekoracje świetlne bożonarodzeniowe	inne-ozdoby-swiateczne	12
+3112	4953	Lampki choinkowe	lampki-choinkowe-oswietlenie	19
+6274	5706	Cedar	cedar	2
+6178	5713	Akcesoria do fotowoltaiki	akcesoria-do-fotowoltaiki	3
+6177	5713	Falowniki	falowniki	0
+6176	5713	Magazyny energii	magazyny-energii	4
+6175	5713	Panele fotowoltaiczne	panele-fotowoltaiczne	0
+5983	5982	EDO	edo	0
+6278	6273	Aquant	aquant	23
+7739	6273	Hermes	hermes	20
+6950	6947	Rury bezhalogenowe	rury-bezhalogenowe	18
+6952	6947	Rury do fotowoltaiki (PV)	rury-do-fotowoltaiki-pv	16
+6951	6947	Rury odporne na UV	rury-odporne-na-uv	61
+6948	6947	Rury samogasnące	rury-samogasnace	88
+6949	6947	Rury transparentne	rury-transparentne	21

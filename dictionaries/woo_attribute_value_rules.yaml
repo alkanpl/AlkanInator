@@ -1,0 +1,101 @@
+version: 1
+updated_at: "2026-10-12"
+description: >
+  Reguly kontroli WARTOSCI atrybutow Woo (src/shop_attribute_values.py,
+  src/audit_shop_attribute_values.py). Zrodlem prawdy jest zrzut terminow
+  sklepu dictionaries/woo_attribute_terms_snapshot.tsv
+  (py scripts/dump_woo_attribute_terms.py). Wartosc spoza zrzutu tworzy w Woo
+  NOWY termin - przy imporcie przez Baselinkera i przez WP All Import - wiec
+  nie trafia do importu bez mapowania albo zatwierdzenia ponizej.
+  Wiele wartosci jednego atrybutu = terminy rozdzielone "|" (format WP All
+  Export/Import). Przecinek w wartosci daje JEDEN nowy termin
+  ("Antenowe, Komputerowe" - blad partii Simon kaszmir z 2026-09-15).
+
+# Rodzenstwo = ten sam produkt w innym kolorze (Simon: TW1.01/142/KON -> TW1.01).
+sibling_key:
+  strip_suffix_regex: "/[A-Z]{2,4}$"
+  color_suffix_regex: "/\\d{2,3}$"
+
+# Mapowanie wartosci dostawcy (ETIM, katalog) na ISTNIEJACE terminy sklepu.
+# null = sklep nie ma odpowiednika, wartosc jest usuwana z importu.
+# Kazda pozycja jest raportowana jako WARNING - do potwierdzenia przy przegladzie.
+value_map:
+  "Kolor producenta":
+    # Sklep: "Kaszmir" (Kolor i Kolor producenta). Simon kaszmir 2026-09-15 mial oba zapisy.
+    "Kaszmirowy": "Kaszmir"
+    "Kaszmirowa": "Kaszmir"
+    "Kaszmirowe": "Kaszmir"
+  "Typ zacisków":
+    # Sklep zna tylko: Gwintowe, Bezgwintowe, Bezgwintowe - IDC, Do lutowania.
+    # Wartosci ETIM Kontakt Simon tworzyly osobny slownik (2026-10-12).
+    "szybkozłącza": "Bezgwintowe"
+    "beznarzędziowe": "Bezgwintowe"
+    "zaciski śrubowe": "Gwintowe"
+    "zacisk śrubowy": "Gwintowe"
+    "zacisk przebijający izolację": "Bezgwintowe - IDC"
+    "beznarzędziowe, zacisk przebijający izolację": "Bezgwintowe - IDC"
+    "wtyk, zacisk przebijający izolację": "Bezgwintowe - IDC"
+    "wtyk, zaciski śrubowe": "Gwintowe"
+    # Gniazda antenowe F / glosnikowe kleszczowe - brak terminu w sklepie.
+    "wtyk": null
+    "do zagniatania (zacisk kleszczowy)": null
+  "Materiał":
+    # Material ETIM ("tworzywo sztuczne, PC, bezhalogenowe") -> termin sklepu.
+    "tworzywo sztuczne, PC, bezhalogenowe": "Tworzywo sztuczne"
+    "tworzywo sztuczne, bezhalogenowe": "Tworzywo sztuczne"
+    "tworzywo sztuczne, PC": "Tworzywo sztuczne"
+    "tworzywo sztuczne, metal, bezhalogenowe": "Tworzywo sztuczne|Metal"
+  "Klasa energetyczna":
+    "nie podlega": null
+  "Stopień ochrony [IP]":
+    "IP20": "IP 20"
+    "IP44": "IP 44"
+    "IP40": "IP 40"
+    "IP 20/IP 44": "IP20/IP44"
+    "IP20 / IP44": "IP20/IP44"
+  "Sposób montażu":
+    "montaż podtynkowy": "Podtynkowy"
+    "montaż natynkowy": "Natynkowy"
+    "inne": null
+
+# Nowe wartosci ZATWIERDZONE przez uzytkownika (moga utworzyc termin w Woo).
+# Dopisuj tylko po decyzji uzytkownika - z arkusza "Nowe wartosci" raportu.
+approved_new_values:
+  # 2026-09-28: model podserii Kontakt Simon (Seria = pelna nazwa, Podseria osobno),
+  # dictionaries/simon_subseries_rules.yaml. build_simon_subseries_woo_update.py
+  # dopisuje sobie reszte par seria/podseria z tych regul.
+  "Seria":
+    - Simon 55 Line
+    - Simon 55 Duo
+    - Simon 55 Nature
+  "Podseria":
+    - Line
+    - Duo
+    - Nature
+    - GO
+    - Premium
+    - Flash
+    - K45
+    - SF
+    - CIMA
+    - KFR
+
+# Identyfikatory - kazdy produkt ma wlasna wartosc, nowy termin jest normalny.
+identifier_attributes:
+  - Symbol
+  - Dane producenta
+
+# Atrybuty techniczne (liczby z jednostka, wymiary, liczebnosci): nowa wartosc
+# ZOSTAJE w imporcie, ale raport pokazuje ja jako WARNING "utworzy nowy termin".
+technical_attributes:
+  - Długość
+  - Szerokość
+  - Wysokość
+  - Głębokość
+  - Średnica
+  - Średnica wewnętrzna
+  - Średnica zewnętrzna
+technical_attribute_patterns:
+  - '\[[^\]]+\]$'
+  - '^(Liczba|Ilość) '
+  - '^Sztuk w opakowaniu$'
