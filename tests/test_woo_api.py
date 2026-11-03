@@ -17,10 +17,12 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from shop_attribute_values import load_vocabulary
 from woo_api.client import WooBridgeError, check_api_version
-from woo_api.knowledge import write_knowledge
+from woo_api.fingerprint import read_fingerprints
+from woo_api.knowledge import write_knowledge, write_variant_groups
+from woo_api.pull import pull_products
 from woo_api.push import PushOptions, image_problems, make_changeset_id, prepare_rows, run_push
 from woo_api.workbook import merge_columns, read_products_xlsx, write_products_xlsx
-from woo_api_cli import confirm_production, load_connection
+from woo_api_cli import confirm_production, load_connection, main as cli_main
 
 
 COLUMNS = ["id", "Title", "SKU", "Width", "Product Attributes", "Atrybut Produktu: Kolor"]
@@ -324,6 +326,130 @@ class KnowledgeTests(TestCase):
                 },
             )
             self.assertEqual(json.loads(paths["full"].read_text(encoding="utf-8")), knowledge)
+
+
+class FingerprintTests(TestCase):
+    """Plik z pull pamieta wiersze z chwili pobrania; push wysyla tylko zmienione."""
+
+    class Shop(FakeBridge):
+        api_url = "https://alkanlocal.test:8443/wp-json/alkan-inator/v1"
+
+        def iter_product_pages(self, per_page=200, **filters):
+            rows = [product_row(1, "A"), product_row(2, "B"), product_row(3, "C")]
+            yield {"page": 1, "total_pages": 1, "total": 3, "columns": COLUMNS, "rows": rows}
+
+    def pulled(self, temp_dir: str) -> tuple[Path, "FingerprintTests.Shop"]:
+        shop = self.Shop()
+        path = Path(temp_dir) / "pull.xlsx"
+        pull_products(shop, path, filters={}, log=lambda _: None)
+        return path, shop
+
+    def edit(self, path: Path, change) -> None:
+        workbook = load_workbook(path)
+        change(workbook["Worksheet"])
+        workbook.save(path)
+
+    def sent_skus(self, shop) -> list[str]:
+        return [row["SKU"] for call in shop.calls for row in call["rows"]]
+
+    def test_pulled_file_has_hidden_fingerprints(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            path, _ = self.pulled(temp_dir)
+            workbook = load_workbook(path)
+            self.assertEqual(workbook.sheetnames, ["Worksheet", "_alkan"])
+            self.assertEqual(workbook["_alkan"].sheet_state, "hidden")
+            prints = read_fingerprints(path)
+            self.assertEqual(prints.site, "alkanlocal.test:8443")
+            self.assertEqual(sorted(prints.rows), ["id:1", "id:2", "id:3"])
+            self.assertNotIn("id", prints.columns)
+            self.assertNotIn("Product Attributes", prints.columns)
+
+    def test_unchanged_file_sends_nothing_and_edits_send_only_their_rows(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            path, shop = self.pulled(temp_dir)
+            result = run_push(shop, path, PushOptions(), report_dir=Path(temp_dir), log=lambda _: None)
+            self.assertEqual(shop.calls, [])
+            self.assertEqual(result.skipped, 3)
+            self.assertEqual(result.dry_run["summary"]["skipped_unchanged"], 3)
+
+            # Zmiana jednej komorki i sortowanie wierszy: wysylany tylko B.
+            def change(sheet):
+                sheet["B3"] = "Gniazdo nowe"
+                sheet.move_range("A2:F2", rows=10)
+            self.edit(path, change)
+            result = run_push(shop, path, PushOptions(), report_dir=Path(temp_dir), log=lambda _: None)
+            self.assertEqual(self.sent_skus(shop), ["B"])
+            self.assertEqual(result.dry_run["summary"]["changed"], 1)
+
+            shop.calls.clear()
+            run_push(shop, path, PushOptions(all_rows=True), report_dir=Path(temp_dir), log=lambda _: None)
+            self.assertEqual(sorted(self.sent_skus(shop)), ["A", "B", "C"])
+
+    def test_new_rows_and_filled_new_column_are_sent(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            path, shop = self.pulled(temp_dir)
+
+            def change(sheet):
+                sheet.append([9, "Nowy", "N", "", "", "Czarny"])
+                sheet["G1"] = "Atrybut Produktu: Seria"
+                sheet["G4"] = "Simon 55"  # C dostaje wartosc w nowej kolumnie, A i B maja ja pusta
+            self.edit(path, change)
+            run_push(shop, path, PushOptions(), report_dir=Path(temp_dir), log=lambda _: None)
+            self.assertEqual(sorted(self.sent_skus(shop)), ["C", "N"])
+
+
+class VariantGroupsTests(TestCase):
+    """Grupy WPC Linked Variation z API 2.1: ten sam uklad co dictionaries/alkanlocal_wpclv_groups.tsv."""
+
+    def test_snapshot_keeps_the_wpclv_dump_layout(self) -> None:
+        sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
+        from fill_variant_tags_from_siblings import load_variant_groups
+
+        knowledge = {
+            "site_url": "https://alkan.pl/",
+            "variant_groups": [
+                {"name": "Kolor - Simon", "status": "publish", "source": "product_tag", "terms": ["ramka-1-krotna-24-simon", "lacznik-24-simon"], "terms_all": False,
+                 "attributes": ["Kolor"], "images": [], "image_labels": [], "swatches": ["Kolor"], "dropdown": []},
+                {"name": "Szkic", "status": "draft", "source": "product_tag", "terms": ["x"], "terms_all": False, "attributes": ["Moc [W]", "Barwa światła"], "images": [], "swatches": [], "dropdown": []},
+            ],
+        }
+        with tempfile.TemporaryDirectory() as temp_dir:
+            path = write_variant_groups(knowledge, Path(temp_dir))
+            self.assertEqual(path.name, "woo_variant_groups_snapshot.tsv")
+            lines = path.read_text(encoding="utf-8").splitlines()
+            self.assertIn("Kolor - Simon	publish	product_tag	ramka-1-krotna-24-simon,lacznik-24-simon	2	Kolor	img:	sw:Kolor	dd:", lines)
+            self.assertIn("Szkic	draft	product_tag	x	1	Moc [W], Barwa światła	img:	sw:	dd:", lines)
+            groups = load_variant_groups(path)
+            self.assertEqual(groups["ramka-1-krotna-24-simon"], ["Kolor - Simon [Kolor]"])
+            self.assertNotIn("x", groups)
+            self.assertIsNone(write_variant_groups({"site_url": "https://alkan.pl/"}, Path(temp_dir)))
+
+    def test_tag_filter_refused_by_old_plugin(self) -> None:
+        # Wtyczka 2.0 pomija nieznany filtr tag i oddalaby caly katalog.
+        class OldShop:
+            def __init__(self, *args, **kwargs):
+                self.pulled = False
+
+            def __enter__(self):
+                return self
+
+            def __exit__(self, *args):
+                pass
+
+            def variant_groups(self):
+                raise WooBridgeError("HTTP 404: Nie znaleziono", status_code=404)
+
+            def iter_product_pages(self, **kwargs):
+                raise AssertionError("pull bez obslugi filtra tag")
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            config = Path(temp_dir) / "config.json"
+            config.write_text(json.dumps({"url": "https://alkan.pl", "token": "t"}), encoding="utf-8")
+            with patch("woo_api_cli.WooBridgeClient", OldShop), patch.dict("os.environ", {}, clear=False) as environ:
+                environ.pop("ALKAN_WOO_URL", None)
+                environ.pop("ALKAN_WOO_TOKEN", None)
+                code = cli_main(["--config", str(config), "pull", "--tag", "Ramka 1-krotna 24 simon", "--output", str(Path(temp_dir) / "x.xlsx")])
+            self.assertEqual(code, 1)
 
 
 class ConnectionTests(TestCase):

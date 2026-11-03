@@ -18,6 +18,9 @@ from urllib.parse import urlparse
 ATTRIBUTE_COLUMNS = ["attribute", "taxonomy", "term", "slug", "count", "parent_term"]
 CATEGORY_COLUMNS = ["term_id", "parent_id", "name", "slug", "count"]
 SHOP_TERM_COLUMNS = ["taxonomy", "term_id", "name", "slug", "count"]
+# Uklad dictionaries/alkanlocal_wpclv_groups.tsv (fill_variant_tags_from_siblings.py, podglad zmian).
+VARIANT_GROUP_COLUMNS = ["name", "status", "source", "terms", "count", "attributes", "images", "swatches", "dropdown"]
+VARIANT_GROUPS_FILE = "woo_variant_groups_snapshot.tsv"
 GENERATOR = "py src/woo_api_cli.py knowledge"
 
 
@@ -53,6 +56,35 @@ def shop_term_rows(knowledge: dict[str, Any]) -> list[list[Any]]:
         for term in sorted(knowledge.get(key, []), key=lambda item: item["name"].casefold()):
             rows.append([taxonomy, term["term_id"], term["name"], term["slug"], term["count"]])
     return rows
+
+
+def variant_group_rows(groups: list[dict[str, Any]]) -> list[list[Any]]:
+    """Grupy WPC Linked Variation: osie (atrybuty laczenia) po przecinku, tryby wyswietlania z prefiksem img:/sw:/dd:."""
+    return [
+        [
+            group["name"],
+            group["status"],
+            group["source"],
+            ",".join(group.get("terms", [])),
+            "*" if group.get("terms_all") else len(group.get("terms", [])),
+            ", ".join(group.get("attributes", [])),
+            "img:" + ", ".join(group.get("images", [])),
+            "sw:" + ", ".join(group.get("swatches", [])),
+            "dd:" + ", ".join(group.get("dropdown", [])),
+        ]
+        for group in sorted(groups, key=lambda item: item["name"].casefold())
+    ]
+
+
+def write_variant_groups(knowledge: dict[str, Any], dictionaries_dir: Path) -> Path | None:
+    """Zrzut grup wariantow; None, gdy wtyczka sklepu ich nie podaje (wersja API przed 2.1)."""
+    groups = knowledge.get("variant_groups")
+    if groups is None:
+        return None
+    source = urlparse(knowledge.get("site_url", "")).netloc or "sklep"
+    path = dictionaries_dir / VARIANT_GROUPS_FILE
+    _write_tsv(path, f"Grupy wariantow WPC Linked Variation z API sklepu {source}", VARIANT_GROUP_COLUMNS, variant_group_rows(groups))
+    return path
 
 
 def write_knowledge(knowledge: dict[str, Any], dictionaries_dir: Path, cache_path: Path) -> dict[str, Path]:

@@ -1,9 +1,13 @@
 from __future__ import annotations
 
+from datetime import datetime
 from pathlib import Path
 from typing import Any, Callable
+from urllib.parse import urlparse
 
+from woo_api import fingerprint
 from woo_api.client import WooBridgeClient
+from woo_api.push import IDENTITY_COLUMNS, READ_ONLY_COLUMNS
 from woo_api.workbook import merge_columns, read_products_xlsx, write_products_xlsx
 
 
@@ -35,5 +39,14 @@ def pull_products(
         rows.extend(page.get("rows", []))
         column_lists.append(page.get("columns", []))
         log(f"Strona {page.get('page')}/{max(1, int(page.get('total_pages') or 0))}: {len(rows)}/{page.get('total')} produktów")
-    warnings = write_products_xlsx(output, merge_columns(column_lists), rows)
+    columns = merge_columns(column_lists)
+    # Odciski wierszy: push wyśle potem tylko wiersze zmienione w pliku (woo_api/fingerprint.py).
+    printed = fingerprint.fingerprint_columns(columns, set(IDENTITY_COLUMNS) | READ_ONLY_COLUMNS)
+    sheet = fingerprint.fingerprint_sheet(
+        rows,
+        printed,
+        site=urlparse(getattr(client, "api_url", "")).netloc,
+        pulled_at=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+    )
+    warnings = write_products_xlsx(output, columns, rows, hidden_sheets={fingerprint.SHEET: sheet})
     return len(rows), warnings

@@ -14,6 +14,7 @@ import requests
 from openpyxl import Workbook
 from PIL import Image, UnidentifiedImageError
 
+from woo_api import fingerprint
 from woo_api.client import WooBridgeClient
 from woo_api.workbook import EXCEL_CELL_LIMIT, ROW_NUMBER_KEY, read_products_xlsx
 
@@ -48,12 +49,15 @@ class PushOptions:
     allow_new_terms: bool = False
     allow_destructive: bool = False
     skip_errors: bool = False
-    batch_size: int = 100
+    # 200 = limit wtyczki na żądanie; każde żądanie to osobny start WordPressa (~2 s), więc mniej partii = szybciej.
+    batch_size: int = 200
     changeset: str = ""
     sheet: str = ""
     check_images: bool = True
     # Wolane przed zapisem z liczba produktow; False wstrzymuje zapis (potwierdzenie na produkcji).
     confirm: Callable[[int], bool] | None = None
+    # True: wysyła cały plik, także wiersze bez zmian od pobrania (np. celowe przywrócenie stanu z pliku).
+    all_rows: bool = False
 
 
 @dataclass
@@ -63,6 +67,7 @@ class PushResult:
     changeset: str
     report_paths: list[Path]
     blocked: bool
+    skipped: int = 0
 
 
 def make_changeset_id(source: str | Path, now: datetime | None = None) -> str:
@@ -261,6 +266,18 @@ def run_push(
     stamp = (now or datetime.now()).strftime("%Y%m%d-%H%M%S")
     report_dir = Path(report_dir)
 
+    skipped = 0
+    prints = None if options.all_rows else fingerprint.read_fingerprints(input_path)
+    if prints is not None:
+        changed = fingerprint.changed_rows(prints, headers, rows, set(IDENTITY_COLUMNS) | READ_ONLY_COLUMNS)
+        total = len(payload)
+        payload = [row for row in payload if row[ROW_NUMBER_KEY] in changed]
+        skipped = total - len(payload)
+        log(
+            f"Wiersze zmienione w pliku od pobrania ({prints.pulled_at}): {len(payload)} z {total}; "
+            f"pominięto {skipped} niezmienionych (--all-rows wysyła wszystkie)."
+        )
+
     parts = []
     for number, chunk in enumerate(_chunks(payload, batch_size), start=1):
         log(f"Dry-run {number}/{-(-len(payload) // batch_size)} ({len(chunk)} wierszy)")
@@ -274,6 +291,8 @@ def run_push(
             )
         )
     dry = merge_results(parts)
+    if prints is not None:
+        dry["summary"]["skipped_unchanged"] = skipped
     if options.check_images:
         verify = getattr(getattr(client, "session", None), "verify", True)
         fetch = image_fetcher or (lambda url: fetch_image(url, verify=verify))
@@ -283,33 +302,33 @@ def run_push(
     reports = [write_report(report_dir / f"{stamp}_{input_path.stem}_dry-run.xlsx", dry, mode="DRY_RUN", source=input_path)]
 
     if not options.apply:
-        return PushResult(dry, None, "", reports, blocked=False)
+        return PushResult(dry, None, "", reports, blocked=False, skipped=skipped)
 
     if dry["summary"].get("errors") and not options.skip_errors:
         log("Zapis wstrzymany: dry-run ma błędy (arkusz Problemy). Popraw plik albo użyj --skip-errors, żeby zapisać resztę.")
-        return PushResult(dry, None, "", reports, blocked=True)
+        return PushResult(dry, None, "", reports, blocked=True, skipped=skipped)
 
     # Sklep zapisze produkt tylko wtedy, gdy jego zmiany sa identyczne jak w raporcie dry-run.
     plan_hashes = {product["row"]: product.get("plan_hash", "") for product in dry["products"] if product["status"] == "changed"}
     to_apply = [{**row, PLAN_HASH_KEY: plan_hashes[row[ROW_NUMBER_KEY]]} for row in payload if row[ROW_NUMBER_KEY] in plan_hashes]
     if not to_apply:
         log("Brak zmian do zapisania.")
-        return PushResult(dry, None, "", reports, blocked=False)
+        return PushResult(dry, None, "", reports, blocked=False, skipped=skipped)
 
     # Sklep i tak odrzuci taki zapis; sprawdzenie tutaj zapobiega zapisaniu tylko pierwszych partii.
     if not dry.get("writes_enabled", True):
         log("Zapis wstrzymany: zapis przez API jest wyłączony w sklepie (WooCommerce > AlkanInator API).")
-        return PushResult(dry, None, "", reports, blocked=True)
+        return PushResult(dry, None, "", reports, blocked=True, skipped=skipped)
     limit = int(dry.get("max_products") or 0)
     if limit and len(to_apply) > limit:
         log(
             f"Zapis wstrzymany: {len(to_apply)} produktów do zmiany, a limit sklepu to {limit} na jeden zapis. "
             "Podziel plik albo podnieś limit w WooCommerce > AlkanInator API (0 = bez limitu)."
         )
-        return PushResult(dry, None, "", reports, blocked=True)
+        return PushResult(dry, None, "", reports, blocked=True, skipped=skipped)
     if options.confirm is not None and not options.confirm(len(to_apply)):
         log("Zapis wstrzymany: brak potwierdzenia.")
-        return PushResult(dry, None, "", reports, blocked=True)
+        return PushResult(dry, None, "", reports, blocked=True, skipped=skipped)
 
     changeset = options.changeset or make_changeset_id(input_path, now)
     parts = []
@@ -327,7 +346,7 @@ def run_push(
         )
     applied = merge_results(parts)
     reports.append(write_report(report_dir / f"{stamp}_{input_path.stem}_apply.xlsx", applied, mode="APPLY", source=input_path, changeset=changeset))
-    return PushResult(dry, applied, changeset, reports, blocked=False)
+    return PushResult(dry, applied, changeset, reports, blocked=False, skipped=skipped)
 
 
 def run_revert(

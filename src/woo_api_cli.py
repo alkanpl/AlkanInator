@@ -2,6 +2,7 @@
 
     py src/woo_api_cli.py knowledge
     py src/woo_api_cli.py pull --category "Gniazdka Kontakt Simon" --output output/simon_woo.xlsx
+    py src/woo_api_cli.py pull --tag "Ramka 1-krotna 24 simon" --output output/warianty.xlsx   (warianty po tagu)
     py src/woo_api_cli.py push --input output/simon_woo.xlsx                 (dry-run + raport)
     py src/woo_api_cli.py push --input output/simon_woo.xlsx --apply         (zapis)
     py src/woo_api_cli.py changesets
@@ -28,7 +29,7 @@ from pathlib import Path
 from urllib.parse import urlparse
 
 from woo_api.client import WooBridgeClient, WooBridgeError
-from woo_api.knowledge import write_knowledge
+from woo_api.knowledge import write_knowledge, write_variant_groups
 from woo_api.pull import pull_products, read_sku_file
 from woo_api.push import PushOptions, run_push, run_revert
 
@@ -133,6 +134,7 @@ def build_parser() -> argparse.ArgumentParser:
     pull = subparsers.add_parser("pull", help="Pobiera produkty do XLSX w układzie WP All Export.")
     pull.add_argument("--output", required=True)
     pull.add_argument("--category", default="", help="Kategorie (slug, ID albo ścieżka A>B) po przecinku; z podkategoriami.")
+    pull.add_argument("--tag", default="", help="Tagi (slug albo nazwa) po przecinku, np. tag grupy wariantów (API 2.1+).")
     pull.add_argument("--sku", default="", help="SKU po przecinku.")
     pull.add_argument("--sku-file", default="", help="Plik z SKU: XLSX z kolumną SKU albo TXT/CSV po jednym w linii.")
     pull.add_argument("--ids", default="", help="ID produktów po przecinku.")
@@ -153,7 +155,12 @@ def build_parser() -> argparse.ArgumentParser:
         help="Pozwala wyczyścić Content, Short Description albo Image URL (pusta komórka) - tylko na wyraźne życzenie.",
     )
     push.add_argument("--skip-errors", action="store_true", help="Zapisuje poprawne produkty mimo błędów w innych wierszach.")
-    push.add_argument("--batch-size", type=int, default=100)
+    push.add_argument("--batch-size", type=int, default=200)
+    push.add_argument(
+        "--all-rows",
+        action="store_true",
+        help="Wysyła cały plik, także wiersze niezmienione od pobrania (domyślnie plik z pull wysyła tylko zmienione).",
+    )
     push.add_argument("--report-dir", default=str(DEFAULT_REPORT_DIR))
     push.add_argument("--apply", action="store_true", help="Wykonuje zapis. Bez tej flagi zawsze tylko dry-run.")
     push.add_argument(
@@ -179,6 +186,8 @@ def _print_summary(label: str, result: dict) -> None:
         f"zapisanych {summary.get('applied', 0)}, zmian pól {summary.get('changes', 0)}, "
         f"z błędami {summary.get('errors', 0)}, ostrzeżeń {summary.get('warnings', 0)}"
     )
+    if summary.get("skipped_unchanged"):
+        print(f"Pominięte wiersze bez zmian od pobrania pliku: {summary['skipped_unchanged']} (--all-rows wysyła wszystkie)")
     if result.get("new_terms"):
         print(f"Nowe terminy: {len(result['new_terms'])} (arkusz 'Nowe terminy')")
     if result.get("ignored_columns"):
@@ -208,12 +217,19 @@ def main(argv: list[str] | None = None) -> int:
                 )
                 for path in paths.values():
                     print(f"-> {path}")
+                groups_path = write_variant_groups(knowledge, Path(args.dictionaries_dir))
+                if groups_path:
+                    print(f"Grup wariantów (WPC Linked Variation): {len(knowledge['variant_groups'])}")
+                    print(f"-> {groups_path}")
+                else:
+                    print("Wtyczka sklepu nie podaje grup wariantów (wersja API przed 2.1) - zaktualizuj alkan-inator-bridge.")
                 return 0
 
             if args.command == "pull":
                 skus = _list(args.sku) + (read_sku_file(args.sku_file) if args.sku_file else [])
                 filters = {
                     "category": _list(args.category),
+                    "tag": _list(args.tag),
                     "sku": list(dict.fromkeys(skus)),
                     "include": _list(args.ids),
                     "status": _list(args.status),
@@ -221,7 +237,15 @@ def main(argv: list[str] | None = None) -> int:
                     "modified_after": args.modified_after,
                 }
                 if not any(filters.values()) and not args.all:
-                    parser.error("Podaj filtr (--category, --sku, --sku-file, --ids, --search, --modified-after) albo --all.")
+                    parser.error("Podaj filtr (--category, --tag, --sku, --sku-file, --ids, --search, --modified-after) albo --all.")
+                if filters["tag"]:
+                    # Wtyczka sprzed 2.1 pomija nieznany filtr tag i oddalaby caly katalog.
+                    try:
+                        client.variant_groups()
+                    except WooBridgeError as exc:
+                        if exc.status_code == 404:
+                            raise WooBridgeError("Filtr --tag wymaga wtyczki alkan-inator-bridge 2.1 w tym sklepie.") from exc
+                        raise
                 count, warnings = pull_products(client, args.output, filters=filters, per_page=args.per_page)
                 for warning in warnings:
                     print(f"UWAGA: {warning}")
@@ -238,6 +262,7 @@ def main(argv: list[str] | None = None) -> int:
                     batch_size=args.batch_size,
                     sheet=args.sheet,
                     check_images=not args.skip_image_check,
+                    all_rows=args.all_rows,
                     confirm=(lambda count: confirm_production(count, "zapis zmian")) if production else None,
                 )
                 result = run_push(client, args.input, options, report_dir=args.report_dir)

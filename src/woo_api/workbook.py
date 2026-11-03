@@ -39,8 +39,13 @@ def _cell_value(column: str, value: Any) -> Any:
     return str(value)
 
 
-def write_products_xlsx(path: str | Path, columns: list[str], rows: list[dict[str, Any]]) -> list[str]:
-    """Zapisuje produkty; zwraca ostrzeżenia o komórkach dłuższych niż limit Excela."""
+def write_products_xlsx(
+    path: str | Path, columns: list[str], rows: list[dict[str, Any]], hidden_sheets: dict[str, list[list[Any]]] | None = None
+) -> list[str]:
+    """Zapisuje produkty; zwraca ostrzeżenia o komórkach dłuższych niż limit Excela.
+
+    hidden_sheets: dodatkowe ukryte arkusze za "Worksheet" (np. odciski wierszy z pull).
+    """
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
     workbook = Workbook()
@@ -57,6 +62,11 @@ def write_products_xlsx(path: str | Path, columns: list[str], rows: list[dict[st
             values.append(value)
         sheet.append(values)
     sheet.freeze_panes = "B2"
+    for title, sheet_rows in (hidden_sheets or {}).items():
+        hidden = workbook.create_sheet(title)
+        hidden.sheet_state = "hidden"
+        for sheet_row in sheet_rows:
+            hidden.append(sheet_row)
     workbook.save(path)
     return warnings
 

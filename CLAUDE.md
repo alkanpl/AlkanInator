@@ -82,25 +82,39 @@ Sklep ma wtyczke `alkan-inator-bridge` (repo AlkanLocal,
 i `--profile prod` (plaski format = profil `local`). Kazda osoba ma wlasny token
 (WooCommerce > AlkanInator API, pokazywany raz), dziennik zapisow pokazuje, kto
 zapisal. Klient sprawdza wersje API wtyczki (naglowek
-`X-Alkan-Inator-Api-Version`, obslugiwana 2.x). Na razie dziala tylko na
-AlkanLocal (`https://alkanlocal.test:8443`); na produkcji wtyczki jeszcze nie ma,
-tam nadal obowiazuje WP All Import (`dictionaries/woo_all_export_import_workflow.yaml`).
+`X-Alkan-Inator-Api-Version`, obslugiwana 2.x; 2.1 dodaje `/variant-groups`,
+filtr `tag` i `/shipping-preview` - AlkanLocal od 2026-11-02, produkcja do wgrania). Dziala na AlkanLocal
+(`https://alkanlocal.test:8443`, profil `local`) i od 2026-11-02 na produkcji
+(profil `prod` z `"production": true`; domyslny zostaje `local`, produkcje
+wybiera sie jawnie `--profile prod` przed nazwa polecenia). WP All Import
+(`dictionaries/woo_all_export_import_workflow.yaml`) nadal dziala na produkcji.
+`pull` z produkcji jest znacznie wolniejszy niz z Laragona (kazda strona to
+osobne uruchomienie WordPressa ze wszystkimi wtyczkami sklepu): pobieraj zakres
+(`--category`, `--modified-after`, `--sku-file`) zamiast `--all`, a pelny
+katalog z `--per-page 500` poza godzinami ruchu. Filtr `--sku` dopasowuje SKU
+dokladnie, z sufiksem dostawcy (`37246/KAN`); warianty nie sa zwracane.
 
 - `knowledge` - wiedza o sklepie. Nadpisuje
   `dictionaries/woo_attribute_terms_snapshot.tsv` i
   `dictionaries/woo_product_categories_snapshot.tsv` (ten sam uklad co
   `scripts/dump_woo_*.py`, nazwy z odkodowanymi encjami, np. `F&F`), tworzy
   `dictionaries/woo_shop_terms_snapshot.tsv` (klasy wysylkowe, "Wysylka w ciagu",
-  tagi) i pelny JSON `cache/woo_api/knowledge.json` (kolumny, ktore sa
-  zapisywalne, formaty, jednostki). Odswiezaj przed praca na wartosciach
+  tagi), od wtyczki 2.1 takze `dictionaries/woo_variant_groups_snapshot.tsv`
+  (grupy WPC Linked Variation: tagi i osie, uklad jak
+  `alkanlocal_wpclv_groups.tsv`) i pelny JSON `cache/woo_api/knowledge.json`
+  (kolumny, ktore sa zapisywalne, formaty, jednostki). Odswiezaj przed praca na wartosciach
   atrybutow zamiast zrzutow z MySQL.
 - `pull --output plik.xlsx` - produkty w ukladzie WP All Export (arkusz
   `Worksheet`, te same naglowki: `Kategorie produktów`, `Product Tags`,
   `Up-Sells`, `Atrybut Produktu: <Etykieta>` z wielkimi literami jak w WP All
   Export). Filtry: `--category` (slug, ID albo sciezka `A>B`, z podkategoriami),
-  `--sku`, `--sku-file`, `--ids`, `--status`, `--search`, `--modified-after`,
+  `--tag` (slug albo nazwa, np. tag grupy wariantow; tylko wtyczka 2.1 - CLI
+  odmawia przy starszej, bo ta pominelaby filtr i oddala caly katalog), `--sku`, `--sku-file`, `--ids`, `--status`, `--search`, `--modified-after`,
   `--all`. Dodatkowe kolumny tylko do odczytu: ceny, stan, EAN,
-  `Post Modified Date`, `Permalink`, `Product Attributes`.
+  `Post Modified Date`, `Permalink`, `Product Attributes`. Od 2026-11-02 plik
+  z `pull` ma ukryty arkusz `_alkan` z odciskiem kazdego wiersza z chwili
+  pobrania (`src/woo_api/fingerprint.py`) - nie usuwac go i nie przepisywac
+  danych do nowego skoroszytu, bo przepada przyspieszenie.
 - `push --input plik.xlsx` - ZAWSZE najpierw dry-run calego pliku i raport
   `reports/woo_api/*_dry-run.xlsx` (arkusze Zmiany / Problemy / Nowe terminy).
   `--apply` zapisuje tylko produkty ze zmianami; bledy w dry-run wstrzymuja zapis
@@ -117,6 +131,39 @@ tam nadal obowiazuje WP All Import (`dictionaries/woo_all_export_import_workflow
   (np. `ai-20261021-153259-plik`) i dziennik starych wartosci w sklepie.
   Cofniecie pomija pola zmienione w sklepie po tym zapisie. Cofnac mozna tez
   przyciskiem w WooCommerce > AlkanInator API.
+- Aplikacja "Wgraj zmiany do sklepu" (od 2026-11-02, dla osob bez terminala):
+  dwuklik `Wgraj zmiany do sklepu.bat` (albo `py src/woo_preview_app.py`) otwiera
+  strone w przegladarce. Wybor sklepu (profile z `config.json`, bez tokenow) i
+  pliku -> dry-run -> karty produktu przed/po w CSS motywu `alkan` z AlkanLocal
+  (`--theme-dir`, bez motywu proste style zastepcze), zmienione pola w ramce,
+  tabela zmian, odznaczanie kolumn (= `--columns`) -> "Zatwierdz" -> zapis ->
+  identyfikator zapisu i "Cofnij". Stan "przed" to wiersz pliku z polami
+  cofnietymi do "bylo" z dry-runu - sklep nie dostaje dodatkowych zapytan. Do
+  zapisu idzie kopia z samymi zmienionymi produktami (`cache/woo_preview/`,
+  oryginal nietkniety); gdy dry-run przed zapisem rozni sie od podgladu (takze
+  stara wartoscia - ktos zmienil produkt w miedzyczasie), zapis staje. Plik z
+  innego sklepu (host w kolumnie `Permalink` inny niz wybrany sklep, np. eksport
+  z alkan.pl na AlkanLocal) zatrzymuje podglad przed dry-runem - inne ID i adresy
+  zdjec dawaly zmiane `Image URL` w calym katalogu i pobieranie tysiecy zdjec. Zapis i
+  cofniecie na PRODUKCJI potwierdza czlowiek w okienku Windows (MessageBox) -
+  odpowiednik potwierdzenia w terminalu CLI. Serwer slucha tylko na 127.0.0.1,
+  API wymaga jednorazowego klucza z adresu, po 15 min bez otwartej strony konczy
+  sie sam. alkan.pl blokuje zdjecia z obcym `Referer` (403), dlatego karta ma
+  `no-referrer`. Karty pokazuja tez przelacznik wariantow, Produkty kompatybilne,
+  Up-Sells i Cross-Sells (dodane/usuniete zaznaczone). Grupy WPC Linked Variation
+  (grupa i os = atrybut laczenia) podglad bierze ze sklepu (`/variant-groups`,
+  wtyczka 2.1), a rodzenstwo wariantow dociaga po tagu; przy wtyczce 2.0 zostaje
+  zrzut `dictionaries/alkanlocal_wpclv_groups.tsv` i rodzenstwo tylko z pliku.
+  Nota pod przelacznikiem podaje grupe, os, liczbe rodzenstwa i powtorzenia osi
+  (`DO_SPRAWDZENIA`), jak raporty wariantow. Produkty spoza pliku: jeden odczyt na
+  200 SKU powiazan i na 50 tagow wariantow, tylko dla zmienionych produktow.
+  Wysylka: metode dostawy wybiera KLASA WYSYLKOWA (Flexible Shipping, takze waga
+  i wymiary), nie tagi. Po otwarciu karty sklep liczy metody i ceny (1 szt.)
+  teraz i po zmianie (`/shipping-preview`: ten sam kalkulator co karta produktu,
+  na kopii produktu w pamieci, bez zapisu); karta pokazuje metody znikajace i
+  nowe oraz linie dostepnosci z `Stock`, `Backorders` i `Wysylka w ciagu` (bez
+  magazynu zewnetrznego). Przy wtyczce 2.0 - sama klasa i waga z nota. Kod: `src/woo_preview/` (korzysta z
+  `src/woo_api/`, nie zmienia go), test `tests/test_woo_preview.py`.
 
 Zapisywalne kolumny: `Title`, `Content`, `Short Description`, `Status`,
 `Kategorie produktów`, `Product Tags`, `Shipping Class`, `Wysyłka w ciągu`,
@@ -130,6 +177,14 @@ naleza do Baselinkera.
 Zasady zapisu:
 - Pobrany plik odeslany bez zmian daje 0 roznic (sprawdzone na calym katalogu
   AlkanLocal) - kazda pozycja w raporcie Zmiany to realna zmiana.
+- Plik z odciskami (`pull` od 2026-11-02) wysyla do dry-runu i zapisu TYLKO
+  wiersze zmienione w pliku od pobrania (inny odcisk, wiersz dopisany albo
+  wartosc w kolumnie dodanej po pobraniu; pusta komorka nowej kolumny nie liczy
+  sie jako zmiana). Niezmienione wiersze nie cofaja zmian zrobionych w sklepie
+  po pobraniu. `--all-rows` (w aplikacji "Sprawdz wszystkie wiersze") wysyla
+  caly plik jak dawniej; pliki bez arkusza `_alkan` (WP All Export, starsze
+  pobrania) tez ida w calosci. Partie po 200 wierszy (limit wtyczki) - kazde
+  zadanie to osobny start WordPressa (~2 s), wiec mniej partii = szybciej.
 - Pusta komorka czysci pole (pusty atrybut usuwa go z produktu). Kolumny, ktorej
   nie ma w pliku, zapis nie rusza.
 - Kategorie: w pliku sa tylko najglebsze sciezki (jak w WP All Export); `A>B`
@@ -158,6 +213,9 @@ jeden zapis, zgoda na czyszczenie pol, zgodnosc z dry-run, tokeny osob) i w CLI
   dopasowuj ich do zmienionego kodu, tylko zapytaj.
 - NIE wolaj API sklepu z pominieciem CLI (wlasne `requests`/`curl`/skrypty z
   tokenem) i nie czytaj ani nie wypisuj tokenu z `config.json`.
+- NIE klikaj "Zatwierdz"/"Cofnij" w aplikacji "Wgraj zmiany do sklepu" i nie
+  wolaj jej `/api/apply` ani `/api/revert` - zapis z aplikacji zatwierdza
+  uzytkownik. Agent moze przygotowac plik i powiedziec, jak go wgrac.
 - NIE uruchamiaj `push --apply` ani `revert --apply` na profilu produkcyjnym.
   CLI i tak odmowi bez terminala - przygotuj plik i dry-run, a polecenie z
   `--apply` podaj uzytkownikowi do uruchomienia samodzielnie. Na AlkanLocal

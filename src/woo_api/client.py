@@ -112,6 +112,14 @@ class WooBridgeClient:
     def knowledge(self) -> dict[str, Any]:
         return self._request("GET", "/knowledge")
 
+    def variant_groups(self) -> list[dict[str, Any]]:
+        """Grupy WPC Linked Variation ze sklepu (API 2.1+); starsza wtyczka odpowiada 404."""
+        return self._request("GET", "/variant-groups")
+
+    def shipping_preview(self, products: list[dict[str, Any]]) -> list[dict[str, Any]]:
+        """Metody dostawy teraz i po zmianie klasy/wagi/wymiarow, bez zapisu (API 2.1+, do 20 produktow)."""
+        return self._request("POST", "/shipping-preview", body={"products": products})
+
     def products_page(self, page: int = 1, per_page: int = 200, **filters: Any) -> dict[str, Any]:
         body = {key: value for key, value in filters.items() if value not in (None, "", [], ())}
         body.update({"page": page, "per_page": per_page})

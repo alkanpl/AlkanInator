@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wgraj zmiany do sklepu</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700|Raleway:600,800&subset=latin-ext">
+<link rel="stylesheet" href="/static/app.css">
+</head>
+<body>
+<header class="top">
+  <div class="brand"><span class="logo">A</span><div><strong>AlkanInator</strong><span>Wgraj zmiany do sklepu</span></div></div>
+  <button id="quit" class="ghost" type="button">Zamknij aplikację</button>
+</header>
+
+<main>
+  <section class="panel" id="step-file">
+    <h2><span class="num">1</span> Wybierz sklep i plik</h2>
+    <div class="form-row">
+      <label class="field"><span>Sklep</span><select id="profile"></select></label>
+      <label class="field grow"><span>Plik z produktami (XLSX)</span><input type="file" id="file" accept=".xlsx"></label>
+      <button id="preview" class="primary" type="button" disabled>Pokaż podgląd zmian</button>
+    </div>
+    <p id="profile-note" class="note"></p>
+    <label class="check"><input type="checkbox" id="all-rows"> Sprawdź wszystkie wiersze, także niezmienione od pobrania pliku (wolniej; np. żeby celowo przywrócić w sklepie stan z pliku)</label>
+    <p class="hint">Plik z eksportu sklepu (AlkanInator albo WP All Export) z poprawionymi komórkami. Na tym etapie nic się w sklepie nie zmienia, a oryginalny plik zostaje nietknięty.</p>
+  </section>
+
+  <section class="panel hidden" id="step-progress">
+    <h2 id="progress-title">Sprawdzam plik w sklepie…</h2>
+    <div class="spinner-row"><span class="spinner"></span><span id="progress-line">Łączę się ze sklepem…</span></div>
+    <details class="log"><summary>Szczegóły</summary><pre id="log"></pre></details>
+  </section>
+
+  <section class="panel hidden error-panel" id="step-error">
+    <h2>Coś poszło nie tak</h2>
+    <p id="error-text"></p>
+    <div class="actions"><button id="error-back" class="primary" type="button">Wróć</button></div>
+  </section>
+
+  <section class="hidden" id="step-preview">
+    <div class="panel">
+      <h2><span class="num">2</span> Sprawdź zmiany</h2>
+      <p id="preview-head" class="lead"></p>
+      <div id="stats" class="stats"></div>
+      <div id="blockers"></div>
+      <div id="columns-box" class="columns-box hidden">
+        <p><strong>Zapisuj tylko zaznaczone pola</strong> - odznacz pole, którego nie chcesz zmieniać, i kliknij „Przelicz podgląd”.</p>
+        <div id="columns" class="chips"></div>
+        <button id="recalc" class="secondary" type="button" disabled>Przelicz podgląd</button>
+      </div>
+      <div id="extra"></div>
+    </div>
+
+    <div class="toolbar">
+      <input id="search" type="search" placeholder="Szukaj po nazwie albo SKU">
+      <div class="seg" id="mode" role="group" aria-label="Widok kart">
+        <button type="button" data-mode="both" class="on">Przed i po</button>
+        <button type="button" data-mode="after">Po zmianie</button>
+        <button type="button" data-mode="before">Przed zmianą</button>
+      </div>
+    </div>
+    <div id="products"></div>
+    <div id="more" class="more hidden"><button type="button" class="secondary">Pokaż kolejne</button></div>
+
+    <div class="panel approve" id="approve-box">
+      <p id="approve-note"></p>
+      <div class="actions">
+        <button id="back" class="ghost" type="button">Wczytaj inny plik</button>
+        <button id="refresh" class="secondary" type="button">Odśwież podgląd</button>
+        <button id="apply" class="primary big" type="button">Zatwierdź i zapisz</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel hidden" id="step-done">
+    <h2><span class="num">3</span> <span id="done-title">Zapisano</span></h2>
+    <div id="done"></div>
+    <div class="actions">
+      <button id="revert" class="danger" type="button">Cofnij ten zapis</button>
+      <button id="again" class="primary" type="button">Wgraj kolejny plik</button>
+    </div>
+  </section>
+</main>
+
+<div id="modal" class="modal hidden" role="dialog" aria-modal="true">
+  <div class="modal-box">
+    <h3 id="modal-title"></h3>
+    <div id="modal-body"></div>
+    <div class="actions">
+      <button id="modal-no" class="ghost" type="button">Anuluj</button>
+      <button id="modal-yes" class="primary" type="button">Tak</button>
+    </div>
+  </div>
+</div>
+<div id="bye" class="bye hidden"><p>Aplikacja zamknięta. Możesz zamknąć tę kartę przeglądarki.</p></div>
+
+<script src="/static/app.js"></script>
+</body>
+</html>
