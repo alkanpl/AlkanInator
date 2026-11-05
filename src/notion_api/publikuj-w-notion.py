@@ -54,6 +54,11 @@ JEZYKI_KODU = {"text": "", "properties": ""}
 # (np. „> 0”, „$” uruchamiałby matematykę inline). Znaki składni markdown (* [ ] `) zostają.
 ZNAKI_DO_ESCAPE = "<>{}$^~"
 
+# Polskie skróty, które Notion bierze za adresy i linkuje („m.in.” → http://m.in, .in to domena Indii).
+# Niewidoczny „word joiner” po kropce rozbija adres, a tekst na stronie wygląda tak samo.
+SKROTY_JAK_ADRES = re.compile(r"\b(m\.in|n\.p\.m|p\.n\.e)\.")
+WORD_JOINER = "⁠"
+
 # Szerokości kolumn tabel w px. Notion bierze <col width> dosłownie i nie rozciąga tabeli do strony,
 # a dokumentacja jest zawsze w trybie „Full width” — ok. 1815 px treści na ekranie autora
 # (standardowa strona ma 708 px). Mały zapas, żeby nie pojawiło się przewijanie w poziomie.
@@ -114,6 +119,7 @@ def przeksztalc_tekst(linia, sciezka_dokumentu):
     czesci = KOD_INLINE.split(linia)
     for i in range(0, len(czesci), 2):
         czesci[i] = "".join("\\" + z if z in ZNAKI_DO_ESCAPE else z for z in czesci[i])
+        czesci[i] = SKROTY_JAK_ADRES.sub(lambda d: d.group(0).replace(".", "." + WORD_JOINER), czesci[i])
     return cytat + "".join(czesci)
 
 

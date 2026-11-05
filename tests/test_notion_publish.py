@@ -43,6 +43,11 @@ class PrzygotujTests(TestCase):
         _, tresc = publikuj.przygotuj("docs/instrukcja.md", "# T\n\n> Zlecenie: 4000K > 3000K\n", "abcdef1", "2026-11-04")
         self.assertIn("> Zlecenie: 4000K \\> 3000K", tresc)
 
+    def test_skrot_m_in_nie_staje_sie_linkiem(self):
+        _, tresc = publikuj.przygotuj("docs/changelog.md", "# T\n\ndoszli m.in. Legrand, `m.in.` w kodzie\n", "abcdef1", "2026-11-04")
+        self.assertIn("doszli m.⁠in.⁠ Legrand", tresc)
+        self.assertIn("`m.in.` w kodzie", tresc)
+
     def test_dokumenty_projektu_maja_naglowek_h1(self):
         for sciezka in publikuj.DOKUMENTY:
             tekst = (ROOT / sciezka).read_text(encoding="utf-8")
