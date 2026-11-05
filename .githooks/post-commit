@@ -1,0 +1,4 @@
+#!/bin/sh
+# Publikacja docs/changelog.md i docs/instrukcja.md w Notion, gdy commit je zmienil.
+# Wlaczenie: git config core.hooksPath .githooks
+py -I src/notion_api/publikuj-w-notion.py || echo "Notion: publikacja nie powiodla sie - commit jest zapisany, uruchom skrypt recznie."
