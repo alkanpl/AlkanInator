@@ -1,4 +1,5 @@
 import os
+import re
 import sys
 import tempfile
 import unittest
@@ -28,6 +29,7 @@ from build_ekonom_names import (  # noqa: E402
     build_name,
     check_catalog_cct,
     full_name,
+    load_web_params,
     package_from_pdfs,
     pdf_texts,
     lumen_from_window,
@@ -37,6 +39,8 @@ from build_ekonom_names import (  # noqa: E402
     diameter_in_mm,
     parse_ballast,
     parse_breaker,
+    kx_lumen,
+    load_params_web,
     parse_cct,
     parse_driver,
     parse_optics,
@@ -51,6 +55,9 @@ from build_ekonom_names import (  # noqa: E402
     strip_brand_from_names,
     write_ekonom_csv,
     EKONOM_FIELDS,
+    load_pawbol_names,
+    pawbol_code_key,
+    load_onninen_cards,
 )
 from utils import load_yaml  # noqa: E402
 
@@ -767,7 +774,7 @@ class KobiTest(unittest.TestCase):
                          "Marka": "Kobi Premium", "Strumień świetlny |lm|": "1 540",
                          "Typ czujnika": "ruchu PIR, zmierzchu", "Kolor produktu": "czarny"}}
         res = build_name(kobi_row("LED ZOE LX 24W 4000K CZARNA PREMIUM"), KOBI, {}, feed)
-        self.assertEqual(res["nazwa"], "Plafon LED 24W 1540lm 4000K IP44 z czujnikiem ruchu i zmierzchu czarny Kobi Premium")
+        self.assertEqual(res["nazwa"], "Plafon LED 24W 1540lm 4000K IP44 z czujnikiem ruchu i zmierzchu czarny Zoe Kobi Premium")
 
     def test_feed_with_other_product_is_ignored(self):
         feed = {"4666": {"_name": "Żarówka LED GS 13W E27 6500K Kobi", "Strumień świetlny |lm|": "1400"}}
@@ -777,13 +784,13 @@ class KobiTest(unittest.TestCase):
 
     def test_extension_cord_and_psu(self):
         res = build_name(kobi_row("Przedłużacz LINEA 3gn/5m/Zu+W czarny Kobi"), KOBI, {}, {})
-        self.assertEqual(res["nazwa"], "Przedłużacz 3gn 5m Zu+W czarny Kobi")
+        self.assertEqual(res["nazwa"], "Przedłużacz 3 gn. 5m z uziemieniem z wyłącznikiem czarny Linea Kobi")
         res = build_name(kobi_row("ZASILACZ DESKTOP 12V 72W 6,0A"), KOBI, {}, {})
         self.assertEqual(res["nazwa"], "Zasilacz LED desktop 12V 72W Kobi")
 
     def test_track_spot_degrees_st(self):
         res = build_name(kobi_row("Reflektor szynowy LED NEXTRACK CORE 20W 3CCT 36ST biały Kobi Pro"), KOBI, {}, {})
-        self.assertEqual(res["nazwa"], "Reflektor szynowy 20W CCT 36° biały Kobi Pro")
+        self.assertEqual(res["nazwa"], "Reflektor szynowy 20W CCT 36° biały Nextrack Core Kobi Pro")
 
     def test_caps_noun_does_not_eat_model(self):
         # rzeczownik ze slownika ma inna dlugosc niz tekst - wczesniej "AKUM. 18650" dawalo "Akumulator Kobi 0"
@@ -792,7 +799,7 @@ class KobiTest(unittest.TestCase):
         res = build_name(kobi_row("SMART SOCKET 16A WIFI"), KOBI, {}, {})
         self.assertEqual(res["nazwa"], "Gniazdko Smart 16A WiFi Kobi")
         res = build_name(kobi_row("KOSTKA HALOGENOWA Z WYSIĘGNIKIEM - K006"), KOBI, {}, {})
-        self.assertEqual(res["nazwa"], "Kostka halogenowa z wysięgnikiem - K006 Kobi")
+        self.assertEqual(res["nazwa"], "Kostka halogenowa z wysięgnikiem K006 Kobi")
 
     def test_brand_before_preposition(self):
         res = build_name(kobi_row("Rozeta sufitowa do LED KOLINE K2 biała Kobi Pro"), KOBI, {}, {})
@@ -801,28 +808,59 @@ class KobiTest(unittest.TestCase):
         self.assertEqual(res["nazwa"], "Adapter do szynoprzewodu 3-obwodowy biały Kobi")
         # przyimek bedacy czescia rodzaju oprawy zostaje w rzeczowniku
         res = build_name(kobi_row("Oprawa do nadbudowania OH12 1xGX53 biała Kobi"), KOBI, {}, {})
-        self.assertEqual(res["nazwa"], "Oprawa do nadbudowania 1xGX53 biała Kobi OH12")
+        self.assertEqual(res["nazwa"], "Oprawa do nadbudowania 1xGX53 biała OH12 Kobi")
 
     def test_lumen_not_glued_to_ip(self):
         res = build_name(kobi_row("Kinkiet ogrodowy LED QUERK 2x2W 3000K IP54 550lm czarny LED2B"), KOBI, {}, {})
-        self.assertEqual(res["nazwa"], "Kinkiet ogrodowy 2x2W 550lm 3000K IP54 czarny LED2B Querk")
+        self.assertEqual(res["nazwa"], "Kinkiet ogrodowy 2x2W 550lm 3000K IP54 czarny Querk LED2B")
 
     def test_tube_length_and_socket_fixture(self):
         res = build_name(kobi_row("LED T8 9W 60CM 4000K LED2B"), KOBI, {}, {})
         self.assertEqual(res["nazwa"], "Tuba LED T8 60cm 9W 4000K LED2B")
         # oprawa na wymienne zrodlo nie ma wlasnego strumienia - brak lm to nie blad
         res = build_name(kobi_row("Reflektor szynowy LAITILINE 1xGU10 biały Laitica"), KOBI, {}, {})
-        self.assertEqual(res["nazwa"], "Reflektor szynowy 1xGU10 biały Laitica")
+        self.assertEqual(res["nazwa"], "Reflektor szynowy 1xGU10 biały Laitiline Laitica")
         self.assertEqual(res["status"], "OK")
         res = build_name(kobi_row("Kinkiet GRANDE 1xR7s Art of Light"), KOBI, {}, {})
-        self.assertEqual(res["nazwa"], "Kinkiet 1xR7s Art of Light Grande")
+        self.assertEqual(res["nazwa"], "Kinkiet 1xR7s Grande Art of Light")
+
+    def test_new_cards_model_first_use_feed_name(self):
+        # nowe kartoteki 2026-11-05: nazwa od kodu modelu - typ z nazwy feedu ("Oprawa drogowa", "Oprawa hermetyczna")
+        feed = {"4666": {"_name": "Oprawa drogowa LED VESPA PRO 40W 4000K IP66 Kobi Pro", "Marka": "Kobi Professional"}}
+        res = build_name(kobi_row("LED VESPA PRO 40W 4000K Lampa uliczna"), KOBI, {}, feed)
+        self.assertEqual(res["nazwa"], "Oprawa uliczna LED 40W 4000K IP66 Vespa Kobi Pro")
+        feed = {"4666": {"_name": "Oprawa hermetyczna HERMETIC 2x60 IP65 Kobi", "Marka": "Kobi"}}
+        res = build_name(kobi_row("HERMETIC 2X60 Oprawa pod tuby led"), KOBI, {}, feed)
+        self.assertEqual(res["nazwa"], "Oprawa hermetyczna pod tuby LED 2x60cm IP65 Hermetic Kobi")
+        # "Nexus" w polu Marka feedu to Kobi Pro (nazwa i kategoria feedu)
+        feed = {"4666": {"_name": "Oprawa liniowa LED NEXLINE1 31W P Kobi Pro", "Marka": "Nexus"}}
+        res = build_name(kobi_row("OPRAWA NEXLINE1 31W P"), KOBI, {}, feed)
+        self.assertTrue(res["nazwa"].endswith(" NEXLINE1 P Kobi Pro"), res["nazwa"])
+
+    def test_new_cards_old_caps_names(self):
+        # plafon na zarowki to nie "Plafon LED"; rodzaj przed modelem; oczka OH-xx z ksztaltem i modelem
+        res = build_name(kobi_row("SAMIRA S 2XE27 CHROM"), KOBI, {},
+                         {"4666": {"_name": "Plafon SAMIRA S 2xE27 chrom Kobi", "Marka": "Kobi"}})
+        self.assertEqual(res["nazwa"], "Plafon 2xE27 chrom Samira S Kobi")
+        res = build_name(kobi_row("PURO NERO OPRAWA N/T GIPSOWA 2XGU10 CZARNA"), KOBI, {}, {})
+        self.assertEqual(res["nazwa"], "Oprawa natynkowa 2xGU10 gipsowa czarna Puro Nero Kobi")
+        res = build_name(kobi_row("OH-20 OCZKO KWADRAT STAŁE CZARNE"), KOBI, {}, {})
+        self.assertEqual(res["nazwa"], "Downlight kwadratowy stały czarny OH-20 Kobi")
+        res = build_name(kobi_row("SOMA PC 100 SIATKA METAL"), KOBI, {}, {})
+        self.assertEqual(res["nazwa"], "Oprawa kanałowa z siatką metalową Soma PC-100 Kobi")
+        # POWER BOX to bank energii (decyzja uzytkownika 2026-11-05)
+        res = build_name(kobi_row("KOBI POWER BOX 600W"), KOBI, {}, {})
+        self.assertEqual((res["nazwa"], res["status"]), ("Bank energii 600W Power Box Kobi", "OK"))
+        # "Lampa solarna" nie dostaje drugiego "solarna"
+        res = build_name(kobi_row("Lampa solarna LED AURA 3000K LED2B"), KOBI, {}, {})
+        self.assertEqual(res["nazwa"].count("solarn"), 1)
 
     def test_extension_cord_without_earth(self):
         res = build_name(kobi_row("Przedłużacz LINEA G 1gn/20m/Bu/2x1mm pomarańczowy Kobi"), KOBI, {}, {})
-        self.assertEqual(res["nazwa"], "Przedłużacz 1gn 20m Bu 2x1mm2 pomarańczowy Kobi")
+        self.assertEqual(res["nazwa"], "Przedłużacz 1 gn. 20m 2x1mm2 bez uziemienia pomarańczowy Linea G Kobi")
         feed = {"4666": {"_name": "Przedłużacz LINEA PRO CUBE 3gn+3USB/1USB-C/Zu+W czarny Kobi", "Marka": "Kobi"}}
         res = build_name(kobi_row("Przedłużacz LINEA PRO CUBE 3gn+3USB/1USB.-C/Zu.+W czarny Kobi"), KOBI, {}, feed)
-        self.assertEqual(res["nazwa"], "Przedłużacz 3gn+3USB/1USB-C Zu+W czarny Kobi")
+        self.assertEqual(res["nazwa"], "Przedłużacz 3 gn. + 3USB/1USB-C z uziemieniem z wyłącznikiem czarny Linea Pro Cube Kobi")
 
     def test_version_number_gets_model_word(self):
         results = []
@@ -832,11 +870,12 @@ class KobiTest(unittest.TestCase):
             res["stara"] = name
             results.append(res)
         add_version_suffixes(results, KOBI)
-        self.assertEqual(results[0]["nazwa"], "Plafon LED 5,5W 4000K Kobi SOLARIS 2")
-        self.assertEqual(results[1]["nazwa"], "Plafon LED 5,5W 4000K Kobi SOLARIS 3")
+        # od 2026-11-16 model jest seria za marka (nazwa wlasna), a nie wyroznikiem wersji WIELKIMI
+        self.assertEqual(results[0]["nazwa"], "Plafon LED 5,5W 4000K Solaris 2 Kobi")
+        self.assertEqual(results[1]["nazwa"], "Plafon LED 5,5W 4000K Solaris 3 Kobi")
         # seria jest juz w nazwie - numer idzie za nia, bez powtorzenia serii
-        self.assertEqual(results[2]["nazwa"], "Kinkiet ogrodowy 1xGU10 czarny Kobi Quazar 11")
-        self.assertEqual(results[3]["nazwa"], "Kinkiet ogrodowy 1xGU10 czarny Kobi Quazar 15")
+        self.assertEqual(results[2]["nazwa"], "Kinkiet ogrodowy 1xGU10 czarny Quazar 11 Kobi")
+        self.assertEqual(results[3]["nazwa"], "Kinkiet ogrodowy 1xGU10 czarny Quazar 15 Kobi")
 
 
 KANLUX = {**load_yaml(DEFAULT_RULES)["suppliers"]["kanlux"], "params": True}
@@ -950,6 +989,21 @@ class KanluxTest(unittest.TestCase):
         res = build_name(kanlux_row("LOGI 02-1480-003 kr Ramka potrójna pozioma", "1"), KANLUX, {}, {})
         self.assertEqual(res["nazwa"], "Ramka potrójna pozioma LOGI kremowa 02-1480-003 Kanlux")
 
+    def test_socket_adapters_from_card_params(self):
+        # Ekonom podaje tylko grupe "Rozgałęźniki, gniazda, wtyczki" - gniazda i uziemienie z karty kanlux.com
+        # (typ E = z uziemieniem, typ F = Schuko), uklad jak rozgalezniki Kobi / Bemko (2026-11-05)
+        card = {"Kolor": "biały", "Liczba gniazd": "3", "Rodzaj uziemienia": "typu E", "Stopień IP": "20",
+                "Prąd znamionowy [A]": "16"}
+        res = self.kx("ZARK KRT/2-1 Rozgałęźniki, gniazda, wtyczki", "2180", card)
+        self.assertEqual((res["nazwa"], res["status"]),
+                         ("Rozgałęźnik 3 gn. z uziemieniem biały ZARK KRT/2-1 Kanlux", "OK"))
+        card = {"Kolor": "czarny", "Rodzaj uziemienia": "typu E", "Stopień IP": "44", "Prąd znamionowy [A]": "16"}
+        res = self.kx("GRIP W/US Rozgałęźniki, gniazda, wtyczki", "4863", card)
+        self.assertEqual(res["nazwa"], "Wtyczka z uziemieniem 16A IP44 czarna GRIP W/US Kanlux")
+        card = {"Kolor": "czarny", "Liczba gniazd": "1", "Rodzaj uziemienia": "typu F", "Stopień IP": "44"}
+        res = self.kx("GRIP GP/S Rozgałęźniki, gniazda, wtyczki", "4862", card)
+        self.assertEqual(res["nazwa"], "Gniazdo przenośne 1 gn. Schuko IP44 czarne GRIP GP/S Kanlux")
+
     def test_series_keeps_code_without_color_suffix_in_middle(self):
         # "-S" w "PRO-S" to nie kolor srebrny - kolor jest tylko na koncu kodu
         res = build_name(kanlux_row("PRO-S S 30W NW Oprawa uliczna LED", "1"), KANLUX, {}, {})
@@ -1059,6 +1113,56 @@ class GtvTest(unittest.TestCase):
         self.assertEqual(res["nazwa"], "Spodnie ochronne ciemnobeżowe EDGAR II S-48 Högert")
 
 
+class GtvReview20261105Test(unittest.TestCase):
+    """Przeglad WARNING GTV 2026-11-05: opis akcesoriow i typow bez schematu, przedluzacze wg schematu V3."""
+
+    def name(self, text, code="LD-TEST-10"):
+        return build_name(gtv_row(text, code), {**GTV, "_vocab": frozenset({"WYSOKI"})}, {})["nazwa"]  # pisownia GTV
+
+    def test_parenthesis_is_not_cut_by_word_limit(self):
+        self.assertEqual(self.name("ZESTAW GLAX NAKŁADANY MINI BIAŁY - (PROFIL 2mb + OSŁONKA MLECZNA + 2 ZAŚLEPKI "
+                                   "KOŃCOWE + 2 UCHWYTY MONTAŻOWE)", "PA-ZGLAXMNKOMZ-10"),
+                         "Zestaw GLAX nakładany MINI biały (profil 2mb + osłonka mleczna + 2 zaślepki końcowe + "
+                         "2 uchwyty montażowe) GTV")
+        self.assertEqual(self.name("ZAŚLEPKA DO PROFILU LED GLAX MINI Z KOŁNIERZEM WYSOKI BIAŁA (10 szt. W BLISTRZE)",
+                                   "PA-ZASGLAXMW-10"),
+                         "Zaślepka do profilu LED GLAX MINI z kołnierzem wysoki biała (10 szt.) GTV")
+
+    def test_unit_after_number_stays(self):
+        self.assertEqual(self.name("OSŁONKA TRANSPARENTNA DO PROFILU LED GLAX 12 m", "PA-OSTRGLAX12M-00"),
+                         "Osłonka transparentna do profilu LED GLAX 12m GTV")
+
+    def test_case_of_phase_usb_and_count(self):
+        self.assertEqual(self.name("ZAŚLEPKA KOŃCOWA DO SZYNY 1-FAZOWEJ, 2-LINIOWEJ, BIAŁY", "XLT-1FAC70-00"),
+                         "Zaślepka końcowa do szyny 1-fazowej 2-liniowej biały GTV")
+        self.assertEqual(self.name("PRZEDŁUŻACZ BIURKOWY WPUSZCZANY PRESTINO, 2xGNIAZDO SCHUKO, USB A+C, RJ45, HDMI, "
+                                   "PRZEWÓD 1,5m, BIAŁY", "AE-PB2SPRES-10"),
+                         "Przedłużacz biurkowy wpuszczany Prestino 2x gniazdo SCHUKO USB A+C RJ45 HDMI przewód 1,5m "
+                         "biały GTV")
+        # kody zostaja w calosci: "10xE27", nie "10x e27"
+        self.assertIn("10xE27", self.name("GIRLANDA OGRODOWA 10m, AC220-240V, 50-60Hz,10xE27, 2x0,75mm", "AE-GIR10-10"))
+
+    def test_lost_cp1250_signs_and_glued_lumen(self):
+        # przeglad 2026-11-05: "A60 820lm" to 820 lm (nie 60820), znaki spoza cp1250 w Ekonomie jako "?"
+        self.assertIn(" 820lm ", self.name("Żarówka LED GTV 10W E27 A60 820lm 3000K AC220-240V ściemnialne",
+                                            "LD-SPCA60-10W"))
+        self.assertEqual(self.name("Smarownica 400 cm?", "HT8G905"), "Smarownica 400 cm3 Högert")
+        self.assertEqual(self.name('Przedłużka 1/4", 76.0 mm??, ??CrV', "HT1A702"), 'Przedłużka 1/4", 76.0 mm, CrV Högert')
+        self.assertEqual(self.name("Szczypce do zaciskania tulejek cienkościennych 6-16 mm?", "HT1P162"),
+                         "Szczypce do zaciskania tulejek cienkościennych 6-16 mm2 Högert")
+
+    def test_extension_cords_follow_schema_v3(self):
+        self.assertEqual(self.name("PRZEDŁUŻACZ DOMOWY 3 GNIAZDA, 1,5m 3X1,00mm2", "AE-PF3G1M-00"),
+                         "Przedłużacz 3 gn. 1,5m 3x1,0mm2 GTV")
+        self.assertEqual(self.name("PRZEDŁUŻACZ SCHUKO 4 GNIAZDA, 3m", "AE-PS4G3M-00"), "Przedłużacz 4 gn. 3m Schuko GTV")
+        self.assertEqual(self.name("PRZEDŁUŻACZ BĘBNOWY 3X1,5mm2, 30m, 4X SCHUKO", "AE-SBEBEN-30"),
+                         "Przedłużacz bębnowy 4 gn. 30m 3x1,5mm2 Schuko GTV")
+        self.assertEqual(self.name("Przedłużacz bębnowy w izolacji gumowej 30 m 3x2.5 mm", "HT1E735"),
+                         "Przedłużacz bębnowy 30m 3x2,5mm2 guma Högert")
+        res = build_name(gtv_row("PRZEDŁUŻACZ OGRODOWY 2X1,0mm2 UNI, 10m", "AE-POGRODUN-10"), GTV, {})
+        self.assertEqual((res["nazwa"], res["status"]), ("Przedłużacz ogrodowy 10m 2x1,0mm2 Uni GTV", "OK"))
+
+
 BEMKO = load_yaml(DEFAULT_RULES)["suppliers"]["bemko"]
 
 
@@ -1096,7 +1200,18 @@ class BemkoTest(unittest.TestCase):
 
     def test_extension_cord_and_empty_t8_housing(self):
         res = build_name(bemko_row('PRZEDŁUŻACZ NEW 1.0 3 GN. Z "0" Z WYŁ. 1.0MM X 1.5M', "B04-NA3GW1M"), BEMKO, {})
-        self.assertEqual(res["nazwa"], "Przedłużacz 3 gn. z uziemieniem z wyłącznikiem 1,0mm2 1,5m Bemko")
+        # schemat nazwy przedluzaczy V3 (2026-11-05): gniazda, dlugosc, przekroj, uziemienie (Schuko zamiast
+        # "z uziemieniem"), wylacznik
+        self.assertEqual(res["nazwa"], "Przedłużacz 3 gn. 1,5m 1,0mm2 z uziemieniem z wyłącznikiem Bemko")
+        res = build_name(bemko_row('PRZEDŁUŻACZ NA SCHUKO 3X 2P+Z+WYŁ. 1.5MM X 1.5M', "B06-NB3GSW1M"), BEMKO, {})
+        self.assertEqual(res["nazwa"], "Przedłużacz 3 gn. 1,5m 1,5mm2 Schuko z wyłącznikiem Bemko")
+        # bebnowe: gniazda, dlugosc, przekroj, material przewodu, hermetycznosc, uziemienie / Schuko przy koncu
+        res = build_name(bemko_row('PRZEDŁUŻACZ BĘBNOWY 4 GN. +"0" 20m 3x1mm2', "B15-DG-4ZRF04-20"), BEMKO, {})
+        self.assertEqual(res["nazwa"], "Przedłużacz bębnowy 4 gn. 20m 3x1mm2 z uziemieniem Bemko")
+        res = build_name(bemko_row('PRZEDŁUŻACZ BĘBNOWY SCHUKO 4 GN. +"0" 15m 3x1,5mm2', "B16-DG-4ZRS05-15"), BEMKO, {})
+        self.assertEqual(res["nazwa"], "Przedłużacz bębnowy 4 gn. 15m 3x1,5mm2 Schuko Bemko")
+        res = build_name(bemko_row('PRZEDŁUŻACZ BĘBNOWY 4 GN. +"0" IP44 25m H05RR-F 3x1,5mm2', "B15-X"), BEMKO, {})
+        self.assertEqual(res["nazwa"], "Przedłużacz bębnowy 4 gn. 25m 3x1,5mm2 guma IP44 z uziemieniem Bemko")
         res = build_name(bemko_row('OPRAWA HERMETYCZNA 1X18W PC "EMPTY"', "S-C10-E-OHB118PC"), BEMKO, {})
         self.assertEqual(res["nazwa"], "Oprawa hermetyczna 60cm 1xT8 klosz PC Bemko")
 
@@ -1125,7 +1240,7 @@ class BemkoTest(unittest.TestCase):
     def test_accessory_brand_before_preposition_keeps_repeated_words(self):
         res = build_name(bemko_row("UCHWYT REGULOWANY DO OPRAW Z UCHWYTEM FI60mm NA SŁUPACH Z FI60mm", "C82-KUL1-60-UR"),
                          BEMKO, {})
-        self.assertEqual(res["nazwa"], "Uchwyt regulowany do opraw z uchwytem FI60mm na słupach z FI60mm Bemko")
+        self.assertEqual(res["nazwa"], "Uchwyt regulowany do opraw z uchwytem fi60mm na słupach z fi60mm Bemko")
         res = build_name(bemko_row("ZESTAW MONTAŻOWY DO PANELI LED - KOMPLET Z LINKĄ 100 cm", "S-C71-PLZ-NTL"), BEMKO, {})
         self.assertEqual(res["nazwa"], "Zestaw montażowy do paneli LED komplet z linką 100cm Bemko")
 
@@ -1160,6 +1275,129 @@ class BemkoTest(unittest.TestCase):
                                                               "Luxmena")})
         self.assertEqual(res["nazwa"], "Naświetlacz LED 60W 8400lm 3000K IP66 szary Luxmena Campus")
         self.assertTrue(any("z karty producenta" in u for u in res["uwagi"]))
+
+
+class BemkoZestawienie20261103Test(unittest.TestCase):
+    """Zestawienie Bemko "kart" z 2026-11-03 (340 nowych kartotek)."""
+
+    def name(self, text, code):
+        return build_name(bemko_row(text, code), BEMKO, {})["nazwa"]
+
+    def test_short_head_of_joined_name_gets_space(self):
+        # pierwsza czesc krotsza niz 40 znakow = ciecie na spacji, ktora zestawienie zgubilo
+        header = "LP;Kod towaru;Nazwa towaru;J.M.;Kod producenta\r\n"
+        with tempfile.TemporaryDirectory() as tmp:
+            src = Path(tmp) / "in.csv"
+            src.write_bytes((header + '1;"a";"PANEL BACKLIGHT SUPERIOR BLS 34W 4000K | 5000LM IP44";"szt";"a"\r\n'
+                             '2;"b";"CZUJNIK MIKROFALOWY 1200W 360* IP20 OKRĄ | GŁY BIAŁY";"szt";"b"\r\n'
+                             '3;"c";"Uchwyt do końcówek wkrętakowych 1/4"", 6 | 0 mm";"szt";"c"\r\n')
+                            .encode("cp1250"))
+            _, rows = read_csv(src)
+        self.assertEqual(full_name(rows[0]), "PANEL BACKLIGHT SUPERIOR BLS 34W 4000K 5000LM IP44")
+        self.assertEqual(full_name(rows[1]), "CZUJNIK MIKROFALOWY 1200W 360* IP20 OKRĄGŁY BIAŁY")
+        # liczba przecieta w srodku zostaje cala (GTV: Ekonom liczy cudzyslow podwojnie)
+        self.assertEqual(full_name(rows[2]), 'Uchwyt do końcówek wkrętakowych 1/4", 60 mm')
+
+    def test_typos_in_ekonom_names(self):
+        self.assertEqual(self.name("OPRAWA AWARYJNA 03 ALWIR 3 35W 4000K 600 0LM IP66 2H CNBOP",
+                                   "C90-AB-HLA3-120-350-4K-AW2H-C"),
+                         "Oprawa awaryjna LED 35W 6000lm 4000K IP66 2h CNBOP Bemko 03 Alwir 3")
+        self.assertEqual(self.name("HIGHBAY LED VOYAGER 100W 4000K 14000LMCRI80 IP65 120° BEMKO", "C29-HBV-100"),
+                         "Oprawa High Bay LED 100W 14000lm 4000K IP65 120° Bemko Voyager")
+        self.assertEqual(self.name("PANEL BACKLIGHT BLO NT OKRĄGŁY 34W 4400L M 4000K IP40 FI60 BIAŁY", "C72-BLO-NT"),
+                         "Panel LED backlight 34W 4400lm 4000K IP40 okrągły fi60cm biały Bemko Blo NT")
+
+    def test_new_types(self):
+        self.assertEqual(self.name("ŻARNIK HALOGENOWY 100W 118MM 0930", "J118 100W"),
+                         "Żarnik halogenowy R7s 100W 118mm Bemko")
+        self.assertEqual(self.name("MR11 ŻARÓWKA HALOG. G4 10W 12V 30ST.0316", "MR11 G4 10W"),
+                         "Żarówka halogenowa MR11 G4 10W 12V 30° Bemko")
+        self.assertEqual(self.name("ŚWIETLÓWKA T4 8W 4000K 340 mm", "T4 8W"), "Świetlówka T4 8W 4000K 340mm Bemko")
+        # ramki roznia sie wymiarem, ktory `inne` wycinalo
+        self.assertEqual(self.name("RAMKA MONTAŻOWA DO PANELU LED 30x120 BIAŁA ECO WYS. 68mm", "C71-RNT123-WH-ECO2"),
+                         "Ramka montażowa do panelu LED 30x120 Eco wys. 68mm biała Bemko")
+        self.assertEqual(self.name("ZASILACZ DO PANELI LEDOWYCH PLM 40W WH (950 mA)", "E88-LD-PLM-400"),
+                         "Zasilacz do paneli LED 40W PLM 950mA Bemko")
+        self.assertEqual(self.name("OPRAWA STADIONOWA LED STADIUM 500W 5000K 80000LM IP66 60x60 Luxmena",
+                                   "C69-STD2-S-500BL-5K-6060"),
+                         "Oprawa stadionowa LED 500W 80000lm 5000K IP66 Luxmena Stadium")
+        self.assertEqual(self.name("OPRAWA RAMA LED 40W 4000LM 4000K 60x60 PLAZA BIAŁA", "C73-FLP-066-400-4K-WH"),
+                         "Panel LED 60x60 40W 4000lm 4000K biały Bemko Plaza")
+        self.assertEqual(self.name("KAFLER 2X36W PAR OPRAWA NASTROPOWA EVG", "K-PAR-236"),
+                         "Oprawa rastrowa 2xT8 natynkowa 120cm Kafler")
+
+    def test_emergency_panel_keeps_light_parameters(self):
+        # panel z modulem awaryjnym niesie lm, barwe i wymiar; mala oprawa awaryjna - jak dotad
+        self.assertEqual(self.name("OPRAWA AWARYJNA 08 MINTAL 40W 4000K 4000LM 120x30 BIAŁA 2H CNBOP",
+                                   "C90-AB-BLM-123-400-4K-WH-AW2H-C"),
+                         "Oprawa awaryjna LED 120x30 40W 4000lm 4000K 2h CNBOP biała Bemko 08 Mintal")
+        self.assertEqual(self.name("OPRAWA AWARYJNA MALER NATYNKOWA 2W IP20 AUTOTEST 3H CNBOP", "C90-MLR"),
+                         "Oprawa awaryjna LED 2W natynkowa autotest 3h CNBOP IP20 Bemko Maler")
+
+    def test_plato_without_lumen_and_24v(self):
+        res = build_name(bemko_row("PLAFONIERA LED PLATO 12W 4000K IP44 BEMKO", "C37-PLA-260-120-4K"), BEMKO, {})
+        self.assertEqual(res["typ"], "plafon_led")
+        self.assertIn("lumen", res["braki"])
+        self.assertEqual(self.name("PLAFONIERA PLATO 1xE27 IP44 24V DC CZ. MIKR.", "C37-PLA-E27-24V-MS"),
+                         "Plafon Plato 1xE27 24V DC z czujnikiem mikrofalowym IP44 Bemko")
+
+    def test_card_brand_does_not_glue_to_short_name(self):
+        rules = {**BEMKO, "_web_params": {"B50-SES02BL": {"_name": "CZUJNIK RUCHU 800W 360* CZARNY", "Marka": "Bemko",
+                                                          "_url": "https://bemko.pl/x"}}}
+        r = {"Nazwa towaru": "CZUJNIK RUCHU 800W 360* CZARNY", "Nazwa dodatkowa": "", "Kod producenta": "B50-SES02BL",
+             "Kod towaru": "B50-SES02BL/BMK"}
+        res = build_name(r, rules, {})
+        res.update(row=r, stara=full_name(r))
+        res = apply_web_card(res, r, rules, {}, None)
+        self.assertEqual(res["nazwa"], "Czujnik ruchu 800W 360° czarny Bemko")
+
+    def test_card_does_not_replace_cct(self):
+        rules = {**BEMKO, "_web_params": {"C72-BLG-044-30B-CCT-9016A": {
+            "_name": "PANEL BACKLIGHT GRANDER BLG 26W/30W/34W CCT (2990-4250lm) IP44 40x40 BIAŁY", "Marka": "Luxmena",
+            "Barwa światła": "3000K / 4000K / 6500K", "_url": "https://bemko.pl/x"}}}
+        res = build_name(bemko_row("PANEL BACKLIGHT GRANDER BLG 26W/30W/34W CCT (2990-4250lm) IP44 40x40 BIAŁY",
+                                   "C72-BLG-044-30B-CCT-9016A"), rules, {})
+        self.assertIn(" CCT ", res["nazwa"])
+
+    def test_upper_case_card_names_are_not_spelling_source(self):
+        # jedno "mini" na koncu nazwy karty robilo z "BIAŁY" nazwe modelu
+        with tempfile.TemporaryDirectory() as tmp:
+            Path(tmp, "a.json").write_text('{"code": "a", "found": true, "name": '
+                                           '"CZUJNIK MIKROFALOWY 1200W IP20 PROSTOKĄTNY BIAŁY mini", "params": {}}',
+                                           encoding="utf-8")
+            _, _, vocab, models = load_web_params(Path(tmp))
+        self.assertEqual((vocab, models), (frozenset(), frozenset()))
+
+
+class BemkoReview20261104Test(unittest.TestCase):
+    """Przeglad nazw Bemko z 2026-11-04: klasa ogranicznika, "+", jednostki i kody modeli."""
+
+    def name(self, text, code):
+        return build_name(bemko_row(text, code), BEMKO, {})["nazwa"]
+
+    def test_surge_class_without_plus(self):
+        self.assertEqual(self.name("OGRANICZNIK PRZEPIĘĆ 3P 8kA DC 1000V KLASY T1T2 SCHELINGER", "A53-SPD-MOV-DC-3P-T1T2"),
+                         "Ogranicznik przepięć T1+T2 3P 8kA 1000V DC Schelinger")
+
+    def test_plus_and_layout_kept_in_accessory(self):
+        self.assertEqual(self.name("STYCZNIK MODUŁOWY SC301 4P 40A TYP 40 (4NO + 0NC) SCHELINGER", "A62-SC-301-4P-40-40"),
+                         "Stycznik modułowy SC301 4P 40A typ 40 (4NO+0NC) Schelinger")
+        self.assertEqual(self.name("BLOK ROZDZIELCZY 30 ZACISKÓW 2x15 (11x5,3mm + 2x7,5mm + 2x9,1mm)", "A18-MDB-215"),
+                         "Blok rozdzielczy 30 zacisków 2x15 (11x5,3mm+2x7,5mm+2x9,1mm) Bemko")
+
+    def test_units_lower_case(self):
+        self.assertEqual(self.name("ZAŚLEPKA DO SZYN ŁĄCZENIOWYCH 1-FAZOWYCH 10MM2 PACZKA 10SZT. Bemko", "A19-ZSL1F"),
+                         "Zaślepka do szyn łączeniowych 1-fazowych 10mm2 paczka 10 szt. Bemko")
+        self.assertEqual(self.name("SŁUP OŚWIETLENIOWY SKŁADANY 3M 160X160MM FI60MM CZARNY", "C84-SSO-S3M-160060-BL"),
+                         "Słup oświetleniowy składany 3m 160x160mm fi60mm czarny Bemko")
+        self.assertEqual(self.name("ROZETA SUFITOWA QUALIS 100x50x50 mm GRAFIT", "C27-QLS-ZMR2-A7016-3W"),
+                         "Rozeta sufitowa Qualis 100x50x50mm grafit Bemko")
+
+    def test_model_codes_stay_upper(self):
+        self.assertEqual(self.name("PRZEDŁUŻKA 1M DO SKŁADANEGO SŁUPA OŚWIETLENIOWEGO SSO SZARA Bemko", "C84-SSO-A1M-DG"),
+                         "Przedłużka 1m do składanego słupa oświetleniowego SSO szara Bemko")
+        self.assertEqual(self.name("NAŚWIETLACZ LED LFX 20W 4000K 1800LM IP65 BIAŁY Bemko", "C65-LFX-020WH-4K"),
+                         "Naświetlacz LED 20W 1800lm 4000K IP65 biały Bemko LFX")
 
 
 if __name__ == "__main__":
@@ -1422,3 +1660,698 @@ class LedvanceZestawienie20261026Test(unittest.TestCase):
         self.assertEqual(parse_ballast("STATECZNIK ELEKTRONICZNY QUICKTRONIC FIT8 3X18/4X18"), "3/4x18W")
         self.assertEqual(body(built("Statecznik elektroniczny Quicktronic FIT8 3x 4x18")["nazwa"]),
                          "Statecznik elektroniczny 3/4x18W")
+
+
+SIGNIFY = {**load_yaml(DEFAULT_RULES)["suppliers"]["signify"], "params": True}
+
+
+def signify_row(name, code="929003691502"):
+    return {"Nazwa towaru": name[:40], "Nazwa dodatkowa": name[40:], "Kod towaru": "872016924864900/PHP",
+            "Kod producenta": code}
+
+
+def signify_built(name, card=None):
+    from build_ekonom_names import signify_card_params
+    feed = {"872016924864900": signify_card_params(card)} if card else {}
+    return build_name(signify_row(name), SIGNIFY, {}, feed)
+
+
+class SignifyTest(unittest.TestCase):
+    """Signify (2026-11-03): karta lighting.philips.pl po 12NC jest zrodlem prawdy, jak pliki Parametry Kanlux."""
+
+    def test_card_params_mapping(self):
+        from build_ekonom_names import signify_card_params
+        p = signify_card_params({"catalog_name": "DN142B 10S/830", "name": "CoreLine Downlight gen5, D150 mm, 1000 lm",
+                                 "params": {"Strumień Świetlny": "2 900 lm 3 100 lm", "Zużycie energii": "31 W 22 W",
+                                            "Kod stopnia ochrony": "IP20/44 [Ochrona]", "Całkowita średnica": "162 mm",
+                                            "Zunifikowany wskaźnik ograniczenia olśnienia CEN": "19"}})
+        self.assertEqual(p["Całkowity znamionowy strumień świetlny [lm]"], "2900/3100")
+        self.assertEqual(p["Moc znamionowa [W]"], "22/31")
+        self.assertEqual(p["Stopień IP"], "44")
+        self.assertEqual(p["Średnica [mm]"], "150")  # rozmiar z nazwy karty, nie obudowa 162 mm
+        self.assertEqual(p["UGR"], "<19")
+        strip = signify_card_params({"catalog_name": "MAS LEDstrip 8.3W965 950LM/M 5M",
+                                     "params": {"Strumień świetlny": "950 lm", "Napięcie wejściowe": "24 V"}})
+        self.assertEqual(strip["Całkowity znamionowy strumień świetlny [lm]"], "1 m = 950")
+        self.assertEqual(strip["Napięcie znamionowe [V]"], "24")
+
+    def test_raw_catalog_lamp_from_card(self):
+        card = {"catalog_name": "MAS LEDBulb D 4-60W E27 827 A60 CL G UE",
+                "category": "Lampy i tuby LED > Żarówki LED > MASTER UltraEfficient LED bulb",
+                "params": {"Podstawa-nasadka": "E27", "Strumień świetlny": "840 lm", "Zużycie energii": "4 W",
+                           "Skorelowana temperatura barwowa (Nom)": "2700 K", "Kształt bańki": "A60",
+                           "Z możliwością przyciemniania": "Tylko z niektórymi ściemniaczami"}}
+        res = signify_built("MAS LEDBulb D 4-60W E27 827 A60 CL G UE", card)
+        self.assertEqual(res["nazwa"], "Żarówka LED E27 4W 840lm 2700K A60 przezroczysta ściemnialna Philips MASTER")
+        self.assertEqual(res["status"], "OK")
+
+    def test_equivalent_power_is_not_power(self):
+        # "LED classic 40W" = zamiennik 40 W; bez karty moc rzeczywista nieznana
+        res = signify_built("Świeczki / kulki LED LED classic 40W P45 E14 WW CL ND RFSRT4")
+        self.assertEqual(res["nazwa"], "Żarówka LED E14 2700K kulka przezroczysta zamiennik 40W Philips")
+        self.assertEqual(res["status"], "DO_SPRAWDZENIA")
+
+    def test_wrong_kind_in_ekonom_fixed_by_card_category(self):
+        card = {"catalog_name": "TL-D Colored 58W Green 1SL/25",
+                "category": "Konwencjonalne lampy i tuby > Świetlówki i zapłonniki do świetlówek > TL-D Colored",
+                "params": {"Podstawa-nasadka": "G13", "Zużycie energii": "58,5 W"}}
+        self.assertEqual(signify_built("Tuba LED 58W G13", card)["nazwa"], "Świetlówka T8 150cm 58W zielona Philips")
+
+    def test_fluorescent_keeps_nominal_power(self):
+        card = {"catalog_name": "MASTER TL5 HO 80W/865", "params": {"Zużycie energii": "79,8 W", "Podstawa-nasadka": "G5"}}
+        res = signify_built("Świetlówka liniowe MASTER TL5 HO 80W/865 SLV/40", card)
+        self.assertEqual(res["nazwa"], "Świetlówka T5 145cm 80W 6500K HO Philips MASTER")
+
+    def test_fixture_family_code_and_line_last(self):
+        card = {"catalog_name": "DN142B 10S/830 PSD-E UGR19",
+                "category": "Oświetlenie wewnętrzne > Oprawy downlight > CoreLine Downlight gen5",
+                "name": "Philips CoreLine Downlight gen5, 10.7 W, D150 mm, 1000 lm, 3000 K, DALI, UGR19",
+                "params": {"Zużycie energii": "10,7 W", "Strumień Świetlny": "1 000 lm",
+                           "Skorelowana temperatura barwowa (Nom)": "3000 K", "Kod stopnia ochrony": "IP20/44 [Ochrona]",
+                           "Interfejs sterownika": "DALI", "Kolor Korpusu": "Biel"}}
+        res = signify_built("Downlight LED 10.7W 1150lm 3000K IP20 DALI EL-ready UGR19 Philips DIM DN142B Coreline", card)
+        # UGR19 z nazwy w Ekonomie (karta w tescie go nie podaje); "fi150" -> "150 mm" dopiero w main (`diameter_mm`)
+        self.assertEqual(res["nazwa"], "Downlight LED fi150 10,7W 1000lm 3000K IP44 UGR19 DALI biały Philips DN142B CoreLine")
+        self.assertIn("lumen z karty lighting.philips.pl: 1000lm (w Ekonomie: 1150lm)", res["uwagi"])
+
+    def test_proper_name_and_street_optics(self):
+        # 2026-11-03: nazwa wlasna rodziny z kategorii karty przed kodem, optyka i klasa z nazwy katalogowej karty
+        card = {"catalog_name": "BRP102 LED55/740 II DM",
+                "category": "Oprawy zewnętrzne > Oświetlenie drogowe i uliczne > CoreLine Malaga LED",
+                "params": {"Zużycie energii": "39 W", "Strumień Świetlny": "4 600 lm",
+                           "Skorelowana temperatura barwowa (Nom)": "4000 K", "Kod stopnia ochrony": "IP65 [Ochrona]"}}
+        res = signify_built("Oprawa drogowa BRP102 LED55/740 II DM", card)
+        self.assertEqual(res["nazwa"], "Oprawa uliczna LED 39W 4600lm 4000K IP65 opt. DM klasa II Philips Malaga BRP102 CoreLine")
+
+    def test_floodlight_optics_short_near_end(self):
+        # wytyczne 2026-11-04: "optyka symetryczna" -> "opt. sym.", blizej konca nazwy (za kolorem, przed marka)
+        card = {"catalog_name": "BVP111 LED49-4S/730 S", "category": "Coreline Tempo Small Gen2",
+                "params": {"Zużycie energii": "31 W", "Strumień Świetlny": "4 263 lm",
+                           "Skorelowana temperatura barwowa (Nom)": "3000 K", "Kod stopnia ochrony": "IP66 [Ochrona]",
+                           "Kolor Korpusu": "Szary"}}
+        res = signify_built("Naświetlacz LED 31W 4263lm 3000K IP66 Philips BVP111 Coreline", card)
+        self.assertEqual(res["nazwa"], "Naświetlacz LED 31W 4263lm 3000K IP66 szary opt. sym. Philips BVP111 CoreLine")
+        card["catalog_name"] = "BVP110 LED49-4S/740 A"
+        res = signify_built("Naświetlacz LED 31W 4263lm 3000K IP66 Philips BVP110 Coreline", card)
+        self.assertIn("szary opt. asym. Philips", res["nazwa"])
+        # High Bay: waska / szeroka optyka tez skrotem na koncu, przed marka
+        res = signify_built("Highbay LED 100W 10000lm 4000K IP65 WB PILA BY007P")
+        self.assertIn("IP65 opt. szer. PILA BY007P", res["nazwa"])
+
+    def test_leaflet_pdf_parsing(self):
+        # karta PDF docs.signify.com dla kodu, ktorego nie ma juz na stronie (angielska: separator tysiecy ",")
+        sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
+        from fetch_signify_leaflets import parse_leaflet
+        text = ("LL212X 53S/840 1x PSU WB 5x1.5 HE\n910925867495\nCoreLine Trunking gen2, 33 W, L1130 mm, 5300 lm,\n"
+                "Light Technical\nLuminous Flux\n5,300 lm\nCorrelated Colour Temperature\n(Nom)\n4000 K\n"
+                "Power Consumption\n33 W\nOverall length\n1130 mm\n")
+        rec = parse_leaflet("910925867495", text, "https://x/FP/en_GB/910925867495_EU.en_GB.PROF.FP.pdf", "en_GB")
+        self.assertEqual(rec["catalog_name"], "LL212X 53S/840 1x PSU WB 5x1.5 HE")
+        self.assertEqual(rec["category"], "CoreLine Trunking gen2")
+        self.assertEqual(rec["params"]["Strumień Świetlny"], "5300 lm")
+        self.assertEqual(rec["params"]["Skorelowana temperatura barwowa (Nom)"], "4000 K")
+        self.assertEqual(rec["params"]["Zużycie energii"], "33 W")
+
+
+class KanluxZestawienie20261104Test(unittest.TestCase):
+    """Zestawienie Kanlux "kart" z 2026-11-04 (1156 nowych kartotek) i karty kanlux.com."""
+
+    def kx(self, name, code="1", rec=None):
+        return build_name(kanlux_row(name, code), KANLUX, {}, {code: {**rec, "_name": name}} if rec else {})
+
+    def test_new_breaker_codes(self):
+        self.assertEqual(parse_breaker("KMBN6-C10/1"), "C10 1P+N 6kA")
+        self.assertEqual(parse_breaker("KMCCB-F-125A-4P"), "125A 4P")
+        self.assertEqual(parse_breaker("KMCCB-F-250A/RL/R"), "")  # wyzwalacz - akcesorium wylacznika
+        self.assertEqual(parse_breaker("KMI-R-3/125A"), "125A 3P")
+        self.assertEqual(parse_breaker("KCS-40A/1P"), "40A 1P")
+        self.assertEqual(parse_breaker("KMC-20-11"), "20A 1NO+1NC")
+        self.assertEqual(parse_breaker("KMC-20-04"), "20A 4NC")
+        self.assertEqual(parse_breaker("KSPD-T1T2 275/100 1PN"), "T1+T2 1P+N")
+        self.assertEqual(parse_breaker("KSPD-TT 275/160 3P+N"), "T2 TT 3P+N")
+        self.assertEqual(parse_breaker("KSD-T2 275/40 M"), "T2 wkładka")
+        self.assertEqual(parse_breaker("KRO6-1M-2/B10/30-A"), "B10 2P 30mA typ A 6kA")
+        res = self.kx("KRO10-2/C16/30 Wyłącznik róznicowo-prądowy, z członem nadmiarowym, 10kA, 2P")
+        self.assertEqual(res["nazwa"], "Wyłącznik RCBO C16 2P 30mA typ AC 10kA KRO10-2/C16/30 Kanlux")
+        res = self.kx("KMI-3/63A Rozłącznik izolacyjny, modułowy")
+        self.assertEqual(res["nazwa"], "Rozłącznik izolacyjny 63A 3P KMI-3/63A Kanlux")
+        self.assertEqual(res["status"], "OK")
+
+    def test_lumen_pairs_with_spaces(self):
+        # "2500(WW) 2700(NW)" sklejalo sie w 25002700 - spacja tylko jako separator tysiecy
+        rec = {"Strumień świetlny oprawy [lm]": "2500(WW) 2700(NW) / 4200(WW) 4400(NW)"}
+        self.assertEqual(kx_lumen(rec, KANLUX["params_lumen_keys"]), "2500-4400lm")
+        self.assertEqual(kx_lumen({"Strumień świetlny oprawy [lm]": "37 000"}, KANLUX["params_lumen_keys"]), "37000lm")
+
+    def test_empty_card_key_is_not_brand(self):
+        # karta kanlux.com ma pusty klucz z ikona klasy energetycznej ("" = "E") - marka "E" zamiast Kanlux
+        rec = {"": "E", "Moc znamionowa [W]": "7", "Całkowity znamionowy strumień świetlny [lm]": "806",
+               "Temperatura barwowa [K]": "2700", "Trzonek": "B22", "Źródło światła": "A60"}
+        res = self.kx("XLEDIMW A60 B22 7W-WW Źródło światła LED", "37246", rec)
+        self.assertTrue(res["nazwa"].endswith("Kanlux XLEDIMW"), res["nazwa"])
+        with tempfile.TemporaryDirectory() as tmp:
+            Path(tmp, "37246.json").write_text('{"code": "37246", "found": true, "name": "X", "params": {"": "E"}}',
+                                               encoding="utf-8")
+            params, _ = load_params_web(Path(tmp))
+            self.assertNotIn("", params["37246"])
+
+    def test_series_cleanup(self):
+        self.assertIn("GRIP", self.kx("BRAVO S/P GRIP 12030 Uchwyt montażowy BRAVO")["nazwa"])
+        self.assertIn("CTRL 12/24V", self.kx("CTRL 12/24V MONO/CCT Kontroler do taśm LED")["nazwa"])
+        self.assertIn("1-10V", self.kx("BLINGO DRV40W1-10V BK Zasilacz LED")["nazwa"])
+        self.assertTrue(self.kx("SPR.CTC-55/MR16 Akcesorium do opraw ścienno-sufitowych")["nazwa"]
+                        .endswith("SPR.CTC-55/MR16"))
+        self.assertNotIn("(", self.kx("AL-MS-WW-MAT-W-NT (35 Oprawa liniowa LED")["nazwa"])
+        self.assertNotIn("11,8WCCT", self.kx("AZPO LED 11,8WCCT-O-W Plafoniera LED")["nazwa"])
+
+    def test_dustproof_is_hermetic(self):
+        # "Oprawa pyłoszczelna" z typu Kanlux = "Oprawa hermetyczna" (decyzja uzytkownika 2026-11-09);
+        # zamiana w `name_replace` (stosowana w main), takze w odmianie
+        def replaced(name):
+            for item in KANLUX["name_replace"]:
+                name = re.sub(item["match"], item["repl"], name)
+            return name
+
+        res = self.kx("DICHT 4LED PI 236/PS Oprawa pyłoszczelna pod tuby LED")
+        self.assertTrue(res["nazwa"].startswith("Oprawa pyłoszczelna pod tuby"), res["nazwa"])
+        self.assertTrue(replaced(res["nazwa"]).startswith("Oprawa hermetyczna pod tuby"))
+        self.assertEqual(replaced("Akcesorium oprawy pyłoszczelnej Kanlux MAH PRO SENSOR C"),
+                         "Akcesorium oprawy hermetycznej Kanlux MAH PRO SENSOR C")
+        self.assertEqual(replaced("Pyłoszczelna oprawa"), "Hermetyczna oprawa")
+
+    def test_glass_tube_with_type_tuba(self):
+        res = self.kx("T8 LED GLASSv3 18W-NW Tuba LED 4000K 2700lm")
+        self.assertEqual(res["nazwa"], "Tuba LED T8 120cm 18W 2700lm 4000K Kanlux GLASSv3")
+        self.assertTrue(self.kx("T8 LED GLASSv3 24W-NW LAMPA LED")["nazwa"].startswith("Tuba LED T8 150cm 24W"))
+
+    def test_split_exactly_at_40_before_preposition(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            src = Path(tmp) / "in.csv"
+            src.write_bytes(("LP;Kod towaru;Nazwa towaru;Kod producenta\r\n"
+                             '1;"2161/KAN";"HLDR-E27-F     Oprawka do źródeł światła | z blaszką";"2161"\r\n'
+                             '2;"28501/KAN";"BRAVO S/P GRIP 12030 Uchwyt montażowy BR | AVO";"28501"\r\n')
+                            .encode("cp1250"))
+            _, rows = read_csv(src)
+            self.assertEqual(full_name(rows[0]), "HLDR-E27-F Oprawka do źródeł światła z blaszką")
+            self.assertEqual(full_name(rows[1]), "BRAVO S/P GRIP 12030 Uchwyt montażowy BRAVO")
+
+
+ELGOTECH = load_yaml(DEFAULT_RULES)["suppliers"]["elgotech"]
+
+
+def elgotech_name(name, code):
+    row = {"Nazwa towaru": name[:40], "Nazwa dodatkowa": name[40:], "Kod producenta": code, "Kod towaru": f"{code}/EGT"}
+    return build_name(row, ELGOTECH, {})
+
+
+class Elgotech20261110Test(unittest.TestCase):
+    """Przedluzacze Elgotech wg schematu V3; kod producenta wycinany z nazwy, skroty z/u, b/u, 2P+Z."""
+
+    def test_home_extension_lead_v3_order_and_line(self):
+        res = elgotech_name("EPS-502W-2 Przedłużacz 5xz/u z wyłącz. CZARNY 2m", "EPS-502W-2")
+        self.assertEqual(res["nazwa"], "Przedłużacz 5 gn. 2m z uziemieniem z wyłącznikiem czarny Economic Elgotech")
+        res = elgotech_name("PSN-201,5W-1,5-2 Przedłużacz przenośny 2.-krotny, 2x2P.+Z czarny z podświetlanym "
+                            "wyłącznikiem 250V~/16A 3x1,5mm2 PVC- 1,5m z zalewaną wtyczką kątową UNISCHUKO i otworem "
+                            "do montażu, Classic PSN-201,5W-1,5-2", "PSN-201,5W-1,5-2")
+        self.assertEqual(res["nazwa"],
+                         "Przedłużacz 2 gn. 1,5m 3x1,5mm2 z uziemieniem z wyłącznikiem czarny Classic Elgotech")
+
+    def test_bez_uziemienia_is_not_z_uziemieniem(self):
+        res = elgotech_name("Przedłużacz PK-1010 bez uziemienia, przew.  2x1mm? 10m", "PK-1010")
+        # katalog: PK-10 to przedluzacz ogrodowy z pomaranczowym przewodem
+        self.assertEqual(res["nazwa"], "Przedłużacz ogrodowy 1 gn. 10m 2x1mm2 bez uziemienia pomarańczowy Elgotech")
+        self.assertIn("bez uziemienia", elgotech_name("GN-4 Gniazdo cztekrotne bez uziemienia", "GN-4")["nazwa"])
+
+    def test_drum_material_ip_and_small_from_code(self):
+        res = elgotech_name("PZB-1111-40G/2,5 Przedł.bębn.4xIP-44 z/u H05RR 3x2,5 GUMA 40m", "PZB-1111-40G/2,5")
+        self.assertEqual(res["nazwa"], "Przedłużacz bębnowy metalowy 4 gn. 40m 3x2,5mm2 guma IP44 z uziemieniem Elgotech")
+        res = elgotech_name("PZB1-40-20G Przed.bęb. 4xz/u H05RR 3x1,5 (GUMA) 20m", "PZB1-40-20G")
+        self.assertTrue(res["nazwa"].startswith("Przedłużacz bębnowy mały 4 gn. 20m"))
+        res = elgotech_name("PSPZ1-12-20 Przedł.bęb.2xIP-44,1xsił. H07RN5x2,5GUMA 20m", "PSPZ1-12-20")
+        self.assertEqual(res["nazwa"],
+                         "Przedłużacz bębnowy 2 gn. + 1 gn. siłowe 20m 5x2,5mm2 guma H07RN-F IP44 Elgotech")
+
+    def test_color_from_code_only_after_model_segment(self):
+        self.assertEqual(elgotech_name("WT-20S-2 Wtyczka standard 16A z uziemieniem", "WT-20S-2")["nazwa"],
+                         "Wtyczka standardowa z uziemieniem 16A czarna Elgotech")
+        # "GN-2" = 2 gniazda, nie kolor
+        self.assertEqual(elgotech_name("GN-2 Gniazdo dwukrotne bez uziemienia", "GN-2")["nazwa"],
+                         "Gniazdo przenośne 2 gn. bez uziemienia Elgotech")
+
+    def test_ip_at_end_survives_code_cleanup(self):
+        self.assertEqual(elgotech_name("WT-30G Wtyczka unischuko z uziemieniem IP-44", "WT-30G")["nazwa"],
+                         "Wtyczka Unischuko z uziemieniem IP44 Elgotech")
+
+    def test_code_length_conflict_goes_to_review(self):
+        res = elgotech_name("PSN-407-1,5 Przedłużacz przenośny 4-krotny, 4x2P+Z biały 250V~/16A 3x1,5mm2 PVC- 6m z "
+                            "zalewaną wtyczką kątową UNISCHUKO i otworami do montażu, Classic PSN-406-1,5", "PSN-407-1,5")
+        self.assertEqual(res["status"], "DO_SPRAWDZENIA")
+        self.assertIn("6m", res["nazwa"])
+
+    def test_catalog_fills_cross_and_color_and_flags_conflict(self):
+        rules = {**ELGOTECH, "_catalog": {"PSN-303": {"rest": "3x1 mm2 biały"},
+                                          "PSN-503W-2": {"rest": "3x1 mm2 czarny"},
+                                          "R-20BS-24": {"rest": "biały"}}}
+        row = {"Nazwa towaru": "PSN-303 Przedłużacz 3xz/u 3m", "Nazwa dodatkowa": "", "Kod producenta": "PSN-303",
+               "Kod towaru": "PSN-303/EGT"}
+        self.assertEqual(build_name(row, rules, {})["nazwa"],
+                         "Przedłużacz 3 gn. 3m 3x1mm2 z uziemieniem biały Classic Elgotech")
+        row = {"Nazwa towaru": "PSN-503W-2 Przedłużacz 5xz/u biały z wyłącznikiem 3m", "Nazwa dodatkowa": "",
+               "Kod producenta": "PSN-503W-2", "Kod towaru": "PSN-503W-2/EGT"}
+        self.assertEqual(build_name(row, rules, {})["status"], "DO_SPRAWDZENIA")
+        # blad tabeli katalogu (zdjecie: czarno-czerwony) - bez konfliktu
+        row = {"Nazwa towaru": "R-20BS-24 ROZGAŁĘŹNIK 2X Z/U IP44 CZARNO-CZERWONY 16A", "Nazwa dodatkowa": "",
+               "Kod producenta": "R-20BS-24", "Kod towaru": "R-20BS-24/EGT"}
+        self.assertEqual(build_name(row, rules, {})["status"], "OK")
+
+    def test_surge_model_garden_and_splitter_shape(self):
+        self.assertTrue(elgotech_name("PSF3-501 Przed. przeciwprzepięciowy 5xz/u i wył., szary 1,5m", "PSF3-501")
+                        ["nazwa"].endswith("szary PSF3 Elgotech"))
+        self.assertEqual(elgotech_name("Przedłużacz PS-1010-5 z uziemieniem, przew. 3x1mm? 10m", "PS-1010-5")["nazwa"],
+                         "Przedłużacz ogrodowy 1 gn. 10m 3x1mm2 z uziemieniem pomarańczowy Elgotech")
+        self.assertTrue(elgotech_name("RT-30CA Rozgałęźnik 3GN. z uziemieniem", "RT-30CA")["nazwa"]
+                        .startswith("Rozgałęźnik trójkątny 3 gn."))
+        self.assertTrue(elgotech_name("PZB-1111-40G Przedł.bębn.4xIP-44 z/u H05RR 3x1,5 GUMA 40m", "PZB-1111-40G")
+                        ["nazwa"].startswith("Przedłużacz bębnowy metalowy 4 gn. 40m"))
+
+    def test_catalog_extra_before_bare_length_and_small_coiled(self):
+        rules = {**ELGOTECH, "_catalog": {"PSN-501,5": {"rest": "3x1 mm2 biały"},
+                                          "PWP-113-1,5": {"rest": "5x1,5 mm2 H07RN-F"}}}
+        row = {"Nazwa towaru": "PSN-501,5 Przedłużacz 5xz/u 1,5", "Nazwa dodatkowa": "", "Kod producenta": "PSN-501,5",
+               "Kod towaru": "PSN-501,5/EGT"}
+        self.assertEqual(build_name(row, rules, {})["nazwa"],
+                         "Przedłużacz 5 gn. 1,5m 3x1mm2 z uziemieniem biały Classic Elgotech")
+        row = {"Nazwa towaru": "PWP-113-1,5 Przedłużacz 2xgn.jednofaz.,1", "Nazwa dodatkowa": "xgn.siłowe 1,5m",
+               "Kod producenta": "PWP-113-1,5", "Kod towaru": "PWP-113-1,5/EGT"}
+        self.assertEqual(build_name(row, rules, {})["nazwa"],
+                         "Przedłużacz 2 gn. + 1 gn. siłowe 1,5m 5x1,5mm2 guma H07RN-F Elgotech")
+        self.assertTrue(elgotech_name("PSZ-306 Przedłużacz zwijany 3xz/u, MAŁY 6m", "PSZ-306")["nazwa"]
+                        .startswith("Przedłużacz zwijany mały 3 gn. 6m"))
+        self.assertEqual(elgotech_name("G-10G Gniazdo z uziemieniem IP-44", "G-10G")["nazwa"],
+                         "Gniazdo przenośne 1 gn. z uziemieniem IP44 Elgotech")
+        # "gniazda okrągłe" to rodzaj gniazd, nie obudowa
+        self.assertFalse(elgotech_name("R-30-2 Rozgałęźnik 3-krotny 3x2P+Z gniazda okrągłe 250V~/16A czarny R-30-2",
+                                       "R-30-2")["nazwa"].startswith("Rozgałęźnik okrągły"))
+
+
+PLASTROL = load_yaml(DEFAULT_RULES)["suppliers"]["plastrol"]
+
+
+def plastrol_name(name, code):
+    row = {"Nazwa towaru": name[:40], "Nazwa dodatkowa": name[40:], "Kod producenta": code, "Kod towaru": f"{code}/PLST"}
+    return build_name(row, PLASTROL, {})["nazwa"]
+
+
+class Plastrol20261110Test(unittest.TestCase):
+    """Plastrol: przedluzacze wg schematu V3, linie bebnow, X1 / X3 = budowlane 1 / 3 gn., KEL = marka Plastrolu."""
+
+    def test_drum_line_and_cable(self):
+        self.assertEqual(plastrol_name("Przedłużacz bębnowy HEAVY LINE: 4x2p+Z: IP44: 16A: H07BQ-F: 3x2,5: 40m: "
+                                       "NIEBIESKI", "W-99275"),
+                         "Przedłużacz bębnowy 4 gn. 40m 3x2,5mm2 PUR IP44 z uziemieniem Heavy Line Plastrol")
+        self.assertEqual(plastrol_name("Przedłużacz bębnowy z automatycznym zwijaczem 14+2m IP20, 3×1,5mm",
+                                       "W-100518"),
+                         "Przedłużacz bębnowy automatyczny 14+2m 3x1,5mm2 IP20 Plastrol")
+
+    def test_construction_x3_colour_of_plug_not_cable(self):
+        self.assertEqual(plastrol_name("Przedłużacz  X3, przewód w oponie gumowej H05RR-F czarna 3x1,5mm2, IP 54, "
+                                       "wtyczka i gniazdo w kolorze czarno-czerwonym, przewód kolor czarny", "W-98985"),
+                         "Przedłużacz budowlany 3 gn. 3x1,5mm2 guma IP54 czarno-czerwony X3 Plastrol")
+
+    def test_two_pole_is_without_earth(self):
+        self.assertEqual(plastrol_name("Przedłużacz jednogniazdowy ECO 2p, 10A,  2500W, z przewodem OMY 2x1mm2, "
+                                       "10m POMARAŃCZOWY", "W-98937"),
+                         "Przedłużacz 1 gn. 10m 2x1mm2 bez uziemienia pomarańczowy Eco Plastrol")
+
+    def test_kel_brand_and_usb(self):
+        self.assertEqual(plastrol_name("Przedłużacz stały z sześciokrotnym gniazdem wtyczkowym 2p+Z oraz gniazdami "
+                                       "USB A, USB C, 2m, SCHUKO  KEL", "W-00354"),
+                         "Przedłużacz 6 gn. + USB A+C 2m Schuko KEL")
+
+    def test_plug_model_after_lost_space(self):
+        self.assertEqual(plastrol_name("Wtyczka rozbieralna kątowa płaska WT-11PBIAŁA", "W-99969"),
+                         "Wtyczka rozbieralna kątowa płaska biała WT-11P Plastrol")
+
+
+PCE = load_yaml(DEFAULT_RULES)["suppliers"]["pce"]
+
+
+def pce_name(name, code):
+    row = {"Nazwa towaru": name[:40], "Nazwa dodatkowa": name[40:], "Kod producenta": code, "Kod towaru": f"{code}/PCE"}
+    return build_name(row, PCE, {})
+
+
+class Pce20261110Test(unittest.TestCase):
+    """PCE: zlacza CEE (bieguny 3P / 4P / 5P, seria), rozdzielnice (wyjscia, zabezpieczenia, nazwa), bebny wg V3."""
+
+    def test_cee_poles_and_series(self):
+        self.assertEqual(pce_name("WTYCZKA PRZENOŚNA SHARK TT IP44 16A 400V 3P+Z+N BEZŚRUBOWA", "015-6TT")["nazwa"],
+                         "Wtyczka przenośna 16A 5P 400V IP44 Shark TT PCE")
+        # ostatnie IP wygrywa ("... IP44 16A 24V 2P IP67"), 24V/~ = AC
+        self.assertEqual(pce_name("WTYCZKI PRZENOŚNE TWIST 24V  IP44 16 A 24V/~50/60Hz 2P IP67", "0622v")["nazwa"],
+                         "Wtyczka przenośna 16A 2P 24V AC IP67 Twist PCE")
+        # "3P+Z" + ".+N" na cieciu i "400V" + "3P+Z" bez spacji
+        self.assertEqual(pce_name("WTYCZKA ODBIORNIKOWA IP67 125A 400V 3P+Z.+N ", "545-6")["nazwa"],
+                         "Wtyczka odbiornikowa 125A 5P 400V IP67 PCE")
+        self.assertEqual(pce_name("GNIAZDO STAŁE bez dławika IP67 125A 400V3P+Z ", "144-6")["nazwa"],
+                         "Gniazdo stałe 125A 4P 400V IP67 bez dławika PCE")
+
+    def test_board_outputs_protection_and_name(self):
+        self.assertEqual(pce_name("ROZDZIELNICA STACJONARNA Z TWORZYWA TYP „ADAMOW” 10M IP44 Wejście M25 - wyjście "
+                                  "32/5xB32 2xGSx2xB16 FI40/4/0,03", "9036314W")["nazwa"],
+                         "Rozdzielnica stacjonarna 32/5 2x230V z RCD 40A IP44 Adamów PCE")
+        # "16/5 GS" = jedno gniazdo 230V, nie piec
+        self.assertEqual(pce_name("ROZDZIELNICA STACJONARNA Z TWORZYWA TYP „KOŁO”  IP44 Wejście M20 - wyjście 16/5 GS "
+                                  "R.0-1 16A 3P ", "9769215W")["nazwa"],
+                         "Rozdzielnica stacjonarna 16/5 1x230V z rozłącznikiem 0-1 IP54 Koło PCE")  # IP54 z nazwy producenta
+        # zasilanie wtyczka 32/5 nie jest wyjsciem; zapis "2*16*B" = 2x16/5 z wylacznikami
+        self.assertEqual(pce_name("ROZDZIELNICA PRZENOŚNA Z TWORZYWA TYP „PIESZYCE”  IP44 Wejście 32/5+1,5M - wyjście "
+                                  "3x32/5", "9430009Wk")["nazwa"],
+                         "Rozdzielnica przenośna 3x32/5 z wtyczką 32/5 IP44 Pieszyce PCE")
+        self.assertEqual(pce_name("ROZDZIELNICA STACJONARNA Z ZABEZPIECZENIAMI IP54 OPOLE 32/5*B 2*16*B 5GS*4B FI63, "
+                                  "IP54", "909110004W")["nazwa"],
+                         "Rozdzielnica stacjonarna 32/5 2x16/5 5x230V z RCD 63A IP54 Opole PCE")
+
+    def test_drums_v3(self):
+        self.assertEqual(pce_name("PRZEDŁUŻACZ ZWIJANY JEDNOFAZOWY TYP „XREEL” - WYJŚCIE 4xGS Z TER. IP44 Wejście "
+                                  "20 mb H05RR-F 3x1,5(OW) wtyczka gumowa 16A IP54 ", "92501H48123")["nazwa"],
+                         "Przedłużacz bębnowy 4 gn. 20m 3x1,5mm2 guma IP44 z uziemieniem z termikiem XREEL PCE")
+        self.assertEqual(pce_name("PRZEDŁUŻACZ ZWIJANY TRÓJFAZOWE TYP „KŁODZKO”  IP44 Wejście 30 mb H05RR-F 5x1,5 "
+                                  "(OW) wtyczka 16/5 – wyjście 2*16/5 GS TERMIK IP44", "9331G32265")["nazwa"],
+                         "Przedłużacz bębnowy trójfazowy 2x16/5 1x230V 30m 5x1,5mm2 guma IP44 z termikiem Kłodzko PCE")
+
+    def test_single_phase_earth_types(self):
+        self.assertEqual(pce_name("WTYCZKA JEDNOFAZOWA GUMOWA 10/16A 2P+Z IP44 Wtyczka z bolcem \"uni-schuko\" pełna "
+                                  "guma ", "0522-sr")["nazwa"],
+                         "Wtyczka pełnogumowa Unischuko 16A IP44 PCE")
+        self.assertEqual(pce_name("GNIAZDO PRZENOŚNE JEDNOFAZOWE GUMOWE 10/16A 2 P+Z TOP TAURUS 2 IP44 Gniazdo gumowe "
+                                  "z zab. bocznym VDE  (z klapką)", "25712-sr")["nazwa"],
+                         "Gniazdo przenośne gumowe Schuko 16A IP54 z zatyczką Taurus2 PCE")
+        # producent: 25712 = z zatyczka i IP54 (Ekonom: z klapka, IP44)
+
+    def test_ekonom_errors_fixed_from_manufacturer_with_note(self):
+        # wtyczka tablicowa 2P+Z 6h = 230V (karta producenta), Ekonom pisze 400V
+        res = pce_name("WTYCZKA TABLICOWA  IP44 16A 400V 2P+Z", "613-6")
+        self.assertEqual(res["nazwa"], "Wtyczka tablicowa 16A 3P 230V IP44 PCE")
+        self.assertEqual(res["status"], "WARNING")
+        self.assertTrue(any("w Ekonomie 400V" in u for u in res["uwagi"]))
+        # 75132-6 = IP67 (pcelectric.at); bez poprawki mial nazwe identyczna z 7513-6
+        res = pce_name("GNIAZDO Z WYŁĄCZNIKIEM 0-1 DUŻE BLOKADA MECHANICZNA IP44 16A 230V 2P+Z IP44", "75132-6")
+        self.assertEqual(res["nazwa"], "Gniazdo z wyłącznikiem 0-1 i blokadą 16A 3P 230V IP67 duże PCE")
+        # puszka -171 opisana w Ekonomie wymiarami -161
+        res = pce_name("PUSZKA SERII „LIGHT”  PUSZKA INSTALACYJNA LIGHT POKRYWA PEŁNA, DŁAWNICE 162x116x76 "
+                       "(6xM25, 4xM40) IP66/67 ", "EV-171")
+        self.assertEqual(res["nazwa"], "Puszka instalacyjna 155x179x100mm z dławnicami IP66/67 Light PCE")
+        res = pce_name("GNIAZDO Z WYŁĄCZNIKIEM 0-1 DUŻE BLOKADA MECHANICZNA IP44 16A 400V 3P+Z IP67", "75142-6")
+        self.assertEqual(res["status"], "OK")
+
+
+PAWBOL = load_yaml(DEFAULT_RULES)["suppliers"]["pawbol"]
+
+
+def pawbol_name(name, code, maker=None):
+    """Nazwa z Ekonoma + opis producenta (cennik Pawbol 2026); `name_replace` jak w main()."""
+    row = {"Nazwa towaru": name[:40], "Nazwa dodatkowa": name[40:], "Kod producenta": code,
+           "Kod towaru": f"{code}/PAW", "_feed_key": pawbol_code_key(code)}
+    feed = {row["_feed_key"]: {"_name": maker, "_source": "cennik Pawbol 2026"}} if maker else {}
+    res = build_name(row, {**PAWBOL, "_withdrawn": set()}, {}, feed)
+    for item in PAWBOL.get("name_replace", []):
+        res["nazwa"] = re.sub(item["match"], item["repl"], res["nazwa"])
+    return res
+
+
+class Pawbol20261110Test(unittest.TestCase):
+    """Pawbol: nazwa z cennika producenta, rozdzielnice jak PCE, bebny wg V3, BETA z kodu, bledy cennika z kodu."""
+
+    def test_code_key_and_loader(self):
+        self.assertEqual(pawbol_code_key("H.7015B -25"), "H.7015B-25")
+        with tempfile.TemporaryDirectory() as tmp:
+            Path(tmp, "cennik_2026.json").write_text(
+                '{"A.0001": {"name": "Puszka podtynkowa PK60, płytka 40mm"}, "B.1": {"name": "Produkt wycofany"},'
+                ' "B.2": {"name": "Produkt wycofany"}}', encoding="utf-8")
+            Path(tmp, "produkty.json").write_text(
+                '{"B.2": {"name": "Rozdzielnica R-BOX 150: 2x250V", "groups": ["R-BOX 150"]}}', encoding="utf-8")
+            names, withdrawn = load_pawbol_names(Path(tmp))
+        self.assertEqual(names["A.0001"]["_source"], "cennik Pawbol 2026")
+        self.assertEqual(names["B.2"]["_name"], "Rozdzielnica R-BOX 150: 2x250V")  # wycofany w cenniku, jest na stronie
+        self.assertEqual(withdrawn, {"B.1"})
+
+    def test_board_from_price_list_and_from_ekonom(self):
+        res = pawbol_name("R-BOX 240R 4S, 1x32A/5p, 1x16A/5p, 2x250V, puste okno", "B.1701R",
+                          "Rozdzielnica R-BOX 240 4S: 1x32A/5P, 1x16A/5P, 2x250V, 400V, IP44")
+        self.assertEqual(res["nazwa"], "Rozdzielnica 32/5 16/5 2x230V z rączką IP44 R-BOX 240 4S Pawbol")
+        self.assertIn("nazwa z: cennik Pawbol 2026", res["uwagi"])
+        # kartoteka spoza cennika: zapis Ekonoma "2x32/5", moduly za wyjsciami, RCD 4/40/0,03
+        res = pawbol_name("R-BOX 380R 1x16/5, 2x32/5, 4x230V 13S zabezp. 2xM.01-B32/3, 1xM.01-B16/3, "
+                          "1xM.02-4/40/0,03 IP44", "B.18.380-2ZRP")
+        self.assertEqual(res["nazwa"],
+                         "Rozdzielnica 2x32/5 16/5 4x230V z wył. nadprądowymi i RCD 40A IP44 R-BOX 380 13S Pawbol")
+        # przelacznik "1xL/P 40A" i 2 podstawy (-PS) / 1 podstawa (-PS_1)
+        res = pawbol_name("R-BOX 240, 1x32A/5p, 1x16A/5p, 2x250V, wył. L/P", "B.1095W-PS",
+                          "Rozdzielnica R-BOX 240: 1x32A/5P, 1x16A/5P, 2x250V, 1xL/P 40A, 400V, IP44, 1x termik "
+                          "+ 2x podstawka")
+        self.assertEqual(res["nazwa"], "Rozdzielnica 32/5 16/5 2x230V z przełącznikiem L-0-P z termikiem "
+                                       "z 2 podstawami IP44 R-BOX 240 Pawbol")
+
+    def test_drums_v3_single_and_three_phase(self):
+        self.assertEqual(pawbol_name("Przedłużacz PB H05RR F 3x1,5 - 25m, 4xGZ16A (250V), IP 44", "B.1116-300G-25",
+                                     "Przedłużacz na bębnie plastikowym, fi300, przewód H05RR-F 3x1,5mm2 - 25m, "
+                                     "4x250V, 250V, 1x termik, czarny, IP44")["nazwa"],
+                         "Przedłużacz bębnowy fi300 4 gn. 25m 3x1,5mm2 guma IP44 z uziemieniem z termikiem Pawbol")
+        self.assertEqual(pawbol_name("Przedłużacz PBS H05RR F 5x1,5 - 25m", "B.111015-25",
+                                     "Przedłużacz na bębnie plastikowym, fi340, przewód H05RR-F 5x1,5mm2 - 25m, "
+                                     "1x16A/5P, 2x250V, 400V, 1x termik, biały, IP44")["nazwa"],
+                         "Przedłużacz bębnowy trójfazowy fi340 16/5 2x230V 25m 5x1,5mm2 guma IP44 z uziemieniem "
+                         "z termikiem Pawbol")
+
+    def test_beta_layout_from_code_overrides_price_list(self):
+        # cennik: "gniazdo BETA pojedyncze", kod GG i Ekonom: podwojne
+        res = pawbol_name("Wyłącznik BETA1, pojedynczy, jednobiegunowy z gniazdem BETA1, podwójnym", "D.3114BGGW/1",
+                          "Wyłącznik BETA pojedynczy, jednobiegunowy i gniazdo BETA pojedyncze, białe, biała klapka, "
+                          "IP44")
+        self.assertEqual(res["nazwa"], "Wyłącznik jednobiegunowy z gniazdem podwójnym biały klapka biała IP44 "
+                                       "Beta Pawbol")
+        self.assertEqual(res["status"], "WARNING")
+        self.assertEqual(pawbol_name("Gniazdo herm.BETA1,3x2P+Z,IP44,czarne ,schuko", "D.3715SCGGG/1",
+                                     "Gniazdo BETA potrójne schuko, czarne, czarna klapka, IP44")["nazwa"],
+                         "Gniazdo potrójne Schuko czarne klapka czarna IP44 Beta Pawbol")
+        # stara kartoteka bez koloru obudowy ("dymnym, ob. brąz") - kolor z kodu D.32..
+        res = pawbol_name("Wyłącznik BETA1, podwójny, jednobiegunowy+świecznikowy z gniazdem BETA1, 2P+Z, IP44, "
+                          "dymnym, ob. brąz*", "D.3214GWW2/1")
+        self.assertEqual(res["nazwa"], "Wyłącznik podwójny jednobiegunowy + świecznikowy z gniazdem brązowy "
+                                       "klapka dymna IP44 Beta Pawbol")
+        self.assertTrue(any("brak w cenniku" in u for u in res["uwagi"]))
+
+    def test_luminaires(self):
+        self.assertEqual(pawbol_name("Oprawa PANTERA LED", "D.3198SRM-BN-13W",
+                                     "Oprawa PANTERA, LED, 13W, klosz mleczny, pierścień srebrny, z czujnikiem ruchu, "
+                                     "odporna na UV, 230V, IK10, IP54")["nazwa"],
+                         "Plafon LED 13W 4000K klosz mleczny srebrny z czujnikiem ruchu IP54 Pantera Pawbol")
+        # E27: moc to limit zarowki - bez W; OWAL 60 / 100 to rozmiar
+        self.assertEqual(pawbol_name("Oprawa kanałowa z siatką metalową owalna 60W, IP 44", "D.3166",
+                                     "Oprawa OWAL, E27, 60W, klosz przeźroczysty szklany, podstawa biała, siatka "
+                                     "metalowa, 230V, IK06, IP44")["nazwa"],
+                         "Oprawa kanałowa E27 klosz przezroczysty szklany z siatką metalową biała IP44 Owal 60 Pawbol")
+        # wycofana BZ (bez cennika): barwa slowem, K nieznane
+        self.assertEqual(pawbol_name("Oprawa oświetleniowa IRYS LED czarny pierścień, klosz mleczny b.zimny  13W",
+                                     "D.31101CM-BZ-13W")["nazwa"],
+                         "Plafon LED 13W barwa zimna klosz mleczny czarny Irys Pawbol")
+
+    def test_boxes_and_price_list_errors(self):
+        self.assertEqual(pawbol_name("Puszka do pustych ścian ProDuo podwójna", "A.0092K",
+                                     "Puszka do pustych ścian ProDuo podwójna, głęboka 60mm, fi68, łączeniowa, z "
+                                     "wkrętami, wiatroszczelna, pomarańczowa, IP30")["nazwa"],
+                         "Puszka do pustych ścian głęboka 60mm fi68 łączeniowa podwójna z wkrętami wiatroszczelna "
+                         "pomarańczowa ProDuo Pawbol")
+        self.assertEqual(pawbol_name("Puszka hermetyczna 120x80x50 dł.d.przeźr.IP65 bezhalogenowa", "S-BOX 206-P",
+                                     "Puszka hermetyczna S-BOX 120x80x50, 6 dławików, szara, z pokrywą "
+                                     "przeźroczystą, IP65")["nazwa"],
+                         "Puszka hermetyczna 120x80x50mm 6 dławików z pokrywą przezroczystą szara IP65 S-BOX Pawbol")
+        # cennik: LZ 10/Ż "zielona", B.1923 "wtyczka tablicowa" - poprawione z kodu / strony, z uwaga
+        res = pawbol_name("Listwa zaciskowa niska podstawa 10 - dzielona 2x5 żółta", "E.4132",
+                          "Listwa zaciskowa ochronna dzielona LZ 10/Ż, niska podstawa, 10x16mm2, 32A, 400V, zielona, "
+                          "IP20")
+        self.assertIn("żółta", res["nazwa"])
+        self.assertTrue(any("cennik Pawbol 2026: zielona" in u for u in res["uwagi"]))
+        self.assertEqual(pawbol_name("Wtyczka siłowa 32A 3P IP67", "B.1923",
+                                     "Wtyczka tablicowa prosta, 32A/3P, 250V, niebieska, IP67")["nazwa"],
+                         "Wtyczka przenośna 32A 3P 230V IP67 Pawbol")
+        # cecha tylko w nazwie z Ekonoma (cennik: oba maszty "2m")
+        self.assertEqual(pawbol_name("Maszt odgromowy wolnostojący h=2m fi16/10 podst. 15kg", "R.8312",
+                                     "Maszt odgromowy, wolnostojący, 2m")["nazwa"],
+                         "Maszt odgromowy wolnostojący 2m podstawa 15kg Pawbol")
+
+
+FELEKTRO = load_yaml(DEFAULT_RULES)["suppliers"]["felektro"]
+
+
+def felektro_name(name, code, card=None):
+    """Nazwa z Ekonoma + rekord karty Onninen (`load_onninen_cards`); marka i `name_replace` jak w main()."""
+    row = {"Nazwa towaru": name[:40], "Nazwa dodatkowa": name[40:], "Kod producenta": code, "Kod towaru": f"{code}/FEL"}
+    feed = {code: {"_url": "https://onninen.pl/produkt/x", "_slug": "", **card}} if card else {}
+    res = build_name(row, FELEKTRO, {}, feed)
+    move_brand_tail([res], FELEKTRO)
+    for item in FELEKTRO.get("name_replace", []):
+        res["nazwa"] = re.sub(item["match"], item["repl"], res["nazwa"])
+    return res
+
+
+class FElektro20261110Test(unittest.TestCase):
+    """F-Elektro: rozdzielnice budowlane (wyjscia, zabezpieczenia, przelacznik, zasilanie, seria z modulami),
+    przedluzacze bebnowe wg V3, IP i przelacznik z karty Onninen, opis z Ekonoma dla osprzetu."""
+
+    def test_boards(self):
+        self.assertEqual(felektro_name("Rozdzielnica R-240 - gniazda 2x32A 5p, 2x230V, L/P (32A), wtyczka 32A 5p, "
+                                       "OPD 5x4mm2 -1,5m", "F3.0147")["nazwa"],
+                         "Rozdzielnica 2x32/5 2x230V z przełącznikiem L-0-P 32A z wtyczką 32/5 na przewodzie 5x4mm2 1,5m "
+                         "R-240 F-Elektro")
+        self.assertEqual(felektro_name("Rozdzielnica LAGO 6M - gniazda 2x230V z zabezpieczeniami R2P25A typ AC, "
+                                       "1FB16Ax2 /FE/", "F3.3598")["nazwa"],
+                         "Rozdzielnica 2x230V z wył. nadprądowymi i RCD 25A LAGO 6M F-Elektro")
+        # wtyk odbiornikowy w obudowie to zasilanie, nie wyjscie; "odbornikowy" = literowka Ekonoma
+        self.assertEqual(felektro_name("Rozdzielnica POLYBOX - wtyk odbornikowy 32A 5p, gniazda 16A 5p, 2x32A 5p",
+                                       "F3.0616")["nazwa"],
+                         "Rozdzielnica 16/5 2x32/5 z wtykiem 32/5 POLYBOX F-Elektro")
+        # "-Z" = przelacznik zamykany; "2x250V" = gniazda 230V
+        self.assertEqual(felektro_name("Rozdzielnica RS-KOMBI - gniazda 32A 5p, 2x230V, L/P (32A-Z)", "F3.1890")["nazwa"],
+                         "Rozdzielnica 32/5 2x230V z przełącznikiem zamykanym L-0-P 32A RS-KOMBI F-Elektro")
+        self.assertEqual(felektro_name("Rozdzielnica ULISSE 6M MAXI - gniazda 16A 5p, 32A 5p, 2x250V", "74180.8")["nazwa"],
+                         "Rozdzielnica 16/5 32/5 2x230V ULISSE 6M MAXI F-Elektro")
+
+    def test_card_ip_and_switch(self):
+        # wersja IP65 ma w Ekonomie te sama nazwe bez " - gniazda" - IP z tytulu karty Onninen, uwaga ze zrodlem
+        res = felektro_name("Rozdzielnica LAGO 10M 32A 5p, 2x230V", "F3.0322",
+                            {"IP": "IP65"})
+        self.assertEqual(res["nazwa"], "Rozdzielnica 32/5 2x230V IP65 LAGO 10M F-Elektro")
+        self.assertEqual(res["status"], "OK")
+        self.assertIn("IP65 z tytułu karty Onninen", res["uwagi"][0])
+        # RB-300: Ekonom zgubil przelacznik, tytul karty go ma
+        self.assertEqual(felektro_name("Rozdzielnica budowlana RB-300 12M 2x16A5p, 2x230V", "F3.0544",
+                                       {"_slug": "F-ELEKTRO-ROZDZIELNICA-BUDOWLANA-RB-300-12M-2X16A5P-2X230V-L-P-32A-F3-0544"}
+                                       )["nazwa"],
+                         "Rozdzielnica budowlana 2x16/5 2x230V z przełącznikiem L-0-P 32A RB-300 12M F-Elektro")
+        # IP tylko z generowanego opisu karty - WARNING
+        res = felektro_name("Gniazdo przemysłowe przenośne 16A 3p /FE/", "F7.0108",
+                            {"IP_opis": "IP67"})
+        self.assertEqual(res["nazwa"], "Gniazdo przemysłowe przenośne 16A 3P IP67 F-Elektro")
+        self.assertEqual(res["status"], "WARNING")
+        # w rozdzielnicach IP z opisu nie wchodzi (opis podaje IP obudowy takze przy wersji z gniazdami IP44)
+        self.assertEqual(felektro_name("Rozdzielnica LAGO 10M - gniazda 2x16A 5p", "F3.0853", {"IP_opis": "IP65"})["nazwa"],
+                         "Rozdzielnica 2x16/5 LAGO 10M F-Elektro")
+        # przelacznik zamykany z nazwy wygrywa z tytulem karty bez "-Z"
+        self.assertEqual(felektro_name("Rozdzielnica RS-KOMBI - gniazda 16A 5p, 230V, L/P (16A-Z)", "F3.1893",
+                                       {"_slug": "F-ELEKTRO-ROZDZIELNICA-RS-KOMBI-GNIAZDA-16A-5P-230V-L-P-16A-F3-1893"}
+                                       )["nazwa"],
+                         "Rozdzielnica 16/5 1x230V z przełącznikiem zamykanym L-0-P 16A RS-KOMBI F-Elektro")
+
+    def test_card_loader(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            Path(tmp, "adresy.json").write_text(
+                '{"F3-0322": {"url": "u1", "slug": "F-ELEKTRO-rozdzielnica-lago-10m-gniazda-32a-5p-2x230v-ip65-F3-0322"},'
+                ' "F7-0108": {"url": "u2", "slug": "F-ELEKTRO-gniazdo-przemyslowe-przenosne-16a-3p-fe-F7-0108"}}',
+                encoding="utf-8")
+            Path(tmp, "karty.json").write_text(
+                '{"F7-0108": {"url": "u2", "ip_opis": ["IP67"]}, "F7-0013": {"url": "u3", "ip_opis": ["IP44", "IP67"]}}',
+                encoding="utf-8")
+            rows = [{"Kod producenta": c, "Kod towaru": f"{c}/FEL"} for c in ("F3.0322", "F7.0108", "F7.0013", "F1.0001")]
+            feed = load_onninen_cards(Path(tmp), rows)
+        self.assertEqual(feed["F3.0322"]["IP"], "IP65")
+        self.assertEqual(feed["F7.0108"]["IP_opis"], "IP67")
+        self.assertNotIn("IP_opis", feed["F7.0013"])  # opis z dwoma IP nie rozstrzyga
+        self.assertNotIn("F1.0001", feed)
+
+    def test_drums_and_extensions(self):
+        self.assertEqual(felektro_name("Przedłużacz MAKARA-460 OPD 5x4 2x32A 5p, 230V, wtyczka 32A 5p - 40m",
+                                       "14800-64")["nazwa"],
+                         "Przedłużacz bębnowy trójfazowy 2x32/5 1x230V 40m 5x4mm2 guma H07RN-F MAKARA-460 F-Elektro")
+        self.assertEqual(felektro_name("Przedłużacz FILO-230 OWY 3x1,5 4x230V -30m", "14508-45")["nazwa"],
+                         "Przedłużacz bębnowy 4 gn. 30m 3x1,5mm2 PVC FILO-230 F-Elektro")
+        self.assertEqual(felektro_name("Rozgałęźnik NERO-240 3x230V +termik +kontrolka", "14650")["nazwa"],
+                         "Rozgałęźnik na bębnie 3 gn. z termikiem z kontrolką NERO-240 F-Elektro")
+        self.assertEqual(felektro_name("Przedłużacz listwowy 4x230V OPD (H07RN-F) 3x2,5 /20m/", "34977-4")["nazwa"],
+                         "Przedłużacz listwowy 4 gn. 20m 3x2,5mm2 guma H07RN-F F-Elektro")
+
+    def test_accessories_from_ekonom_description(self):
+        self.assertEqual(felektro_name("Reduktor wtyczka 16A 4p na gniazdo 32A 4p", "F7.0023")["nazwa"],
+                         "Reduktor wtyczka 16A 4P na gniazdo 32A 4P F-Elektro")
+        self.assertEqual(felektro_name("Szybkozłączka uniwersalna 0,14-4mm2 - 3-styki - opakowanie 10 szt",
+                                       "F2.0630")["nazwa"],
+                         "Szybkozłączka uniwersalna 0,14-4mm2 3 styki F-Elektro op. 10 szt.")
+        self.assertEqual(felektro_name("Puszka hermet. V8, 400V, 80x45x41, biała.-klik", "F1.0262")["nazwa"],
+                         "Puszka hermetyczna V8 400V 80x45x41 biała klik F-Elektro")
+        self.assertEqual(felektro_name("Obudowa ULISSE 6M MIDI 355- gniazda mm x 135mm x 105mm", "74180.41")["nazwa"],
+                         "Obudowa rozdzielnicy 355x135x105mm ULISSE 6M MIDI F-Elektro")
+
+
+class ProperNames20261116Test(unittest.TestCase):
+    """Przeglad nazw wlasnych 2026-11-16 (Kobi, GTV, Kanlux): seria / linia / producent nie gina z nazwy."""
+
+    def test_kobi_series_in_parametric_types(self):
+        feed = {"4666": {"_name": "Plafon LED NIVERA SQUARE 12W 3CCT IP54 czarny Kobi Premium", "Marka": "Kobi Premium"}}
+        res = build_name(kobi_row("Plafon LED NIVERA SQUARE 12W 3CCT IP54 czarny Kobi Premium"), KOBI, {}, feed)
+        self.assertTrue(res["nazwa"].endswith("Nivera Square Kobi Premium"), res["nazwa"])
+        # rodzaj z nazwy feedu i kat "110ST" nie wchodza do serii; kody MHN zostaja WIELKIMI
+        res = build_name(kobi_row("Naświetlacz LED DELYO MHN 30W 4000K IP65 Kobi Premium"), KOBI, {}, {})
+        self.assertTrue(res["nazwa"].endswith("Delyo MHN Kobi Premium"), res["nazwa"])
+        res = build_name(kobi_row("NEXTRACK NT4 MINI 20W 60ST 4000K CR90 CP"), KOBI, {}, {})
+        self.assertTrue(res["nazwa"].endswith("Nextrack NT4 Mini Kobi"), res["nazwa"])
+        # w dekor seria dalej niesie DALI (porzadki tylko w typach parametrycznych)
+        self.assertNotIn("Dali", build_name(kobi_row("Panel LED CAPRI 40W 60x60 4000K DALI Kobi Pro"), KOBI, {}, {})["nazwa"])
+
+    def test_kobi_proper_name_before_brand(self):
+        # 2026-11-17: nazwa wlasna (seria) przed marka, marka na samym koncu
+        res = build_name(kobi_row("Taśma LED TRAMO 320 COB 50m 6500K 12V IP20 Kobi Premium"), KOBI, {}, {})
+        self.assertEqual(res["nazwa"], "Taśma LED COB 320LED/m 50m 6500K 12V IP20 Tramo Kobi Premium")
+        res = build_name(kobi_row("Oprawa drogowa LED CYOTO 50W 4000K LX Kobi Premium"), KOBI, {}, {})
+        self.assertEqual(res["nazwa"], "Oprawa uliczna LED 50W 4000K z czujnikiem Cyoto Kobi Premium")
+
+    def test_kobi_review_20261117(self):
+        # przeglad po "nazwa wlasna przed marka": zestaw z tubami, lacznik z cecha z Ekonoma, Windstar, akumulatory
+        res = build_name(kobi_row("ZESTAW HERMETIC 2X120 + LED T8 18W 4000K"), KOBI, {}, {})
+        self.assertEqual(res["nazwa"], "Oprawa hermetyczna z tubami LED 2x120cm 2x18W 4000K Hermetic Kobi")
+        res = build_name(kobi_row("Zestaw hermetyczny HERMETIC G2 + 2x LED T8 18W 120cm 4000K KOBI"), KOBI, {}, {})
+        self.assertIn("z tubami LED 2x120cm 2x18W", res["nazwa"])
+        feed = {"4666": {"_name": "Łącznik do szynoprzewodu 3-obwodowy T PRAWY biały Kobi", "Marka": "Kobi"}}
+        res = build_name(kobi_row("ŁĄCZNIK T ZEWNĘTRZN BIAŁY DO NEXTRACK NT"), KOBI, {}, feed)
+        self.assertEqual(res["nazwa"], "Łącznik do szynoprzewodu 3-obwodowy T zewnętrzny prawy biały Nextrack NT Kobi")
+        feed = {"4666": {"_name": "Grzejnik konwektorowy SONDO 2000W TURBO biały Kobi Windstar", "Marka": "Kobi Windstar"}}
+        res = build_name(kobi_row("GRZEJNIK KONWEKTOROWY SONDO 2000W TURBO"), KOBI, {}, feed)
+        self.assertEqual(res["nazwa"], "Grzejnik konwektorowy 2000W biały Sondo Turbo Kobi Windstar")
+        feed = {"4666": {"_name": "Wentylator wieżowy LISSE 2 ST 45W czarny Kobi Windstar", "Marka": "Kobi Windstar"}}
+        res = build_name(kobi_row("Wentylator wieżowy LISSE 2 ST 45W czarny Kobi Windstar"), KOBI, {}, feed)
+        self.assertEqual(res["nazwa"], "Wentylator wieżowy 45W czarny Lisse 2 ST Kobi Windstar")
+        res = build_name(kobi_row("AKUM. 18650 7,4V 5,4AH (SOLAR STREET 15W"), KOBI, {}, {})
+        self.assertEqual(res["nazwa"], "Akumulator 18650 7,4V 5,4Ah do Solar Street 15W Kobi")
+        res = build_name(kobi_row("KOSTKA HALOGENOWA Z WYSIĘGNIKIEM - K006"), KOBI, {}, {})
+        self.assertEqual(res["nazwa"], "Kostka halogenowa z wysięgnikiem K006 Kobi")
+        # "barwa NEUTRALNA BIAŁA" to barwa swiatla - nie seria i nie kolor obudowy
+        res = build_name(kobi_row("Oprawa LED NEXFORCE N2 52W barwa NEUTRALNA BIAŁA"), KOBI, {}, {})
+        self.assertNotRegex(res["nazwa"], r"(?i)neutraln|biał")
+
+    def test_kobi_accessory_system_from_ekonom_name(self):
+        feed = {"4666": {"_name": "Szynoprzewód 3-obwodowy 2m czarny Kobi", "Marka": "Kobi"}}
+        res = build_name(kobi_row("SZYNA 3-FAZOWA 2M CZARNA DO NEXTRACK NT"), KOBI, {}, feed)
+        self.assertTrue(res["nazwa"].endswith("Nextrack NT Kobi"), res["nazwa"])
+
+    def test_gtv_bulb_line_and_wall_luminaire_model(self):
+        res = build_name(gtv_row("ŹRÓDŁO ŚWIATŁA LED, FILAMENT, SPIN, C35, E14, 3,0W, 165lm, 2200K, AC220-240V, 360ST"),
+                         GTV, {})
+        self.assertTrue(res["nazwa"].endswith("GTV Spin"), res["nazwa"])
+        res = build_name(gtv_row("OPRAWA ŚCIENNA JEDNOKIERUNKOWA, TIAGO, GU10, max. 35W, IP54, AC220-240V, 50/60Hz, INOX"),
+                         GTV, {})
+        self.assertIn("Tiago", res["nazwa"])
+
+    def test_gtv_driver_maker_and_voltage_range(self):
+        res = build_name(gtv_row("ZASILACZ STAŁOPRĄDOWY DALI REGULOWANY 550-1000mA 3-54V SELV KLASA 1, BOKE"), GTV, {})
+        self.assertIn("GTV Boke", res["nazwa"])
+        self.assertNotRegex(res["nazwa"], r"\b3-(\s|$)")
+        res = build_name(gtv_row("ZASILACZ STAŁOPRĄDOWY DALI-PUSH-1-10V REGULOWANY 250-700mA 3-42V SELV KLASA 2, BOKE"),
+                         GTV, {})
+        self.assertIn("DALI-PUSH-1-10V", res["nazwa"])
+
+    def test_kanlux_tube_and_breaker_line(self):
+        res = build_name(kanlux_row("T8 LED GLASSv4 18W-NW Tuba LED 4000k 2880lm", "33212"), KANLUX, {}, {})
+        self.assertTrue(res["nazwa"].endswith("Kanlux GLASSv4"), res["nazwa"])
+        # linia za marka (rzeczownik z karty kanlux.com); gdy rzeczownik z nazwy w Ekonomie juz ja niesie, nie powtarza sie
+        res = build_name(kanlux_row("KRD10-2/63/30-AC Wyłącznik różnicowoprądowy IDEAL TS 2P", "38732"), KANLUX, {}, {})
+        self.assertEqual(res["nazwa"].count("IDEAL TS"), 1, res["nazwa"])

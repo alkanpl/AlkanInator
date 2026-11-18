@@ -62,6 +62,16 @@ czyta z `archived_input_files/input_2026-08-05/kanlux_braki_wymaganych_uzupelnio
 - `validate_output.py` - role produktow (glowny vs akcesorium), zgodnosc z
   kategoria.
 - `catalog_knowledge.py` - wstrzykiwanie wiedzy z eksportu WooCommerce do configu.
+  Slownik `dictionaries/woocommerce_catalog_knowledge.yaml` generuje
+  `analyze_woocommerce_export.py` z pliku `woo_api_cli.py pull --all` (od 2026-11-05;
+  dawniej CSV `wszystko.csv`): sciezki kategorii rozwija do rodzicow, nazwy atrybutow
+  bierze z `cache/woo_api/knowledge.json` (najpierw `knowledge` z tego samego sklepu),
+  przecinek w wartosci (`2,5`, dane producenta) nie dzieli juz terminu.
+  `knowledge --profile prod` bez `--dictionaries-dir` nadpisuje `dictionaries/woo_*_snapshot.tsv`,
+  a produkcja ma jeszcze smieciowe terminy po partii Simon kaszmir (`Antenowe, Komputerowe`,
+  `Kaszmirowy`, licznik 0; pilnuje tego `test_shop_attribute_values`) - do analizy katalogu
+  `knowledge --dictionaries-dir cache/woo_api/prod --cache cache/woo_api/prod/knowledge.json`
+  i `--woo-knowledge` na ten plik; zrzuty `.tsv` zostaja z AlkanLocal do czasu sprzatniecia Woo.
 - `dictionaries/supplier_global_knowledge.yaml` - globalna wiedza o dostawcach,
   obecnie przede wszystkim Kanlux: suffixy, zasady kategorii, tytulow,
   akcesoriow, atrybutow i bezpiecznych opisow. Przy zadaniach Kanlux czytaj ten
@@ -133,7 +143,10 @@ dokladnie, z sufiksem dostawcy (`37246/KAN`); warianty nie sa zwracane.
   przyciskiem w WooCommerce > AlkanInator API.
 - Aplikacja "Wgraj zmiany do sklepu" (od 2026-11-02, dla osob bez terminala):
   dwuklik `Wgraj zmiany do sklepu.bat` (albo `py src/woo_preview_app.py`) otwiera
-  strone w przegladarce. Wybor sklepu (profile z `config.json`, bez tokenow) i
+  strone w przegladarce. Nowy komputer: Python z py launcherem + `Instalacja.bat`
+  (requests, openpyxl, Pillow; `.bat` aplikacji sam go wola, gdy bibliotek brak -
+  `pyw` padal bez komunikatu) + wlasny `config.json`; `Diagnostyka - Wgraj
+  zmiany.bat` pokazuje bledy startu. Wybor sklepu (profile z `config.json`, bez tokenow) i
   pliku -> dry-run -> karty produktu przed/po w CSS motywu `alkan` z AlkanLocal
   (`--theme-dir`, bez motywu proste style zastepcze), zmienione pola w ramce,
   tabela zmian, odznaczanie kolumn (= `--columns`) -> "Zatwierdz" -> zapis ->
@@ -224,6 +237,25 @@ jeden zapis, zgoda na czyszczenie pol, zgodnosc z dry-run, tokeny osob) i w CLI
   `--skip-image-check` i podnoszenie limitu tylko na wyrazne zyczenie.
   Blad "Zapis wstrzymany" albo "limit" zglos uzytkownikowi zamiast szukac
   obejscia.
+
+## Dokumentacja dla zespolu (Notion)
+
+`docs/changelog.md` (zmiany od najnowszych, jezykiem osob korzystajacych) i
+`docs/instrukcja.md` (prosta instrukcja funkcji dla osob bez terminala) sa
+publikowane na stronach Notion przez `py -I src/notion_api/publikuj-w-notion.py`
+(mapa plik -> ID strony w `DOKUMENTY`; pusty ID = dokument pomijany). Publikowana
+jest tresc z commita, nie robocza; po kazdym commicie robi to hook
+`.githooks/post-commit` (wlaczenie: `git config core.hooksPath .githooks`).
+`--podglad` pokazuje tytul i tresc bez wysylania, `--wszystkie` publikuje oba
+dokumenty niezaleznie od commita. Token integracji Notion: `NOTION_TOKEN` albo
+`src/notion_api/config.json` (`{"token": "..."}`, ignorowany przez git) - nie
+czytaj go ani nie wypisuj. Strony w Notion sa nadpisywane w calosci, wiec poprawki
+robi sie tylko w repo.
+- Po zmianie widocznej dla uzytkownika (nowe narzedzie, nowy dostawca, nowa
+  runda, zmiana zasady) dopisz wpis na gorze `docs/changelog.md` pod dzisiejsza
+  data; gdy zmienia sie sposob korzystania - popraw tez `docs/instrukcja.md`.
+  Oba pliki pisze sie po polsku z polskimi znakami, bez sciezek do skryptow.
+- Test: `tests/test_notion_publish.py`.
 
 ## Testy
 
@@ -351,7 +383,7 @@ przy konflikcie z promptem wygrywa YAML).
 - Dla produktow Hager/Berker pole `Atrybut Produktu: Seria` ma odzwierciedlac
   dokladna grupe przypisana do konkretnego SKU w katalogu. Kategorie moga byc
   szersze i laczyc serie zgodnie z aktualna lista w
-  `input/BerkerHagerKategorie.xlsx`; jeden produkt moze nalezec do wielu
+  `archived_input_files/input_2026-11-10/BerkerHager/BerkerHagerKategorie.xlsx`; jeden produkt moze nalezec do wielu
   kategorii. Przyklad: seria `R.1|R.3` pozostaje bez `R.8`, ale kategoria to
   `Berker R.1/R.3/R.8`.
 - Dla Hager/Berker `B.1` nie jest seria i nie wolno jej zapisywac w atrybucie,
@@ -807,12 +839,23 @@ przy konflikcie z promptem wygrywa YAML).
   "Lampka na monitor"), oprawa na wymienne zrodlo (1xGU10, G5.3/GU10) nie wymaga lm, swietlowki T8 maja
   dlugosc, wyroznik z samej cyfry/litery dostaje slowo modelu ("SOLARIS 2", "Quazar 15"). Produkty
   spoza feedu (stare kartoteki, ~230) nie maja lm z zadnego zrodla - nastepcy w feedzie to czesto inna
-  seria (ZOE != SIGARO), wiec lm nie przenosimy. Kanlux (od 2026-10-14):
+  seria (ZOE != SIGARO), wiec lm nie przenosimy. Kobi runda 3 (2026-11-05): wejscie to katalog
+  `archived_input_files/input_2026-11-10/EkonomNazwy/Kobi` ("kata" + 391 nowych kartotek "kart"), feed `ceneo_kobi.xml` jest tylko w stashu git
+  `4ad6dd9` (bez niego nazwy traca kolory i nazwy z feedu). Nazwa od kodu modelu ("LED VESPA PRO 40W 4000K Lampa
+  uliczna", "HERMETIC 1X60 Oprawa pod tuby led") tez bierze nazwe z feedu (`prefer_feed_name_model_first`), a
+  `name_cleanup` czysci i nazwe feedu (`feed_name_cleanup`: "PRAWE", "Kob i", "25-36- 40W", "do nabudowania").
+  HERMETIC / HERMIC / HERMES n x dlugosc = oprawa pod tuby ("pod tuby LED 2x120cm"), plafon na zarowki (2xE27, 1X60W)
+  to "Plafon", nie "Plafon LED"; marka feedu "Nexus" = Kobi Pro (`brand_map`); VESPA PRO = oprawa uliczna (stare VESPA spoza feedu zostaja naswietlaczem); oczka
+  OH-xx z ksztaltem i modelem; "STALE" to nie stal. "LED <MODEL> W K" bez rodzaju (DEFENDER, INDUO) = "Oprawa LED"
+  + model, DO_SPRAWDZENIA - rodzaju nie zgadujemy (SUNFLASH zostaje bez reguly; POWER BOX = "Bank energii 600W Kobi Power Box",
+  decyzja uzytkownika). Kanlux (od 2026-10-14):
   parametry z plikow `Parametry*.xlsx` z kanlux.pl (`--params-dir`, format dlugi
   Kod Kanlux / Nazwa atrybutu / Wartosc, dopasowanie po `Kod towaru` 37246/KAN) sa
   zrodlem prawdy i nadpisuja nazwe (kod `WW` u zarowek bywa 2700K, nie 3000K).
   Nazwa Kanlux = kod modelu + polski typ - rzeczownik bierze sie z typu
   ("Oprawa liniowa LED"), seria to kod modelu bez parametrow (`AL-SL-MAT-NT`).
+  Typ "Oprawa pyloszczelna" w nazwie to "Oprawa hermetyczna" (takze odmiana: "Akcesorium
+  oprawy hermetycznej"; `name_replace` Kanlux, decyzja uzytkownika 2026-11-09).
   "Moc maksymalna" przy wymiennym zrodle (trzonek GU10/E27) to limit zarowki, nie
   moc oprawy. Osprzet DOMO/LOGI/TEKNO: typ + seria + kolor + indeks na koncu (kody
   kolorow bi/kr/sr/gr/sz/pe/cm w YAML; `cm` = czarny mat - tak podaja parametry Kanlux LOGI);
@@ -823,7 +866,21 @@ przy konflikcie z promptem wygrywa YAML).
   parametrach (G13/GU10/E27...) nie wymaga mocy/lm/K i ma w nazwie trzonek z krotnoscia (NOTUS 418 ->
   4xG13); MOD/MODv2 = "Moduł LED"; powtorzenia rozniace sie rozmiarem z kodu dostaja rozmiar przy serii
   (STOBI DLP 350 / 450);
-  wylaczniki KMB/KRD i styczniki KCP dekodowane z kodu (B16 1P 10kA). GTV (od
+  wylaczniki KMB/KRD i styczniki KCP dekodowane z kodu (B16 1P 10kA).
+  Kanlux runda 3 (2026-11-04): wejscie to katalog `archived_input_files/input_2026-11-10/EkonomNazwy/Kanlux` ("kata" = baza z rund 1-2,
+  "kart" = 1156 nowych kartotek jako "<40> | <reszta>"), `--input <katalog>` jak Bemko. 14 plikow
+  `Parametry*.xlsx` z rund 1-2 nie ma juz w `input/` - sa tylko w stashu git `4ad6dd9` ("input/Nazwy do
+  ekonom/Kanlux/"); `--params-dir` z nimi odtwarza v2, a reszte kodow pokrywa `fetch_kanlux_web.py`
+  (3386 kart, 94 wycofane). Bez tych plikow kata traci lm/kolor u kodow wycofanych z kanlux.com. Pusty klucz
+  karty kanlux.com (ikona klasy energetycznej = "E") nie jest atrybutem - dawal marke "E". Nowe kody
+  aparatury: KMBN6 (C10 1P+N 6kA), KRO = "Wylacznik RCBO" (B10 2P 30mA typ A 6kA), KMI / KCS (63A 3P),
+  KMC (20A 1NO+1NC), KSD / KSPD (T1+T2 3P+N, M = wkladka, TT = T2 TT), KMCCB-F (125A 4P). "UGR≤" idzie do
+  Ekonoma jako "UGR<" (cp1250 dawal "UGR?"); IP powtorzone z typu ("Oprawa punktowa LED IP44") zostaje raz.
+  Grupa Ekonoma "Rozgalezniki, gniazda, wtyczki" (ZARK / PIN / GRIP / STAN, 2026-11-05): typy `rozgaleznik`, `wtyczka`,
+  `gniazdo_przenosne`, cechy z karty kanlux.com (`param` w `features`: "Liczba gniazd", "Rodzaj uziemienia" typ E = z
+  uziemieniem / typ F = Schuko, "Prad znamionowy"), uklad jak rozgalezniki Kobi / Bemko: "Rozgaleznik 3 gn. z uziemieniem
+  bialy ZARK KRT/2-1 Kanlux", "Gniazdo przenosne 1 gn. Schuko IP44 czarne GRIP GP/S Kanlux".
+  GTV (od
   2026-10-14): `Kod producenta` to kod GTV (LD-SMBD45-10), nie EAN - katalog PDF jest
   czytany po kodzie i tylko z komorek z jednostka (`1000 lm`, `650 lm/m`, `3200 K`);
   lm z nazwy maja pierwszenstwo, katalog uzupelnia braki, a `150lm/W` x moc daje lm.
@@ -857,6 +914,19 @@ przy konflikcie z promptem wygrywa YAML).
   karty, WARNING ze stara nazwa w uwagach (`apply_web_card`, np. Plato 450-360 = 36W 3250lm, nie "24W 2160LM").
   Akcesoria `inne`: marka za rzeczownikiem przed "do/z/na" (`brand_before_prep`), caly opis bez wycinania
   powtorzen (`series_all_segments`).
+  Bemko runda 3 (2026-11-03): wejscie to katalog `archived_input_files/input_2026-11-10/EkonomNazwy/Bemko` ("kata" = baza z rund 1-2 w ukladzie
+  Ekonoma, "kart" = 340 nowych kartotek jako "<40> | <reszta>"), `--input <katalog>` jak Signify. Zestawienie gubi
+  spacje na cieciu: pierwsza czesc krotsza niz 40 znakow dostaje spacje przed reszta (`read_csv`), chyba ze to
+  liczba i jej ciag dalszy / jednostka ("4000" + "K", GTV '1/4", 6' + '0 mm' - Ekonom liczy cudzyslow podwojnie).
+  Literowki Ekonoma ("600 0LM", "4400L M", "I P44", "AT 1H", "z CZUP44") naprawia `name_cleanup`. Nowe typy:
+  zarnik R7s, zarowka halogenowa, swietlowka, ramka montazowa do paneli (z wymiarem 60x60 / 30x120), zasilacz do
+  paneli (mA), oprawa stadionowa, awaryjna z lm (`awaryjna_lm`: panel / hermetyczna z modulem awaryjnym niesie
+  wymiar, lm i K; male awaryjne bez nich), Plato 24V DC; "OPRAWA RAMA LED ... PLAZA" = Panel LED. Plafon LED bez
+  lm w nazwie (moc, bez trzonka) to `plafon_led` z lm z karty. "CCT" z nazwy nie jest nadpisywane barwami karty;
+  nazwy kart WIELKIMI LITERAMI (takze z jednym "mini") nie ucza pisowni slow (`load_web_params`).
+  Przeglad 2026-11-04: ogranicznik "KLASY T1T2" = T1+T2; w akcesoriach `inne` "+" zostaje ("(4NO+0NC)"), uklad
+  "2x15" tez, jednostki malymi (`series_unit_lower`: "290mm", "1,5m", "160x160mm", "fi60mm", "10 szt."), kody
+  SSO / LFX WIELKIMI, "grafit" / "typ" malymi.
   Przeglad Ledvance partiami (2026-10-21, v19): `name_cleanup` naprawia zapis Ekonoma (PANELANON -> PLANON,
   SUNATHOME -> SUN@HOME, Obris -> Orbis, sklejone RGBTWBK / ERECESSEDMOUNTFRAME, skroty PEND / CLICKD / REM / CAM), a
   `undo_excel_date` cofa daty Excela w `Nazwa dodatkowa` ("05-lip" = 7/5, "27-maj" = 27/5, "maj-40" = 40/5 - koncowki
@@ -890,6 +960,179 @@ przy konflikcie z promptem wygrywa YAML).
   marka Osram tez przy koncowce EAN ("OSRAM 7426"), DUOBOX = op. 2 szt.
   Swietlowki liniowe Ledvance to "Swietlowka", nie "Tuba fluorescencyjna" (decyzja uzytkownika 2026-10-26); "Tuba LED"
   i oprawy "pod tuby" bez zmian.
+  Signify (od 2026-11-03, runda 1): wejscie to KATALOG `archived_input_files/input_2026-11-10/EkonomNazwy/Signify` z 4 zestawieniami (FAR = oprawy,
+  PHP = zrodla; "kat" w ukladzie Ekonoma, "kart" jako "<40> | <reszta>") - `--input <katalog>` liczy nazwy i powtorzenia
+  razem, a wynik zapisuje osobno dla kazdego pliku (`output/Ekonom-nazwy-Signify_<plik>_<data>.csv`, uklad Ekonoma).
+  `Kod producenta` to 12NC Philipsa; karta `lighting.philips.pl/.../product-detail-page.<12NC>_EU.html`
+  (`scripts/fetch_signify_web.py`, cache `cache/signify_web/`, ~25 min / 2700 kodow w 10 watkach, potem
+  `--retry-missing`) jest zrodlem prawdy jak pliki Parametry Kanlux (`params_web_loader: signify`): moc, lm, K, IP, trzonek,
+  kolor, wymiary, DALI, UGR. 404 = brak w ofercie (2026-11-03: 817 z 2674) - dane tylko z nazwy, bez dalszej pracy.
+  Zmiane parametru wzgledem Ekonoma notuje uwaga "lumen z karty ...: X (w Ekonomie: Y)" (`params_change_note`).
+  Swietlowki, kompakty, halogeny i HID biora moc NOMINALNA z nazwy (`params_skip: [power]`; karta podaje 79,8 W przy 80W).
+  Wzor: parametry, potem marka (Philips / PILA), kod rodziny oprawy w pisowni producenta (BY120P, RC132V, DN142B) i linia
+  (MASTER, CorePro, CoreLine, Ledinaire... - z nazwy, a gdy jej brak z kategorii karty) na koncu: "Downlight LED 150 mm
+  10,7W 1000lm 3000K IP44 UGR19 DALI bialy Philips DN142B CoreLine", "Zarowka LED E27 4W 840lm 2700K A60 przezroczysta
+  sciemnialna Philips MASTER". "LED classic 40W" / "PILA LED 60W" to ZAMIENNIK mocy - bez karty zostaje "zamiennik 40W"
+  i DO_SPRAWDZENIA. Kod Philips "LED55/740", "36S/840" = 5500 / 3600 lm i 4000K; PSD / PSR = DALI; "IP20/44" = IP44.
+  Stare narzedzie nazwalo czesc swietlowek TL-D Colored / TL-E / TL Mini i zarowek do piekarnika "Tuba LED" - kategoria
+  karty to poprawia (`card_rename`). Decyzje 2026-11-03 ("dodaj to, co opisales w grupach powtorzen, i nazwy wlasne"):
+  wyrozniki z nazwy i z nazwy katalogowej karty (`features_card_name`) - optyka drogowa kodem "opt. DM10", klasa I / II,
+  optyka naswietlaczy i High Bay ("opt. sym." / "opt. asym." / "opt. OFA52" / "opt. wąska" / "opt. szer." - za kolorem, tuz przed marka; wytyczne
+  2026-11-04: "Naswietlacz LED 31W 4263lm 3000K IP66 szary opt. sym. Philips BVP111 CoreLine"), linie swietlne "opt. WB przewody 5x1,5 HE", panele
+  OC / NOC, generacja G4 / G5, "awaryjna 3h" (ELB3), downlighty kat 36° i oslona "opt. C / WR", tuby i zarowki "sciemnialna",
+  "CRI 90" (kod 9xx / CRI95), ksztalt plomyk (BA35) i A67; reszte blizniakow rozroznia kod wersji z nazwy katalogowej karty
+  (`version_suffix_all`, `version_from_card`, np. PSR / PSD). Nazwa wlasna rodziny (`proper_names`, slownik kategorii karty)
+  stoi przed kodem: "... Philips Malaga BRP102 CoreLine", "Philips ClearWay BGP307"; produkty bez karty dostaja ja po kodzie
+  rodziny. Slowa kategorii (Downlight, Highbay, Waterproof, Batten, Panel) nie sa nazwa wlasna. Powtorzenia 251 -> 63 grupy
+  (28 identycznych juz w Ekonomie). Kontrola 2026-11-03: TForce "60-35W" = 35 W rzeczywiste (odwrotnie niz "LEDBulb
+  8-60W"), "LED760/WW" (3-4 cyfry) to juz lumeny, a "LED42/NW" (2 cyfry) = 4200 lm; MDU = czujnik ruchu; MR16 bez
+  trzonka = GU5.3, PAR20/30/38 i R63/R80 = E27; kod W3 / W5 paneli przed ELB3, bo "ELB3 W3" czytalo sie jako moc 3W.
+  Braki (2026-11-03): kod bez strony czesto ma jeszcze karte PDF `docs.signify.com/assets/Leaflet/Philips_PROF/FP/<pl_PL |
+  en_GB | en_AA>/<12NC>_EU.<jezyk>.PROF.FP.pdf` - `scripts/fetch_signify_leaflets.py` (po `fetch_signify_web.py`) zapisuje ja
+  do `cache/signify_web` jak karte strony (`source: pdf`, uwagi "karta PDF docs.signify.com"); 495 z 813 kodow, DO_SPRAWDZENIA
+  491 -> 147 (reszta: wycofane zarowki konsumenckie LED classic / PILA i stare oprawy bez zadnej karty). Karta, ktora zmienia
+  co najmniej dwa z: moc / lm (>15 %) / barwa, opisuje inny produkt niz kartoteka - nazwa z karty, WARNING "karta przeczy
+  nazwie w Ekonomie". Dlugosc belek / hermetycznych / linii i wymiar paneli nominalny z nazwy (`params_keep_name`: L1500 =
+  150cm, nie 145 z karty); WW / NW przy slupkach i najazdowych = 3000K / 4000K (potwierdzone kartami PDF).
+  Przedluzacze (schemat uzytkownika `archived_input_files/input_2026-11-10/schemat nazwy przedłużaczy V3.xlsx`, 2026-11-05, wszyscy dostawcy;
+  V3 zastepuje V2 z 2026-11-04 - w domowych dlugosc i przekroj przeszly przed uziemienie): domowe "Przedluzacz |
+  ilosc gniazd | dlugosc | przekroj | uziemienie / Schuko / bez uziemienia | wylacznik | nazwa wlasna | producent", bebnowe "Przedluzacz bebnowy | ilosc gniazd | dlugosc |
+  przekroj | rodzaj przewodu (material: guma / PVC) | hermetycznosc | uziemienie / Schuko | nazwa wlasna |
+  producent" (uziemienie przy koncu - decyzja uzytkownika do V2, potwierdzona dla V3 2026-11-05 - arkusz V3 nie ma tej kolumny, bez niego B15 i B16 Bemko mialy te same nazwy). Uziemienie w domowych to jedna wartosc (Schuko zastepuje "z uziemieniem"); USB idzie za gniazdami
+  ("3 gn. + 2xUSB A+C"), kolor (Kobi) przed nazwa wlasna; kody Kobi "3gn/1,5m/Zu+W" rozpisane slowami, nazwa
+  wlasna = seria Kobi (Linea, Linea Pro XC, Connecto...). "Przedluzacz 3 gn. 1,5m 1,5mm2 Schuko z wylacznikiem
+  Bemko", "Przedluzacz bebnowy 4 gn. 15m 3x1,5mm2 Schuko Bemko", "Przedluzacz 3 gn. 5m z uziemieniem z
+  wylacznikiem czarny Linea Kobi" (kolejnosc cech = kolejnosc `features` w YAML; reguly `przedluzacz` Kobi, Bemko i GTV, `przedluzacz_bebnowy` Bemko i GTV).
+  GTV od 2026-11-05: domowe (PF / PS), ogrodowe, bebnowe i przedluzacze Hogert ("w izolacji gumowej" = "guma");
+  biurkowe, wpuszczane i katowe MINI to inny rodzaj bez schematu. Uziemienia nie zgadujemy z liczby zyl.
+  Opis akcesoriow / typow bez schematu GTV (`series_keep_units`, `series_keep_plus`, `series_balance_parens`):
+  jednostka za liczba zostaje ("GLAX 12m"), "+" w skladzie zestawu tez, limit slow nie tnie w nawiasie.
+  GTV runda 3 (2026-11-05): katalog `archived_input_files/input_2026-11-10/EkonomNazwy/GTV` (kata + 490 nowych kartotek kart). Znaki spoza cp1250
+  przychodza z Ekonoma jako "?": "??" = smieci (usuwane), "?150 mm" = srednica, "mm?" = mm2, "cm?" = cm3, "PF?" = PF>;
+  "A60 820lm" to 820 lm (liczba sklejona z litera nie zaczyna lumenow). Nowe grupy powtorzen to glownie identyczne
+  nazwy w Ekonomie (Hogert -1/-2, profile GLAX z P na koncu) - do decyzji uzytkownika.
+  Elgotech (od 2026-11-10, runda 1): katalog `input/Nazwy Ekonom/Elgotech` ("katalog" w ukladzie Ekonoma + "karto" =
+  130 nowych kartotek), `--input <katalog>`. Zrodlo danych: katalog PDF ze strony (elgotech.pl ma tylko PDF) -
+  `scripts/extract_elgotech_catalog.py` -> `cache/elgotech/katalog_wiersze.json` (`catalog_rows`, 609 z 1254 kodow):
+  przekroj i kolor, ktorych krotka nazwa nie podaje; kolor sprzeczny z nazwa = DO_SPRAWDZENIA (`catalog_color_skip`
+  dla bledow tabeli, R-20BS-24 jest czarno-czerwony jak na zdjeciu). Z dzialow katalogu: PK-10 / PS-10-5 =
+  "Przedluzacz ogrodowy" pomaranczowy, PZB-1111-xxG = beben metalowy, RT-30CA trojkatny, R-x0CA plaski, model
+  przeciwprzepieciowych (PSF / PSF2 / PSF3 / PSF4 / MPSFU / MPSF2U - rozna ochrona) jako nazwa wlasna. Prawie same przedluzacze - schemat V3 jak Kobi / Bemko / GTV:
+  "Przedluzacz 5 gn. 2m z uziemieniem z wylacznikiem czarny Economic Elgotech", "Przedluzacz bebnowy maly 4 gn. 20m
+  3x1mm2 PVC z uziemieniem Elgotech". Kod producenta stoi w nazwie (na poczatku albo w srodku) i jest wycinany
+  (`strip_code`). Zapis Elgotech: z/u = z uziemieniem, b/u = bez uziemienia ("BEZ UZIEM" zawiera "Z UZIEM" - stad
+  `\bZ UZIEM`), 2P+Z = z uziemieniem, "unischuko" to wtyczka (nie gniazdo Schuko). Nazwa wlasna: EPS = Economic, PSN =
+  Classic (z kodu, tak podaja dlugie nazwy). Kolor tylko w koncowce kodu (`code_colors`, uwaga w raporcie): -2 czarny,
+  -3 brazowy, -7 zielony, -9 szary, -5 pomaranczowy (jak OSLONA-5) - ale tylko po co najmniej jednym czlonie modelu,
+  bo "GN-2" / "GO-3" to liczba gniazd. Bebny: Y = PVC, G = guma, BQ = PUR (H07BQ-F), PZB1 = maly, SPZD = duzy;
+  przewod H07RN-F obok H05RR-F tego samego bebna jest jedyna roznica, wiec idzie do nazwy ("guma H07RN-F").
+  Silowe SP5-16 / SP5-32 = 16A / 32A z kodu. Kod domowych <gniazda>[0 = z uziemieniem]<dlugosc> ("PSN-407-1,5" = 4 gn.,
+  7m) i dlugosc bebna w kodzie sa sprawdzane z nazwa (`code_checks`) - 17 kartotek, w ktorych kod przeczy nazwie,
+  ma DO_SPRAWDZENIA (nazwy nie poprawiamy) - to glownie dlugie opisy w Ekonomie skopiowane z sasiedniego kodu
+  (PSN-307W opisany jak 306W), stad tez 14 grup powtorzen. Wynik v2: 1221 OK / 14 WARNING / 19 DO_SPRAWDZENIA.
+  Plastrol (od 2026-11-10, runda 1): `input/Nazwy Ekonom/Plastrol` - "karto" i "katalog" sa identyczne (78
+  kartotek), wiec przebieg na jednym pliku (`--input <plik karto>`; katalog dalby kazdy produkt dwa razy). Bez
+  zrodla danych poza nazwa. Przedluzacze wg V3 jak Elgotech; bebny z linia (Professional / Heavy / Hand / Extreme /
+  Eco Line) i przewodem (H05RR-F = guma, H07BQ-F = PUR, H05VV-F = PVC). X1 / X3 = "Przedluzacz budowlany" 1 / 3 gn.
+  (karty TME), "X3" zostaje jako nazwa wlasna; "2p" bez "+Z" = bez uziemienia. KEL to marka Plastrolu - produkty
+  z "KEL" w nazwie maja marke KEL zamiast Plastrol. Kolor przewodu przedluzaczy X ("przewod kolor czarny") to nie
+  kolor wtyczki i gniazda. Wynik: 76 OK / 2 WARNING (W-99986 i W-97615 maja w Ekonomie identyczna nazwe "WT-16UP").
+  PCE (od 2026-11-10, runda 1): `input/Nazwy Ekonom/PCE` - "karto" to same uslugi (KGO, marketing, samochody), produkty
+  sa tylko w "katalog" (577, `--input <plik katalog>`). Bez zrodla danych poza nazwa. Zlacza CEE: prad, bieguny skrotem
+  branzowym (2P+Z = 3P, 3P+Z = 4P, 3P+Z+N = 5P, 5P+Z+N = 7P), napiecie (24V AC / DC), IP (ostatnie w nazwie), seria na
+  koncu: "Wtyczka przenosna 16A 5P 400V IP44 Shark TT PCE". Rozdzielnice budowlane: wyjscia (32/5, 2x16/5, Nx230V -
+  "GS" = gniazdo 230V, "16/5 GS" = jedno, nie piec), zabezpieczenia (z RCD 40A / z RCBO / z wyl. nadpradowymi / bez
+  zabezpieczen), rozlacznik, wtyczka zasilajaca przenosnych, nazwa typu: "Rozdzielnica stacjonarna 32/5 2x230V z RCD 40A
+  IP44 Adamow PCE"; "Wejscie 32/5" / "wtyczka 16/5" to zasilanie, nie wyjscie. Bebny wg V3, trojfazowe z wyjsciami jak
+  rozdzielnice. Jednofazowe 10/16A: "z zab. bocznym VDE" = Schuko, "uni-schuko" = Unischuko, "z bolcem" = z uziemieniem.
+  Bledy opisow w Ekonomie poprawione wg zrodel (przeglad 2026-11-10; wartosc z cechy `code_match`, uwaga ze zrodlem i
+  WARNING z `code_notes`): wtyczki tablicowe 613 / 623 / 6132 / 6232 = 230V (Ekonom 400V przy 2P+Z 6h), 75132-6 = IP67
+  (pcelectric.at), 8615-6 = 7715-6 z dwoma wprowadzeniami przewodu (certyfikat OVE), puszki Light -171 = 155x179x100
+  (Ekonom skopiowal -161; Onninen / TME), EX-088 = wymiar EP-088. Star 9M / 12M rozni liczba modulow ("9 mod.").
+  Zrodla PCE: pce.pl (WooCommerce, karta z parametrami, "Pliki BMEcat"; Store API wylaczone, `?s=` prowadzi do serii),
+  pcelectric.at (`/shop/en/?plugin=dynamicsearch&query=<kod>`, szybko daje 429), Onninen / TME po kodzie. NAJLEPSZE
+  ZRODLO: baza XLS PCE (pce.pl > Info & media > Pliki BMEcat > "Baza produktowa w formacie xls" = etim-mapper.com, POST
+  formularza -> zip; 10683 produkty, nazwa PL, opis, arkusze klas ETIM z IP, pradem, biegunami, wymiarami, typem gniazd),
+  zapis lokalny `cache/pce/`. Kontrola 2026-11-10: 470 z 577 kodow w bazie (bez Argenta, Combi / Oro, ppoz natynkowych);
+  poprawione tylko to, co stoi w nazwie / opisie producenta: PV = IP65 (IP54 to naglowek grupy w Ekonomie), lampy - IP z
+  bazy (tez naglowek), gniazda z rozlacznikiem = IP44/54, Taurus2 25711 = z klapka / 25712 = z zatyczka (Ekonom odwrotnie)
+  i IP54, 0351-6 = IP44, Kolo 9769215W i XREEL 92503H48153 = IP54. IP z samego ETIM (rozdzielnice budowlane IP54,
+  ppoz podtynkowe IP44, Light IP65 - pole ETIM, opis mowi IP66/67) i wymiary zewnetrzne ETIM puszek zostaja jak w
+  Ekonomie - raport `reports/Ekonom-nazwy-PCE_kontrola-z-baza-PCE_2026-11-10.xlsx`. GS w bebnach = CEE 7/5 typ E
+  (z uziemieniem), w Ecoline typ F. Wynik: 537 OK / 40 WARNING (poprawki z uwaga); jedyne powtorzenie 90EKO006 /
+  90EKO010 - na pce.pl identyczne parametry.
+  Pawbol (od 2026-11-10, runda 1): `input/Nazwy Ekonom/Pawbol` ("katalog" 2120 + "karto" 288 nowych), `--input <katalog>`.
+  Zrodlo nazwy: cennik Pawbol 2026 (PDF ze strefy klienta, 2031 kodow) i karty pawbol.pl (REST API WordPressa, typ
+  `produkt`, kod w komentarzu tresci `<!-- H.7015B -25 -->`) - `scripts/fetch_pawbol_web.py` -> `cache/pawbol_web/`,
+  loader `params_web_loader: pawbol`, `prefer_feed_name: always` (opis producenta zastepuje nazwe z Ekonoma,
+  `feed_name_cleanup` czysci go tymi samymi regulami). "Produkt wycofany" w cenniku i kody spoza obu zrodel (ok. 630,
+  glownie rozdzielnice R-BOX z zabezpieczeniami i stare oprawy BZ) = dane tylko z nazwy w Ekonomie. Klucz feedu to
+  `Kod producenta` (`_feed_key`), bo czlon przed ukosnikiem mylil warianty (E.4150/N, E.4150/SZ). Wzor jak PCE: rzeczownik
+  + parametry + kolor + IP, nazwa wlasna serii (R-BOX 240 4S, MAX-BOX 16S, S-BOX, PK60 Lux, ProDuo, Beta, Pantera...) i
+  Pawbol na koncu, za marka tylko "op. N szt.". Rozdzielnice: wyjscia (32/5, 2x16/5, Nx230V; 250V z nazw = 230V),
+  "z wył. nadprądowymi i RCD 40A" (M.01 / M.02-4/40/0,03), przelacznik L-0-P / rozlacznik 0-1, termik, "z rączką"
+  (R w modelu 240R, cennik "+ rączka"; "b/R" = bez raczki), "z 2 podstawami" (-PS) / "z podstawą" (-PS_1). Bebny wg V3,
+  trojfazowe = "Przedłużacz bębnowy trójfazowy" z wyjsciami jak rozdzielnica. Oprawy: E27 = "Plafon" bez mocy (moc to
+  limit zarowki), LED = "Plafon LED" z moca, OWAL = "Oprawa kanałowa" (Owal 60 / 100 to rozmiar); BN = 4000K (karty EPREL
+  pawbol.pl), BZ / BC = "barwa zimna / ciepła" (K nieznane), lm brak w zrodlach - bez DO_SPRAWDZENIA. Puszki "do pustych
+  ścian" (K / PG / G/K) to inny rzeczownik niz podtynkowe. Osprzet BETA: uklad z KODU (G = gniazdo, GG / GGG, W =
+  jednobiegunowy, W2 = swiecznikowy, WS / WK / WD), bo cennik 2026 opisuje zestawy GGW / W2W2 jak pojedyncze; kolor
+  starych kartotek z kodu (D.31 bialy, 32 brazowy, 36 szary, 37 czarny). Bledy cennika poprawione z kodu / strony z
+  uwaga (`code_notes`, `code_color_fix`): E.4132 LZ 10/Ż = zolta, E.4316/54SZ = sztyftowa, B.1923 = wtyczka przenosna,
+  E.4096/125 = 1x10-35mm2. Cechy tylko z nazwy w Ekonomie: atrybut `features_raw` (maszty R.8312 / R.8313 "podstawa
+  15kg / 40kg"). Akcesoria bez schematu (odgromowe, drobne): `noun_from: rest_head` + `rest` (opis producenta bez
+  przecinkow i bez 230V / IK / "samogasnąca"). Wynik: 2367 OK / 41 WARNING; 15 grup powtorzen - pary stara / nowa
+  kartoteka o identycznym opisie u producenta (przewody D.35xx i D.350x-N, OWAL D.3152 / D.31524, zlacza R.8006 /
+  R.8060, S-BOX 036B dwa razy, C.1524-IT / -ITM) - do decyzji uzytkownika.
+  F-Elektro (od 2026-11-10, runda 1): `input/Nazwy Ekonom/F Electro` ("katalog" 2925 + "karto" 21 nowych), `--input
+  <katalog>`, klucz dostawcy `felektro` (plik wynikowy "F-Elektro" z `label`). Wlasnej strony nie ma (f-elektro.pl nie
+  istnieje); nazwy w Ekonomie sa opisowe po polsku i sa zrodlem. Onninen ma karty wszystkich produktow marki, a adres
+  karty to tytul producenta z kodem: `scripts/fetch_felektro_onninen.py --sitemap` (mapa strony, robots jej nie blokuje)
+  -> `cache/onninen_felektro/adresy.json`, `--codes-from-report <kontrola>` -> `karty.json` (kody z arkusza
+  Powtorzenia); loader `params_web_loader: onninen`. Tytul daje to, co Ekonom zgubil: wersje IP65 rozdzielnic (te same
+  nazwy bez " - gniazda": LAGO F3.031x / F3.178x / F3.183x, ULISSE 74185 / 74186, FEMO 74187, LEGATO 75101 / 75102,
+  TRIBOX F3.058x) i przedluzaczy 92978, przelacznik RB-300 (Ekonom 3x ta sama nazwa). Opis karty Onninen jest
+  generowany (do LAGO 11M z gniazdami CEE dopisuje "dwa gniazda 250V") - z niego tylko IP, tylko dla zlaczy CEE
+  (`ip_card_desc`, pary IP44 / IP67, WARNING) i tylko, gdy opis podaje jedno IP; w rozdzielnicach opis podaje IP
+  obudowy takze przy gniazdach IP44. Wzor jak PCE / Pawbol: "Rozdzielnica 16/5 2x230V z wył. nadprądowymi i RCD 40A
+  R-240 8M F-Elektro", "Rozdzielnica 2x32/5 2x230V z przełącznikiem L-0-P 32A z wtyczką 32/5 na przewodzie 5x4mm2 1,5m
+  R-240 F-Elektro" (seria z liczba modulow na koncu, "(32A-Z)" = przelacznik zamykany, "wtyk odbiornikowy" = zasilanie
+  w obudowie, "2x250V" = 2x230V). Bebny wg V3 (OW = guma, OPD = guma H07RN-F, OWY = PVC; uziemienia nie zgadujemy):
+  "Przedłużacz bębnowy trójfazowy 2x32/5 1x230V 40m 5x4mm2 guma H07RN-F MAKARA-460 F-Elektro". Osprzet (puszki, LZ,
+  bloki, szafy, dlawice...) = rzeczownik + reszta opisu z Ekonoma, "op. N szt." za marka. "/FE/" i "/VC/" to znaczniki
+  marki (VC: F7.0197-F7.0201 - marka do potwierdzenia, uwaga w raporcie). Wynik: 2873 OK / 73 WARNING; 16 grup
+  powtorzen - pary zlaczy CEE bez IP na karcie (cena i waga jak IP44 / IP67), F7.0102 / F7.0201 (/VC/), ULISSE
+  74184.11 / .12, szyna F2.0112 / F2.0329 - do decyzji uzytkownika.
+  Przeglad nazw wlasnych Kobi / GTV / Kanlux (2026-11-16, "czy nie zgubiles nazw wlasnych"): porownanie slow
+  "Stara nazwa" z "Nowa nazwa" w raportach kontrolnych pokazalo, ze Kobi gubil serie we wszystkich typach
+  parametrycznych (atrybut `series` mial tylko `dekor`) - teraz kazdy typ oprawy / zrodla Kobi ma `series` (za marka
+  przez `series_after_brand`: "... Kobi Premium Nivera Square", "... Kobi Premium Delyo MHN"), porzadki serii tylko w
+  tych typach (`series_drop: [*kobi_param_series_drop]` - rodzaj z nazwy feedu, kat 36ST, UGR, CRI, DALI; w `dekor`
+  seria niesie tez DALI), `series_drop_skip` zostawia SQUARE / ROUND w typach bez cechy ksztaltu, `series_dedupe` usuwa
+  slowa serii obecne juz w nazwie. Akcesoria z nazwa z feedu biora system z nazwy w Ekonomie (`features_sys_raw`:
+  "Szynoprzewod ... Kobi Nextrack NT", Nelio), zasilacze Lifud kod LF-. GTV: linia zarowek / tub jawna lista
+  (`features_line`: Spin, Glow, Grid, Ceramic, Slim, Wave, Vintage, Innovo, SHL), model z 2. czlonu, gdy 1. to sam opis
+  (`series_next_segment`: Tiago, Escada), producent zasilacza tuz za marka (`tail_attrs`: "GTV Boke"), zakres napiecia
+  "3-54V" i sterowanie "1-10V" nie ucinaja serii, wiszacy myslnik ("Osl SLIM-") wypada. Kanlux trzyma serie w kodzie
+  modelu; doszly linie tub GLASSv2-v5 / IQ-LED EX i wylacznikow IDEAL TS (`features_line_raw`). `features_line*`,
+  `features_sys*` i `features_maker` nie dopisuja sie, gdy nazwa juz je zawiera. Wejscie: archiwum
+  `archived_input_files/input_2026-11-10/EkonomNazwy/<Dostawca>` + feed Kobi i Parametry Kanlux ze stasha `4ad6dd9`
+  (przed zmianami przebieg odtwarzal poprzednie wyniki 1:1). Wynik: Kobi 643, GTV 64, Kanlux 23 zmienionych nazw,
+  statusy i powtorzenia bez zmian; zestawienie `reports/Ekonom-nazwy-wlasne_przeglad_Kobi-Kanlux-GTV_2026-11-16.xlsx`
+  (stara / poprzednia / nowa nazwa, arkusz "Nie zmienione - do decyzji"). Przy kazdym dostawcy warto zrobic ta sama
+  kontrole: slowa WIELKIMI ze starej nazwy, ktorych nie ma w nowej, posortowane po liczbie wystapien.
+  Kobi: nazwa wlasna PRZED marka (decyzja uzytkownika 2026-11-17, uchyla "seria za marka" powyzej):
+  `series_before_brand: true` stawia serie z typow parametrycznych tuz przed marka, a typy z jawna pozycja marki
+  (zarowki, zestaw szynowy, akcesoria z systemem) maja w `attrs` `series, brand` / `features_sys_raw, brand`; marka
+  zamyka nazwe (za nia tylko "op. N szt."): "Taśma LED COB 320LED/m 50m 6500K 12V IP20 Tramo Kobi Premium",
+  "Oprawa uliczna LED 50W 4000K z czujnikiem Cyoto Kobi Premium", "Szynoprzewod ... czarny Nextrack NT Kobi",
+  protokol smart tez przed marka ("... RGB A60 WiFi Kobi"). Zmiana 1161 nazw, statusy i powtorzenia bez zmian;
+  inni dostawcy (Bemko, GTV, Kanlux, Ledvance) zostaja z seria / linia za marka.
+  Przeglad tego samego dnia: zestawy HERMETIC = typ `zestaw_hermetyczny` (atrybut `set_tubes` "z tubami LED 2x120cm",
+  `power_per_tube` "2x18W"); cecha tylko z nazwy w Ekonomie dopisywana do nazwy z feedu przez `feed_name_from_raw`
+  (lacznik "ZEWNĘTRZN" -> "T zewnętrzny prawy"); Windstar (grzejniki, wentylatory, klimatory) = typ `windstar`
+  (rodzaj, moc, kolor, nazwa wlasna przed marka); "barwa NEUTRALNA BIAŁA" w Ekonomie to barwa swiatla, nie seria
+  ani kolor obudowy.
   Test: `tests/test_build_ekonom_names.py`.
 
 ## Synchronizacja instrukcji Codex <-> Claude

@@ -6,7 +6,7 @@ workflow:
   export_plugin: "WP All Export"
   import_plugin: "WP All Import"
   do_not_use_for_updates: "Wbudowany importer CSV produktow WooCommerce"
-  canonical_template: "input/Hager-Berker-Gniazdka.xlsx"
+  canonical_template: "archived_input_files/input_2026-11-10/BerkerHager/Hager-Berker-Gniazdka.xlsx"
   file_format: "XLSX"
 
 canonical_structure:

@@ -650,6 +650,19 @@ Nazwy do Ekonoma, Kanlux - runda 2 (2026-10-15):
 - [ ] Do potwierdzenia: nazwy typow bez schematu (np. "Rozgałęźniki, gniazda, wtyczki Kanlux GRIP GP/S" -
       rzeczownik z kategorii Kanlux).
 
+Nazwy do Ekonoma, Kanlux - runda 3 (2026-11-04):
+
+- [x] `archived_input_files/input_2026-11-10/EkonomNazwy/Kanlux` (kata 5028 = baza, kart 1156 nowych). Parametry: 14 plikow z rund 1-2 ze stasha
+      `4ad6dd9` + karty kanlux.com (3386 pobranych, 94 wycofane). Wynik
+      `output/Ekonom-nazwy-Kanlux_Zestawienie-Kanlux-ka{ta,rt}_2026-11-04.csv`, kontrola
+      `reports/Ekonom-nazwy-Kanlux_kontrola_2026-11-04.xlsx` (arkusz "Kata - zmiany wzgl. v2": 131 zmian, glownie
+      UGR? -> UGR<). Statusy: 5481 OK / 329 WARNING / 374 DO_SPRAWDZENIA (kart: 57 DO_SPR - same wycofane),
+      0 grup powtorzen.
+- [x] Nowa aparatura dekodowana z kodu (KMBN6, KRO = RCBO, KMI, KCS, KMC, KSD/KSPD, KMCCB-F).
+- [ ] Do decyzji: 14 plikow Parametry przeniesc ze stasha do `archived_input_files/` (inaczej kolejny przebieg
+      Kanlux traci dane wycofanych kodow); dalej bez schematu (WARNING): rozdzielnice KDB/KP-DB, klipsy/linki
+      BRAVO, ramki AVAR, wskazniki KLI, szynoprzewody TEAR TR, tasmy izolacyjne.
+
 Nazwy do Ekonoma, GTV - runda 2 (2026-10-15):
 
 - [x] Karty gtv.com.pl (`scripts/fetch_gtv_web.py`, 730 kodow z problemem: 703 na stronie, 27 wycofanych)

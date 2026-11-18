@@ -15,7 +15,7 @@ from export_hager_woo_variant_updates import PhpUnserializer, clean, sha256
 
 
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_SOURCE = ROOT / "input" / "Hager-Berker-Gniazdka.xlsx"
+DEFAULT_SOURCE = ROOT / "archived_input_files" / "input_2026-11-10" / "BerkerHager" / "Hager-Berker-Gniazdka.xlsx"
 DEFAULT_ANALYSIS = ROOT / "output" / "Hager-Berker-Gniazdka_WARIANTY_ATRYBUTY_I_TAGI.xlsx"
 DEFAULT_OUTPUT = ROOT / "output" / "Hager-Berker-Gniazdka_WOO_ALL_IMPORT_ATRYBUTY_I_TAGI.xlsx"
 DEFAULT_REPORT = ROOT / "reports" / "Hager-Berker-Gniazdka_WOO_ALL_IMPORT_ATRYBUTY_I_TAGI_report.json"

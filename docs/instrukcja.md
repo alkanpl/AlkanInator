@@ -58,7 +58,7 @@ Opisy HTML SEO z blokiem FAQ (3 pytania i odpowiedzi plus schema dla Google). Ka
 
 Krótkie nazwy dla sprzedawców przy ladzie – nie tytuły SEO. Same parametry przydatne przy sprzedaży: typ, gwint, moc, lumeny, barwa, IP, marka na końcu. Obsługiwani dostawcy: Ledvance, Signify (Philips/PILA), Kanlux, Kobi, GTV, Bemko.
 
-- **Zlecenie:** „Robimy nazwy do Ekonoma dla input/EkonomNazwy/Dostawca”.
+- **Zlecenie:** „Robimy nazwy do Ekonoma dla input/Nazwy Ekonom/Dostawca”.
 - **Wynik:** CSV w układzie Ekonoma (`Nazwa towaru` do 40 znaków, reszta w `Nazwa dodatkowa`) i skoroszyt kontrolny.
 - **Uwaga:** gdy dwa produkty dostają tę samą nazwę, Claude pokazuje, czym się różnią, a Ty decydujesz, co dopisać do nazwy.
 

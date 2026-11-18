@@ -27,7 +27,7 @@ from openpyxl import Workbook, load_workbook
 from openpyxl.styles import Alignment, Font, PatternFill
 from openpyxl.utils import get_column_letter
 
-DEFAULT_INPUT = Path("input/hager-berker-sposob-montazu-IP-seria-02.09.xlsx")
+DEFAULT_INPUT = Path("archived_input_files/input_2026-11-10/BerkerHager/hager-berker-sposob-montazu-IP-seria-02.09.xlsx")
 DEFAULT_ETIM = Path("output/BMEcat_Hager_PL_produkty_ETIM_PL_ZDJECIA_RELACJE.xlsx")
 DEFAULT_CATALOG = Path("output/Hager-Berker-Katalog-PDF_BAZA_KOMPATYBILNOSCI.xlsx")
 DEFAULT_RULES = Path("dictionaries/hager_berker_mounting_rules.yaml")

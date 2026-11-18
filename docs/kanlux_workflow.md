@@ -46,7 +46,9 @@ Pipeline powinien opierac sie na tym, co juz istnieje w Woo.
 Jesli mamy swiezy eksport WooCommerce, najpierw warto odswiezyc slownik:
 
 ```powershell
-py src/analyze_woocommerce_export.py --input archived_input_files/wszystko.csv --reports-dir reports/woocommerce_catalog --dictionary dictionaries/woocommerce_catalog_knowledge.yaml
+py src/woo_api_cli.py --profile prod knowledge --dictionaries-dir cache/woo_api/prod --cache cache/woo_api/prod/knowledge.json
+py src/woo_api_cli.py --profile prod pull --all --per-page 500 --output output/Woo-prod-caly-katalog.xlsx
+py src/analyze_woocommerce_export.py --input output/Woo-prod-caly-katalog.xlsx --reports-dir reports/woocommerce_catalog --dictionary dictionaries/woocommerce_catalog_knowledge.yaml --woo-knowledge cache/woo_api/prod/knowledge.json
 ```
 
 Ten slownik daje:

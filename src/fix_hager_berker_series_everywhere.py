@@ -39,8 +39,8 @@ from update_hager_berker_titles_for_series import (
 )
 
 
-DEFAULT_INPUT = Path("input/Hager-Berker-Gniazdka.xlsx")
-DEFAULT_CATEGORY_MAP = Path("input/BerkerHagerKategorie.xlsx")
+DEFAULT_INPUT = Path("archived_input_files/input_2026-11-10/BerkerHager/Hager-Berker-Gniazdka.xlsx")
+DEFAULT_CATEGORY_MAP = Path("archived_input_files/input_2026-11-10/BerkerHager/BerkerHagerKategorie.xlsx")
 DEFAULT_CATALOG = Path("output/Hager-Berker-Katalog-PDF_BAZA_KOMPATYBILNOSCI.xlsx")
 DEFAULT_OUTPUT = Path(
     "output/Hager-Berker-Gniazdka_SERIE_KATEGORIE_OPISY_POPRAWIONE_2026-08-31.xlsx"

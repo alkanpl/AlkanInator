@@ -116,7 +116,7 @@ def detect_columns(df: pd.DataFrame) -> dict[str, str | None]:
         "sku": detect_column(df, ["Sku", "SKU", "Kod", "Indeks", "PRODUCT_CODE", "TOWARIDX"]),
         "ean": detect_column(df, ["hwp_product_gtin", "EAN", "GTIN"]),
         "category": detect_column(df, ["Kategorie produktów", "Kategorie", "category", "categories"]),
-        "producer": detect_column(df, ["PRODUCER", "Producent", "manufacturer_name", "manufacturer", "Marka"]),
+        "producer": detect_column(df, ["Atrybut Produktu: Producent", "PRODUCER", "Producent", "manufacturer_name", "manufacturer", "Marka"]),
         "status": detect_column(df, ["Status"]),
         "product_type": detect_column(df, ["Product Type", "Typ produktu"]),
     }

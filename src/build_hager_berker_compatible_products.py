@@ -58,7 +58,7 @@ from build_hager_berker_variants import (
 
 ROOT = Path(__file__).resolve().parents[1]
 TODAY = date.today().isoformat()
-DEFAULT_INPUT = ROOT / "input" / "BerkerHager" / "Hager-Berker-Gniazdka.xlsx"
+DEFAULT_INPUT = ROOT / "archived_input_files" / "input_2026-11-10" / "BerkerHager" / "Hager-Berker-Gniazdka.xlsx"
 DEFAULT_PDF_BASE = ROOT / "output" / "Hager-Berker-Katalog-PDF_BAZA_KOMPATYBILNOSCI.xlsx"
 DEFAULT_BMECAT = ROOT / "output" / "BMEcat_Hager_PL_produkty_ETIM_PL_ZDJECIA_RELACJE.xlsx"
 DEFAULT_UPSELL_SOURCE = (

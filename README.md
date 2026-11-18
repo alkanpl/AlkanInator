@@ -57,10 +57,12 @@ Budowanie slownika typow, producentow i kategorii z pelnego eksportu produktow:
 py src/learn_product_taxonomy.py --input archived_input_files/Produkty-Export-2026-April-30-0723.xlsx --output dictionaries/learned_product_taxonomy.yaml --reports-dir reports/product_taxonomy
 ```
 
-Pelna analiza eksportu produktow WooCommerce CSV:
+Pelna analiza katalogu WooCommerce (plik z `woo_api_cli.py pull` albo dawny eksport CSV WooCommerce; `pull --all` z produkcji uruchamiaj poza godzinami ruchu, a `knowledge` przed analiza daje prawdziwe nazwy atrybutow):
 
 ```powershell
-py src/analyze_woocommerce_export.py --input archived_input_files/wszystko.csv --reports-dir reports/woocommerce_catalog --dictionary dictionaries/woocommerce_catalog_knowledge.yaml
+py src/woo_api_cli.py --profile prod knowledge --dictionaries-dir cache/woo_api/prod --cache cache/woo_api/prod/knowledge.json
+py src/woo_api_cli.py --profile prod pull --all --per-page 500 --output output/Woo-prod-caly-katalog.xlsx
+py src/analyze_woocommerce_export.py --input output/Woo-prod-caly-katalog.xlsx --reports-dir reports/woocommerce_catalog --dictionary dictionaries/woocommerce_catalog_knowledge.yaml --woo-knowledge cache/woo_api/prod/knowledge.json
 ```
 
 Ten slownik zasila kolejne uruchomienia pipeline'u: rozszerza liste znanych producentow, kolorow, serii, typow produktow, wartosci IP, kategorii i rekomendowanych filtrow bez recznego kopiowania tych danych do configow kategorii.

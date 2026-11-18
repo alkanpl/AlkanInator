@@ -558,8 +558,13 @@ BULB_LINES: list[tuple[str, str]] = [
 LINE_LABELS = {label for _, label in BULB_LINES if " " not in label} - {"antybakteryjna"}
 
 
-def parse_bulb_line(u: str) -> str:
-    """Linia produktu; tuby i liniowe niosa dodatkowo strumien "Ultra Output" ("UO P" = Performance Ultra Output)."""
+def parse_bulb_line(u: str, lines: list[dict[str, str]] | None = None) -> str:
+    """Linia produktu; tuby i liniowe niosa dodatkowo strumien "Ultra Output" ("UO P" = Performance Ultra Output).
+
+    `lines` - linie dostawcy z YAML ({match, label}, Signify: MASTER / CorePro / CoreLine...) zamiast linii Ledvance.
+    """
+    if lines is not None:
+        return next((item["label"] for item in lines if re.search(item["match"], u)), "")
     output = ("Ultra Output" if re.search(r"\bULTRA OUTPUT\b|\bUO\b", u)
               else "High Output" if re.search(r"\bHIGH OUTPUT\b", u) else "")
     # tylko linia zapisana slowem; sama litera ("MR16 DIM S", "EM P 600") nie jest dowodem - 2026-10-19 wylaczone,
@@ -576,6 +581,8 @@ def parse_family(u: str, rules: dict[str, Any]) -> str:
     """Rodzina opraw z `families` ("URBAN LITE S" -> "Urban Lite S"); litery rozmiaru zostaja wielkie."""
     for item in rules.get("families", []):
         m = re.search(item["match"], u)
+        if m and item.get("raw"):
+            return m.group(item.get("group", 0))  # kod rodziny w pisowni producenta (Signify: BY120P, RC132V)
         if m:
             return item.get("label") or " ".join(w if len(w) <= 2 else w.capitalize() for w in m.group(0).split())
     return ""
@@ -1069,6 +1076,7 @@ def move_brand_tail(results: list[dict[str, Any]], rules: dict[str, Any]) -> Non
     if not rules.get("brand_last"):
         return
     words_cfg = [w for w in rules.get("brand_words") or [] if w]
+    line_labels = LINE_LABELS | {item["label"] for item in rules.get("lines", []) if " " not in item["label"]}
     pattern = re.compile(rf"(?:{'|'.join(re.escape(w) for w in words_cfg)})", re.I) if words_cfg else None
     for res in results:
         head, pack = re.match(r"^(.*?)((?: op\. \d+ szt\.)?)$", res["nazwa"]).groups()
@@ -1090,8 +1098,8 @@ def move_brand_tail(results: list[dict[str, Any]], rules: dict[str, Any]) -> Non
         rest = words[:idx] + words[idx + size + k:]
         if res.get("linia") and k == 0:
             # linia dopisana pozniej jako wyroznik ("świeczka PCR Ledvance") tez stoi przy marce
-            moved = [w for w in rest[1:] if w in LINE_LABELS]
-            rest = rest[:1] + [w for w in rest[1:] if w not in LINE_LABELS]
+            moved = [w for w in rest[1:] if w in line_labels]
+            rest = rest[:1] + [w for w in rest[1:] if w not in line_labels]
             tail += moved
         res["nazwa"] = " ".join(rest + tail) + pack
 
@@ -1594,7 +1602,9 @@ def apply_web_card(res: dict[str, Any], row: dict[str, str], rules: dict[str, An
     if why:
         fixed = {**row, "Nazwa towaru": f"{page['_name']} {brand}".strip(), "Nazwa dodatkowa": ""}
     else:
-        fixed = {**row, "Nazwa dodatkowa": f"{row.get('Nazwa dodatkowa', '')} {brand}".strip()}
+        # bez strip(): `full_name` skleja czesci bez separatora, wiec przy pustej `Nazwa dodatkowa` marka
+        # przyklejala sie do nazwy ("CZARNYBemko", 2026-11-03)
+        fixed = {**row, "Nazwa dodatkowa": f"{row.get('Nazwa dodatkowa', '')} {brand}"}
     new = build_name(fixed, rules, pdf_lm, feed)
     new.update(row=row, stara=res["stara"])
     if why:
@@ -1606,14 +1616,33 @@ def apply_web_card(res: dict[str, Any], row: dict[str, str], rules: dict[str, An
 
 
 def nice_case(text: str, keep: set[str]) -> str:
-    """WIELKIE LITERY GTV -> male, z wyjatkiem skrotow (USB, HDMI, RJ45) i tokenow z cyframi."""
-    out = []
+    """WIELKIE LITERY GTV -> male, z wyjatkiem skrotow (USB, HDMI, RJ45) i tokenow z cyframi.
+
+    Tokeny z cyframi (2026-11-05): "1-FAZOWY" -> "1-fazowy", "2xGNIAZDO" -> "2x gniazdo", "1XUSB" -> "1xUSB";
+    litera wtyczki za USB zostaje wielka ("USB A+C", "USB-A").
+    """
+    out, prev = [], ""
     for tok in text.split():
         core = re.sub(r"[^\wĄĆĘŁŃÓŚŹŻąćęłńóśźż+]", "", tok)
-        if not core or core.upper() in keep or re.search(r"\d", core) or not tok.isupper():
-            out.append(tok)
+        word_num = re.fullmatch(r"(\d+-)([A-ZĄĆĘŁŃÓŚŹŻ]{3,})([,.)]*)", tok)
+        times = re.fullmatch(r"(\(?\d+)X([A-ZĄĆĘŁŃÓŚŹŻ0-9]*)([,.)]*)", tok, re.I)
+        if word_num and is_polish_word(word_num.group(2)):
+            tok = word_num.group(1) + word_num.group(2).lower() + word_num.group(3)
+        elif times and not re.match(r"\d", times.group(2)):
+            word = times.group(2)
+            if re.fullmatch(r"[A-ZĄĆĘŁŃÓŚŹŻ]{3,}", word) and ascii_upper(word) not in keep \
+                    and not word.upper().startswith(("USB", "RJ", "HDMI")):
+                word = " " + word.lower()  # "2xGNIAZDO" -> "2x gniazdo"; kody zostaja: "10xE27", "18xSMD5630"
+            tok = f"{times.group(1)}x{word}{times.group(3)}"
+        elif prev.endswith("USB") and re.fullmatch(r"[AC](\+[AC])?", core):
+            pass  # "USB A+C", "USB C"
+        elif not core or core.upper() in keep or re.search(r"\d", core) or not tok.isupper() \
+                or any(part in keep for part in re.split(r"[-/]", tok.strip(",.()").upper())):
+            pass  # "USB-A", "RJ45"
         else:
-            out.append(tok.lower())
+            tok = tok.lower()
+        out.append(tok)
+        prev = ascii_upper(core)
     return " ".join(out)
 
 
@@ -1630,6 +1659,23 @@ def parse_segments(original: str, rules: dict[str, Any]) -> str:
         if not seg or any(re.search(p, ascii_upper(seg)) for p in rules.get("segment_drop", [])):
             continue
         parts.append(nice_case(seg, set(rules.get("keep_upper", []))))
+    return " ".join(parts)
+
+
+def parse_rest(original: str, rule: dict[str, Any], rules: dict[str, Any]) -> str:
+    """Reszta nazwy producenta za rzeczownikiem, czlony bez przecinkow (Pawbol, akcesoria bez schematu).
+
+    `rest_strip` (regex w regule) wycina rzeczownik z poczatku ("Uchwyt dachówkowy, prosty, zacisk przez dogięcie,
+    160mm, ocynk ogniowy" -> "prosty zacisk przez dogięcie 160mm ocynk ogniowy"); czlony pasujace do `rest_drop`
+    (dostawca + regula, na nazwie bez polskich znakow WIELKIMI) wypadaja - napiecie, IK, "samogasnąca".
+    """
+    text = re.sub(rule["rest_strip"], " ", original, count=1) if rule.get("rest_strip") else original
+    drops = list(rules.get("rest_drop", [])) + list(rule.get("rest_drop", []))
+    parts = []
+    for seg in split_segments(text):
+        seg = " ".join(seg.split()).strip(" -–:")
+        if seg and not any(re.search(p, ascii_upper(seg)) for p in drops):
+            parts.append(seg)
     return " ".join(parts)
 
 
@@ -1788,37 +1834,101 @@ def is_polish_word(tok: str) -> bool:
 
 def tidy_tokens(text: str, limit: int = 6, split_slash: bool = True, keep_case: bool = False,
                 keep_upper: frozenset[str] = frozenset(), polish_lower: bool = False, lower_re: str = "",
-                vocab: frozenset[str] = frozenset(), models: frozenset[str] = frozenset(), dedupe: bool = True) -> str:
+                vocab: frozenset[str] = frozenset(), models: frozenset[str] = frozenset(), dedupe: bool = True,
+                unit_lower: bool = False, keep_units: bool = False, keep_plus: bool = False,
+                balance_parens: bool = False) -> str:
     """Bez polskich slow pisanych malymi literami, bez powtorzen, WIELKIE SLOWA -> Wielkie.
 
-    `dedupe=False` (opis akcesorium): powtorzone slowo niesie tresc ("uchwytem FI60mm na slupach z FI60mm").
+    `dedupe=False` (opis akcesorium): powtorzone slowo niesie tresc ("uchwytem FI60mm na slupach z FI60mm"),
+    takze wymiar ("blok 30 zaciskow 2x15"). `unit_lower`: "290MM" -> "290mm", "10SZT" -> "10 szt." (Bemko).
+    GTV (2026-11-05): `keep_units` - jednostka pisana malymi za liczba zostaje ("GLAX 12 m" dawalo "GLAX 12"),
+    `keep_plus` - "+" w skladzie zestawu ("profil 2mb + osłonka"), `balance_parens` - limit slow nie tnie w nawiasie.
     """
     out, seen = [], set()
+    if keep_units:
+        # U+2060 (word joiner) nie jest bialym znakiem - "10 szt." zostaje jednym tokenem, spacja wraca na koncu
+        text = re.sub(r"(?<=\d)\s+(?=(?:mm2|mm|cm|mb|m)\b)", "", text, flags=re.I)
+        text = re.sub(r"(?<=\d)\s*szt\b\.?", "\u2060szt", text, flags=re.I)
     if keep_case:
         # po wycieciu parametrow z kodu "AL-SL-NW-MAT-W-NT" zostaja wiszace myslniki: "AL-SL -MAT -NT"
         text = re.sub(r"-+", "-", re.sub(r"\s+-(?=[A-Za-z0-9])", "-", text))
     for tok in (text.replace("/", " / ") if split_slash else text).split():
+        if keep_plus and tok == "+":
+            out.append(tok)
+            continue
         tok = tok.strip(",.+-" if keep_case else ",.+")
         if not tok or tok == "/" or tok == "-":
             continue
+        if keep_plus and re.fullmatch(r"\d+X", tok):
+            tok = tok[:-1] + "x"  # "3X GNIAZDO" -> "3x gniazdo", jak w `nice_case`
         if re.fullmatch(r"[a-ząćęłńóśźż]+", tok):
             continue
         key = ascii_upper(tok)
-        if (dedupe and key in seen) or re.fullmatch(r"\d+X\d+", key):
+        repeat_ok = keep_plus and key.isdigit() and out and out[-1] == "+"  # "+ 2 zaślepki + 2 uchwyty"
+        if (dedupe and key in seen and not repeat_ok) or (dedupe and re.fullmatch(r"\d+X\d+", key)):
             continue
         seen.add(key)
+        # takze wymiar i srednica: "160X160MM" -> "160x160mm", "FI50-70MM" -> "fi50-70mm"
+        unit = re.fullmatch(r"(FI)?(\d+(?:,\d+)?(?:-\d+(?:,\d+)?)?(?:X\d+(?:,\d+)?)*)(MM2|MM|CM|M|SZT)", key) \
+            if unit_lower else None
+        if unit and unit.group(3) == "SZT" and not unit.group(1):
+            out.append(f"{unit.group(2)} szt.")
+            continue
+        if unit and unit.group(3) != "SZT":
+            out.append(("fi" if unit.group(1) else "") + unit.group(2).lower() + unit.group(3).lower())
+            continue
         if polish_lower and tok.isupper() and key not in keep_upper and key.strip("()") not in models \
                 and (is_polish_word(tok) or key.strip("()") in vocab or (lower_re and re.fullmatch(lower_re, key))):
             tok = tok.lower()  # GTV: "OPRAWA ... MONTAŻOWY" -> "montażowy", model "ARALIA" -> "Aralia"
         elif tok.isalpha() and tok.isupper() and len(tok) > 2 and not keep_case and key not in keep_upper:
             tok = tok.capitalize()
+        elif balance_parens and tok.strip("()").isalpha() and tok.isupper() and len(tok.strip("()")) > 2                 and key.strip("()") not in keep_upper:
+            tok = tok.lower() if is_polish_word(tok) else tok.capitalize()  # "BLISTRZE)" jak slowo bez nawiasu
         out.append(tok)
-    return " ".join(out[:limit])
+    out = cut_tokens(out, limit, balance_parens)
+    text = " ".join(out).replace("\u2060szt", " szt.")
+    if keep_plus:
+        # "+" bez skladnika po wycieciu mocy: "VILANA 42W (30W+12W)" -> "Vilana ( + )"
+        text = re.sub(r"\(\s*\)", " ", re.sub(r"(?<=\()\s*\+\s*|\s*\+\s*(?=\))", "", text))
+        text = " ".join(re.sub(r"^\+\s*|\s*\+$", "", text.strip()).split())
+    return text
+
+
+def cut_tokens(tokens: list[str], limit: int, balance_parens: bool = False) -> list[str]:
+    """Pierwsze `limit` slow; z `balance_parens` "+" nie liczy sie do limitu, a nawias otwarty przed cieciem
+    jest domykany (do 15 slow dalej) albo odcinany ("(profil 2mb osłonka mleczna 2" dawalo nawias bez konca)."""
+    if not balance_parens:
+        return tokens[:limit]
+    count, cut = 0, len(tokens)
+    for i, tok in enumerate(tokens):
+        count += tok != "+"
+        if count > limit:
+            cut = i
+            break
+    depth = sum(t.count("(") - t.count(")") for t in tokens[:cut])
+    if depth > 0 and cut < len(tokens):  # bez ciecia nawias bez konca jest w Ekonomie - zostaje
+        for j, tok in enumerate(tokens[cut:cut + 15], start=cut):
+            depth += tok.count("(") - tok.count(")")
+            if depth <= 0:
+                cut = j + 1
+                break
+        else:
+            cut = max(i for i, t in enumerate(tokens[:cut]) if "(" in t)
+    out = tokens[:cut]
+    while out and out[-1] == "+":
+        out.pop()
+    return out
 
 
 def parse_series(original: str, rule: dict[str, Any], rules: dict[str, Any]) -> str:
     text = strip_words(original, rule, rules)
-    for pattern in [] if rule.get("series_raw") else rules.get("series_drop", []):
+    # `series_drop` typu dochodzi do listy dostawcy; `series_drop_skip` (fragmenty wzorca) wylacza wzorce dostawcy w tym
+    # typie - Kobi (2026-11-16): plafon bez cechy ksztaltu ma serie "Nivera Square", nie "Nivera"
+    # (lista typu moze zawierac wspolne listy z kotwicy YAML - splaszczana)
+    skip = rule.get("series_drop_skip", [])
+    own = [p for item in rule.get("series_drop", []) for p in (item if isinstance(item, list) else [item])]
+    drops = [p for p in rules.get("series_drop", []) if not any(s in p for s in skip)] + own
+    for pattern in [] if rule.get("series_raw") else drops:
         text = re.sub(pattern, " ", text)
     if rules.get("series_drop_polish") and not rule.get("series_raw"):
         # Bemko: "SKALER KWADRATOWA ... CZ. MIKR." -> "SKALER"; nazwy modeli z polska koncowka chroni `proper_words`
@@ -1832,7 +1942,10 @@ def parse_series(original: str, rule: dict[str, Any], rules: dict[str, Any]) -> 
                        keep_upper=frozenset(rules.get("keep_upper", [])), polish_lower=bool(rules.get("polish_lower")),
                        lower_re=rules.get("polish_lower_re", "") if rule.get("series_raw") else "",
                        vocab=rules.get("_vocab", frozenset()), models=rules.get("_models", frozenset()),
-                       dedupe=not rule.get("series_all_segments"))
+                       dedupe=not rule.get("series_all_segments"),
+                       unit_lower=bool(rules.get("series_unit_lower") and rule.get("series_raw")),
+                       keep_units=bool(rules.get("series_keep_units")), keep_plus=bool(rules.get("series_keep_plus")),
+                       balance_parens=bool(rules.get("series_balance_parens")))
 
 
 def parse_deco_size(u: str, noun: str, bare_cm: bool = False) -> str:
@@ -2076,13 +2189,17 @@ def load_feed(path: Path) -> dict[str, dict[str, str]]:
 
 
 def feed_key(row: dict[str, str]) -> str:
+    if row.get("_feed_key"):
+        # Pawbol: kod z ukosnikiem ("E.4150/N/PAW", "D.3159/2/PAW") - czlon przed ukosnikiem mylil warianty
+        return row["_feed_key"]
     return (row.get("Kod towaru") or "").split("/")[0].strip().lstrip("0")
 
 
 def resolve_brand(u: str, feed_rec: dict[str, str], rules: dict[str, Any]) -> str:
     """Marka/linia: z feedu (np. Kobi Premium, LED2B), potem reguly po nazwie, potem domyslna."""
     mapped = rules.get("brand_map", {})
-    value = feed_rec.get(rules.get("feed_attrs", {}).get("brand", ""), "")
+    key = rules.get("feed_attrs", {}).get("brand")
+    value = feed_rec.get(key, "") if key else ""  # bez mapowania nie bierzemy pustego klucza karty ("" = "E")
     if value:
         return mapped.get(value, value)
     for item in rules.get("brand_rules", []):
@@ -2121,7 +2238,9 @@ def apply_feed(values: dict[str, str], rule: dict[str, Any], feed_rec: dict[str,
     attrs = rule.get("attrs", [])
 
     def get(key: str) -> str:
-        return feed_rec.get(names.get(key, ""), "").strip()
+        # atrybut bez mapowania w `feed_attrs` nie moze trafic w pusty klucz karty (kanlux.com: "" = "E" z ikony
+        # klasy energetycznej - marka "E" zamiast Kanlux, 2026-11-04)
+        return feed_rec.get(names[key], "").strip() if names.get(key) else ""
 
     if "power" in attrs and not values.get("power"):
         n = feed_number(get("power"))
@@ -2202,7 +2321,9 @@ def load_params_web(cache_dir: Path) -> tuple[dict[str, dict[str, str]], set[str
     for f in sorted(cache_dir.glob("*.json")) if cache_dir.is_dir() else []:
         rec = json.loads(f.read_text(encoding="utf-8"))
         if rec.get("found"):
-            params[rec["code"]] = {**rec.get("params", {}), "_name": rec.get("name", ""), "_src": "kanlux.com"}
+            # pusty klucz to ikona klasy energetycznej ("" = "E") - nie jest atrybutem
+            params[rec["code"]] = {**{k: v for k, v in rec.get("params", {}).items() if k},
+                                   "_name": rec.get("name", ""), "_src": "kanlux.com"}
         else:
             withdrawn.add(rec["code"])
     return params, withdrawn
@@ -2224,10 +2345,14 @@ def load_web_params(cache_dir: Path) -> tuple[dict[str, dict[str, str]], set[str
         if not rec.get("found"):
             withdrawn.add(rec["code"])
             continue
-        params[rec["code"]] = {**rec.get("params", {}), "_name": rec.get("name", ""), "_url": rec.get("url", "")}
+        params[rec["code"]] = {**{k: v for k, v in rec.get("params", {}).items() if k},
+                               "_name": rec.get("name", ""), "_url": rec.get("url", "")}
         name = rec.get("name", "")
-        if name.isupper():
-            continue  # Bemko: nazwy kart WIELKIMI LITERAMI - nic nie mowia o pisowni slow
+        letters = re.findall(r"[^\W\d_]", name)
+        if name.isupper() or sum(c.islower() for c in letters) < 0.3 * len(letters):
+            # Bemko: nazwy kart WIELKIMI LITERAMI - nic nie mowia o pisowni slow; jedno "mini" na koncu
+            # ("... PROSTOKĄTNY BIAŁY mini") robilo z "BIAŁY" nazwe modelu (2026-11-03)
+            continue
         for tok in re.findall(r"[A-Za-zĄĆĘŁŃÓŚŹŻąćęłńóśźż]{2,}", name):
             if tok.islower():
                 lower_n[ascii_upper(tok)] += 1
@@ -2237,6 +2362,171 @@ def load_web_params(cache_dir: Path) -> tuple[dict[str, dict[str, str]], set[str
     vocab = {w for w, n in lower_n.items() if n > upper_n[w]}
     models = {w for w, n in upper_n.items() if n > lower_n[w]}
     return params, withdrawn, frozenset(vocab), frozenset(models)
+
+
+def signify_card_params(card: dict[str, Any]) -> dict[str, str]:
+    """Karta lighting.philips.pl (scripts/fetch_signify_web.py) -> parametry w kluczach plikow Parametry Kanlux.
+
+    Dzieki temu `apply_params` (zrodlo prawdy, nadpisuje nazwe) dziala bez osobnej galezi. Liczby z karty maja
+    spacje tysiecy ("2 900 lm 3 100 lm") - Multi Lumen / Multi CCT podaje kilka wartosci po spacji.
+    """
+    p = card.get("params", {})
+    # karta PDF docs.signify.com (scripts/fetch_signify_leaflets.py) - produkt zniknal ze strony, karta zostala
+    src = "karta PDF docs.signify.com" if card.get("source") == "pdf" else "lighting.philips.pl"
+    out: dict[str, str] = {"_name": card.get("catalog_name", ""), "_src": src,
+                           "_category": card.get("category", ""), "_url": card.get("url", "")}
+
+    def nums(value: str) -> list[float]:
+        return [to_float(x.replace(" ", "")) for x in re.findall(r"\d{1,3}(?: \d{3})+(?:,\d+)?|\d+(?:[.,]\d+)?", value)]
+
+    power = sorted(dict.fromkeys(n for n in nums(p.get("Zużycie energii", "")) if n > 0))
+    if power:
+        out["Moc znamionowa [W]"] = "/".join(fmt_num(n) for n in power)
+    lm = sorted(dict.fromkeys(n for n in nums(p.get("Strumień Świetlny") or p.get("Strumień świetlny", "")) if n >= 1))
+    if lm:
+        out["Całkowity znamionowy strumień świetlny [lm]"] = "/".join(fmt_num(n) for n in lm)
+    cct = p.get("Skorelowana temperatura barwowa (Nom)", "")
+    if re.search(r"\d{4}", cct):
+        out["Temperatura barwowa [K]"] = "/".join(re.findall(r"\d{4}", cct))
+    if re.search(r"RGBW|Czerwony, zielony, niebieski i biały", p.get("Barwa źródła światła", "")):
+        out["Temperatura barwowa [K]"] = (out.get("Temperatura barwowa [K]", "") + " RGBW").strip()
+    if re.search(r"\d", p.get("Podstawa-nasadka", "")):  # "Cable" (MHN-SB) to nie trzonek
+        out["Trzonek"] = p["Podstawa-nasadka"]
+        out["Źródło światła w komplecie"] = "tak"  # lampa z trzonkiem sama jest zrodlem - nie "oprawa na wymienne"
+    if lm and re.search(r"LM/M\b", card.get("catalog_name", "").upper()):
+        # tasma "MAS LEDstrip 8.3W965 950LM/M 5M" - strumien na metr, moc na karcie to cala rolka
+        out["Całkowity znamionowy strumień świetlny [lm]"] = "1 m = " + fmt_num(lm[0])
+    ips = [int(x) for x in re.findall(r"(?<=IP)\d{2}|(?<=/)\d{2}(?=\s|\[|$)", p.get("Kod stopnia ochrony", ""))]
+    if ips:
+        out["Stopień IP"] = str(max(ips))  # "IP20/44" - od strony pomieszczenia IP44, sprzedawcy liczy sie wyzszy
+    color = p.get("Kolor Korpusu") or p.get("Kolor akcesorium", "")
+    if color and color != "-":
+        out["Kolor"] = color
+    for src, dst in (("Całkowita długość", "Długość [mm]"), ("Całkowita szerokość", "Szerokość [mm]"),
+                     ("Całkowita średnica", "Średnica [mm]")):
+        n = nums(p.get(src, ""))
+        if n and n[0] > 0:
+            out[dst] = fmt_num(n[0])
+    m = re.search(r"\bD(\d{2,3}) mm\b", card.get("name", ""))
+    if m:
+        out["Średnica [mm]"] = m.group(1)  # downlight "D150 mm" - rozmiar z nazwy karty, a nie 162 mm obudowy
+    ugr = nums(p.get("Zunifikowany wskaźnik ograniczenia olśnienia CEN", ""))
+    if ugr and ugr[0] <= 19:
+        out["UGR"] = f"<{fmt_num(ugr[0])}"
+    control = p.get("Interfejs sterownika", "")
+    if re.search(r"\bDALI\b", control) and "zależności" not in control:
+        out["Możliwość współpracy ze ściemniaczem"] = "DALI"
+    elif re.search(r"(?i)1-10 ?V", control) and "zależności" not in control:
+        out["Możliwość współpracy ze ściemniaczem"] = "1-10V"
+    elif p.get("Z możliwością przyciemniania") in ("Tak", "Tylko z niektórymi ściemniaczami") \
+            or control in ("Przyciemnienie przez odcięcie fazy", "Phase-cut"):
+        out["Możliwość współpracy ze ściemniaczem"] = "tak"
+    if re.search(r"(?i)czujnik ruchu", p.get("Sterownik wbudowany", "")):
+        out["Wykrywanie ruchu"] = "tak"
+    elif re.search(r"(?i)czujnik natężenia", p.get("Fotokomórka", "")):
+        out["Rodzaj czujnika"] = "zmierzchu"
+    if p.get("Kształt bańki"):
+        out["Źródło światła"] = p["Kształt bańki"]
+    beam = nums(p.get("Kąt rozsyłu światła (Nom)", ""))
+    if beam:
+        out["Kąt promieniowania [°]"] = fmt_num(beam[0])
+    volt = nums(p.get("Napięcie (Nom)") or p.get("Napięcie wejściowe", ""))
+    if len(volt) == 1 and volt[0] in (12, 24, 48):
+        out["Napięcie znamionowe [V]"] = fmt_num(volt[0])
+    return out
+
+
+def signify_proper_name(category: str, rules: dict[str, Any]) -> str:
+    """Nazwa wlasna rodziny z kategorii karty (`proper_names`): "... > CoreLine Malaga LED" -> "Malaga"."""
+    cu = ascii_upper(category)
+    return next((item["name"] for item in rules.get("proper_names", []) if re.search(item["category"], cu)), "")
+
+
+def signify_proper_by_family(cards: dict[str, dict[str, str]], rules: dict[str, Any]) -> dict[str, str]:
+    """Kod rodziny -> nazwa wlasna z kart tej rodziny (tylko jednoznaczne) - dla produktow bez karty."""
+    found: dict[str, set[str]] = defaultdict(set)
+    for card in cards.values():
+        code = parse_family(parse_view(card.get("_name", "")), rules)
+        proper = signify_proper_name(card.get("_category", ""), rules)
+        if code and proper:
+            found[code].add(proper)
+    return {code: names.pop() for code, names in found.items() if len(names) == 1}
+
+
+def load_signify_cards(cache_dir: Path) -> tuple[dict[str, dict[str, str]], set[str]]:
+    """Cache kart Signify: 12NC -> parametry (`signify_card_params`); drugi wynik - 12NC bez karty (wycofane)."""
+    params: dict[str, dict[str, str]] = {}
+    withdrawn: set[str] = set()
+    for f in sorted(cache_dir.glob("*.json")) if cache_dir.is_dir() else []:
+        rec = json.loads(f.read_text(encoding="utf-8"))
+        if rec.get("found"):
+            params[rec["code"]] = signify_card_params(rec)
+        else:
+            withdrawn.add(rec["code"])
+    return params, withdrawn
+
+
+def pawbol_code_key(code: str) -> str:
+    """Kod Pawbol bez spacji, wielkimi: "H.7015B -25" (Ekonom) = "H.7015B-25" (pawbol.pl), "S-BOX 036C"."""
+    return re.sub(r"\s+", "", code).upper()
+
+
+def load_pawbol_names(cache_dir: Path) -> tuple[dict[str, dict[str, str]], set[str]]:
+    """Nazwy producenta Pawbol po kodzie: cennik 2026 (PDF z pawbol.pl), potem karta produktu pawbol.pl.
+
+    Cennik i strona to ten sam opis katalogowy ("Puszka podtynkowa PK60, płytka 40mm, fi63, bez wkrętów, czarna,
+    IP30"); cennik ma wiecej kodow, strona - produkty spoza cennika. "Produkt wycofany" w cenniku = brak nazwy
+    (drugi wynik), chyba ze strona jeszcze ma karte. Zrodla: scripts/fetch_pawbol_web.py -> cache/pawbol_web.
+    """
+    names: dict[str, dict[str, str]] = {}
+    withdrawn: set[str] = set()
+    web_path, price_path = cache_dir / "produkty.json", cache_dir / "cennik_2026.json"
+    web = json.loads(web_path.read_text(encoding="utf-8")) if web_path.is_file() else {}
+    price = json.loads(price_path.read_text(encoding="utf-8")) if price_path.is_file() else {}
+    for code, rec in web.items():
+        names[pawbol_code_key(code)] = {"_name": rec["name"], "_source": "pawbol.pl",
+                                        "_category": " | ".join(rec.get("groups", []))}
+    for code, rec in price.items():
+        key = pawbol_code_key(code)
+        if re.match(r"(?i)produkt wycofany", rec["name"]):
+            if key not in names:
+                withdrawn.add(key)
+            continue
+        names[key] = {**names.get(key, {}), "_name": rec["name"], "_source": "cennik Pawbol 2026"}
+    return names, withdrawn
+
+
+def load_onninen_cards(cache_dir: Path, rows: list[dict[str, str]]) -> dict[str, dict[str, str]]:
+    """F-Elektro: tytul karty onninen.pl (slug adresu) i karta po kodzie producenta (scripts/fetch_felektro_onninen.py).
+
+    Tytul producenta podaje to, co Ekonom zgubil: wersje IP65 rozdzielnic / przedluzaczy ("LAGO 10M gniazda 32A 5p
+    2x230V IP65" obok tej samej nazwy bez IP) i przelacznik RB-300. Opis karty jest generowany, wiec z niego tylko IP
+    i tylko, gdy podaje jedno (pary zlaczy CEE: IP44 / IP67). Klucz = `feed_key` wiersza, w rekordzie `_slug` (WIELKIMI),
+    `IP`, zrodlo IP i adres karty.
+    """
+    addr_path, cards_path = cache_dir / "adresy.json", cache_dir / "karty.json"
+    addresses = json.loads(addr_path.read_text(encoding="utf-8")) if addr_path.is_file() else {}
+    cards = json.loads(cards_path.read_text(encoding="utf-8")) if cards_path.is_file() else {}
+    out: dict[str, dict[str, str]] = {}
+    for row in rows:
+        code = (row.get("Kod producenta") or (row.get("Kod towaru") or "").rsplit("/", 1)[0]).strip().upper()
+        key = code.replace(".", "-")
+        addr, card = addresses.get(key), cards.get(key)
+        if not addr and not card:
+            continue
+        rec: dict[str, str] = {"_url": (addr or card)["url"]}
+        slug = ascii_upper(addr["slug"]) if addr else ""
+        rec["_slug"] = slug
+        m = re.search(r"-IP(\d\d)(?=-|$)", slug)
+        ips = card.get("ip_opis", []) if card else []
+        if m:
+            rec["IP"] = f"IP{m.group(1)}"
+        if len(ips) == 1:
+            # tylko dla typow, ktore to wskazuja w YAML (`param: IP_opis`, zlacza CEE IP44 / IP67); w rozdzielnicach
+            # opis podaje IP obudowy takze dla wersji z gniazdami IP44
+            rec["IP_opis"] = ips[0]
+        out[feed_key(row)] = rec
+    return out
 
 
 def apply_web_params(values: dict[str, str], rule: dict[str, Any], rec: dict[str, str], rules: dict[str, Any],
@@ -2249,8 +2539,9 @@ def apply_web_params(values: dict[str, str], rule: dict[str, Any], rec: dict[str
         values["lumen"] = f"{fmt_num(lm)}lm"
         result["lm_zrodlo"] = rules.get("web_params_label", "strona producenta")
     cct = kx_cct(rec.get(keys.get("cct", ""), ""))
-    if "cct" in attrs and cct and (not values.get("cct") or not re.search(r"\d", values["cct"])):
-        values["cct"] = cct  # K ze strony zamiast braku albo slow "ciepła biała"
+    if "cct" in attrs and cct and (not values.get("cct") or not re.search(r"\d|CCT", values["cct"])):
+        # K ze strony zamiast braku albo slow "ciepła biała"; "CCT" z nazwy zostaje (karta: "3000K / 4000K / 6500K")
+        values["cct"] = cct
     m = re.search(r"(\d{2})", rec.get(keys.get("ip", ""), ""))
     if "ip" in attrs and not values.get("ip") and m and int(m.group(1)) >= 44:
         values["ip"] = f"IP{m.group(1)}"
@@ -2310,7 +2601,9 @@ def tail_noun(tail: str, rules: dict[str, Any]) -> tuple[str, str]:
 
 
 def kx_numbers(value: str) -> list[float]:
-    return [to_float(x) for x in re.findall(r"\d+(?:[.,]\d+)?", value.replace(" ", ""))]
+    # spacja tylko jako separator tysiecy ("37 000"); "2500(WW) 2700(NW)" to dwie liczby, a nie 25002700 (2026-11-04)
+    value = re.sub(r"(?<=\d)[ \xa0](?=\d{3}(?!\d))", "", value)
+    return [to_float(x) for x in re.findall(r"\d+(?:[.,]\d+)?", value)]
 
 
 def kx_power(rec: dict[str, str]) -> str:
@@ -2424,6 +2717,33 @@ def parse_breaker(head_u: str) -> str:
     m = re.search(r"\bKMCCB-RT-(\d+)A(?:-(\d)P)?", head_u)
     if m:
         return f"{m.group(1)}A {m.group(2) or 3}P"
+    # nowe kartoteki 2026-11-04: KMBN6-C10/1 (1P+N), KMCCB-F-125A-4P (bez akcesoriow ".../RL/R", ".../AX/L"),
+    # KMI-3/63A, KMI-R-3/125A, KCS-40A/1P, KMC-20-11 (styki zwierne/rozwierne), KSD-T1T2 275/240 3P+N
+    m = re.search(r"\bKRO(\d+)(?:-1M)?-(\d)/([BCD]\d+)/(\d+)(?:-(AC|A|B|F))?", head_u)
+    if m:
+        return f"{m.group(3)} {m.group(2)}P {m.group(4)}mA typ {m.group(5) or 'AC'} {m.group(1)}kA"
+    m = re.search(r"\bKMBN(\d+)-([BCD])(\d+)/1\b", head_u)
+    if m:
+        return f"{m.group(2)}{m.group(3)} 1P+N {m.group(1)}kA"
+    m = re.search(r"\bKMCCB-F-(\d+)A(?:-(\d)P)?(?![/\w])", head_u)
+    if m:
+        return f"{m.group(1)}A {m.group(2) or 3}P"
+    m = re.search(r"\bKMI(?:-R)?-(\d)/(\d+)A\b", head_u)
+    if m:
+        return f"{m.group(2)}A {m.group(1)}P"
+    m = re.search(r"\bKCS-(\d+)A/(\d)P\b", head_u)
+    if m:
+        return f"{m.group(1)}A {m.group(2)}P"
+    m = re.search(r"\bKMC-(\d+)-(\d)(\d)\b", head_u)
+    if m:
+        contacts = "+".join(f"{n}{kind}" for n, kind in ((m.group(2), "NO"), (m.group(3), "NC")) if n != "0")
+        return f"{m.group(1)}A {contacts}"
+    m = re.search(r"\bKS(?:P)?D-(T1\+?T2|T2|TT) \d+/\d+ ?(1P\+?N|3P\+?N|1P|3P|M)?\b", head_u)
+    if m:
+        kind = {"TT": "T2 TT"}.get(m.group(1), m.group(1).replace("T1T2", "T1+T2"))
+        poles = m.group(2) or ""
+        poles = "wkładka" if poles == "M" else re.sub(r"P\+?N$", "P+N", poles)
+        return f"{kind} {poles}".strip()
     return ""
 
 
@@ -2508,13 +2828,19 @@ def apply_params(values: dict[str, str], rule: dict[str, Any], rec: dict[str, st
 
 
 def parse_features(u: str, gender: str, rules: dict[str, Any], items: list[dict[str, Any]] | None = None,
-                   code: str = "") -> str:
-    """Cechy z nazwy (`match`) albo z kodu producenta (`code_match`); z jednej `group` wygrywa pierwsza trafiona."""
+                   code: str = "", params: dict[str, str] | None = None) -> str:
+    """Cechy z nazwy (`match`), z kodu producenta (`code_match`) albo z parametru karty (`param` + `match`,
+    Kanlux: "Liczba gniazd", "Rodzaj uziemienia"); z jednej `group` wygrywa pierwsza trafiona."""
     out, groups = [], set()
     for item in rules.get("features", []) if items is None else items:
         if item.get("group") and item["group"] in groups:
             continue
-        m = re.search(item["code_match"], code) if "code_match" in item else re.search(item["match"], u)
+        if "param" in item:
+            m = re.search(item["match"], (params or {}).get(item["param"], ""))
+        elif "code_match" in item:
+            m = re.search(item["code_match"], code)
+        else:
+            m = re.search(item["match"], u)
         if m:
             label = item["label"]
             label = label.get(gender, label.get("m", "")) if isinstance(label, dict) else label
@@ -2522,7 +2848,8 @@ def parse_features(u: str, gender: str, rules: dict[str, Any], items: list[dict[
                 label = label.format(*(g or "" for g in m.groups()))
                 # wartosci z nazwy WIELKIMI: "10X38" -> "10x38", "1.5" -> "1,5"
                 label = re.sub(r"(?<=\d)X(?=\d)", "x", re.sub(r"(?<=\d)\.(?=\d)", ",", label))
-            out.append(label)
+            if label:  # pusta etykieta tylko zajmuje grupe (Elgotech: uziemienie opisane juz przy gniazdach)
+                out.append(label)
             if item.get("group"):
                 groups.add(item["group"])
     return " ".join(dict.fromkeys(out))
@@ -2577,6 +2904,60 @@ def parse_code(u: str, rule: dict[str, Any]) -> str:
     return (m.group(1) if m.groups() else m.group(0)) if m else ""
 
 
+CATALOG_CROSS_RE = re.compile(r"(\d)x(\d+(?:,\d+)?)\s?mm2")
+
+
+def load_catalog_rows(path: Path) -> dict[str, dict[str, str]]:
+    """Wiersze tabel katalogu PDF dostawcy (Elgotech: kod -> dlugosc, przekroj, kolor), zrzut JSON z katalogu."""
+    if not path.exists():
+        return {}
+    data = json.loads(path.read_text(encoding="utf-8"))
+    return {code: recs[0] for code, recs in data.items() if recs}
+
+
+def apply_catalog_row(u: str, code: str, rule: dict[str, Any], rules: dict[str, Any], result: dict[str, Any]) -> str:
+    """Katalog uzupelnia przekroj i kolor, ktorych krotka nazwa w Ekonomie nie podaje (Elgotech 2026-11-10:
+    "Przedłużacz 3xz/u 3m" = katalog "3x1 mm2 biały"). Kolor sprzeczny z nazwa - DO_SPRAWDZENIA, nazwa bez zmian."""
+    rec = rules["_catalog"].get(code)
+    if not rec:
+        return u
+    rest = rec.get("rest", "")
+    added, extra = [], []
+    m = CATALOG_CROSS_RE.search(rest)
+    if m and rule["key"] in rules.get("catalog_cross_types", []) \
+            and not re.search(rules.get("catalog_cross_re", r"\b[235]\s?[XG]\s?\d"), u):
+        extra.append(f"{m.group(1)}X{ascii_upper(m.group(2))}MM2")
+        added.append(f"przekrój {m.group(0).replace(' ', '')}")
+    cable = re.search(r"\b(H0[57][A-Z]{2}-F|OMY)\b", rest)
+    if cable and rule["key"] in rules.get("catalog_cross_types", []) and not re.search(r"GUM|\bH0[57]|\bOMY\b|\bPVC\b", u):
+        extra.append(cable.group(1))  # PWP-113: "5x1,5 mm2 H07RN-F" jak PWP-11 z nazwa "H07RN-F"
+        added.append(f"przewód {cable.group(1)}")
+    words = rest.split()
+    colors = rules.get("housing_colors", {})
+    cat_key = next((key for key, c in colors.items() if words and any(re.search(p, ascii_upper(words[-1]))
+                                                                        for p in c["match"])), "")
+    if code in rules.get("catalog_color_skip", []):
+        cat_key = ""  # blad tabeli katalogu (zdjecie pokazuje inny kolor)
+    if cat_key:
+        src = u
+        for pattern in rules.get("color_ignore", []):
+            src = re.sub(pattern, " ", src)
+        name_key = next((key for key, c in colors.items() if any(re.search(p, src) for p in c["match"])), "")
+        if not name_key:
+            extra.append(ascii_upper(words[-1]))
+            added.append(f"kolor {words[-1]}")
+        elif name_key != cat_key:
+            result["uwagi"].append(f"katalog Elgotech podaje kolor {words[-1]}, nazwa w Ekonomie inny")
+            result["_catalog_conflict"] = True
+    if extra:
+        # przed dlugoscia bez jednostki na koncu ("PSN-501,5 Przedłużacz 5xz/u 1,5") - ta musi zostac ostatnia
+        m = re.search(r"\s(\d(?:,\d)?)$", u)
+        u = f"{u[:m.start()]} {' '.join(extra)}{u[m.start():]}" if m else f"{u} {' '.join(extra)}"
+    if added:
+        result["uwagi"].append(f"{', '.join(added)} z katalogu {rules.get('catalog_label', 'producenta')}")
+    return u
+
+
 def code_mismatches(code: str, raw_u: str, rules: dict[str, Any]) -> list[str]:
     """Kod producenta przeczy nazwie z Ekonoma (Bemko: kod -6K, a w nazwie 4000K) - nazwy nie poprawiamy, zglaszamy."""
     out = []
@@ -2617,20 +2998,61 @@ def build_name(row: dict[str, str], rules: dict[str, Any], pdf_lm: dict[str, dic
                feed: dict[str, dict[str, str]] | None = None) -> dict[str, Any]:
     feed_rec = (feed or {}).get(feed_key(row), {})
     original = full_name(row)
+    if rules.get("strip_code"):
+        # Elgotech: kod producenta na poczatku albo w srodku nazwy ("PZB1-40-10Y/1 Przedł.bębnowy ...",
+        # "Przedłużacz PK-1010-1,5 bez uziemienia") - cyfry kodu myliłyby gniazda, dlugosc i przekroj
+        maker_code = (row.get("Kod producenta") or "").strip()
+        if maker_code:
+            original = " ".join(re.sub(rf"(?<!\S){re.escape(maker_code)}(?=[\s,]|$)", " ", original).split())
     raw_u = parse_view(original)  # przed czyszczeniem - Bemko: marka na koncu nazwy jest wycinana w `name_cleanup`
+    for item in rules.get("card_rename", []) if feed_rec.get("_name") else []:
+        # Signify: zly rodzaj w Ekonomie ("Tuba LED 58W G13" to swietlowka TL-D Colored, "Tuba LED 26W E14" zarowka do
+        # piekarnika) - kategoria karty to rozstrzyga; nazwa = rodzaj + nazwa katalogowa z karty (przed `name_cleanup`)
+        if re.search(item["category"], ascii_upper(feed_rec.get("_category", ""))) and re.search(item["name"], raw_u):
+            original = f"{item['prefix']} {feed_rec['_name']}"
+            break
     for item in rules.get("name_cleanup", []):
         # dopiski marketingowe w starych nazwach ("... 3 lat Gwar. LCOBB 10W/M ...") - zostaje nazwa katalogowa;
         # pozycja {match, repl} normalizuje zapis ("1*E27" -> "1xE27", "360ST" -> "360°")
         pattern, repl = (item["match"], item["repl"]) if isinstance(item, dict) else (item, " ")
         original = " ".join(re.sub(pattern, repl, original).split())
-    feed_note = feed_mismatch(original, feed_rec)
+    if not re.match(POLISH_WORD + r"\b", original):
+        # Signify: surowa nazwa katalogowa ("BCP384 9LED 30K 220V", "MAS LEDBulb D 4-60W E27") - rodzaj produktu
+        # z nazwy albo z kategorii karty producenta (`noun_prefix`), zeby typ dopasowal sie jak w nazwach po polsku
+        ou, cat = parse_view(original), ascii_upper(feed_rec.get("_category", ""))
+        for item in rules.get("noun_prefix", []):
+            if ("match" in item and re.search(item["match"], ou)) \
+                    or ("category" in item and re.search(item["category"], cat)):
+                original = f"{item['prefix']} {original}"
+                break
+    # Signify: karta to dokladnie ten 12NC, a nazwa katalogowa karty ("MAS LEDBulb D 4-60W") ma zamiennik mocy -
+    # porownanie mocy z nazwa Ekonoma odrzucaloby dobre karty; rozbieznosci notuje `params_change_note`
+    # Pawbol: moc oprawy na zarowke w cenniku to limit zrodla (18W LED), a w Ekonomie stara zarowka (100W) - to nie
+    # inny produkt; kod w cenniku jest dokladny
+    feed_note = "" if rules.get("params_web_loader") in ("signify", "pawbol") else feed_mismatch(original, feed_rec)
     if feed_note:
         feed_rec = {}  # kod w Ekonomie wskazuje inny produkt niz w feedzie - feed pomijamy
     polish_start = bool(re.match(POLISH_WORD + r"\b", original))
-    if feed_rec.get("_name") and ((rules.get("prefer_feed_name") == "polish_start" and polish_start)
-                                  or (rules.get("prefer_feed_name") is True and original == original.upper())):
+    all_caps = original == original.upper()
+    if feed_rec.get("_name") and ((rules.get("prefer_feed_name") == "polish_start"
+                                   and (polish_start or (rules.get("prefer_feed_name_upper") and all_caps)))
+                                  or (rules.get("prefer_feed_name") is True and all_caps)
+                                  # Kobi: nazwa od kodu modelu ("LED VESPA PRO 40W 4000K Lampa uliczna", "HERMETIC
+                                  # 1X60 Oprawa pod tuby led") - typ i rzeczownik z nazwy feedu (2026-11-05)
+                                  or (rules.get("prefer_feed_name_model_first") and not polish_start)
+                                  # Pawbol: nazwa z cennika producenta zawsze (jednolity opis katalogowy)
+                                  or rules.get("prefer_feed_name") == "always"):
         # stara nazwa WIELKIMI LITERAMI -> nowa nazwa dostawcy z feedu ("Naświetlacz LED DELYO MHN 10W ...")
         original = " ".join(feed_rec["_name"].split())
+        for item in rules.get("name_cleanup", []) if rules.get("feed_name_cleanup") else []:
+            # literowki feedu Kobi ("PRAWE", "Łącznik PROSTY", "25-36- 40W")
+            pattern, repl = (item["match"], item["repl"]) if isinstance(item, dict) else (item, " ")
+            original = " ".join(re.sub(pattern, repl, original).split())
+        for item in rules.get("feed_name_from_raw", []):
+            # cecha, ktora podaje tylko nazwa w Ekonomie (Kobi 2026-11-17: "ŁĄCZNIK T ZEWNĘTRZN" -> feed "Łącznik
+            # do szynoprzewodu 3-obwodowy T prawy" + "zewnętrzny")
+            if re.search(item["raw"], raw_u):
+                original = " ".join(re.sub(item["match"], item["repl"], original).split())
     head, tail = split_head_tail(original) if rules.get("split_tail") else (original, "")
     for item in rules.get("socket_rules", []):
         if re.search(item["match"], parse_view(head)):
@@ -2657,9 +3079,29 @@ def build_name(row: dict[str, str], rules: dict[str, Any], pdf_lm: dict[str, dic
                               if rules.get("brand_explicit") else True,
                               # wyroznik wersji z nazwy po oczyszczeniu i rozklejeniu ("NWPanel" -> "NW Panel")
                               "zrodlo_nazwy": f"{head} {tail}".strip() if rules.get("split_tail")
+                              # Signify: wersja z nazwy katalogowej karty ("DN142B 10S/830 PSD-E UGR19") - blizniaki w
+                              # Ekonomie roznia sie tam kodem sterownika / oslony, ktorego stara nazwa nie podaje
+                              else (feed_rec.get("_name") or original) if rules.get("version_from_card")
                               else (original if rules.get("version_from_clean") else "")}
+    if rules.get("params_web_loader") == "pawbol":
+        if feed_rec:
+            result["uwagi"].append(f"nazwa z: {feed_rec['_source']}")
+        else:
+            result["uwagi"].append("wycofany w cenniku Pawbol 2026 - dane tylko z nazwy"
+                                   if feed_key(row) in rules.get("_withdrawn", ()) else
+                                   "brak w cenniku Pawbol 2026 i na pawbol.pl - dane tylko z nazwy")
+    if rules.get("params_web_loader") == "onninen" and not re.search(r"\bIP\d\d\b", u):
+        # F-Elektro: IP, ktorego nazwa w Ekonomie nie podaje (wersja IP65 / IP67 obok tej samej nazwy); opis karty
+        # Onninen jest generowany - IP tylko z opisu (typy z `param: IP_opis`) daje WARNING
+        uses_desc = rule is not None and "ip_card_desc" in rule.get("features_post", [])
+        if feed_rec.get("IP"):
+            result["uwagi"].append(f"{feed_rec['IP']} z tytułu karty Onninen ({feed_rec['_url']})")
+        elif feed_rec.get("IP_opis") and uses_desc:
+            result["uwagi"].append(f"{feed_rec['IP_opis']} z opisu karty Onninen ({feed_rec['_url']})")
+            result["_card_name_only"] = True
     if rules.get("params") and not feed_rec:
-        result["uwagi"].append("brak w ofercie kanlux.com (wycofany) - dane tylko z nazwy"
+        result["uwagi"].append(rules.get("params_withdrawn_note", "brak w ofercie kanlux.com (wycofany)")
+                               + " - dane tylko z nazwy"
                                if feed_key(row) in rules.get("_withdrawn", ()) else
                                "brak w plikach Parametry - dane tylko z nazwy")
     if rule is None:
@@ -2700,13 +3142,24 @@ def build_name(row: dict[str, str], rules: dict[str, Any], pdf_lm: dict[str, dic
         gender = rule.get("gender") or ("f" if first.endswith("a") else ("n" if first.endswith(("o", "e")) else "m"))
         if rule.get("noun_add_led") and "LED" not in noun.upper().split():
             noun += " LED"
+    elif rule.get("noun_from") == "rest_head":
+        # Pawbol: rzeczownik = poczatek opisu producenta do pierwszego przecinka / liczby / slowa WIELKIMI
+        # ("Uchwyt dachówkowy skręcony, regulowany, ..." -> "Uchwyt dachówkowy skręcony"), reszta idzie do `rest`
+        m = re.match(rule["rest_strip"], original)
+        noun = (m.group(0) if m else original.split()[0]).strip()
+        first = ascii_upper(noun.split()[0]) if noun else ""
+        gender = rule.get("gender") or ("f" if first.endswith("A") else ("n" if first.endswith(("O", "E")) else "m"))
     else:
         noun, gender = resolve_noun(rule, u, original, rules)
     # tez rodzina z karty GTIN: "Orbis Flame" w Ekonomie to na karcie "Orbis Flame Wall" albo "... Ceiling" (2026-10-21)
+    if rules.get("_catalog"):
+        u = apply_catalog_row(u, ean, rule, rules, result)
     noun_src = f"{u} {parse_view(rules.get('_card_family_raw', {}).get(ean, ''))}"
     for item in rules.get("noun_overrides", []):
-        # rodzaj oprawy z kategorii producenta zamiast ogolnego "Oprawa LED" (2026-10-19: "Oprawa LED nic nie mowi")
-        if (not item.get("types") or rule["key"] in item["types"]) and re.search(item["match"], noun_src):
+        # rodzaj oprawy z kategorii producenta zamiast ogolnego "Oprawa LED" (2026-10-19: "Oprawa LED nic nie mowi");
+        # Elgotech: rodzaj z dzialu katalogu po kodzie ("PK-1010" = przedluzacz ogrodowy)
+        hit = re.search(item["code_match"], ean) if "code_match" in item else re.search(item["match"], noun_src)
+        if (not item.get("types") or rule["key"] in item["types"]) and hit:
             noun, gender = item["noun"], item.get("gender", gender)
             result["typ"] = item.get("typ", result["typ"])
             break
@@ -2727,11 +3180,16 @@ def build_name(row: dict[str, str], rules: dict[str, Any], pdf_lm: dict[str, dic
     attrs0 = list(rule.get("attrs", []))
     # Ledvance (2026-10-19): linia "jesli jest" w kazdym typie; typy z seria / modelem ("Vintage 1906 PenduLum")
     # maja linie w serii
-    add_line = rules.get("line_all_types") and not {"line", "series", "model", "model_code"} & set(attrs0)
+    add_line = rules.get("line_all_types") and (rule.get("line_with_model")
+                                                or not {"line", "series", "model", "model_code"} & set(attrs0))
     if rules.get("brand_last") and "brand" not in attrs0:
         # marka (+ linia) na koncu, jak w zarowkach: "Downlight LED fi200 18W 4000K bialy Ledvance Value"
         # rodzina opraw za marka, przed linia: "... Ledvance Urban Lite S" (`families`, 2026-10-19)
         tail_attrs = ["brand"] + (["family"] if rules.get("families") and not rules.get("family_after_noun") else [])             + (["line"] if add_line else [])
+        if rule.get("tail_attrs"):
+            # atrybuty typu tuz za marka (GTV 2026-11-16: producent zasilacza "Boke" - "... GTV Boke ...")
+            attrs0 = [a for a in attrs0 if a not in rule["tail_attrs"]]
+            tail_attrs[1:1] = list(rule["tail_attrs"])
         if rules.get("families") and rules.get("family_after_noun"):
             # nazwa wlasna zaraz za rzeczownikiem (2026-10-20): "Naswietlacz LED Floodlight Compact 50W ... Ledvance"
             attrs0 = ["family"] + attrs0
@@ -2739,7 +3197,11 @@ def build_name(row: dict[str, str], rules: dict[str, Any], pdf_lm: dict[str, dic
             # seria oprawy z parametrami jest jak linia: "Naswietlacz LED 10W 800lm 4000K IP65 czarny Bemko Kastel 2";
             # opis z poczatku serii ("z akumulatorem", "puszkowy") zostaje na jej miejscu jako `series_desc`
             attrs0 = [("series_desc" if a == "series" else a) for a in attrs0]
-            tail_attrs.append("series")
+            if rules.get("series_before_brand"):
+                # Kobi (2026-11-17): nazwa wlasna przed marka - "Taśma LED COB ... IP20 Tramo Kobi Premium"
+                tail_attrs.insert(0, "series")
+            else:
+                tail_attrs.append("series")
         rule = {**rule, "attrs": attrs0 + tail_attrs}
     elif add_line:
         rule = {**rule, "attrs": ([] if "brand" in attrs0 else ["brand"]) + ["line"] + attrs0}
@@ -2765,6 +3227,9 @@ def build_name(row: dict[str, str], rules: dict[str, Any], pdf_lm: dict[str, dic
             if power_text and (rules.get("split_tail") or rules.get("per_meter_power")) \
                     and re.search(r"\dW/M\b", head_u):
                 values[attr] += "/m"
+            tubes = re.search(r"\b([2-9])\s?X\s?(60|120|150)\b", u) if rule.get("power_per_tube") else None
+            if power_text and tubes:
+                values[attr] = f"{tubes.group(1)}x{power_text}"  # zestaw z tubami: moc tuby ("2x18W"), Kobi 2026-11-17
         elif attr == "lumen":
             lm = None
             info = pdf_lm.get(ean)
@@ -2805,7 +3270,7 @@ def build_name(row: dict[str, str], rules: dict[str, Any], pdf_lm: dict[str, dic
             kel = (pdf_lm.get(ean) or {}).get("k") or []
             if not values[attr] and len(kel) == 1:
                 values[attr] = f"{kel[0]}K"  # barwa z katalogu PDF
-            for item in rules.get("cct_words", []) if not values[attr] else []:
+            for item in rule.get("cct_words", rules.get("cct_words", [])) if not values[attr] else []:
                 if re.search(item["match"], u):
                     values[attr] = item["label"]  # "CIEPLY BIALY" bez K w nazwie i katalogu
                     break
@@ -2843,7 +3308,13 @@ def build_name(row: dict[str, str], rules: dict[str, Any], pdf_lm: dict[str, dic
             # pozycja-napis to nazwa wspolnej listy z `feature_sets` (czujniki, ksztalt...)
             items = [x for item in items for x in (rules.get("feature_sets", {}).get(item, [])
                                                    if isinstance(item, str) else [item])]
-            values[attr] = parse_features(u, gender, rules, items, ean)
+            # Signify: kody optyki / klasy / oslony sa czesto tylko w nazwie katalogowej karty ("BRP102 LED55/740 II DM")
+            feat_src = f"{u} {parse_view(feed_rec.get('_name', ''))}" if rules.get("features_card_name") else u
+            if attr.endswith("_raw"):
+                # Pawbol: cecha tylko w nazwie z Ekonoma, nie w cenniku producenta (maszty R.8312 / R.8313 "podst. 15kg"
+                # / "40kg" - w cenniku oba "Maszt odgromowy, wolnostojący, 2m")
+                feat_src = raw_u
+            values[attr] = parse_features(feat_src, gender, rules, items, ean, feed_rec)
         elif attr == "cri":
             values[attr] = parse_cri(u)
         elif attr == "psu_kind":
@@ -2859,7 +3330,10 @@ def build_name(row: dict[str, str], rules: dict[str, Any], pdf_lm: dict[str, dic
             if not values[attr] and len(beams) == 1 and REFLECTOR_SHAPE_RE.match(shape):
                 values[attr] = f"{beams[0]}°"
         elif attr == "line":
-            values[attr] = parse_bulb_line(u)
+            values[attr] = parse_bulb_line(u, rules.get("lines"))
+            if not values[attr] and rules.get("line_from_category"):
+                # Signify: linia z kategorii karty ("Oprawy downlight > CoreLine Downlight gen5"), gdy nazwa jej nie podaje
+                values[attr] = parse_bulb_line(ascii_upper(feed_rec.get("_category", "")), rules.get("lines"))
             fam_line = rules.get("_family_lines", {}).get(ean, "")
             if fam_line and values[attr] in ("", "Ultra Output", "High Output"):
                 # linia rodziny z kart GTIN (`line_from_card_family`): "LED CLASSIC B V" = Value, bo karta tej rodziny
@@ -2868,6 +3342,13 @@ def build_name(row: dict[str, str], rules: dict[str, Any], pdf_lm: dict[str, dic
                 result["uwagi"].append(f"linia {fam_line} z rodziny na karcie ledvance.com")
         elif attr == "family":
             values[attr] = parse_family(u, rules)
+            if rules.get("proper_names"):
+                # nazwa wlasna rodziny przed kodem (2026-11-03): "Philips Malaga BRP102 CoreLine"; bez karty - po kodzie
+                # rodziny z innych kart ("BRP102" = Malaga)
+                proper = (signify_proper_name(feed_rec.get("_category", ""), rules)
+                          or rules.get("_proper_by_family", {}).get(values[attr], ""))
+                if proper:
+                    values[attr] = f"{proper} {values[attr]}".strip()
             card_cfg = rules.get("family_from_card") or {}
             if not values[attr] and rule["key"] in card_cfg.get("types", []):
                 # nazwa wlasna z rodziny na karcie GTIN ("... Ledvance Damp Proof Max"), 2026-10-20
@@ -2918,6 +3399,20 @@ def build_name(row: dict[str, str], rules: dict[str, Any], pdf_lm: dict[str, dic
         elif attr == "color":
             values[attr] = parse_color(color_src, gender, rules.get("housing_colors", {}),
                                        two_tone=bool(rules.get("two_tone_colors")))
+            for item in rules.get("code_color_fix", []):
+                # Pawbol: blad koloru w cenniku producenta (E.4132 "LZ 10/Ż ... zielona") - kolor z kodu, uwaga ze zrodlem
+                if re.search(item["code"], ean):
+                    color = rules.get("housing_colors", {}).get(item["color"], {})
+                    values[attr] = color.get(gender, color.get("m", ""))
+                    result["uwagi"].append(item["note"])
+                    break
+            for item in rules.get("code_colors", []) if not values[attr] else []:
+                # Elgotech: wersja kolorystyczna tylko w kodzie ("WT-20S-2" = czarna, nazwa jak "WT-20S")
+                if re.search(item["code"], ean):
+                    color = rules.get("housing_colors", {}).get(item["color"], {})
+                    values[attr] = color.get(gender, color.get("m", ""))
+                    result["uwagi"].append(f"kolor {values[attr]} z koncowki kodu {ean}")
+                    break
         elif attr == "series":
             src = head if rules.get("split_tail") else original
             if rules.get("series_first_segment"):
@@ -2930,8 +3425,21 @@ def build_name(row: dict[str, str], rules: dict[str, Any], pdf_lm: dict[str, dic
                         and not re.search(r"\d\s?(W|V|HZ|LM|K|MM|CM)\b|^\s*(IP|AC|DC|MAX|G\d|GU|E\d)", segs[1]):
                     src = segs[1]  # "OPRAWA NA SZYNOPRZEWÓD 1-FAZOWY, LAGOS II, ..." -> model z 2. czlonu
             values[attr] = parse_series(src, rule, rules)
+            if rules.get("series_first_segment") and rules.get("series_next_segment") and not rule.get("series_raw") \
+                    and not any(w[:1].isupper() for w in values[attr].split()):
+                # GTV (2026-11-16): 1. czlon bez modelu, najwyzej z opisem malymi ("OPRAWA ŚCIENNA JEDNOKIERUNKOWA, TIAGO",
+                # "OPRAWA SCHODOWA LED, ESCADA OA") - model z 2. czlonu, tym samym testem co dla pustego 1. czlonu
+                segs = split_segments(head if rules.get("split_tail") else original)
+                if len(segs) > 1 and re.fullmatch(r"\s*[A-Z][A-Z0-9 .+-]{1,20}", segs[1]) \
+                        and not re.search(r"\d\s?(W|V|HZ|LM|K|MM|CM)\b|^\s*(IP|AC|DC|MAX|G\d|GU|E\d)", segs[1]):
+                    model = parse_series(segs[1], rule, rules)
+                    # tylko nazwa ("Tiago", "Escada OA"), nie opis ("ledowa", "inox", "z teleskopem")
+                    if model[:1].isupper() and not is_polish_word(model.split()[0]):
+                        values[attr] = " ".join(f"{values[attr]} {model}".split())
         elif attr == "segments":
             values[attr] = parse_segments(original, rules)
+        elif attr == "rest":
+            values[attr] = parse_rest(original, rule, rules)
         elif attr == "light_color":
             found = [c for code, c in rules.get("light_colors", {}).items() if re.search(rf"-{code}\b", head_u)]
             values[attr] = found[0] if found else ""
@@ -2957,6 +3465,9 @@ def build_name(row: dict[str, str], rules: dict[str, Any], pdf_lm: dict[str, dic
             values[attr] = parse_poles(u)
         elif attr == "housing_tubes":
             values[attr] = parse_housing_tubes(u, tuple(rules.get("tube_words", ("świetlówkę", "świetlówki"))))
+        elif attr == "set_tubes":
+            # Kobi (2026-11-17): zestaw oprawy z tubami - "z tubami LED 2x120cm" ("ZESTAW HERMETIC 2X120 + LED T8 18W")
+            values[attr] = re.sub(r"^pod ", "z ", parse_housing_tubes(u, ("tubą", "tubami")))
         elif attr == "ls_profile":
             values[attr] = parse_ls_profile(u)
         elif attr == "ls_cover":
@@ -3034,7 +3545,37 @@ def build_name(row: dict[str, str], rules: dict[str, Any], pdf_lm: dict[str, dic
             result["uwagi"].append(f"karta podaje {card['cct']}K ({card.get('name', '')}), Ekonom D/DL - do sprawdzenia")
             result["_card_name_only"] = True
     if rules.get("params"):
-        apply_params(values, rule, feed_rec, rules, gender, result)
+        before = {k: values.get(k, "") for k in ("power", "lumen", "cct")}
+        # `params_skip: [power]` - moc nominalna z nazwy zamiast pomiarowej z karty (swietlowka "80W" = 79,8 W na karcie)
+        skip = {"power": "Moc znamionowa [W]"}
+        rec_used = {k: v for k, v in feed_rec.items()
+                    if k not in {skip[a] for a in rule.get("params_skip", []) if a in skip}}
+        # `params_keep_name`: wymiar nominalny z nazwy wygrywa z wymiarem obudowy z karty (belka "L1500" = 150cm, karta 1450 mm)
+        kept = {a: values[a] for a in rule.get("params_keep_name", []) if values.get(a)}
+        apply_params(values, rule, rec_used, rules, gender, result)
+        values.update(kept)
+        def far(key: str, old: str, new: str) -> bool:
+            # istotna roznica: moc / lm o wiecej niz 15 %, barwa bez wspolnej wartosci (drobne korekty karty nie licza sie)
+            if key == "cct":
+                return not set(re.findall(r"\d{4}", old)) & set(re.findall(r"\d{4}", new))
+            a, b = kx_numbers(old.replace(",", ".")), kx_numbers(new.replace(",", "."))
+            return bool(a and b) and max(a[0], b[0]) / max(min(a[0], b[0]), 0.1) > 1.15
+
+        changed = [k for k, old in before.items() if old and values.get(k) and far(k, old, values[k])]
+        if rules.get("params_change_note") and feed_rec and len(changed) >= 2:
+            # karta tego kodu opisuje inny produkt niz nazwa w Ekonomie (kartoteka skopiowana z sasiedniej) - WARNING
+            result["uwagi"].append("karta producenta przeczy nazwie w Ekonomie (" + ", ".join(changed)
+                                   + ") - nazwa z karty, do sprawdzenia kartoteki")
+            result["_card_name_only"] = True
+        if rule.get("drop_with_power") and values.get("power") and values.get("features"):
+            # "zamiennik 60W" tylko, gdy moc rzeczywista nieznana (Signify: karta wycofanej zarowki)
+            values["features"] = " ".join(re.sub(rule["drop_with_power"], " ", values["features"]).split())
+        if rules.get("params_change_note") and feed_rec:
+            # karta producenta nadpisala parametr z nazwy w Ekonomie - sprzedawca widzial dotad inna wartosc
+            for key, old in before.items():
+                new = values.get(key, "")
+                if old and new and old.replace(",", ".").lower() != new.replace(",", ".").lower():
+                    result["uwagi"].append(f"{key} z karty {feed_rec.get('_src', 'producenta')}: {new} (w Ekonomie: {old})")
     else:
         apply_feed(values, rule, feed_rec, rules, gender, result)
     if rules.get("_web_params") is not None:
@@ -3142,6 +3683,17 @@ def build_name(row: dict[str, str], rules: dict[str, Any], pdf_lm: dict[str, dic
             others = {w.lower() for v in [noun] + [x for k, x in values.items() if k != key] for w in str(v).split()}
             if {w.lower() for w in found.split()} <= others:
                 values[key] = ""
+    for key in [k for k in values if k.startswith(("features_line", "features_sys", "features_maker"))]:
+        # nazwa wlasna dopisywana za marka (linia, system, producent - 2026-11-16) tylko, gdy jej jeszcze nie ma w nazwie
+        # ("Wyłącznik różnicowoprądowy IDEAL TS 2P ..." z rzeczownikiem z konca nazwy w Ekonomie)
+        found = values[key]
+        if found and any(re.search(rf"(?i)(?<!\S){re.escape(found)}(?!\S)", str(v))
+                         for v in [noun] + [x for k, x in values.items() if k != key]):
+            values[key] = ""
+    if rules.get("series_dedupe") and values.get("series"):
+        # Kobi (2026-11-16): slowo serii, ktore juz stoi w nazwie (kod OH-17, optyka WB, "Mini"), nie powtarza sie za marka
+        others = {w.lower() for v in [noun] + [x for k, x in values.items() if k != "series"] for w in str(v).split()}
+        values["series"] = " ".join(w for w in values["series"].split() if w.lower() not in others)
     attrs = rule.get("attrs", [])
     if "brand" in attrs:
         # marka na pozycji z `attrs` (zarowki Ledvance: "... 36° Osram Value", jak "... 36ST Philips CorePro")
@@ -3153,6 +3705,9 @@ def build_name(row: dict[str, str], rules: dict[str, Any], pdf_lm: dict[str, dic
         at = parts.index(values["color"]) if values.get("color") in parts else len(parts)
         parts.insert(at, sock)
     result["nazwa"] = " ".join(p for p in parts if p)
+    if rules.get("squash_spaces"):
+        # Pawbol: etykieta cechy z pustej grupy ("R-BOX SLIM {1}" bez liczby modulow) zostawia podwojna spacje
+        result["nazwa"] = " ".join(result["nazwa"].split())
     if "brand" in attrs:  # slowa za marka (linia, protokol) - `move_brand_tail` trzyma je przy marce
         result["po_marce"] = " ".join(values.get(a, "") for a in attrs[attrs.index("brand") + 1:]).split()
         result["linia"] = "line" in attrs
@@ -3174,7 +3729,11 @@ def build_name(row: dict[str, str], rules: dict[str, Any], pdf_lm: dict[str, dic
     result["atrybuty"] = values
     mismatch = code_mismatches(ean, raw_u, rules)
     result["uwagi"] += mismatch
-    if missing or mismatch:
+    # PCE: wartosc poprawiona wg karty producenta (cecha z `code_match`), bo nazwa w Ekonomie ma blad - uwaga ze
+    # zrodlem i WARNING, zeby poprawka byla widoczna w raporcie
+    code_notes = [item["note"] for item in rules.get("code_notes", []) if re.search(item["code"], ean)]
+    result["uwagi"] += code_notes
+    if missing or mismatch or result.pop("_catalog_conflict", False):
         result["status"] = "DO_SPRAWDZENIA"
     elif not rule.get("trusted") and ("model" in rule.get("attrs", []) or "segments" in rule.get("attrs", [])
                                       or (rule.get("no_schema") and not values.get("breaker"))):
@@ -3182,7 +3741,7 @@ def build_name(row: dict[str, str], rules: dict[str, Any], pdf_lm: dict[str, dic
         result["uwagi"].append("typ bez schematu - nazwa z modelu katalogowego")
     else:
         # cecha tylko z nazwy na karcie, rodzina jej nie potwierdza - do sprawdzenia (2026-10-20)
-        result["status"] = "WARNING" if result.pop("_card_name_only", False) else "OK"
+        result["status"] = "WARNING" if result.pop("_card_name_only", False) or code_notes else "OK"
     result.pop("_card_name_only", None)
     return result
 
@@ -3279,7 +3838,7 @@ def add_version_suffixes(results: list[dict[str, Any]], rules: dict[str, Any]) -
     Tylko dla typow z `version_suffix: true` (decyzja uzytkownika 2026-10-14: najpierw kat, a gdy
     nie wystarcza - wersje). Identyczne nazwy w Ekonomie zostaja powtorzeniem.
     """
-    allowed = {t["key"] for t in rules["types"] if t.get("version_suffix")}
+    allowed = {t["key"] for t in rules["types"] if t.get("version_suffix") or rules.get("version_suffix_all")}
     for numbers in (False, True):  # najpierw slowa, potem tez numery modeli
         groups: dict[str, list[dict[str, Any]]] = defaultdict(list)
         for res in results:
@@ -3362,6 +3921,17 @@ def read_csv(path: Path) -> tuple[list[str], list[dict[str, str]]]:
         # "Zestawienie" z Ekonoma (2026-10-26): obie czesci w jednej kolumnie, "<40 znakow> | <reszta>"
         for row in rows:
             head, _, tail = row["Nazwa towaru"].partition(JOINED_NAME_SEP)
+            if tail and len(head) < NAME_LIMIT and not tail[0].isspace() \
+                    and not (head[-1:].isdigit() and re.match(r"(?i)\d|(?:K|W|V|LM|MM|CM)\b", tail)):
+                # pierwsza czesc krotsza niz 40 znakow = ciecie na spacji, ktora zestawienie zgubilo
+                # (Bemko 2026-11-03: "... 34W 4000K" + "5000LM ..." sklejalo sie w "4000K5000LM"); liczby i jej
+                # jednostki nie rozdzielamy - GTV 'wkrętakowych 1/4", 6' + '0 mm' (cudzyslow Ekonom liczy
+                # podwojnie), Bemko "9W 4000" + "K 1300LM"
+                tail = " " + tail
+            elif len(head) == NAME_LIMIT and re.search(r"[a-ząćęłńóśźż]$", head) and re.match(r"[zwi] \S", tail):
+                # ciecie dokladnie na 40. znaku zgubilo spacje przed przyimkiem: "Oprawka do źródeł światła" + "z
+                # blaszką" (Kanlux 2026-11-04: "światłaz blaszką")
+                tail = " " + tail
             row["Nazwa towaru"], row["Nazwa dodatkowa"] = head, tail
     return fields, rows
 
@@ -3425,13 +3995,30 @@ def main() -> None:
     args = parser.parse_args()
 
     rules = load_yaml(args.rules)["suppliers"][args.supplier]
-    fields, rows = read_csv(args.input)
     stamp = date.today().isoformat()
-    label = args.supplier.capitalize()
-    output = args.output or ROOT / "output" / f"Ekonom-nazwy-{label}_{stamp}.csv"
+    label = rules.get("label") or args.supplier.capitalize()  # F-Elektro: klucz "felektro", plik "F-Elektro"
+    if args.input.is_dir():
+        # kilka zestawien jednego dostawcy (Signify: FAR = oprawy, PHP = zrodla; katalog i kartoteki) - nazwy i
+        # powtorzenia liczone razem, wynik osobno dla kazdego pliku, zawsze w ukladzie Ekonoma
+        fields, rows = EKONOM_FIELDS, []
+        for path in sorted(args.input.glob("*.csv")):
+            f_fields, f_rows = read_csv(path)
+            if "Nazwa dodatkowa" not in f_fields:
+                f_rows = to_ekonom_layout(f_rows)  # zestawienie "<40> | <reszta>" - read_csv juz rozdzielil nazwe
+            for row in f_rows:
+                row["_plik"] = path.stem
+            rows += f_rows
+        out_dir = args.output or ROOT / "output"
+        outputs = {stem: out_dir / f"Ekonom-nazwy-{label}_{stem.replace(' ', '-')}_{stamp}.csv"
+                   for stem in dict.fromkeys(r["_plik"] for r in rows)}
+        output = out_dir
+    else:
+        fields, rows = read_csv(args.input)
+        output = args.output or ROOT / "output" / f"Ekonom-nazwy-{label}_{stamp}.csv"
+        outputs = {}
+        if output.resolve() == args.input.resolve():
+            raise SystemExit("Plik wynikowy nie moze nadpisac pliku wejsciowego.")
     report = args.report or ROOT / "reports" / f"Ekonom-nazwy-{label}_kontrola_{stamp}.xlsx"
-    if output.resolve() == args.input.resolve():
-        raise SystemExit("Plik wynikowy nie moze nadpisac pliku wejsciowego.")
 
     pdf_lm: dict[str, dict[str, Any]] = {}
     pkg: dict[str, dict[str, Any]] = {}
@@ -3466,10 +4053,33 @@ def main() -> None:
             web_params, withdrawn = load_params_web(ROOT / rules["params_web_cache"])
             feed = {**web_params, **feed}
             rules["_withdrawn"] = withdrawn
+    if rules.get("params_web_loader") == "signify":
+        # karty lighting.philips.pl po 12NC (`Kod producenta`, scripts/fetch_signify_web.py) - zrodlo prawdy jak
+        # pliki Parametry Kanlux; klucz feedu to kod towaru, wiec przepisujemy karty na wiersze
+        cards, missing_cards = load_signify_cards(ROOT / rules["params_web_cache"])
+        feed = {feed_key(row): cards[(row.get("Kod producenta") or "").strip()] for row in rows
+                if (row.get("Kod producenta") or "").strip() in cards}
+        rules = {**rules, "params": True,
+                 "_withdrawn": {feed_key(row) for row in rows if (row.get("Kod producenta") or "").strip() in missing_cards}}
+        rules["_proper_by_family"] = signify_proper_by_family(cards, rules)
+    if rules.get("params_web_loader") == "pawbol":
+        # cennik Pawbol 2026 + karty pawbol.pl (scripts/fetch_pawbol_web.py) po `Kod producenta`
+        names, withdrawn = load_pawbol_names(ROOT / rules["params_web_cache"])
+        for row in rows:
+            row["_feed_key"] = pawbol_code_key(row.get("Kod producenta") or (row.get("Kod towaru") or "").rsplit("/", 1)[0])
+        feed = {row["_feed_key"]: names[row["_feed_key"]] for row in rows if row["_feed_key"] in names}
+        rules = {**rules, "_withdrawn": withdrawn}
+    if rules.get("params_web_loader") == "onninen":
+        # F-Elektro: tytul i karta onninen.pl po kodzie producenta (scripts/fetch_felektro_onninen.py)
+        feed = load_onninen_cards(ROOT / rules["params_web_cache"], rows)
     if feed is not None:
         hits = sum(1 for row in rows if feed_key(row) in feed)
         print(f"Feed: {len(feed)} produktow, dopasowane do CSV: {hits}/{len(rows)}")
 
+    if rules.get("catalog_rows"):
+        # Elgotech: wiersze tabel katalogu PDF (scripts/extract_elgotech_catalog.py)
+        rules = {**rules, "_catalog": load_catalog_rows(ROOT / rules["catalog_rows"])}
+        print(f"Katalog producenta: {len(rules['_catalog'])} kodow")
     if rules.get("web_params_cache"):
         web_params, withdrawn, vocab, models = load_web_params(ROOT / rules["web_params_cache"])
         rules = {**rules, "_web_params": web_params, "_withdrawn": withdrawn, "_vocab": vocab, "_models": models}
@@ -3567,6 +4177,9 @@ def main() -> None:
         # srednica jako "220 mm" zamiast "fi220" (decyzja uzytkownika 2026-10-19); "fi30cm" -> "300 mm"
         for res in results:
             res["nazwa"] = diameter_in_mm(res["nazwa"])
+    for res in results:
+        # CSV Ekonoma jest w cp1250 - "≤" z parametrow Kanlux dawal "UGR?14" (2026-11-04); "UGR<19" jak w innych nazwach
+        res["nazwa"] = res["nazwa"].replace("≤", "<").replace("≥", ">")
     for item in rules.get("name_replace", []):
         # koncowe zamiany slow ("Oprawa świetlówkowa" -> "Oprawa pod tuby", 2026-10-19)
         for res in results:
@@ -3575,6 +4188,15 @@ def main() -> None:
         # to samo slowo dwa razy obok siebie: "globe Globe 95", "Haloline Haloline 1500", "SENSOR SENSOR" z Ekonoma
         for res in results:
             res["nazwa"] = re.sub(r"(?i)(?<!\S)(\S+) (?=\1(?!\S))", "", res["nazwa"])
+            # IP z typu Kanlux i z parametrow: "Oprawa punktowa LED IP44 4,5W 3000K IP44" - zostaje drugie, na
+            # miejscu atrybutu; samo IP w typie ("Zestaw uszczelniający IP44") zostaje (2026-11-04)
+            for ip in {m for m in re.findall(r"\bIP\d{2}\b", res["nazwa"]) if res["nazwa"].count(m) > 1}:
+                res["nazwa"] = re.sub(rf"\s*\b{ip}\b", "", res["nazwa"], count=1).strip()
+    if rules.get("capitalize_first"):
+        # akcesoria `inne` z polskim pierwszym slowem WIELKIMI ("ŻARNIK", "SŁUP") dostawaly mala litere - po
+        # `dedupe_adjacent`, ktore z "Przedłużka przedłużka 1M" zostawia drugie slowo (2026-11-03)
+        for res in results:
+            res["nazwa"] = res["nazwa"][:1].upper() + res["nazwa"][1:]
     if rules.get("onoff_twins"):
         drop_lone_onoff(results)
 
@@ -3600,11 +4222,17 @@ def main() -> None:
 
     out_rows = []
     for res in results:
-        row = dict(res["row"])
+        row = {k: v for k, v in res["row"].items() if k != "_feed_key"}  # klucz roboczy Pawbol, nie kolumna Ekonoma
         row["Nazwa towaru"], row["Nazwa dodatkowa"] = split_for_ekonom(res["nazwa"])
         out_rows.append(row)
-    ensure_dir(output.parent)
-    write_ekonom_csv(output, fields, out_rows)
+    if outputs:
+        ensure_dir(output)
+        for stem, path in outputs.items():
+            write_ekonom_csv(path, fields, [{k: v for k, v in r.items() if k != "_plik"}
+                                            for r in out_rows if r["_plik"] == stem])
+    else:
+        ensure_dir(output.parent)
+        write_ekonom_csv(output, fields, out_rows)
 
     write_report(report, results, dup_rows)
     stats = Counter(r["status"] for r in results)
@@ -3621,6 +4249,7 @@ def write_report(path: Path, results: list[dict[str, Any]], dup_rows: list[dict[
 
     ensure_dir(path.parent)
     names = pd.DataFrame([{
+        **({"Plik": r["row"]["_plik"]} if "_plik" in r["row"] else {}),
         "LP": r["row"].get("LP", ""), "Kod towaru": r["row"].get("Kod towaru", ""),
         "EAN": r["row"].get("Kod producenta", ""), "Stara nazwa": r["stara"], "Nowa nazwa": r["nazwa"],
         "Dlugosc": len(r["nazwa"]), "Typ": r["typ"], "Status": r["status"],

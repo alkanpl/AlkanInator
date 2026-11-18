@@ -70,6 +70,24 @@ EAN_COLUMNS = [
 ]
 
 
+# Plik z `woo_api_cli.py pull` (uklad WP All Export) -> nazwy kolumn natywnego CSV WooCommerce.
+WP_ALL_EXPORT_COLUMNS = {
+    "id": "ID",
+    "Title": "Nazwa",
+    "Product Type": "Rodzaj",
+    "Content": "Opis",
+    "Short Description": "Krótki opis",
+    "Product Tags": "Tagi",
+    "Stock Status": "W magazynie?",
+    "Stock": "Stan magazynowy",
+    "Regular Price": "Cena",
+    "Image URL": "Obrazki",
+    "hwp_product_gtin": "Pola: hwp_product_gtin",
+}
+WP_ALL_EXPORT_ATTRIBUTE_PREFIX = "Atrybut Produktu: "
+DEFAULT_WOO_KNOWLEDGE_PATH = "cache/woo_api/knowledge.json"
+
+
 def split_list(value: Any, separators: str = r",|\|") -> list[str]:
     parts = re.split(separators, str(value or ""))
     return [compact_spaces(part) for part in parts if compact_spaces(part)]
@@ -79,7 +97,59 @@ def split_attribute_values(value: Any) -> list[str]:
     text = str(value or "")
     if not compact_spaces(text):
         return []
-    return split_list(text, separators=r",|\||>")
+    # CSV WooCommerce escapuje przecinek w wartosci jako "\," (2\,5 mm, dane producenta).
+    return [part.replace("\\,", ",") for part in split_list(text, separators=r"(?<!\\),|\||>")]
+
+
+def is_wp_all_export(df: pd.DataFrame) -> bool:
+    columns = [str(column) for column in df.columns]
+    return f"{ATTRIBUTE_NAME_PREFIX}1" not in columns and any(
+        column.startswith(WP_ALL_EXPORT_ATTRIBUTE_PREFIX) for column in columns
+    )
+
+
+def load_attribute_labels(path: str | Path) -> dict[str, str]:
+    """Kolumna "Atrybut Produktu: Podtyp Produktu" -> prawdziwa etykieta "Podtyp produktu"."""
+    knowledge_path = Path(path)
+    if not knowledge_path.exists():
+        return {}
+    knowledge = json.loads(knowledge_path.read_text(encoding="utf-8"))
+    return {
+        attribute["column"]: attribute["label"]
+        for attribute in knowledge.get("attributes") or []
+        if attribute.get("column") and attribute.get("label")
+    }
+
+
+def expand_category_paths(value: Any) -> str:
+    # W pliku z pull sa tylko najglebsze sciezki; natywny CSV podaje tez kategorie nadrzedne.
+    paths: list[str] = []
+    for path in str(value or "").split("|"):
+        parts = category_parts(path)
+        for depth in range(1, len(parts) + 1):
+            prefix = " > ".join(parts[:depth])
+            if prefix not in paths:
+                paths.append(prefix)
+    return ", ".join(paths)
+
+
+def native_attribute_value(value: Any) -> str:
+    terms = [compact_spaces(term) for term in str(value or "").split("|") if compact_spaces(term)]
+    return ", ".join(term.replace(",", "\\,") for term in terms)
+
+
+def from_wp_all_export(df: pd.DataFrame, labels: dict[str, str]) -> pd.DataFrame:
+    native = df.rename(columns=WP_ALL_EXPORT_COLUMNS)
+    if "Kategorie produktów" in native.columns:
+        native["Kategorie"] = native.pop("Kategorie produktów").map(expand_category_paths)
+    attribute_columns = [column for column in df.columns if str(column).startswith(WP_ALL_EXPORT_ATTRIBUTE_PREFIX)]
+    slots: dict[str, pd.Series] = {}
+    for index, column in enumerate(attribute_columns, start=1):
+        label = labels.get(column) or column[len(WP_ALL_EXPORT_ATTRIBUTE_PREFIX):]
+        values = native.pop(column).map(native_attribute_value)
+        slots[f"{ATTRIBUTE_NAME_PREFIX}{index}"] = values.map(lambda value, label=label: label if value else "")
+        slots[f"{ATTRIBUTE_VALUE_PREFIX}{index}"] = values
+    return pd.concat([native, pd.DataFrame(slots, index=native.index)], axis=1)
 
 
 def split_category_paths(value: Any) -> list[str]:
@@ -552,13 +622,25 @@ def write_outputs(analysis: dict[str, Any], reports_dir: Path, dictionary_path: 
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Wyciaga wiedze z eksportu produktow WooCommerce CSV.")
+    parser = argparse.ArgumentParser(
+        description="Wyciaga wiedze z eksportu produktow WooCommerce CSV albo pliku XLSX z woo_api_cli.py pull."
+    )
     parser.add_argument("--input", required=True)
     parser.add_argument("--reports-dir", default="reports/woocommerce_catalog")
     parser.add_argument("--dictionary", default="dictionaries/woocommerce_catalog_knowledge.yaml")
+    parser.add_argument(
+        "--woo-knowledge",
+        default=DEFAULT_WOO_KNOWLEDGE_PATH,
+        help="knowledge.json z woo_api_cli.py knowledge - prawdziwe nazwy atrybutow dla pliku z pull.",
+    )
     args = parser.parse_args()
 
     df = read_products(args.input)
+    if is_wp_all_export(df):
+        labels = load_attribute_labels(args.woo_knowledge)
+        if not labels:
+            print(f"UWAGA: brak {args.woo_knowledge} - nazwy atrybutow z naglowkow kolumn (wielkie litery).")
+        df = from_wp_all_export(df, labels)
     analysis = build_analysis(df)
     write_outputs(analysis, Path(args.reports_dir), Path(args.dictionary))
 

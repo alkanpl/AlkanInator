@@ -10,7 +10,7 @@ zmienia sie wylacznie kolumna ``Product Tags`` w nowych produktach.
 
 Uzycie:
     py src/fill_variant_tags_from_siblings.py \
-        --input "input/Kaszmir Simon/Simon-55-i-55-Go-i-54.xlsx" \
+        --input "archived_input_files/input_2026-11-10/Kaszmir Simon/Simon-55-i-55-Go-i-54.xlsx" \
         --color-codes 42,142 \
         --output output/Simon-55-i-55-Go-i-54_TAGI_KASZMIR.xlsx \
         --control output/Simon-55-i-55-Go-i-54_TAGI_KASZMIR_kontrola.xlsx \

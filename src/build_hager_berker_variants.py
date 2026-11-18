@@ -20,7 +20,7 @@ from openpyxl.utils import get_column_letter
 
 
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_INPUT = ROOT / "input" / "Hager-Berker-Gniazdka.xlsx"
+DEFAULT_INPUT = ROOT / "archived_input_files" / "input_2026-11-10" / "BerkerHager" / "Hager-Berker-Gniazdka.xlsx"
 DEFAULT_PDF = ROOT / "input" / "21PL001_Katalog_Osprzet_Hager_2021.pdf"
 DEFAULT_OUTPUT = ROOT / "output" / "Hager-Berker-Gniazdka_WARIANTY_ATRYBUTY_I_TAGI.xlsx"
 DEFAULT_REPORT = ROOT / "reports" / "Hager-Berker-Gniazdka_WARIANTY_ATRYBUTY_I_TAGI_report.json"
