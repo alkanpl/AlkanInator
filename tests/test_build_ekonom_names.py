@@ -1,3 +1,5 @@
+import csv
+import io
 import os
 import re
 import sys
@@ -55,6 +57,7 @@ from build_ekonom_names import (  # noqa: E402
     strip_brand_from_names,
     write_ekonom_csv,
     EKONOM_FIELDS,
+    OUTPUT_FIELDS,
     load_pawbol_names,
     pawbol_code_key,
     load_onninen_cards,
@@ -1592,10 +1595,10 @@ class JoinedNameFormatTest(unittest.TestCase):
     """"Zestawienie" z Ekonoma (2026-10-26): "Nazwa towaru" = "<40 znakow> | <reszta>", bez kolumny "Nazwa dodatkowa"."""
 
     HEADER = "LP;Kod towaru;Nazwa towaru;J.M.;Ilość;Cena C3 - Cena Katalogowa;Cena Internet sklep;Kod producenta\r\n"
-    EKONOM_HEADER = "LP;Kod towaru;Nazwa towaru;Nazwa dodatkowa;Kod producenta;JM;Cena netto;Waluta\r\n"
+    OUTPUT_HEADER = "Kod towaru;Nazwa towaru;Nazwa dodatkowa\r\n"
 
     def test_split_on_read_and_write_in_ekonom_layout(self):
-        """Wynik idzie w ukladzie Ekonoma z "Nazwa dodatkowa", nie w ukladzie zestawienia (2026-10-27)."""
+        """Wynik: "Nazwa dodatkowa", nie uklad zestawienia (2026-10-27); UTF-8 z BOM i 3 kolumny (2026-11-18)."""
         with tempfile.TemporaryDirectory() as tmp:
             src = Path(tmp) / "in.csv"
             src.write_bytes((self.HEADER + '1;"4058075420991/LDV";"Naświetlacz FLOOD LED PERFORMANCE 20W 30 | 00K SYM";'
@@ -1609,15 +1612,26 @@ class JoinedNameFormatTest(unittest.TestCase):
             rows[0]["Nazwa towaru"], rows[0]["Nazwa dodatkowa"] = split_for_ekonom(name)
             out = Path(tmp) / "out.csv"
             write_ekonom_csv(out, fields, rows)
-            text = out.read_bytes().decode("cp1250")
-            self.assertTrue(text.startswith(self.EKONOM_HEADER))
+            raw = out.read_bytes()
+            self.assertTrue(raw.startswith(b"\xef\xbb\xbf"))  # BOM UTF-8
+            text = raw.decode("utf-8-sig")
+            self.assertTrue(text.startswith(self.OUTPUT_HEADER))
             self.assertNotIn(" | ", text)
-            fields2, rows2 = read_csv(out)
-            self.assertEqual(fields2, EKONOM_FIELDS)
+            self.assertIn("100°", text)  # znaki spoza cp1250 zostaja
+            rows2 = list(csv.DictReader(io.StringIO(text), delimiter=";"))
+            self.assertEqual(list(rows2[0]), OUTPUT_FIELDS)
+            self.assertEqual(rows2[0]["Kod towaru"], "4058075420991/LDV")
             self.assertEqual(full_name(rows2[0]), name)
             self.assertLessEqual(len(rows2[0]["Nazwa towaru"]), 40)
-            self.assertEqual((rows2[0]["JM"], rows2[0]["Cena netto"], rows2[0]["Waluta"]), ("szt", "71,82", "PLN"))
-            self.assertEqual(rows2[1]["Cena netto"], "")
+            self.assertEqual((rows2[1]["Kod towaru"], rows2[1]["Nazwa dodatkowa"]), ("x", ""))
+
+    def test_output_from_ekonom_layout_keeps_only_three_columns(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            out = Path(tmp) / "out.csv"
+            row = dict(zip(EKONOM_FIELDS, ["1", "037246/KAN", "Oprawa", " hermetyczna", "5905339372469", "szt", "71,82", "PLN"]))
+            write_ekonom_csv(out, EKONOM_FIELDS, [row])
+            self.assertEqual(out.read_bytes().decode("utf-8-sig"),
+                             'Kod towaru;Nazwa towaru;Nazwa dodatkowa\r\n"037246/KAN";"Oprawa";" hermetyczna"\r\n')
 
 
 class LedvanceZestawienie20261026Test(unittest.TestCase):

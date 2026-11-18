@@ -755,9 +755,13 @@ przy konflikcie z promptem wygrywa YAML).
   o mocy z Ekonoma; Multi Lumen "40W" = najwyzszy stopien 39,3 W; komplet SETn - lm na sztuke; kilka mocy w nazwie
   "11,3/14W" / "4-7-9W" -> lm w tej samej kolejnosci "1900/2300lm" / "500-720-840lm"). Narzedzie
   `src/build_ekonom_names.py --supplier <x> --input <csv> --pdf-dir <katalog>`,
-  reguly typow `dictionaries/ekonom_name_rules.yaml`, wynik: CSV w formacie
-  Ekonoma w `output/` + skoroszyt kontrolny w `reports/` (arkusze "Nazwy",
-  "Powtorzenia", "Roznice w powtorzeniach"). **Powtorzenia nazw zglasza sie
+  reguly typow `dictionaries/ekonom_name_rules.yaml`, wynik: CSV do Ekonoma
+  w `output/` + skoroszyt kontrolny w `reports/` (arkusze "Nazwy",
+  "Powtorzenia", "Roznice w powtorzeniach"). **Plik wynikowy w `output/` ma
+  kodowanie UTF-8 z BOM, separator `;` i TYLKO kolumny `Kod towaru`, `Nazwa towaru`,
+  `Nazwa dodatkowa`** (decyzja uzytkownika 2026-11-18, `OUTPUT_FIELDS` /
+  `write_ekonom_csv`). Dotyczy wylacznie pliku wynikowego - CSV z Ekonoma na wejsciu
+  dalej czyta sie w cp1250 z pelnym ukladem, a skoroszyt kontrolny sie nie zmienia. **Powtorzenia nazw zglasza sie
   uzytkownikowi** razem z tym, czym roznia sie produkty - to on decyduje,
   jaki atrybut dodac do nazwy; nie dobiera sie wyroznika samodzielnie.
   Decyzje Ledvance (2026-10-14): zarowki dostaja linie (Value, Performance,
@@ -960,10 +964,9 @@ przy konflikcie z promptem wygrywa YAML).
   (< 5000 K = WARNING). Kamery Smart+ ze swiatlem to oprawy z kamera (`kamera_oprawa`: "Kinkiet LED z kamera Smart+ WiFi
   15W 950lm 3000K ..."). Surowe nazwy EN tlumaczy sie tylko po akceptacji arkusza z `scripts/propose_ledvance_translations.py`.
   Zestawienie Ekonoma (2026-10-26, `input/Zestawienie Ledvance.csv`): bez kolumny `Nazwa dodatkowa`, obie czesci w
-  `Nazwa towaru` jako `<40 znakow> | <reszta>` - `read_csv` je rozdziela, a wynik idzie ZAWSZE w ukladzie Ekonoma
-  (`LP;Kod towaru;Nazwa towaru;Nazwa dodatkowa;Kod producenta;JM;Cena netto;Waluta`, jak `Ledvance.csv`; `JM` z `J.M.`,
-  `Cena netto` z `Cena C3 - Cena Katalogowa`, `Waluta` = PLN). Uklad zestawienia z ` | ` NIE jest formatem do Ekonoma
-  (poprawka uzytkownika 2026-10-27). Nowa partia idzie przez przebieg laczny z baza v20 (`Ledvance.csv` + zestawienie), zeby wyrozniki
+  `Nazwa towaru` jako `<40 znakow> | <reszta>` - `read_csv` je rozdziela, a wynik ma ZAWSZE osobna `Nazwa dodatkowa`
+  (od 2026-11-18 tylko `Kod towaru;Nazwa towaru;Nazwa dodatkowa`, UTF-8 z BOM - patrz wyzej). Uklad zestawienia
+  z ` | ` NIE jest formatem do Ekonoma (poprawka uzytkownika 2026-10-27). Nowa partia idzie przez przebieg laczny z baza v20 (`Ledvance.csv` + zestawienie), zeby wyrozniki
   liczyly sie tez wzgledem produktow juz nazwanych; do wyniku ida tylko nowe pozycje, a nazwy w v20 zostaja. Przed
   przebiegiem pobierz karty GTIN nowych EAN (`fetch_ledvance_web.py --ean-file`). Stare kartoteki Osram z kodem na
   poczatku maja wlasne typy i porzadki: zarowki samochodowe (zawsze Osram; NBU / NL = Night Breaker Unlimited / Laser),

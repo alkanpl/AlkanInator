@@ -6,8 +6,8 @@ dlugosc...) sa czytane z nazwy, lumeny z tabel PDF po EAN (`Kod producenta`).
 Reguly typow: dictionaries/ekonom_name_rules.yaml.
 
 Wynik:
-- CSV dla Ekonoma w tym samym formacie co wejscie, z nowa nazwa podzielona na
-  `Nazwa towaru` (max 40 znakow, ciecie na spacji) i `Nazwa dodatkowa` (reszta),
+- CSV dla Ekonoma (UTF-8 z BOM, ';', tylko Kod towaru; Nazwa towaru; Nazwa dodatkowa) z nowa nazwa
+  podzielona na `Nazwa towaru` (max 40 znakow, ciecie na spacji) i `Nazwa dodatkowa` (reszta),
 - skoroszyt kontrolny: wszystkie nazwy ze statusem, arkusz "Powtorzenia" z grupami
   identycznych nazw i tym, czym roznia sie ich nazwy oryginalne.
 
@@ -3951,34 +3951,22 @@ def to_ekonom_layout(rows: list[dict[str, str]]) -> list[dict[str, str]]:
     return out
 
 
+# Plik WYNIKOWY do Ekonoma (decyzja uzytkownika 2026-11-18): UTF-8 z BOM i tylko te trzy kolumny.
+# Dotyczy wylacznie CSV w output/ - wejscie z Ekonoma dalej czytamy w cp1250, skoroszyt kontrolny bez zmian.
+OUTPUT_FIELDS = ["Kod towaru", "Nazwa towaru", "Nazwa dodatkowa"]
+OUTPUT_ENCODING = "utf-8-sig"
+
+
 def write_ekonom_csv(path: Path, fields: list[str], rows: list[dict[str, str]]) -> None:
+    """CSV do Ekonoma: UTF-8 z BOM, ';', kolumny ``OUTPUT_FIELDS`` (``fields`` wejscia nie maja znaczenia)."""
     if "Nazwa dodatkowa" not in fields:
-        fields, rows = EKONOM_FIELDS, to_ekonom_layout(rows)
-    with path.open("w", encoding="cp1250", newline="", errors="replace") as fh:
-        writer = csv.DictWriter(fh, fieldnames=fields, delimiter=";", quoting=csv.QUOTE_NONNUMERIC, lineterminator="\r\n")
-        fh.write(";".join(fields) + "\r\n")  # naglowek bez cudzyslowow, jak w eksporcie Ekonoma
+        rows = to_ekonom_layout(rows)
+    with path.open("w", encoding=OUTPUT_ENCODING, newline="") as fh:
+        writer = csv.DictWriter(fh, fieldnames=OUTPUT_FIELDS, delimiter=";", quoting=csv.QUOTE_ALL,
+                                lineterminator="\r\n", extrasaction="ignore")
+        fh.write(";".join(OUTPUT_FIELDS) + "\r\n")  # naglowek bez cudzyslowow, jak w eksporcie Ekonoma
         for row in rows:
-            out = dict(row)
-            for key in ("LP",):
-                if out.get(key, "").isdigit():
-                    out[key] = int(out[key])
-            if "Cena netto" in out:
-                out["Cena netto"] = _raw_number(out["Cena netto"])
-            writer.writerow(out)
-
-
-class _raw_number(float):
-    """Liczba zapisywana bez cudzyslowu, ale z oryginalnym przecinkiem z Ekonoma."""
-
-    def __new__(cls, text: str):
-        obj = super().__new__(cls, float(text.replace(",", ".") or 0))
-        obj.text = text
-        return obj
-
-    def __repr__(self) -> str:
-        return self.text
-
-    __str__ = __repr__
+            writer.writerow({field: row.get(field) or "" for field in OUTPUT_FIELDS})
 
 
 def main() -> None:
