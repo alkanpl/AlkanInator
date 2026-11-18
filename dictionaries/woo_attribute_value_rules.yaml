@@ -1,10 +1,11 @@
 version: 1
-updated_at: "2026-10-12"
+updated_at: "2026-11-18"
 description: >
   Reguly kontroli WARTOSCI atrybutow Woo (src/shop_attribute_values.py,
   src/audit_shop_attribute_values.py). Zrodlem prawdy jest zrzut terminow
-  sklepu dictionaries/woo_attribute_terms_snapshot.tsv
-  (py scripts/dump_woo_attribute_terms.py). Wartosc spoza zrzutu tworzy w Woo
+  sklepu dictionaries/woo_attribute_terms_snapshot.tsv (od 2026-11-18 produkcja
+  alkan.pl: py src/woo_api_cli.py --profile prod knowledge; smieci sklepu
+  odfiltrowuje shop_junk_terms ponizej). Wartosc spoza zrzutu tworzy w Woo
   NOWY termin - przy imporcie przez Baselinkera i przez WP All Import - wiec
   nie trafia do importu bez mapowania albo zatwierdzenia ponizej.
   Wiele wartosci jednego atrybutu = terminy rozdzielone "|" (format WP All
@@ -57,6 +58,29 @@ value_map:
     "montaż podtynkowy": "Podtynkowy"
     "montaż natynkowy": "Natynkowy"
     "inne": null
+
+# Smieci w terminach sklepu (zrzut z produkcji alkan.pl od 2026-11-18): opisy, kody
+# i zdania wpisane jako wartosc atrybutu, wszystkie bez produktow (licznik 0).
+# shop_attribute_values.load_vocabulary NIE traktuje ich jako terminow sklepu - wartosc
+# rowna smieciowi dostaje DO_SPRAWDZENIA jak nowa. To samo dotyczy automatycznie kluczy
+# value_map (Kaszmirowy, IP20...) i terminow z licznikiem 0 sklejonych przecinkiem
+# z innych terminow ("Antenowe, Komputerowe"). Pelna lista do sprzatniecia w Woo:
+# py scripts/report_shop_junk_terms.py
+shop_junk_terms:
+  "Kolor":
+    - "Elastyczny materiał zapewniający swobodę ruchów;"
+    - "Pojedynczy kolor"
+  "Kolor producenta":
+    - "Elastyczny materiał zapewniający swobodę ruchów;"
+    - "Pojedynczy kolor"
+  "Materiał":
+    - "97% bawełna, 3% elastan;"
+    - "Każdy element zestawu FELO Seria 400 ERGONIC® został zaprojektowany z myślą o Twojej wygodzie i efektywności."
+    - "Meets the product standard's requirements."
+    - "PKWiU"
+    - "V0"
+  "Dodatkowe funkcje":
+    - "Tłumienie sprzężenia dla wyjścia R: 13,2÷13,6 dB Tłumienie sprzężenia dla wyjścia TV: 9,5÷12,4 dB Tłumienie sprzężenia dla wyjścia DATA: 2,4÷4,3 dB Zakres częstotliwości wejścia: 5÷862 MHz"
 
 # Nowe wartosci ZATWIERDZONE przez uzytkownika (moga utworzyc termin w Woo).
 # Dopisuj tylko po decyzji uzytkownika - z arkusza "Nowe wartosci" raportu.

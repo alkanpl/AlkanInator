@@ -139,6 +139,59 @@ class SnapshotAndRulesTest(unittest.TestCase):
         self.assertFalse([check for check in checks if check.status == "DO_SPRAWDZENIA"])
 
 
+class ShopJunkTest(unittest.TestCase):
+    """Zrzut z produkcji (od 2026-11-18) ma smieci po importach - nie sa terminami docelowymi."""
+
+    SNAPSHOT = (
+        "# zrzut testowy\n"
+        "attribute\ttaxonomy\tterm\tslug\tcount\tparent_term\n"
+        "Podtyp produktu\tpa_podtyp\tAntenowe\tantenowe\t5\tGniazda\n"
+        "Podtyp produktu\tpa_podtyp\tKomputerowe\tkomputerowe\t3\tGniazda\n"
+        "Podtyp produktu\tpa_podtyp\tAntenowe, Komputerowe\tantenowe-komputerowe\t0\t\n"
+        "Kolor producenta\tpa_kp\tKaszmir\tkaszmir\t302\t\n"
+        "Kolor producenta\tpa_kp\tKaszmirowy\tkaszmirowy\t0\t\n"
+        "Stopień ochrony [IP]\tpa_ip\tIP 20\tip-20\t5329\t\n"
+        "Stopień ochrony [IP]\tpa_ip\tIP20\tip20\t328\t\n"
+        "Moc [W]\tpa_moc\t10\t10\t4\t\n"
+        "Moc [W]\tpa_moc\t5\t5\t4\t\n"
+        "Moc [W]\tpa_moc\t10,5\t10-5\t0\t\n"
+        "Materiał\tpa_material\tPKWiU\tpkwiu\t0\t\n"
+    )
+    RULES = {
+        "value_map": {"Kolor producenta": {"Kaszmirowy": "Kaszmir"}, "Stopień ochrony [IP]": {"IP20": "IP 20"}},
+        "shop_junk_terms": {"Materiał": ["PKWiU"]},
+    }
+
+    def load(self) -> ShopVocabulary:
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "terms.tsv"
+            path.write_text(self.SNAPSHOT, encoding="utf-8")
+            return load_vocabulary(path, self.RULES)
+
+    def test_junk_is_not_canonical(self) -> None:
+        vocab = self.load()
+        self.assertIsNone(vocab.canonical("Podtyp produktu", "Antenowe, Komputerowe"))
+        self.assertIsNone(vocab.canonical("Kolor producenta", "Kaszmirowy"))
+        self.assertIsNone(vocab.canonical("Stopień ochrony [IP]", "IP20"))  # 328 produktow, ale value_map
+        self.assertIsNone(vocab.canonical("Materiał", "PKWiU"))
+        self.assertTrue(vocab.has_attribute("Materiał"))
+        self.assertEqual(vocab.canonical("Kolor producenta", "kaszmir"), "Kaszmir")
+        self.assertEqual(vocab.canonical("Moc [W]", "10,5"), "10,5")  # przecinek dziesietny to nie sklejka
+
+    def test_junk_is_listed_and_mapped(self) -> None:
+        vocab = self.load()
+        self.assertEqual(sorted(item["termin"] for item in vocab.junk), ["Antenowe, Komputerowe", "IP20", "Kaszmirowy", "PKWiU"])
+        fixed, _ = check_features("X", "", {"Stopień ochrony [IP]": "IP20", "Podtyp produktu": "Antenowe, Komputerowe"},
+                                  vocab, self.RULES)
+        self.assertEqual(fixed["Stopień ochrony [IP]"], "IP 20")
+        self.assertEqual(fixed["Podtyp produktu"], "Antenowe|Komputerowe")
+
+    def test_junk_from_shop_export_is_not_added(self) -> None:
+        vocab = self.load()
+        vocab.add("Kolor producenta", "Kaszmirowy")
+        self.assertIsNone(vocab.canonical("Kolor producenta", "Kaszmirowy"))
+
+
 class AuditCliTest(unittest.TestCase):
     def test_fixes_copy_of_woo_export_and_lists_orphaned_terms(self) -> None:
         from openpyxl import Workbook, load_workbook

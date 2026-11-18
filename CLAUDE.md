@@ -67,11 +67,21 @@ czyta z `archived_input_files/input_2026-08-05/kanlux_braki_wymaganych_uzupelnio
   dawniej CSV `wszystko.csv`): sciezki kategorii rozwija do rodzicow, nazwy atrybutow
   bierze z `cache/woo_api/knowledge.json` (najpierw `knowledge` z tego samego sklepu),
   przecinek w wartosci (`2,5`, dane producenta) nie dzieli juz terminu.
-  `knowledge --profile prod` bez `--dictionaries-dir` nadpisuje `dictionaries/woo_*_snapshot.tsv`,
-  a produkcja ma jeszcze smieciowe terminy po partii Simon kaszmir (`Antenowe, Komputerowe`,
-  `Kaszmirowy`, licznik 0; pilnuje tego `test_shop_attribute_values`) - do analizy katalogu
-  `knowledge --dictionaries-dir cache/woo_api/prod --cache cache/woo_api/prod/knowledge.json`
-  i `--woo-knowledge` na ten plik; zrzuty `.tsv` zostaja z AlkanLocal do czasu sprzatniecia Woo.
+  Nazwy atrybutow LOKALNYCH produktow (nie `pa_*`, np. `Kompatybilny z`) bierze z kolumny
+  `Product Attributes` pliku z pull (naglowki maja Wielkie Litery), EAN z kolumny `EAN`.
+  **Cala wiedza o sklepie jest z PRODUKCJI alkan.pl** (decyzja uzytkownika 2026-11-18;
+  wczesniej zrzuty z AlkanLocal, a slownik katalogu z CSV z maja 2026). Odswieza ja jedno
+  polecenie `py scripts/refresh_shop_knowledge.py --pull` (najlepiej poza godzinami ruchu):
+  `knowledge --profile prod` -> `dictionaries/woo_*_snapshot.tsv` + `cache/woo_api/knowledge.json`
+  (kopia w `cache/woo_api/prod/`), lista `woo_attributes` w `kontakt_simon_shop_structure.yaml`,
+  raport smieci, pelny `pull --all` -> `woocommerce_catalog_knowledge.yaml` i
+  `learned_product_taxonomy.yaml`; potem testy i `py tests/generate_snapshots.py`.
+  Produkcja ma smieciowe terminy po importach (`Antenowe, Komputerowe`, `Kaszmirowy`, opisy
+  wpisane jako `Materiał`). `shop_attribute_values.load_vocabulary` ich nie uznaje za terminy
+  sklepu: klucze `value_map` (takze `IP20` z 328 produktami -> `IP 20`), terminy z licznikiem 0
+  sklejone przecinkiem z innych terminow (nie liczby `10,5`) i `shop_junk_terms` w
+  `dictionaries/woo_attribute_value_rules.yaml`. Lista do sprzatniecia w Woo (smieci + terminy
+  bez produktow): `py scripts/report_shop_junk_terms.py` -> `reports/woo_api/`.
 - `dictionaries/supplier_global_knowledge.yaml` - globalna wiedza o dostawcach,
   obecnie przede wszystkim Kanlux: suffixy, zasady kategorii, tytulow,
   akcesoriow, atrybutow i bezpiecznych opisow. Przy zadaniach Kanlux czytaj ten
@@ -166,7 +176,7 @@ dokladnie, z sufiksem dostawcy (`37246/KAN`); warianty nie sa zwracane.
   Up-Sells i Cross-Sells (dodane/usuniete zaznaczone). Grupy WPC Linked Variation
   (grupa i os = atrybut laczenia) podglad bierze ze sklepu (`/variant-groups`,
   wtyczka 2.1), a rodzenstwo wariantow dociaga po tagu; przy wtyczce 2.0 zostaje
-  zrzut `dictionaries/alkanlocal_wpclv_groups.tsv` i rodzenstwo tylko z pliku.
+  zrzut `dictionaries/woo_variant_groups_snapshot.tsv` i rodzenstwo tylko z pliku.
   Nota pod przelacznikiem podaje grupe, os, liczbe rodzenstwa i powtorzenia osi
   (`DO_SPRAWDZENIA`), jak raporty wariantow. Produkty spoza pliku: jeden odczyt na
   200 SKU powiazan i na 50 tagow wariantow, tylko dla zmienionych produktow.
@@ -268,7 +278,7 @@ generowania tytulow - utrwalaja aktualne zachowanie na realnych danych Kanlux,
 zeby kazda niezamierzona regresja w regexach/regulach byla od razu widoczna.
 
 Po **SWIADOMEJ** zmianie regul ekstrakcji, configow tytulow lub slownikow
-nalezy zregenerowac snapshoty (wymaga `archived_input_files/input_2026-08-05/Alkan_Kanlux_pelne_rodziny.xlsx`):
+nalezy zregenerowac snapshoty (wymaga `archived_input_files/Alkan_Kanlux_pelne_rodziny.xlsx`):
 
     py tests/generate_snapshots.py
 
@@ -424,8 +434,9 @@ przy konflikcie z promptem wygrywa YAML).
   usuwa zbednych kluczy.
 - **Zadnych nowych atrybutow sklepu bez zatwierdzenia.** Do Baselinkera/Woo
   trafiaja tylko cechy z listy `woo_attributes` w
-  `dictionaries/kontakt_simon_shop_structure.yaml` (137 globalnych atrybutow
-  Woo z AlkanLocal 2026-09-17) plus `approved_extra_attributes`. Cechy z
+  `dictionaries/kontakt_simon_shop_structure.yaml` (150 globalnych atrybutow
+  Woo z produkcji 2026-11-18, lista z `knowledge.json` przez
+  `scripts/refresh_shop_knowledge.py`) plus `approved_extra_attributes`. Cechy z
   katalogu dostawcy spoza tej listy (ETIM, opakowania, RAL, "Wysokosc [mm]"
   itp.) sa usuwane z pliku i laduja w raporcie
   (`atrybuty_do_zatwierdzenia` w JSON, arkusz "Atrybuty do zatwierdzenia" w
@@ -437,8 +448,8 @@ przy konflikcie z promptem wygrywa YAML).
 - **Zadnych nowych WARTOSCI atrybutow bez zatwierdzenia.** Kazda wartosc
   atrybutu globalnego spoza terminow sklepu tworzy w Woo nowy termin (przez
   Baselinkera i przez WP All Import). Slownik terminow:
-  `dictionaries/woo_attribute_terms_snapshot.tsv` (zrzut z bazy AlkanLocal,
-  odswiezany `py scripts/dump_woo_attribute_terms.py`; zawiera tez
+  `dictionaries/woo_attribute_terms_snapshot.tsv` (zrzut z produkcji przez
+  `woo_api_cli.py --profile prod knowledge`, bez smieci sklepu - `shop_junk_terms`; zawiera tez
   powiazanie Podtyp -> Typ z filtra). Reguly: `dictionaries/woo_attribute_value_rules.yaml`
   (`value_map` wartosci dostawcy -> termin sklepu, `null` = usun;
   `approved_new_values` - tylko po decyzji uzytkownika; `identifier_attributes`
@@ -481,7 +492,8 @@ przy konflikcie z promptem wygrywa YAML).
   grupy (atrybut, np. `Kolor`, `Kolor producenta`, `Podswietlenie`) i z wartoscia
   tego atrybutu per SKU, plus kontrole, czy wartosci w grupie sie nie powtarzaja
   (powtorzenie = brak osi, `DO_SPRAWDZENIA`). Osie istniejacych grup sa w
-  `dictionaries/alkanlocal_wpclv_groups.tsv`. Robia to
+  `dictionaries/woo_variant_groups_snapshot.tsv` (z produkcji; dawny zrzut AlkanLocal
+  `alkanlocal_wpclv_groups.tsv` nie jest juz czytany). Robia to
   `src/build_simon_woo_relations.py` (sekcja `variant_group` w
   `dictionaries/simon_woo_relations.yaml`) i `src/fill_variant_tags_from_siblings.py`
   (kolumna "Grupa wariantow w sklepie [osie]"); nowe narzedzie od wariantow musi miec to samo.

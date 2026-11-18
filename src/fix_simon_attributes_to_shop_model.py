@@ -444,7 +444,7 @@ def main(argv: list[str] | None = None) -> int:
 
     config = load_dictionary(args.dictionary)
     fieldnames, rows = read_baselinker_csv(args.input)
-    vocabulary = None if args.skip_value_check else load_vocabulary(args.shop_terms)
+    vocabulary = None if args.skip_value_check else load_vocabulary(args.shop_terms, load_value_rules(args.value_rules))
     results, unknown = process_rows(
         rows, config, keep_unknown=args.keep_unknown_attributes, vocabulary=vocabulary,
         value_rules=load_value_rules(args.value_rules), keep_new_values=args.keep_new_values,

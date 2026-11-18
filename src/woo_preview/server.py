@@ -55,7 +55,7 @@ from woo_preview.cards import (
 STATIC_DIR = Path(__file__).resolve().parent / "static"
 WORK_DIR = ROOT / "cache" / "woo_preview"
 # Grupy WPC Linked Variation podaje wtyczka bridge 2.1 (/variant-groups); dla starszej zostaje zrzut z AlkanLocal.
-VARIANT_GROUPS_PATH = ROOT / "dictionaries" / "alkanlocal_wpclv_groups.tsv"
+VARIANT_GROUPS_PATH = ROOT / "dictionaries" / "woo_variant_groups_snapshot.tsv"
 RELATED_BATCH = 200
 TAG_BATCH = 50
 DEFAULT_THEME_DIR = Path(r"C:\laragon\www\AlkanLocal\wp-content\themes\alkan")

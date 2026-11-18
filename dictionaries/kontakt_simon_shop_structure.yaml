@@ -1,5 +1,5 @@
 version: 1
-updated_at: "2026-09-17"
+updated_at: "2026-11-18"
 description: >
   Struktura atrybutow Kontakt Simon w sklepie Woo (odczytana z lokalnej kopii
   AlkanLocal, kategoria "Gniazdka Kontakt Simon", 2171 produktow). To jest
@@ -106,11 +106,15 @@ variant_tags:
   # wersja z "kategoria 6".
   overrides:
     "T62E.01": "Gniazdo komputerowe podwójne RJ45 kategoria 6 ekranowane 55 simon"
-  # Zrzut grup wariantow z AlkanLocal (2026-09-17): nazwa, status, zrodlo,
+  # Zrzut grup wariantow z produkcji (woo_api_cli.py --profile prod knowledge,
+  # od 2026-11-18; wczesniej AlkanLocal 2026-09-17): nazwa, status, zrodlo,
   # slugi tagow, licznik, osie.
-  variant_groups_snapshot: dictionaries/alkanlocal_wpclv_groups.tsv
+  variant_groups_snapshot: dictionaries/woo_variant_groups_snapshot.tsv
 
-# Globalne atrybuty WooCommerce (etykiety pa_*), stan AlkanLocal 2026-09-17.
+# Globalne atrybuty WooCommerce (etykiety pa_*), stan PRODUKCJI alkan.pl z knowledge.json
+# (od 2026-11-18; wczesniej AlkanLocal 2026-09-17 - produkcja nie ma: Bateria, Biegunowość,
+# Ilość styków zwiernych/rozwiernych, Znamionowy przekrój poprzeczny).
+# Odswiezanie: py scripts/refresh_shop_knowledge.py (nie edytowac listy recznie).
 # ZASADA: do Baselinkera/Woo trafiaja TYLKO cechy z tej listy (plus
 # approved_extra_attributes). Kazda inna cecha z katalogu dostawcy jest
 # usuwana z pliku i trafia do raportu "atrybuty_do_zatwierdzenia" -
@@ -119,8 +123,6 @@ variant_tags:
 woo_attributes:
   - "Barwa lampek"
   - "Barwa światła"
-  - "Bateria"
-  - "Biegunowość"
   - "Budowa żyły"
   - "Charakterystyka wyzwalania"
   - "Ciągłe napięcie robocze Uc [V]"
@@ -128,6 +130,7 @@ woo_attributes:
   - "Czujnik zmierzchu"
   - "Człon nadmiarowy"
   - "Dane producenta"
+  - "Daszek"
   - "Do modelu puszek"
   - "Dodatkowe funkcje"
   - "Dodatkowe informacje"
@@ -135,12 +138,12 @@ woo_attributes:
   - "Długość"
   - "Ekranowany"
   - "Graniczna zwarciowa zdolność wyłączania Icu [kA]"
+  - "Gwarancja"
   - "Głośność [dB]"
   - "Głębokość"
   - "Ilość kanałów"
   - "Ilość lampek"
   - "Ilość reflektorów"
-  - "Ilość styków zwiernych/rozwiernych"
   - "Ilość w zestawie"
   - "Impedancja falowa [Ohm]"
   - "Kategoria kabli sieciowych"
@@ -148,11 +151,13 @@ woo_attributes:
   - "Klapka"
   - "Klasa energetyczna"
   - "Klasa ograniczenia energii"
+  - "Klosz"
   - "Kolor"
   - "Kolor producenta"
   - "Kolor przewodu"
   - "Kolor szkła"
   - "Kolory"
+  - "Konfiguracja styków (NO/NC)"
   - "Krotność"
   - "Kształt"
   - "Kształt żarówki"
@@ -173,6 +178,7 @@ woo_attributes:
   - "Maksymalny prąd obciążenia [A]"
   - "Materiał"
   - "Materiał powłoki"
+  - "Materiał przewodu"
   - "Moc [W]"
   - "Moc [kWh]"
   - "Możliwość łączenia"
@@ -183,6 +189,7 @@ woo_attributes:
   - "Odporność na UV"
   - "Opakowanie"
   - "Optyka"
+  - "Orientacja"
   - "Piktogram"
   - "Pilot"
   - "Podtyp produktu"
@@ -192,6 +199,7 @@ woo_attributes:
   - "Pojemność [mAh]"
   - "Producent"
   - "Przeciwblokada"
+  - "Przekrój poprzeczny [mm²]"
   - "Przekrój żyły [mm]"
   - "Przesłony torów prądowych"
   - "Przewód [mm²]"
@@ -208,10 +216,13 @@ woo_attributes:
   - "Rodzaj łącznika"
   - "Rozmiar"
   - "Rozmiar wkładki bezpiecznikowej"
+  - "Rozmiar – najdłuższy bok [mm]"
   - "Seria"
+  - "Skuteczność świetlna [lm/W]"
   - "Sonda"
   - "Sposób montażu"
   - "Stopień ochrony [IP]"
+  - "Stopień odporności [IK]"
   - "Strumień świetlny [lm]"
   - "Styk zdalnej sygnalizacji"
   - "Symbol"
@@ -219,9 +230,11 @@ woo_attributes:
   - "Sztuk w opakowaniu"
   - "Technologia ogranicznika przepięć"
   - "Temperatura barwowa [K]"
+  - "Trwałość [h]"
   - "Trzonek"
   - "Typ"
   - "Typ czujnika"
+  - "Typ gwintu"
   - "Typ izolacji"
   - "Typ ogranicznika przepięć (SPD)"
   - "Typ produktu"
@@ -233,19 +246,21 @@ woo_attributes:
   - "Wariant"
   - "Wi-Fi"
   - "Wskaźnik oddawania barw"
+  - "Wskaźnik olśnienia [UGR]"
   - "Współpraca ze ściemniaczem"
   - "Wykończenie ramki"
   - "Wymiary [mm]"
   - "Wypełnienie żelem"
   - "Wysokość"
   - "Wyłącznik"
+  - "Zakres przekroju przewodu [mm²]"
   - "Zakres regulacji kąta"
   - "Zakres temperatury pracy"
+  - "Zakres średnicy przewodu [mm]"
   - "Zasilanie"
   - "Zasięg detekcji"
   - "Zastosowanie"
   - "Znamionowa zwarciowa zdolność wyłączania Icn [kA]"
-  - "Znamionowy przekrój poprzeczny"
   - "Znamionowy prąd różnicowy IΔn [mA]"
   - "Znamionowy prąd wyładowczy In [kA]"
   - "Znamionowy warunkowy prąd zwarciowy [kA]"
@@ -253,10 +268,12 @@ woo_attributes:
   - "Średnica"
   - "Średnica wewnętrzna"
   - "Średnica zewnętrzna"
+  - "Źródło światła"
+  - "Źródło światła w komplecie"
   - "Żyła ochronna"
 
-# Atrybuty zatwierdzone przez uzytkownika, ktorych nie ma jeszcze w lokalnej
-# kopii Woo (np. zalozone na produkcji pozniej). Dopisuj recznie.
+# Atrybuty zatwierdzone przez uzytkownika, ktorych nie ma jeszcze w sklepie
+# (2026-11-18: Podseria nie jest jeszcze zalozona na produkcji). Dopisuj recznie.
 approved_extra_attributes:
   # 2026-09-28: podseria Kontakt Simon (Line, Duo, Nature, GO, Premium, Flash,
   # K45/SF/CIMA) - decyzja uzytkownika; buduje src/build_simon_subseries_woo_update.py

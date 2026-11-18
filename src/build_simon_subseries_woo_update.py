@@ -533,7 +533,8 @@ def main() -> None:
     duplicates = sorted(s for s, n in seen.items() if n > 1)
 
     write_output(args.input, args.output, results)
-    value_checks = check_shop_values(results, load_vocabulary(args.shop_terms), load_value_rules(args.value_rules), rules)
+    value_rules = load_value_rules(args.value_rules)
+    value_checks = check_shop_values(results, load_vocabulary(args.shop_terms, value_rules), value_rules, rules)
     summary = build_summary(results, {
         "plik_wejsciowy": str(args.input), "plik_wyjsciowy": str(args.output),
         "kontrola": str(args.control), "duplikaty_sku": duplicates,

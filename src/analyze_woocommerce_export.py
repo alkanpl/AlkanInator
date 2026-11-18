@@ -83,6 +83,8 @@ WP_ALL_EXPORT_COLUMNS = {
     "Regular Price": "Cena",
     "Image URL": "Obrazki",
     "hwp_product_gtin": "Pola: hwp_product_gtin",
+    # Wtyczka bridge 2.1.1 podaje EAN w kolumnie "EAN" (tylko do odczytu).
+    "EAN": "GTIN, UPC, EAN lub ISBN",
 }
 WP_ALL_EXPORT_ATTRIBUTE_PREFIX = "Atrybut Produktu: "
 DEFAULT_WOO_KNOWLEDGE_PATH = "cache/woo_api/knowledge.json"
@@ -121,6 +123,34 @@ def load_attribute_labels(path: str | Path) -> dict[str, str]:
     }
 
 
+# Jeden wpis _product_attributes (PHP serialize): nazwa ... is_taxonomy tego samego wpisu.
+LOCAL_ATTRIBUTE_RE = re.compile(r's:4:"name";s:\d+:"(.*?)";s:5:"value";.*?s:11:"is_taxonomy";i:(\d);', re.DOTALL)
+
+
+def local_attribute_labels(df: pd.DataFrame) -> dict[str, str]:
+    """Atrybuty lokalne produktow (nie pa_*): naglowek pull "Atrybut Produktu: Kompatybilny Z" -> "Kompatybilny z".
+
+    knowledge.json zna tylko atrybuty globalne; prawdziwa nazwe lokalnego bierzemy z
+    zserializowanej kolumny ``Product Attributes`` (najczestszy zapis przy kilku wariantach).
+    """
+    if "Product Attributes" not in df.columns:
+        return {}
+    spellings: dict[str, Counter[str]] = {}
+    for value in df["Product Attributes"].dropna():
+        for match in LOCAL_ATTRIBUTE_RE.finditer(str(value)):
+            name = compact_spaces(match.group(1))
+            if name and match.group(2) == "0":
+                spellings.setdefault(name.casefold(), Counter())[name] += 1
+    labels: dict[str, str] = {}
+    for column in df.columns:
+        column = str(column)
+        if column.startswith(WP_ALL_EXPORT_ATTRIBUTE_PREFIX):
+            found = spellings.get(column[len(WP_ALL_EXPORT_ATTRIBUTE_PREFIX):].strip().casefold())
+            if found:
+                labels[column] = found.most_common(1)[0][0]
+    return labels
+
+
 def expand_category_paths(value: Any) -> str:
     # W pliku z pull sa tylko najglebsze sciezki; natywny CSV podaje tez kategorie nadrzedne.
     paths: list[str] = []
@@ -139,7 +169,7 @@ def native_attribute_value(value: Any) -> str:
 
 
 def from_wp_all_export(df: pd.DataFrame, labels: dict[str, str]) -> pd.DataFrame:
-    native = df.rename(columns=WP_ALL_EXPORT_COLUMNS)
+    native = df.rename(columns=WP_ALL_EXPORT_COLUMNS).copy()
     if "Kategorie produktów" in native.columns:
         native["Kategorie"] = native.pop("Kategorie produktów").map(expand_category_paths)
     attribute_columns = [column for column in df.columns if str(column).startswith(WP_ALL_EXPORT_ATTRIBUTE_PREFIX)]
@@ -640,6 +670,7 @@ def main() -> None:
         labels = load_attribute_labels(args.woo_knowledge)
         if not labels:
             print(f"UWAGA: brak {args.woo_knowledge} - nazwy atrybutow z naglowkow kolumn (wielkie litery).")
+        labels = {**local_attribute_labels(df), **labels}
         df = from_wp_all_export(df, labels)
     analysis = build_analysis(df)
     write_outputs(analysis, Path(args.reports_dir), Path(args.dictionary))

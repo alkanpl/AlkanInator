@@ -21,7 +21,7 @@ series_tag_suffix: "24 simon"
 
 # Grupa WPC Linked Variation, do ktorej dopisuje sie nowe tagi, i atrybut, po
 # ktorym przelacza warianty (os grupy w sklepie, zrzut
-# dictionaries/alkanlocal_wpclv_groups.tsv). Wartosci atrybutu dla kodow koloru
+# dictionaries/woo_variant_groups_snapshot.tsv). Wartosci atrybutu dla kodow koloru
 # bierze z `colors` w `colors_source` (pole `color_field` = termin Woo).
 # Raport "Grupy wariantow" sprawdza, czy produkty grupy roznia sie ta wartoscia.
 variant_group:

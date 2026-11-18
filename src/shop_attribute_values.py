@@ -16,6 +16,15 @@ Reguly (``dictionaries/woo_attribute_value_rules.yaml``): mapowanie wartosci
 dostawcy na terminy sklepu, wartosci zatwierdzone przez uzytkownika i klucz
 rodzenstwa (ten sam produkt w innym kolorze).
 
+Smieci sklepu (od 2026-11-18 zrzut idzie z produkcji alkan.pl, ktora ma terminy
+po bledach importow) NIE sa terminami docelowymi - ``load_vocabulary`` je
+pomija i zapisuje w ``ShopVocabulary.junk``:
+- klucze ``value_map`` (decyzja uzytkownika: ``Kaszmirowy`` -> ``Kaszmir``,
+  ``IP20`` -> ``IP 20``), takze gdy sklep ma je przypiete do produktow,
+- termin z licznikiem 0 sklejony przecinkiem z terminow tego samego atrybutu
+  (``Antenowe, Komputerowe``),
+- ``shop_junk_terms`` z regul (opisy, kody i nazwy produktow wpisane jako wartosc).
+
 Kolejnosc decyzji dla kazdej wartosci (czesci po ``|``):
 1. termin sklepu (dokladnie albo ten sam slug/wielkosc liter - Woo i tak
    podepnie istniejacy termin),
@@ -106,12 +115,19 @@ class ShopVocabulary:
     by_slug: dict[str, dict[str, str]] = field(default_factory=dict)
     parents: dict[str, dict[str, str]] = field(default_factory=dict)
     sources: list[str] = field(default_factory=list)
+    # Atrybut -> terminy sklepu (casefold), ktore nie moga byc wartoscia docelowa.
+    excluded: dict[str, set[str]] = field(default_factory=dict)
+    # Pominiete terminy zrzutu: atrybut, termin, licznik, powod (do sprzatniecia w Woo).
+    junk: list[dict[str, str]] = field(default_factory=list)
 
     def has_attribute(self, attribute: str) -> bool:
         return attribute in self.terms
 
+    def is_excluded(self, attribute: str, term: str) -> bool:
+        return term.casefold() in self.excluded.get(attribute, set())
+
     def add(self, attribute: str, term: str, parent: str = "") -> None:
-        if not term:
+        if not term or self.is_excluded(attribute, term):
             self.terms.setdefault(attribute, set())
             return
         self.terms.setdefault(attribute, set()).add(term)
@@ -138,12 +154,52 @@ class ShopVocabulary:
         return self.parents.get(attribute, {}).get(term)
 
 
-def load_vocabulary(path: Path = DEFAULT_SNAPSHOT) -> ShopVocabulary:
-    vocabulary = ShopVocabulary(sources=[str(path)])
+def junk_rules(rules: dict[str, Any]) -> dict[str, dict[str, str]]:
+    """Atrybut -> {termin casefold: powod} z regul: klucze ``value_map`` i ``shop_junk_terms``."""
+    result: dict[str, dict[str, str]] = defaultdict(dict)
+    for attribute, table in (rules.get("value_map") or {}).items():
+        for source in table or {}:
+            result[attribute][str(source).casefold()] = "value_map: wartosc dostawcy, sklep ma inny termin"
+    for attribute, terms in (rules.get("shop_junk_terms") or {}).items():
+        for term in terms or []:
+            result[attribute][str(term).casefold()] = "shop_junk_terms: smiec w sklepie"
+    return result
+
+
+def _is_comma_junk(attribute: str, term: str, count: str, names: dict[str, set[str]]) -> bool:
+    """Termin bez produktow sklejony przecinkiem z terminow tego samego atrybutu."""
+    if "," not in term or (count or "").strip() not in ("0", ""):
+        return False
+    pieces = [piece.strip().casefold() for piece in term.split(",") if piece.strip()]
+    if any(re.fullmatch(r"[\d.]+", piece) for piece in pieces):
+        return False  # przecinek dziesietny ("10,5" W), nie sklejka terminow
+    return len(pieces) > 1 and all(piece in names.get(attribute, set()) for piece in pieces)
+
+
+def load_vocabulary(path: Path = DEFAULT_SNAPSHOT, rules: dict[str, Any] | None = None) -> ShopVocabulary:
+    """Slownik terminow sklepu ze zrzutu, bez smieci (``rules`` domyslnie z ``DEFAULT_RULES``)."""
+    if rules is None:
+        rules = load_rules() if DEFAULT_RULES.is_file() else {}
     with path.open("r", encoding="utf-8", newline="") as stream:
         lines = (line for line in stream if not line.startswith("#"))
-        for row in csv.DictReader(lines, delimiter="\t"):
-            vocabulary.add(row["attribute"], row.get("term") or "", row.get("parent_term") or "")
+        rows = list(csv.DictReader(lines, delimiter="\t"))
+    names: dict[str, set[str]] = defaultdict(set)
+    for row in rows:
+        if row.get("term"):
+            names[row["attribute"]].add(row["term"].casefold())
+    by_rule = junk_rules(rules)
+    vocabulary = ShopVocabulary(sources=[str(path)])
+    for attribute, reasons in by_rule.items():
+        vocabulary.excluded.setdefault(attribute, set()).update(reasons)
+    for row in rows:
+        attribute, term = row["attribute"], row.get("term") or ""
+        reason = by_rule.get(attribute, {}).get(term.casefold()) if term else None
+        if term and not reason and _is_comma_junk(attribute, term, row.get("count") or "", names):
+            reason = "przecinek sklejil terminy (licznik 0)"
+            vocabulary.excluded.setdefault(attribute, set()).add(term.casefold())
+        if reason:
+            vocabulary.junk.append({"atrybut": attribute, "termin": term, "produktow": row.get("count") or "", "powod": reason})
+        vocabulary.add(attribute, term, row.get("parent_term") or "")
     return vocabulary
 
 

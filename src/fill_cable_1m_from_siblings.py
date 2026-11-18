@@ -416,7 +416,8 @@ def check_shop_values(changes: list[Change], header: list[str], rows: list[dict[
                       new_rows: list[dict[str, Any]], snapshot: Path = DEFAULT_SNAPSHOT,
                       rules_path: Path = DEFAULT_VALUE_RULES) -> list[ValueCheck]:
     """Raport: czy wartosci wpisane odcinkom 1 m tworza w Woo nowe terminy (slownik = zrzut + reszta eksportu)."""
-    vocabulary, rules = load_vocabulary(snapshot), load_value_rules(rules_path)
+    rules = load_value_rules(rules_path)
+    vocabulary = load_vocabulary(snapshot, rules)
     new_ids = {id(row) for row in new_rows}
     extend_from_export(vocabulary, header, [row for row in rows if id(row) not in new_ids], rules)
     per_row: dict[tuple[str, str, str], dict[str, str]] = {}

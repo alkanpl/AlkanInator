@@ -234,8 +234,8 @@ def main(argv: list[str] | None = None) -> int:
     control = args.control or control
     report = args.report or report
 
-    vocabulary = load_vocabulary(args.snapshot)
     rules = load_rules(args.rules)
+    vocabulary = load_vocabulary(args.snapshot, rules)
     is_csv = args.input.suffix.lower() == ".csv"
 
     if is_csv:

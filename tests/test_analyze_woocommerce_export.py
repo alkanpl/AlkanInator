@@ -11,6 +11,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 from analyze_woocommerce_export import (  # noqa: E402
     build_analysis,
     from_wp_all_export,
+    local_attribute_labels,
     is_wp_all_export,
     split_attribute_values,
 )
@@ -90,6 +91,28 @@ class AnalyzeWooCommerceExportTest(unittest.TestCase):
             data["kontakt simon"],
             "KONTAKT-SIMON, Bestwińska 21 43-500 Czechowice-Dziedzice, info@kontakt-simon.com.pl",
         )
+
+    def test_ean_column_from_bridge_2_1_1(self) -> None:
+        frame = pull_frame().drop(columns=["hwp_product_gtin"])
+        frame["EAN"] = ["5902787826178", ""]
+        analysis = build_analysis(from_wp_all_export(frame, LABELS))
+        self.assertEqual(analysis["summary"]["without_ean"], 1)
+        self.assertEqual(analysis["summary"]["invalid_ean"], 0)
+
+    def test_local_attribute_names_from_product_attributes(self) -> None:
+        frame = pull_frame()
+        frame["Atrybut Produktu: Kompatybilny Z"] = ["Simon 10", ""]
+        frame["Product Attributes"] = [
+            'a:2:{s:12:"pa_producent";a:6:{s:4:"name";s:12:"pa_producent";s:5:"value";s:0:"";s:8:"position";i:0;'
+            's:10:"is_visible";i:1;s:12:"is_variation";i:0;s:11:"is_taxonomy";i:1;}s:14:"kompatybilny-z";a:6:'
+            '{s:4:"name";s:14:"Kompatybilny z";s:5:"value";s:8:"Simon 10";s:8:"position";i:1;s:10:"is_visible";i:1;'
+            's:12:"is_variation";i:0;s:11:"is_taxonomy";i:0;}}',
+            "",
+        ]
+        labels = local_attribute_labels(frame)
+        self.assertEqual(labels, {"Atrybut Produktu: Kompatybilny Z": "Kompatybilny z"})
+        analysis = build_analysis(from_wp_all_export(frame, {**labels, **LABELS}))
+        self.assertIn("Kompatybilny z", {row["attribute"] for row in analysis["attributes"]})
 
     def test_native_csv_escaped_comma_stays_in_value(self) -> None:
         self.assertEqual(split_attribute_values("2\\,5, 4"), ["2,5", "4"])
