@@ -646,7 +646,8 @@ def render_card(
     availability = availability_html(values, changed)
     delivery = shipping_html(values, side, shipping, changed, shipping_note)
     title = values.get("Title", "")
-    ean = values.get("hwp_product_gtin", "").strip()
+    # Sklep od wtyczki bridge 2.1.1 wysyła kolumnę "EAN"; starsze pliki mają "hwp_product_gtin".
+    ean = (values.get("EAN") or values.get("hwp_product_gtin") or "").strip()
     manufacturer = ", ".join(split_list(values.get(ATTRIBUTE_PREFIX + "Producent", "")))
     badges = ""
     if ean or manufacturer:

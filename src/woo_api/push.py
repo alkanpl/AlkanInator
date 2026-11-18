@@ -28,7 +28,8 @@ READ_ONLY_COLUMNS = {
     "Sale Price",
     "Stock",
     "Stock Status",
-    "hwp_product_gtin",
+    "EAN",
+    "hwp_product_gtin",  # dawna nazwa kolumny EAN (pliki pobrane przed wtyczką 2.1.1)
     "Permalink",
     "Product Attributes",
 }
