@@ -6,6 +6,7 @@
     py src/woo_api_cli.py push --input output/simon_woo.xlsx                 (dry-run + raport)
     py src/woo_api_cli.py push --input output/simon_woo.xlsx --apply         (zapis)
     py src/woo_api_cli.py changesets
+    py src/woo_api_cli.py customers                                          (klienci -> output/klienci_RRRR-MM-DD.xlsx)
     py src/woo_api_cli.py revert ai-20261021-153000-simon_woo --apply
     py src/woo_api_cli.py --profile prod push --input plik.xlsx --apply     (produkcja: potwierdzenie w terminalu)
 
@@ -29,6 +30,7 @@ from pathlib import Path
 from urllib.parse import urlparse
 
 from woo_api.client import WooBridgeClient, WooBridgeError
+from woo_api.customers import pull_customers
 from woo_api.knowledge import write_knowledge, write_variant_groups
 from woo_api.pull import pull_products, read_sku_file
 from woo_api.push import PushOptions, run_push, run_revert
@@ -169,6 +171,12 @@ def build_parser() -> argparse.ArgumentParser:
         help="Nie sprawdza nowych zdjęć z Image URL (JPG 1000x1000 na białym tle) - tylko na wyraźne życzenie.",
     )
 
+    customers = subparsers.add_parser(
+        "customers", help="Pobiera listę klientów (jak WooCommerce > Klienci) do XLSX albo CSV - dane osobowe, plik zostaje w output/."
+    )
+    customers.add_argument("--output", default="", help="Plik .xlsx albo .csv (domyślnie output/klienci_RRRR-MM-DD.xlsx).")
+    customers.add_argument("--per-page", type=int, default=1000)
+
     changesets = subparsers.add_parser("changesets", help="Lista ostatnich zapisów w sklepie.")
     changesets.add_argument("--limit", type=int, default=20)
 
@@ -276,6 +284,12 @@ def main(argv: list[str] | None = None) -> int:
                     return 2
                 failed = result.applied if result.applied is not None else result.dry_run
                 return 2 if failed.get("summary", {}).get("errors") else 0
+
+            if args.command == "customers":
+                output = Path(args.output) if args.output else ROOT / "output" / f"klienci_{datetime.now():%Y-%m-%d}.xlsx"
+                count = pull_customers(client, output, per_page=args.per_page, log=print)
+                print(f"Gotowe: {output.resolve()} ({count} klientów)")
+                return 0
 
             if args.command == "changesets":
                 for item in client.changesets(args.limit):

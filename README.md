@@ -132,6 +132,7 @@ py src/woo_api_cli.py pull --category "Gniazdka i Łączniki>Gniazdka Kontakt Si
 py src/woo_api_cli.py push --input output/simon_woo.xlsx --columns "Product Tags,Wysyłka w ciągu"
 py src/woo_api_cli.py push --input output/simon_woo.xlsx --columns "Product Tags,Wysyłka w ciągu" --apply
 py src/woo_api_cli.py changesets
+py src/woo_api_cli.py customers          # klienci -> output/klienci_RRRR-MM-DD.xlsx (wtyczka 2.2, odczyt wlaczony w panelu)
 py src/woo_api_cli.py revert ai-20261021-153259-simon_woo --apply
 ```
 

@@ -120,6 +120,19 @@ class WooBridgeClient:
         """Metody dostawy teraz i po zmianie klasy/wagi/wymiarow, bez zapisu (API 2.1+, do 20 produktow)."""
         return self._request("POST", "/shipping-preview", body={"products": products})
 
+    def customers_page(self, page: int = 1, per_page: int = 1000) -> dict[str, Any]:
+        """Klienci jak w WooCommerce > Klienci (API 2.2+, odczyt włączany w panelu wtyczki; do 1000 na stronę)."""
+        return self._request("GET", "/customers", params={"page": page, "per_page": per_page})
+
+    def iter_customer_pages(self, per_page: int = 1000) -> Iterator[dict[str, Any]]:
+        page = 1
+        while True:
+            data = self.customers_page(page=page, per_page=per_page)
+            yield data
+            if page >= int(data.get("total_pages") or 0):
+                return
+            page += 1
+
     def products_page(self, page: int = 1, per_page: int = 200, **filters: Any) -> dict[str, Any]:
         body = {key: value for key, value in filters.items() if value not in (None, "", [], ())}
         body.update({"page": page, "per_page": per_page})
